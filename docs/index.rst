@@ -5,7 +5,7 @@ Fields2Cover
   **Robust and efficient coverage paths for autonomous agricultural vehicles**
 
 
-`The repository github is here <https://github.com/Fields2Cover/Fields2Cover>`__.
+`The github repository is here <https://github.com/Fields2Cover/Fields2Cover>`__.
 
 
 The Coverage Path Planning problem (CPP) aims to create a path to cover an area with one or several vehicles.
