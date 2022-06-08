@@ -1,8 +1,13 @@
 Fields2Cover
 ============
 
-::
-  is the first coverage path planning library for UGVs in agriculture.
+
+  **Robust and efficient coverage paths for autonomous agricultural vehicles**
+
+
+.. image:: docs/figures/logo_fields2cover.png
+   :align: center
+
 
 
 The coverage path planning problem (CPP) aims to create a path to cover an area with one or several vehicles.
@@ -11,13 +16,16 @@ Each of the application has its own requirements.
 For example, in cleaning robots environment is usually unknown and the objective is improve the probability of cover the area.
 On the other hand, CPP in agriculture knows the area to cover, but the coverage has to be complete.
 
-.. note::
-    Although the development of this project is focused on offline planning of agricultural vehicles, the library accepts pull requests from other types of coverage planners.
 
 
-Fields2Cover library offers several algorithms to plan the coverage path on convex fields:
+
+Fields2Cover library provides several algorithms to plan the coverage path on convex fields:
 
 .. image:: docs/figures/Tutorial_6_1_Dubins.png
+   :align: center
+
+
+Although the development of this project is focused on offline planning of agricultural vehicles, the library accepts pull requests from other types of coverage planners.
 
 
 Why?
@@ -29,8 +37,51 @@ Due to this, research about this topic is slow as you need to implement every al
 Fields2Cover provides a flexible structure and several algorithms to compare with, so any developer can research about this topic easily.
 
 
-.. include:: docs/source/installation.rst
+Installation
+------------
 
+The Fields2Cover package has only been tested on Ubuntu 20.04.
+If you are able to run it in other operative systems, open an issue/PR and it will be added to this guide
+
+
+Requirements on Linux
+^^^^^^^^^^^^^^^^^^^^^^
+
+Some packages are needed before compiling the package:
+
+.. code-block:: console
+
+   sudo add-apt-repository -y ppa:ubuntugis/ppa
+   sudo apt-get -y update
+   sudo apt-get install -y --no-install-recommends build-essential ca-certificates cmake \
+        doxygen g++ git libeigen3-dev libgdal-dev libpython3-dev python3 python3-pip \
+        python3-matplotlib lcov libgtest-dev 
+   python -m pip install gcovr
+
+
+Compilation
+^^^^^^^^^^^^
+
+First, clone this repository. 
+Then, from the main folder of the project:
+
+.. code-block:: console
+
+   cd build;
+   cmake -DCMAKE_BUILD_TYPE=Release ..;
+   make -j$(nproc);
+   sudo make install;
+
+
+Add it to your projects
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+To add Fields2Cover into your CMakeLists.txt, it is as easy as:
+
+.. code-block:: console
+   
+   find_package(Fields2Cover REQUIRED)
+   target_link_libraries(<<<your_package>>> Fields2Cover)
 
 
 Contribute
@@ -45,6 +96,17 @@ License
 --------
 
 Fields2Cover project is under `BSD-3 license <https://tldrlegal.com/license/bsd-3-clause-license-%28revised%29>`__.
+
+
+
+TODO
+-------
+
+- Create SWIG interface with Python/Lua/R
+- Support Route planners with metaheuristics
+- Support non-convex fields
+- Consider the start and end point of the vehicle
+- ...
 
 
 More info
