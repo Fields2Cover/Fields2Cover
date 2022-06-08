@@ -1,0 +1,14 @@
+.. _exhale_define_Swaths_8h_1a1134abe7d828141bb72019b0795b5736:
+
+Define FIELDS2COVER_TYPES_SWATHS_H_
+===================================
+
+- Defined in :ref:`file_fields2cover_types_Swaths.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: FIELDS2COVER_TYPES_SWATHS_H_
+   :project: Fields2Cover

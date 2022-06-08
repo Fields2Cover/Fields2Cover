@@ -1,0 +1,14 @@
+.. _exhale_define_Cells_8h_1a63865564d7ef47f9dad421547c7844aa:
+
+Define FIELDS2COVER_TYPES_CELLS_H_
+==================================
+
+- Defined in :ref:`file_fields2cover_types_Cells.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: FIELDS2COVER_TYPES_CELLS_H_
+   :project: Fields2Cover
