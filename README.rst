@@ -9,6 +9,9 @@ Fields2Cover
    :align: center
 
 
+`The extended documentation is here <https://fields2cover.github.io/>`__.
+
+
 
 The coverage path planning problem (CPP) aims to create a path to cover an area with one or several vehicles.
 CPP has many application as cleaning robots, surveillance, de-mining or agriculture. 

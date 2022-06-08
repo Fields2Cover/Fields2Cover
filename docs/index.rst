@@ -2,7 +2,11 @@
 Fields2Cover
 ==================
 
-is the first coverage path planning library for UGVs in agriculture.
+  **Robust and efficient coverage paths for autonomous agricultural vehicles**
+
+
+`The repository github is here <https://github.com/Fields2Cover/Fields2Cover>`__.
+
 
 The Coverage Path Planning problem (CPP) aims to create a path to cover an area with one or several vehicles.
 Although the development of this project is focused on offline planning of agricultural vehicles,
