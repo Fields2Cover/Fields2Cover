@@ -1,3 +1,4 @@
 exhale>=0.3.0
+sphinx-sitemap
 m2r2
 
