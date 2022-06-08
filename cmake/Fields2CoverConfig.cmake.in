@@ -1,0 +1,8 @@
+set(F2C_CMAKE_INSTALL_DIR @INSTALL_CMAKE_DIR@cmake/fields2cover)
+
+include(CMakeFindDependencyMacro)
+find_dependency(GDAL 2.0 REQUIRED)  
+
+include("${F2C_CMAKE_INSTALL_DIR}/Fields2CoverTargets.cmake")
+
+

@@ -1,0 +1,55 @@
+<GAOS_parcel xmlns:gml="http://www.opengis.net/gml" id="14d36f66-eac9-4e2b-b835-f6bddd925ae2">
+    <Field area="17.2581" date="2018-04-05" id="boundary" lineage="Unknown">
+        <geometry>
+            <gml:Polygon srsName="EPSG:4258">
+                <gml:outerBoundaryIs>
+                    <gml:LinearRing>
+                        <gml:coordinates>4.26199990317851,51.7859704975047 4.26203858931428,51.7860392024232 4.26234728296244,51.7867682098064 4.26283009086539,51.7878798462305 4.26321532471923,51.7887809885397 4.26344944239078,51.7893481817958 4.25601634525234,51.7906387243889 4.25603742148301,51.7905786368844 4.25662083047068,51.7889909449083 4.25732681137421,51.7870536505356 4.25749399420598,51.7866017400346 4.26195105582634,51.7858278333044 4.26199990317851,51.7859704975047</gml:coordinates>
+                    </gml:LinearRing>
+                </gml:outerBoundaryIs>
+            </gml:Polygon>
+        </geometry>
+    </Field>
+    <Edge date="2018-04-05" id="1" include="1" maxstripwidth="0.50" minstripwidth="0.25" preference="1" striptype="2">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.26203858931428,51.7860392024232 4.26234728296244,51.7867682098064 4.26283009086539,51.7878798462305 4.26321532471923,51.7887809885397 4.26344944239078,51.7893481817958</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Edge>
+    <Edge date="2018-04-05" id="2" include="1" maxstripwidth="0.50" minstripwidth="0.25" preference="1" striptype="2">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.26344944239078,51.7893481817958 4.25601634525234,51.7906387243889</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Edge>
+    <Edge date="2018-04-05" id="3" include="0" maxstripwidth="0.0" minstripwidth="0.0" preference="0" striptype="0">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.25601634525234,51.7906387243889 4.25603742148301,51.7905786368844</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Edge>
+    <Edge date="2018-04-05" id="4" include="1" maxstripwidth="0.50" minstripwidth="0.25" preference="1" striptype="2">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.25603742148301,51.7905786368844 4.25662083047068,51.7889909449083 4.25732681137421,51.7870536505356 4.25749399420598,51.7866017400346</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Edge>
+    <Edge date="2018-04-05" id="5" include="1" maxstripwidth="0.50" minstripwidth="0.25" preference="1" striptype="2">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.25749399420598,51.7866017400346 4.26195105582634,51.7858278333044</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Edge>
+    <Edge date="2018-04-05" id="6" include="1" maxstripwidth="0.50" minstripwidth="0.25" preference="1" striptype="2">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.26195105582634,51.7858278333044 4.26199990317851,51.7859704975047 4.26203858931428,51.7860392024232</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Edge>
+</GAOS_parcel>

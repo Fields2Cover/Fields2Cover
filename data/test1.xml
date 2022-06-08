@@ -1,0 +1,1035 @@
+<GAOS_parcel xmlns:gml="http://www.opengis.net/gml" id="b913fe9d-ed9f-4cc4-aa77-a10652165455">
+    <Field area="17.2581" best_angle="2.85311132324" cost_if_no_crop="0.23" date="2018-06-05" greening_subsidy="0.1667" id="boundary" increment="0.05" lineage="Unknown" penalty_additnl_swath="7.285" sprayer_width="39" swath_width="3">
+        <geometry>
+            <gml:Polygon srsName="EPSG:4258">
+                <gml:outerBoundaryIs>
+                    <gml:LinearRing>
+                        <gml:coordinates>4.261999903178513,51.785970497504699 4.262038589314281,51.786039202423197 4.262347282962439,51.786768209806375 4.262830090865386,51.78787984623051 4.263215324719226,51.788780988539685 4.263449442390776,51.789348181795773 4.256016345252335,51.790638724388899 4.256037421483011,51.790578636884391 4.256620830470679,51.788990944908264 4.257326811374215,51.787053650535569 4.257493994205981,51.786601740034598 4.261951055826343,51.785827833304417 4.261999903178513,51.785970497504699</gml:coordinates>
+                    </gml:LinearRing>
+                </gml:outerBoundaryIs>
+            </gml:Polygon>
+        </geometry>
+    </Field>
+    <Edge date="2018-06-05" id="1" include="1" maxstripwidth="0.50" minstripwidth="0.25" preference="0" striptype="2">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.262038589314281,51.786039202423197 4.262347282962439,51.786768209806375 4.262830090865386,51.78787984623051 4.263215324719226,51.788780988539685 4.263449442390776,51.789348181795773</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Edge>
+    <Edge date="2018-06-05" id="2" include="1" maxstripwidth="0.50" minstripwidth="0.25" preference="1" striptype="2">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.263449442390776,51.789348181795773 4.256016345252335,51.790638724388899</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Edge>
+    <Edge date="2018-06-05" id="3" include="0" maxstripwidth="0.0" minstripwidth="0.0" preference="0" striptype="0">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256016345252335,51.790638724388899 4.256037421483011,51.790578636884391</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Edge>
+    <Edge date="2018-06-05" id="4" include="1" maxstripwidth="0.50" minstripwidth="0.25" preference="0" striptype="2">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256037421483011,51.790578636884391 4.256620830470679,51.788990944908264 4.257326811374215,51.787053650535569 4.257493994205981,51.786601740034598</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Edge>
+    <Edge date="2018-06-05" id="5" include="1" maxstripwidth="0.50" minstripwidth="0.25" preference="1" striptype="2">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257493994205981,51.786601740034598 4.261951055826343,51.785827833304417</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Edge>
+    <Edge date="2018-06-05" id="6" include="1" maxstripwidth="0.50" minstripwidth="0.25" preference="0" striptype="2">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.261951055826343,51.785827833304417 4.261999903178513,51.785970497504699 4.262038589314281,51.786039202423197</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Edge>
+    <Refline date="2018-06-05" edge_id="2" id="1" type="mainField">
+        <geometry>
+            <gml:LineString>
+                <gml:coordinates>4.26344488082701,51.78934619181782 4.256039563461868,51.790631912021297</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Refline>
+    <Refline date="2018-06-05" edge_id="5" id="4" type="mainField">
+        <geometry>
+            <gml:LineString>
+                <gml:coordinates>4.257504706016651,51.786625470885085 4.261953156252548,51.785853058501758</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Refline>
+    <Path date="2018-06-05" edge_id="2" id="1" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256033703019618,51.790618929000104 4.263439018425379,51.789333209147124</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="2" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256048175528241,51.790588416185038 4.263428233353311,51.78930708061489</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="3" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256059165970909,51.790558507799396 4.263417448293561,51.789280952081704</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="4" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256070156398912,51.790528599412539 4.263406663246123,51.789254823547594</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="5" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256081146812249,51.790498691024474 4.263395878211004,51.78922869501254</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="6" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256092137210922,51.790468782635209 4.263385093188203,51.78920256647654</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="7" spraypath="1" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256103127594929,51.790438874244757 4.263374308177716,51.78917643793956</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="8" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256114117964271,51.790408965853075 4.263363523179542,51.789150309401684</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="9" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256125108318948,51.790379057460186 4.263352738193687,51.789124180862821</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="10" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.25613609865896,51.790349149066124 4.263341953220149,51.789098052323006</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="11" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256147088984307,51.790319240670833 4.263331168258926,51.789071923782288</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="12" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256158079294989,51.790289332274348 4.263320383310018,51.789045795240561</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="13" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256169069591006,51.790259423876641 4.263309598373425,51.789019666697968</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="14" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256180059872357,51.790229515477769 4.263298813449149,51.788993538154358</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="15" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256191050139044,51.790199607077646 4.263288028537189,51.788967409609832</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="16" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256202040391066,51.790169698676337 4.263277243637544,51.788941281064375</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="17" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256213030628424,51.790139790273855 4.263266458750214,51.788915152517944</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="18" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256224020851117,51.790109881870144 4.2632556738752,51.78888902397059</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="19" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256235011059144,51.790079973465225 4.263244889012505,51.78886289542227</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="20" spraypath="1" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256246001252507,51.790050065059106 4.263234104162122,51.788836766873018</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="21" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256256991431204,51.790020156651785 4.263223319324056,51.788810638322829</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="22" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256267981595238,51.789990248243235 4.263212534498305,51.788784509771681</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="23" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256278971744608,51.78996033983352 4.263201609813048,51.788758405509483</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="24" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.25628996187931,51.789930431422619 4.263190466402521,51.7887323392318</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="25" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.25630095199935,51.789900523010473 4.263179323004695,51.788706272953213</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="26" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256311942104725,51.789870614597127 4.263168179619566,51.788680206673575</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="27" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256322932195436,51.789840706182574 4.263157036247137,51.78865414039295</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="28" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256333922271482,51.789810797766805 4.263145892887407,51.788628074111287</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="29" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256344912332863,51.789780889349842 4.263134749540377,51.788602007828644</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="30" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.25635590237958,51.7897509809317 4.263123606206046,51.788575941544941</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="31" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256366892411633,51.78972107251235 4.263112462884412,51.78854987526028</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="32" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256377882429021,51.789691164091764 4.263101319575478,51.788523808974574</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="33" spraypath="1" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256388872431745,51.789661255669998 4.263090176279244,51.788497742687888</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="34" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256399862419804,51.789631347247031 4.263079032995706,51.788471676400206</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="35" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.2564108523932,51.789601438822842 4.26306788972487,51.788445610111459</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="36" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256421842351931,51.789571530397431 4.263056746466731,51.788419543821767</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="37" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256432832295997,51.789541621970862 4.263045603221293,51.788393477531038</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="38" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256443822225402,51.789511713543092 4.26303445998855,51.788367411239278</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="39" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256454812140139,51.789481805114079 4.263023316768509,51.788341344946559</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="40" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256465802040214,51.789451896683886 4.263012173561166,51.788315278652817</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="41" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256476791925625,51.789421988252514 4.263001030366522,51.788289212358016</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="42" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.25648778179637,51.789392079819891 4.262989887184577,51.788263146062285</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="43" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256498771652454,51.789362171386081 4.262978744015328,51.788237079765459</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="44" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256509761493871,51.789332262951071 4.262967600858779,51.788211013467667</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="45" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256520751320625,51.789302354514845 4.26295645771493,51.788184947168872</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="46" spraypath="1" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256531741132715,51.789272446077426 4.262945314583778,51.788158880869041</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="47" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256542730930144,51.789242537638806 4.262934171465325,51.78813281456825</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="48" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256553720712907,51.789212629198957 4.262923028359571,51.788106748266458</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="49" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256564710481007,51.789182720757957 4.262911885266514,51.788080681963592</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="50" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256575700234441,51.789152812315713 4.26290074218616,51.788054615659775</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="51" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256586689973211,51.789122903872268 4.262889599118499,51.788028549354884</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="52" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.25659767969732,51.789092995427637 4.262878456063539,51.788002483049041</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="53" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256608669406765,51.789063086981777 4.262867313021277,51.787976416742183</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="54" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256619659101546,51.789033178534737 4.262856169991714,51.787950350434279</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="55" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256630645067778,51.789003270731165 4.262845026974848,51.787924284125403</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="56" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256641538573078,51.788973378974809 4.262833883970682,51.787898217815538</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="57" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.25665243206385,51.788943487217267 4.262822740979213,51.787872151504608</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="58" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256663325540092,51.788913595458546 4.26281146202824,51.787846108805418</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="59" spraypath="1" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256674219001806,51.788883703698581 4.262800153118926,51.787820071309902</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="60" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.25668511244899,51.788853811937486 4.262788844222488,51.787794033813334</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="61" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256696005881649,51.788823920175197 4.262777535338923,51.787767996315758</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="62" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256706899299777,51.788794028411701 4.262766226468234,51.787741958817129</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="63" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256717792703379,51.788764136647053 4.26275491761042,51.787715921317414</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="64" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.25672868609245,51.788734244881205 4.26274360876548,51.787689883816746</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="65" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256739579466996,51.78870435311417 4.262732299933417,51.787663846314992</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="66" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256750472827012,51.788674461345948 4.262720991114228,51.787637808812221</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="67" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.2567613661725,51.788644569576554 4.262709682307913,51.787611771308391</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="68" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256772259503459,51.78861467780596 4.262698373514475,51.787585733803517</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="69" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256783152819892,51.7885847860342 4.26268706473391,51.78755969629762</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="70" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256794046121796,51.788554894261232 4.26267575596622,51.787533658790679</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="71" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256804939409172,51.788525002487098 4.262664447211406,51.787507621282693</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="72" spraypath="1" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256815832682021,51.788495110711764 4.262653138469465,51.787481583773683</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="73" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256826725940341,51.788465218935237 4.2626418297404,51.787455546263644</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="74" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256837619184133,51.788435327157558 4.26263052102421,51.787429508752538</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="75" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256848512413398,51.788405435378671 4.262619212320893,51.787403471240403</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="76" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256859405628135,51.788375543598612 4.262607903630452,51.787377433727251</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="77" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256870298828342,51.788345651817345 4.262596594952886,51.787351396213054</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="78" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256881192014024,51.788315760034926 4.262585286288193,51.7873253586978</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="79" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256892085185177,51.788285868251272 4.262573977636377,51.787299321181514</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="80" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256902978341802,51.788255976466473 4.262562668997433,51.787273283664206</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="81" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256913871483902,51.788226084680481 4.262551360371365,51.787247246145839</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="82" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256924764611473,51.788196192893309 4.262540051758172,51.787221208626477</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="83" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256935657724515,51.788166301104944 4.262528743157852,51.787195171106021</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="84" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256946550823029,51.788136409315406 4.262517434570408,51.787169133584541</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="85" spraypath="1" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256957443907017,51.788106517524653 4.262506125995838,51.787143096062046</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="86" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256968336976477,51.788076625732756 4.262494817434141,51.787117058538485</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="87" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256979230031411,51.788046733939673 4.26248350888532,51.7870910210139</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="88" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.256990123071816,51.788016842145389 4.262472200349373,51.787064983488285</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="89" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257001016097694,51.787986950349904 4.262460891826301,51.787038945961591</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="90" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257011909109044,51.787957058553246 4.262449583316101,51.787012908433937</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="91" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257022802105868,51.787927166755416 4.262438274818778,51.786986870905153</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="92" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257033695088164,51.787897274956364 4.262426966334329,51.786960833375367</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="93" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257044588055933,51.787867383156176 4.262415657862753,51.786934795844566</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="94" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257055481009173,51.787837491354772 4.262404349404052,51.786908758312698</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="95" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.25706637394789,51.787807599552202 4.262393040958225,51.786882720779815</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="96" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257077266872074,51.78777770774844 4.262381732525272,51.786856683245901</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="97" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257088159781735,51.787747815943462 4.262370424105193,51.786830645710928</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="98" spraypath="1" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257099052676868,51.787717924137375 4.262359115697989,51.786804608174911</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="99" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257109945557476,51.787688032330031 4.262347807303658,51.786778570637857</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="100" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257120838423553,51.787658140521508 4.262336532017875,51.786752527352448</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="101" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257131731275105,51.787628248711854 4.262325487049654,51.786726444071647</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="102" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257142624112129,51.787598356900965 4.262314442094024,51.786700360789901</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="103" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257153516934627,51.787568465088931 4.262303397150988,51.786674277507132</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="104" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257164409742599,51.787538573275675 4.262292352220546,51.786648194223396</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="105" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257175302536043,51.787508681461247 4.262281307302695,51.786622110938652</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="106" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257186195314961,51.78747878964564 4.26227026239744,51.786596027652919</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="107" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257197088079351,51.787448897828831 4.262259217504774,51.786569944366221</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="108" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257207980829215,51.787419006010872 4.262248172624704,51.786543861078506</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="109" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257218873564552,51.787389114191697 4.262237127757226,51.786517777789797</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="110" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257229766285361,51.787359222371343 4.262226082902341,51.786491694500114</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="111" spraypath="1" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257240658991646,51.787329330549795 4.262215038060051,51.786465611209408</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="112" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257251551683401,51.787299438727082 4.262203993230351,51.78643952791775</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="113" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257262444360634,51.787269546903211 4.262192948413245,51.786413444625076</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="114" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257273337023337,51.787239655078096 4.262181903608731,51.786387361331428</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="115" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257284229671513,51.787209763251823 4.26217085881681,51.786361278036765</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="116" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257295122305164,51.787179871424357 4.262159814037483,51.78633519474112</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="117" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257306014924287,51.787149979595725 4.262148769270748,51.786309111444488</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="118" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257316907528888,51.787120087765892 4.262137724516606,51.786283028146897</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="119" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257327800118956,51.787090195934873 4.262126679775058,51.78625694484829</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="120" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257338733199438,51.787060297070596 4.262115635046101,51.786230861548667</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="121" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.2573498030759,51.787030374453302 4.262104590329736,51.786204778248084</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="122" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257360872937585,51.787000451834793 4.262093545625964,51.786178694946464</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="123" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257371942784494,51.786970529215068 4.262082500934786,51.786152611643914</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="124" spraypath="1" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257383012616629,51.786940606594108 4.2620714562562,51.786126528340354</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="125" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257394082433986,51.786910683971925 4.262060411590206,51.786100445035771</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="126" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.25740515223657,51.786880761348513 4.262049366936805,51.786074361730222</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="127" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257416222024378,51.786850838723943 4.262038322295997,51.786048278423692</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="128" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.262024042853978,51.786022756868668 4.25742729179741,51.786820916098094</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="129" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.262009680381598,51.785997249733676 4.257438361555669,51.78679099347108</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="130" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.261997889094817,51.785971296092043 4.25744943129915,51.7867610708428</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="131" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257460501027857,51.786731148213306 4.261986165981536,51.785945330612734</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="132" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257471570741788,51.78670122558259 4.261977116572708,51.785918900823539</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="133" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257482640440943,51.78667130295068 4.261968067174313,51.785892471033641</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Path date="2018-06-05" edge_id="2" id="134" spraypath="0" type="mainField">
+        <geometry>
+            <gml:LineString srsName="EPSG:4258">
+                <gml:coordinates>4.257493710125327,51.786641380317519 4.261959017786348,51.785866041243125</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Path>
+    <Refline date="2018-06-05" edge_id="1" id="6" type="other">
+        <geometry>
+            <gml:LineString>
+                <gml:coordinates>4.262038589314281,51.786039202423197 4.262347282962439,51.786768209806375 4.262830090865386,51.78787984623051 4.263215324719226,51.788780988539685 4.26344488082701,51.78934619181782</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Refline>
+    <Refline date="2018-06-05" edge_id="3" id="2" type="other">
+        <geometry>
+            <gml:LineString>
+                <gml:coordinates>4.256039563461868,51.790631912021297 4.256037421483011,51.790578636884391</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Refline>
+    <Refline date="2018-06-05" edge_id="4" id="3" type="other">
+        <geometry>
+            <gml:LineString>
+                <gml:coordinates>4.256037421483011,51.790578636884391 4.256620830470679,51.788990944908257 4.257326811374215,51.787053650535569 4.257504706016651,51.786625470885085</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Refline>
+    <Refline date="2018-06-05" edge_id="6" id="5" type="other">
+        <geometry>
+            <gml:LineString>
+                <gml:coordinates>4.261953156252548,51.785853058501758 4.262038589314281,51.786039202423197</gml:coordinates>
+            </gml:LineString>
+        </geometry>
+    </Refline>
+</GAOS_parcel>

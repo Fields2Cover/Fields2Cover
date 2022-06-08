@@ -1,0 +1,152 @@
+Part 2: Objective functions
+===========================
+
+One of the main problems in the Coverage Path Planning problem is to define the objective function.
+The objective function defines how good a path is.
+By default, the objective functions are defined as minimization problems.
+
+Fields2Cover defines two kind of objective functions: Global objective functions and path objective functions.
+
+Global objective functions
+--------------------------
+
+Global objective functions are objective functions where the order of the swaths are not important. This kind of objective functions are used before the route planning. Thanks to global functions, early problems as swath generation can be solved without computing the complete path in each step. Global objective functions provided are:
+
+Field coverage
+^^^^^^^^^^^^^^
+
+Compute the percentage of the field covered by the swaths. The cost is a value between [0, 1], and it is defined as a maximization problem.
+
+.. note::
+   Right now, it only works with same width swaths.
+
+.. code-block:: cpp
+
+   double width {2.0};
+   F2CSwath swath1(F2CLineString({F2CPoint(0.0, 1.0), F2CPoint(4.0, 1.0)}), width);
+   F2CSwath swath2(F2CLineString({F2CPoint(0.0, 3.0), F2CPoint(4.0, 3.0)}), width);
+   F2CSwath swath3(F2CLineString({F2CPoint(0.0, 2.0), F2CPoint(4.0, 2.0)}), width);
+
+   F2CCells field(F2CCell(F2CLinearRing(
+     {F2CPoint(0,0), F2CPoint(4,0), F2CPoint(4,4), F2CPoint(0,4), F2CPoint(0,0)})));
+
+   f2c::obj::FieldCoverage field_cov;
+
+   std::cout << "The field coverage with swath1 is "
+     << field_cov.computeCost(field, F2CSwaths({swath1})) << " and with all of the swaths "
+     << field_cov.computeCost(field, F2CSwaths({swath1, swath2, swath3})) <<std::endl;
+
+| *The field coverage with swath1 is 0.5 and with all of the swaths 1*
+
+If you want to create an algorithm that reduce the objective function, use ``computeCostWithMinimizingSign()`` function instead, as it consider if it is a maximization or minimization problem:
+
+
+.. code-block:: cpp
+
+   std::cout << "The field coverage with sign for all of the swaths is "
+     << field_cov.computeCostWithMinimizingSign(
+     field, F2CSwaths({swath1, swath2, swath3})) <<std::endl;
+
+*The field coverage with sign for all of the swaths is -1*
+
+
+Number of swaths
+^^^^^^^^^^^^^^^^
+
+Compute the number of swaths needed to cover the field. The idea is the slowest part of covering a field is turning between swaths. If the number of swaths are reduced, the number of turns too, and consequently, the time needed to cover the field.
+
+.. code-block:: cpp
+
+  f2c::obj::NSwath n_swaths;
+
+  std::cout << "The number of swaths with swath1 is "
+     << n_swaths.computeCost(F2CSwaths({swath1})) << " and with all of the swaths "
+     << n_swaths.computeCost(field, F2CSwaths({swath1, swath2, swath3})) <<std::endl;
+
+*The number of swaths with swath1 is 1 and with all of the swaths 3*
+
+.. note::
+  As the number of swaths do not depend on the field, the parameter can be omitted.
+
+
+Overlap
+^^^^^^^
+
+Compute percentage of the overlapping area in relation with the area of the field.
+
+.. code-block:: cpp
+
+   f2c::obj::Overlaps overlaps;
+
+   std::cout << "The field overlapping with swath1 is "
+     << overlaps.computeCost(field, F2CSwaths({swath1})) << " and with all of the swaths "
+     << overlaps.computeCost(field, F2CSwaths({swath1, swath2, swath3})) <<std::endl;
+
+*The field overlapping with swath1 is 0 and with all of the swaths 0.5*
+
+
+Swath Length
+^^^^^^^^^^^^
+
+Compute the sum of the path length of each swath.
+
+.. code-block:: cpp
+
+   f2c::obj::SwathLength swath_length;
+
+   std::cout << "The swath length with swath1 is "
+     << swath_length.computeCost(F2CSwaths({swath1})) << " and with all of the swaths "
+     << swath_length.computeCost(field, F2CSwaths({swath1, swath2, swath3})) <<std::endl;
+
+*The swath length with swath1 is 4 and with all of the swaths 12*
+
+Path objective functions
+------------------------
+
+Path objective functions are those in which the order of the swaths matter.
+Those objective functions depends directly on the final path that is going to be generated.
+
+
+Distance with turns
+^^^^^^^^^^^^^^^^^^^
+
+Compute the complete distance of the path, including turns. This objective function actually computes each turn needed, so we will need to define the way to compute the turns.
+
+.. code-block:: cpp
+  :linenos:
+
+  F2CSwaths swaths_path({
+    F2CSwath(F2CLineString({F2CPoint(0.0, 0.0), F2CPoint(0.0, 1.0)})),
+    F2CSwath(F2CLineString({F2CPoint(1.0, 1.0), F2CPoint(1.0, 0.0)}))});
+  F2CRobot robot(3.0, 39.0);
+  robot.setMinRadius(0.5);
+
+  f2c::obj::CompleteTurnPathObj<f2c::pp::DubinsCurves> complete_length(robot);
+
+  std::cout << "The complete length is: " << complete_length.computeCost(swaths_path) <<
+    " =~= " << 1 + 1 + M_PI/2.0 << std::endl;
+
+*The complete length is: 3.57166 =~= 3.5708*
+
+On line 7, we define the cost function with the class to compute the turns. In this case, ``f2c::pp::DubinsCurves``.
+
+Direct distance without turns
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Compute an approximation of the distance of the path, replacing turns by straight lines.
+This is faster than computing the turns and doesn't require to provide a class to compute the turns.
+
+.. code-block:: cpp
+
+  f2c::obj::DirectDistPathObj direct_dist;
+
+  std::cout << "The aproximated length is: " <<
+    direct_dist.computeCost(swaths_path) << std::endl;
+
+*The aproximated length is: 3*
+
+
+
+
+
+
