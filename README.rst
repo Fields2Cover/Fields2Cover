@@ -5,7 +5,7 @@ Fields2Cover
   **Robust and efficient coverage paths for autonomous agricultural vehicles**
 
 
-.. image:: docs/figures/logo_fields2cover.png
+.. image:: docs/figures/logo_fields2cover.jpeg
    :align: center
 
 
