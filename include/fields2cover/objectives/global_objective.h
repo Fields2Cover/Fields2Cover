@@ -19,16 +19,6 @@ namespace obj {
 /// the field. Some of the could be f2c::obj::NSwath or f2c::obj::FieldCoverage
 class GlobalObjective {
  public:
-  /// @cond DOXYGEN_SHOULD_SKIP_THIS
-  virtual ~GlobalObjective() = default;
-  GlobalObjective() = default;
-  GlobalObjective(const GlobalObjective& copyFrom) = default;
-  GlobalObjective& operator=(const GlobalObjective& copyFrom) = default;
-  GlobalObjective(GlobalObjective &&) = default;
-  GlobalObjective& operator=(GlobalObjective &&) = default;
-  /// @endcond
-
- public:
   /// @brief Compute the cost function with minimizing sign.
   ///
   /// If the objective is to maximize the cost function, the cost is

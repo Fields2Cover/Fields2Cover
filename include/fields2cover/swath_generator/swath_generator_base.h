@@ -23,11 +23,6 @@ namespace sg {
 template <typename T>
 class SwathGeneratorBase : public obj::OptimizationClass<T> {
  public:
-  /// @cond DOXYGEN_SHOULD_SKIP_THIS
-  SwathGeneratorBase() = default;
-  virtual ~SwathGeneratorBase() = default;
-  /// @endcond
-
   virtual F2CSwaths generateBestSwaths(
       double _op_width, const F2CCell& _poly) = 0;
 

@@ -24,16 +24,6 @@ namespace obj {
 /// turns.
 class PathObjective {
  public:
-  /// @cond DOXYGEN_SHOULD_SKIP_THIS
-  virtual ~PathObjective() = default;
-  PathObjective() = default;
-  PathObjective(const PathObjective& copyFrom) = default;
-  PathObjective& operator=(const PathObjective& copyFrom) = default;
-  PathObjective(PathObjective &&) = default;
-  PathObjective& operator=(PathObjective &&) = default;
-  /// @endcond
-
- public:
   /// @brief Compute the cost function with minimizing sign.
   ///
   /// If the objective is to maximize the cost function, the cost is
