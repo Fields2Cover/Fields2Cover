@@ -14,7 +14,7 @@ set(PACKAGE_MAINTAINER "Gonzalo Mier")
 option(BUILD_CPP "Build Cpp package" ON)
 option(BUILD_TUTORIALS "Build tutorials" ON)
 option(BUILD_TESTS "Build tests" ON)
-option(BUILD_DOC "Build Documentation" ON)
+option(BUILD_DOC "Build Documentation" OFF)
 
 option(USING_MATPLOTLIB "Use Matplotlib" ON)
 
