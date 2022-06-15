@@ -112,8 +112,16 @@ TODO
 - ...
 
 
-More info
+
+
+
+Credits and more info
 ----------
+
+This library is only possible thanks to `GDAL <https://gdal.org/index.html>`_ who provides the basic types of this library. 
+Other great libraries that made Fields2Cover possible are `hbanzhaf/steering_functions <https://github.com/hbanzhaf/steering_functions>`_, `nlohmann/json <https://github.com/nlohmann/json/>`_, `leethomason/tinyxml2 <https://github.com/leethomason/tinyxml2>`_, `ttk592/spline <https://github.com/ttk592/spline>`_ and `lava/matplotlib-cpp <https://github.com/lava/matplotlib-cpp>`_
+
+
 
 This code repository is part of the project Fields2Cover which is (partly) financed by the Dutch Research Council (NWO).
 
