@@ -13,8 +13,7 @@
 #include "fields2cover/types.h"
 #include "fields2cover/objectives/global_objective.h"
 
-namespace f2c {
-namespace obj {
+namespace f2c::obj {
 
 /// Global cost function as the percentage of the field overlapped
 class Overlaps : public GlobalObjective {
@@ -28,7 +27,6 @@ class Overlaps : public GlobalObjective {
   double computeCost(const F2CCells& poly) const override;
 };
 
-}  // namespace obj
-}  // namespace f2c
+}  // namespace f2c::obj
 
 #endif  // FIELDS2COVER_OBJECTIVES_OVERLAPS_H_

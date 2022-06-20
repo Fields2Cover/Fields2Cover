@@ -16,8 +16,7 @@
 #include "fields2cover/types/LineString.h"
 #include "fields2cover/types/MultiPoint.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 enum RouteType { R_NONE = 0, R_START = 1, R_END = 2, R_START_END = 3};
 
@@ -38,7 +37,6 @@ struct Route {
 };
 
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
 
 #endif  //  FIELDS2COVER_TYPES_ROUTE_H_

@@ -6,13 +6,11 @@
 
 #include "fields2cover/route_planning/boustrophedon_order.h"
 
-namespace f2c {
-namespace rp {
+namespace f2c::rp {
 
 void BoustrophedonOrder::sortSwaths() {
   this->changeStartPoint();
 }
 
-}  // namespace rp
-}  // namespace f2c
+}  // namespace f2c::rp
 

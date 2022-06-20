@@ -11,8 +11,7 @@
 #include "fields2cover/types.h"
 #include "fields2cover/path_planning/turning_base.h"
 
-namespace f2c {
-namespace pp {
+namespace f2c::pp {
 
 /// Dubins' curves planner
 class DubinsCurves : public TurningBase {
@@ -34,7 +33,6 @@ class DubinsCurves : public TurningBase {
   double discretization {0.01};
 };
 
-}  // namespace pp
-}  // namespace f2c
+}  // namespace f2c::pp
 
 #endif  // FIELDS2COVER_PATH_PLANNING_DUBINS_CURVES_H_

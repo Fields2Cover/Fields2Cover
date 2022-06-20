@@ -13,8 +13,7 @@
 #include "fields2cover/types.h"
 #include "fields2cover/objectives/global_objective.h"
 
-namespace f2c {
-namespace obj {
+namespace f2c::obj {
 
 /// @brief Base class to classes that have a global cost function as objective.
 template <typename T>
@@ -50,7 +49,6 @@ class OptimizationClass {
   T objective_;
 };
 
-}  // namespace obj
-}  // namespace f2c
+}  // namespace f2c::obj
 
 #endif  // FIELDS2COVER_OBJECTIVES_OPTIMIZATION_CLASS_H_

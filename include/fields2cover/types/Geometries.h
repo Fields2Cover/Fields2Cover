@@ -15,8 +15,7 @@
 #include <cstddef>
 #include "fields2cover/types/Geometry.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 template <class SAMETYPE, class T, OGRwkbGeometryType R, class CHILDRENTYPE>
 struct Geometries : public Geometry<T, R> {
@@ -94,8 +93,7 @@ struct Geometries : public Geometry<T, R> {
   #endif
 };
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
 
 #include "fields2cover/types/Geometries_impl.hpp"
 

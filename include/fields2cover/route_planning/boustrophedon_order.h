@@ -11,8 +11,7 @@
 #include "fields2cover/types.h"
 #include "fields2cover/route_planning/single_cell_swaths_order_base.h"
 
-namespace f2c {
-namespace rp {
+namespace f2c::rp {
 
 class BoustrophedonOrder : public SingleCellSwathsOrderBase {
  public:
@@ -23,7 +22,6 @@ class BoustrophedonOrder : public SingleCellSwathsOrderBase {
 };
 
 
-}  // namespace rp
-}  // namespace f2c
+}  // namespace f2c::rp
 
 #endif  // FIELDS2COVER_ROUTE_PLANNING_BOUSTROPHEDON_ORDER_H_

@@ -6,8 +6,7 @@
 
 #include "fields2cover/types/Swath.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 Swath::Swath() = default;
 Swath::Swath(const LineString& path) : path_(path) {}
@@ -188,5 +187,5 @@ void Swath::setCreationDir(bool creation_dir) {
 
 
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
+

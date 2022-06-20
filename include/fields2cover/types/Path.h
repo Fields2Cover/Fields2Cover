@@ -16,8 +16,7 @@
 #include "fields2cover/types/Swath.h"
 #include "fields2cover/types/Point.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 enum PathSectionType {
   SWATH = 1,
@@ -61,7 +60,6 @@ struct Path {
   Path& reduce(double min_dist_equal = 0.1);
 };
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
 
 #endif  //  FIELDS2COVER_TYPES_PATH_H_

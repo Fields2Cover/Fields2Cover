@@ -6,8 +6,7 @@
 
 #include "fields2cover/types/MultiLineString.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 MultiLineString::MultiLineString() {
   data = std::shared_ptr<OGRMultiLineString>(static_cast<OGRMultiLineString*>(
@@ -110,6 +109,5 @@ MultiLineString MultiLineString::getLineSegments(const LinearRing& line) {
   return getLineSegments(LineString(line));
 }
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
 

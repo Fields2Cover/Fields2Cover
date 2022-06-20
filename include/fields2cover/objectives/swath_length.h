@@ -12,8 +12,7 @@
 #include "fields2cover/types.h"
 #include "fields2cover/objectives/global_objective.h"
 
-namespace f2c {
-namespace obj {
+namespace f2c::obj {
 
 /// Global cost function as the length of the swaths
 class SwathLength : public GlobalObjective {
@@ -23,7 +22,6 @@ class SwathLength : public GlobalObjective {
   double computeCost(const F2CSwaths& swaths) const override;
 };
 
-}  // namespace obj
-}  // namespace f2c
+}  // namespace f2c::obj
 
 #endif  // FIELDS2COVER_OBJECTIVES_SWATH_LENGTH_H_

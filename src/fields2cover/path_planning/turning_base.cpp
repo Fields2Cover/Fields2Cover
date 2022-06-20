@@ -6,8 +6,7 @@
 
 #include "fields2cover/path_planning/turning_base.h"
 
-namespace f2c {
-namespace pp {
+namespace f2c::pp {
 
 void TurningBase::setRobotParams(const F2CRobot& params) {
   robot = params;
@@ -134,5 +133,5 @@ bool TurningBase::isTurnValid(const types::Path& path,
   return true;
 }
 
-}  // namespace pp
-}  // namespace f2c
+}  // namespace f2c::pp
+

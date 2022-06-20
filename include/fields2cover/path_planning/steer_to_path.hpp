@@ -13,8 +13,7 @@
 #include "fields2cover/types.h"
 
 
-namespace f2c {
-namespace pp {
+namespace f2c::pp {
 
 
 /// Cast steer::State type from steering_functions library to
@@ -41,8 +40,6 @@ inline types::Path steerStatesToPath(
   return path;
 }
 
+}  // namespace f2c::pp
 
-
-}  // namespace pp
-}  // namespace f2c
 #endif  // FIELDS2COVER_PATH_PLANNING_STEER_TO_PATH_HPP_

@@ -6,8 +6,7 @@
 
 #include "fields2cover/types/Cell.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 Cell::Cell() {
   data = std::shared_ptr<OGRPolygon>(
@@ -204,5 +203,5 @@ Cell Cell::Intersection(const Cell& c) const {
   }
 }
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
+

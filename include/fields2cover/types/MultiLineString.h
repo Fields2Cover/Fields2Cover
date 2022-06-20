@@ -13,8 +13,7 @@
 #include "fields2cover/types/Geometries.h"
 #include "fields2cover/types/LineString.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 struct MultiLineString :
     public Geometries<MultiLineString, OGRMultiLineString,
@@ -74,7 +73,6 @@ MultiLineString MultiLineString::Intersection(
 }
 
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
 
 #endif  // FIELDS2COVER_TYPES_MULTILINESTRING_H_

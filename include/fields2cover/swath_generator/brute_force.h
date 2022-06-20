@@ -15,8 +15,7 @@
 #include "fields2cover/types.h"
 #include "fields2cover/swath_generator/swath_generator_base.h"
 
-namespace f2c {
-namespace sg {
+namespace f2c::sg {
 
 template <typename T>
 class BruteForce : public SwathGeneratorBase<T> {
@@ -30,8 +29,7 @@ class BruteForce : public SwathGeneratorBase<T> {
 };
 
 
-}  // namespace sg
-}  // namespace f2c
+}  // namespace f2c::sg
 
 #include "fields2cover/swath_generator/brute_force_impl.hpp"
 

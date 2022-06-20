@@ -10,8 +10,7 @@
 
 #include "fields2cover/types.h"
 
-namespace f2c {
-namespace obj {
+namespace f2c::obj {
 
 /// @brief Base class for global objectives.
 ///
@@ -123,7 +122,6 @@ class GlobalObjective {
 };
 
 
-}  // namespace obj
-}  // namespace f2c
+}  // namespace f2c::obj
 
 #endif  // FIELDS2COVER_OBJECTIVES_GLOBAL_OBJECTIVE_H_

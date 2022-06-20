@@ -11,8 +11,7 @@
 #include "fields2cover/types.h"
 #include "fields2cover/path_planning/turning_base.h"
 
-namespace f2c {
-namespace pp {
+namespace f2c::pp {
 
 /// Reeds-Shepp's curves planner with continuous curves
 class ReedsSheppCurvesHC : public TurningBase {
@@ -34,7 +33,6 @@ class ReedsSheppCurvesHC : public TurningBase {
   double discretization {0.01};
 };
 
-}  // namespace pp
-}  // namespace f2c
+}  // namespace f2c::pp
 
 #endif  // FIELDS2COVER_PATH_PLANNING_REEDS_SHEPP_CURVES_HC_H_

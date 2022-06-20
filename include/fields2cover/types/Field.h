@@ -13,8 +13,7 @@
 #include "fields2cover/types/Point.h"
 #include "fields2cover/types/Cells.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 struct Field {
  public:
@@ -47,7 +46,6 @@ struct Field {
   void setUTMCoordSystem(const std::string& utm);
 };
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
 
 #endif  //  FIELDS2COVER_TYPES_FIELD_H_

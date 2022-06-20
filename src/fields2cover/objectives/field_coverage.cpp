@@ -6,8 +6,7 @@
 
 #include "fields2cover/objectives/field_coverage.h"
 
-namespace f2c {
-namespace obj {
+namespace f2c::obj {
 
 double FieldCoverage::computeCost(
     const F2CCell& poly, const F2CSwaths& swaths) const {
@@ -30,6 +29,5 @@ bool FieldCoverage::isMinimizing() const {
   return false;
 }
 
-}  // namespace obj
-}  // namespace f2c
+}  // namespace f2c::obj
 

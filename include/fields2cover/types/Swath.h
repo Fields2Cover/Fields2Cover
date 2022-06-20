@@ -16,8 +16,7 @@
 #include "fields2cover/types/LineString.h"
 #include "fields2cover/types/Cells.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 struct Swath {
  public:
@@ -94,7 +93,6 @@ struct Swath {
 };
 
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
 
 #endif  //  FIELDS2COVER_TYPES_SWATH_H_

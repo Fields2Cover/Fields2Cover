@@ -12,8 +12,7 @@
 #include "fields2cover/types/Geometries.h"
 #include "fields2cover/types/Point.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 struct MultiPoint :
   public Geometries<MultiPoint, OGRMultiPoint, wkbMultiPoint, Point> {
@@ -41,7 +40,6 @@ struct MultiPoint :
   void operator*=(double b);
 };
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
 
 #endif  // FIELDS2COVER_TYPES_MULTIPOINT_H_

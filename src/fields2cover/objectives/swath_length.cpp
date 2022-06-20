@@ -6,8 +6,7 @@
 
 #include "fields2cover/objectives/swath_length.h"
 
-namespace f2c {
-namespace obj {
+namespace f2c::obj {
 
 double SwathLength::computeCost(const F2CSwath& s) const {
   return s.getLength();
@@ -18,6 +17,5 @@ double SwathLength::computeCost(const F2CSwaths& swaths) const {
     [] (int init, const F2CSwath& s) {return init + s.getLength();});
 }
 
-}  // namespace obj
-}  // namespace f2c
+}  // namespace f2c::obj
 

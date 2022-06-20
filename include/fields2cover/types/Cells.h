@@ -15,8 +15,7 @@
 #include "fields2cover/types/LineString.h"
 #include "fields2cover/types/Cell.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 struct Cells : public Geometries<Cells, OGRMultiPolygon, wkbMultiPolygon,
     Cell> {
@@ -97,7 +96,6 @@ Cells Cells::Buffer(const Geometry<T, R>& geom, double width) {
 }
 
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
 
 #endif  // FIELDS2COVER_TYPES_CELLS_H_

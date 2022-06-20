@@ -8,8 +8,7 @@
 #ifndef FIELDS2COVER_SWATH_GENERATOR_SWATH_GENERATOR_BASE_IMPL_HPP_
 #define FIELDS2COVER_SWATH_GENERATOR_SWATH_GENERATOR_BASE_IMPL_HPP_
 
-namespace f2c {
-namespace sg {
+namespace f2c::sg {
 
 template <typename T>
 F2CSwathsByCells SwathGeneratorBase<T>::generateBestSwaths(
@@ -56,7 +55,6 @@ double SwathGeneratorBase<T>::getBestAngle() const {
   return this->best_angle;
 }
 
-}  // namespace sg
-}  // namespace f2c
+}  // namespace f2c::sg
 
 #endif  // FIELDS2COVER_SWATH_GENERATOR_SWATH_GENERATOR_BASE_IMPL_HPP_

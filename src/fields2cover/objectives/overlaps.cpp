@@ -6,8 +6,7 @@
 
 #include "fields2cover/objectives/overlaps.h"
 
-namespace f2c {
-namespace obj {
+namespace f2c::obj {
 
 double Overlaps::computeCost(const F2CCell& poly, const F2CSwaths& swaths) const {
   return computeCost(F2CCells(poly), swaths);
@@ -37,6 +36,5 @@ double Overlaps::computeCost(const F2CCells& poly) const {
   return area_overlaped / poly.getArea();
 }
 
-}  // namespace obj
-}  // namespace f2c
+}  // namespace f2c::obj
 

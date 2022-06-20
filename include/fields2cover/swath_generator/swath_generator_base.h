@@ -17,8 +17,7 @@
 #include "fields2cover/types.h"
 #include "fields2cover/objectives/optimization_class.h"
 
-namespace f2c {
-namespace sg {
+namespace f2c::sg {
 
 template <typename T>
 class SwathGeneratorBase : public obj::OptimizationClass<T> {
@@ -41,8 +40,7 @@ class SwathGeneratorBase : public obj::OptimizationClass<T> {
   double best_angle {-1e7};  // radians
 };
 
-}  // namespace sg
-}  // namespace f2c
+}  // namespace f2c::sg
 
 #include "fields2cover/swath_generator/swath_generator_base_impl.hpp"
 

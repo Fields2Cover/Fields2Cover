@@ -8,8 +8,7 @@
 #ifndef FIELDS2COVER_TYPES_GEOMETRIES_IMPL_HPP_
 #define FIELDS2COVER_TYPES_GEOMETRIES_IMPL_HPP_
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 template <class SAMETYPE, class T, OGRwkbGeometryType R, class CHILDRENTYPE>
 double Geometries<SAMETYPE, T, R, CHILDRENTYPE>::getArea() const {
@@ -167,7 +166,6 @@ typename Geometries<SAMETYPE, T, R, CHILDRENTYPE>::ConstIterator
   return poSelf->end();
 }
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
 
 #endif  // FIELDS2COVER_TYPES_GEOMETRIES_IMPL_HPP_

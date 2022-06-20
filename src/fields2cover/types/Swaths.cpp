@@ -7,8 +7,7 @@
 #include "fields2cover/types/Swaths.h"
 #include <algorithm>
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 Swaths::Swaths() = default;
 Swaths::Swaths(int i) : data(i) {}
@@ -131,5 +130,5 @@ Swaths Swaths::clone() const {
 
 
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
+

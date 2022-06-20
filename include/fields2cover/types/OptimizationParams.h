@@ -8,8 +8,7 @@
 #ifndef FIELDS2COVER_TYPES_OPTIMIZATIONPARAMS_H_
 #define FIELDS2COVER_TYPES_OPTIMIZATIONPARAMS_H_
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 struct OptimizationParams {
  public:
@@ -21,7 +20,6 @@ struct OptimizationParams {
   double increment;
   double penalty_extra_swath;
 };
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
 
 #endif  //  FIELDS2COVER_TYPES_OPTIMIZATIONPARAMS_H_

@@ -6,8 +6,7 @@
 
 #include "fields2cover/objectives/n_swath.h"
 
-namespace f2c {
-namespace obj {
+namespace f2c::obj {
 
 double NSwath::computeCost(const F2CSwath& s) const {
   return 1.0;
@@ -17,6 +16,5 @@ double NSwath::computeCost(const F2CSwaths& swaths) const {
   return swaths.size();
 }
 
-}  // namespace obj
-}  // namespace f2c
+}  // namespace f2c::obj
 

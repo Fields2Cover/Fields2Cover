@@ -16,8 +16,7 @@
 #include <string>
 #include <boost/math/constants/constants.hpp>
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 class EmptyDestructor {};
 
@@ -131,13 +130,11 @@ struct Geometry {
   std::shared_ptr<T> data;
 };
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
 
 #include "fields2cover/types/Geometry_impl.hpp"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 template struct Geometry<OGRPoint, wkbPoint>;
 template struct Geometry<OGRMultiPoint, wkbMultiPoint>;
 template struct Geometry<OGRLinearRing, wkbLinearRing>;
@@ -145,8 +142,7 @@ template struct Geometry<OGRLineString, wkbLineString>;
 template struct Geometry<OGRMultiLineString, wkbMultiLineString>;
 template struct Geometry<OGRPolygon, wkbPolygon>;
 template struct Geometry<OGRMultiPolygon, wkbMultiPolygon>;
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
 
 
 #endif  // FIELDS2COVER_TYPES_GEOMETRY_H_

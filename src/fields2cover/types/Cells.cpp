@@ -6,8 +6,7 @@
 
 #include "fields2cover/types/Cells.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 Cells::Cells() {
   data = std::shared_ptr<OGRMultiPolygon>(
@@ -205,5 +204,5 @@ LineString Cells::createLineUntilBorder(
 }
 
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
+

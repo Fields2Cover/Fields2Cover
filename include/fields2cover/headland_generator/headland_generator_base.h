@@ -11,8 +11,7 @@
 #include "fields2cover/types.h"
 #include "fields2cover/objectives/optimization_class.h"
 
-namespace f2c {
-namespace hg {
+namespace f2c::hg {
 
 /// Base class to generate the headlands.
 template <typename T>
@@ -31,7 +30,6 @@ class HeadlandGeneratorBase : public obj::OptimizationClass<T> {
       double dist_headland) = 0;
 };
 
-}  // namespace hg
-}  // namespace f2c
+}  // namespace f2c::hg
 
 #endif  // FIELDS2COVER_HEADLAND_GENERATOR_HEADLAND_GENERATOR_BASE_H_

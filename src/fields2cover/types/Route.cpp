@@ -6,8 +6,7 @@
 
 #include "fields2cover/types/Route.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 double Route::getLength() const {
   return getRouteAsLine().getLength();
@@ -59,5 +58,5 @@ Route Route::clone() const {
 }
 
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
+

@@ -6,8 +6,7 @@
 
 #include "fields2cover/types/Point.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 Point::Point() {
   data = std::shared_ptr<OGRPoint>(
@@ -112,5 +111,5 @@ Point Point::getPointFromAngle(double angle, double dist) const {
 
 
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
+

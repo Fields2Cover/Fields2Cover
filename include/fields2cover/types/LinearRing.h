@@ -12,8 +12,7 @@
 #include "fields2cover/types/Geometries.h"
 #include "fields2cover/types/Point.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 struct LinearRing : public Geometries<LinearRing, OGRLinearRing, wkbLinearRing,
   Point> {
@@ -47,7 +46,6 @@ struct LinearRing : public Geometries<LinearRing, OGRLinearRing, wkbLinearRing,
 };
 
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
 
 #endif  // FIELDS2COVER_TYPES_LINEARRING_H_

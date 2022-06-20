@@ -6,8 +6,7 @@
 
 #include "fields2cover/objectives/path_objective.h"
 
-namespace f2c {
-namespace obj {
+namespace f2c::obj {
 
 double PathObjective::computeCost(
     const F2CPoint& p1, const F2CPoint& p2) {
@@ -132,6 +131,5 @@ double PathObjective::computeCost(const F2CPath& p) {
   return p.length();
 }
 
-}  // namespace obj
-}  // namespace f2c
+}  // namespace f2c::obj
 

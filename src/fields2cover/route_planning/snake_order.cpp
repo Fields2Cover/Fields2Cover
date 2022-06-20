@@ -6,8 +6,7 @@
 
 #include "fields2cover/route_planning/snake_order.h"
 
-namespace f2c {
-namespace rp {
+namespace f2c::rp {
 
 void SnakeOrder::sortSwaths() {
   this->changeStartPoint();
@@ -23,6 +22,5 @@ void SnakeOrder::sortSwaths() {
 }
 
 
-}  // namespace rp
-}  // namespace f2c
+}  // namespace f2c::rp
 

@@ -11,8 +11,7 @@
 #include <vector>
 #include "fields2cover/types.h"
 
-namespace f2c {
-namespace obj {
+namespace f2c::obj {
 
 
 /// @brief Base class for objectives that are affected by the final path.
@@ -165,7 +164,6 @@ class PathObjective {
 };
 
 
-}  // namespace obj
-}  // namespace f2c
+}  // namespace f2c::obj
 
 #endif  // FIELDS2COVER_OBJECTIVES_PATH_OBJECTIVE_H_

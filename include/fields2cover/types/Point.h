@@ -16,8 +16,7 @@
 #include <vector>
 #include "fields2cover/types/Geometry.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 struct Point : public Geometry<OGRPoint, wkbPoint> {
  public:
@@ -86,8 +85,6 @@ T Point::rotateFromPoint(double angle, const T& t) const {
   return res;
 }
 
-}  // namespace types
-}  // namespace f2c
 
 inline OGRPoint operator+(const OGRPoint& a, const OGRPoint& b) {
   return std::move(OGRPoint(
@@ -173,5 +170,6 @@ inline T operator-(const T& t, const f2c::types::Point& dir) {
   return res;
 }
 
+}  // namespace f2c::types
 
 #endif  // FIELDS2COVER_TYPES_POINT_H_

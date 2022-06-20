@@ -15,8 +15,7 @@
 #include "fields2cover/types/Cells.h"
 #include "fields2cover/types/Swath.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 struct Swaths {
   Swaths();
@@ -66,7 +65,6 @@ struct Swaths {
 };
 
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
 
 #endif  //  FIELDS2COVER_TYPES_SWATHS_H_

@@ -6,8 +6,7 @@
 
 #include "fields2cover/types/LineString.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 LineString::LineString() {
   data = std::shared_ptr<OGRLineString>(
@@ -90,5 +89,5 @@ Point LineString::EndPoint() const {
 }
 
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
+

@@ -10,8 +10,7 @@
 
 #include <utility>
 
-namespace f2c {
-namespace hg {
+namespace f2c::hg {
 
 
 template <typename T>
@@ -31,7 +30,6 @@ F2CCells ConstHL<T>::generateHeadlands(
 }
 
 
-}  // namespace hg
-}  // namespace f2c
+}  // namespace f2c::hg
 
 #endif  // FIELDS2COVER_HEADLAND_GENERATOR_CONSTANT_HEADLAND_IMPL_HPP_

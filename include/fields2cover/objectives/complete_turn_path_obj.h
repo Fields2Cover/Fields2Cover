@@ -13,8 +13,7 @@
 #include "fields2cover/objectives/direct_dist_path_obj.h"
 #include "fields2cover/path_planning/turning_base.h"
 
-namespace f2c {
-namespace obj {
+namespace f2c::obj {
 
 /// @brief Class to compute the cost of turning from one point to another.
 /// @details This is the closest result to the real cost of executing the path
@@ -63,7 +62,6 @@ double CompleteTurnPathObj<T, R>::computeCost(
 }
 
 
-}  // namespace obj
-}  // namespace f2c
+}  // namespace f2c::obj
 
 #endif  // FIELDS2COVER_OBJECTIVES_COMPLETE_TURN_PATH_OBJ_H_

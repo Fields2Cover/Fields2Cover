@@ -11,8 +11,7 @@
 #include <utility>
 #include <limits>
 
-namespace f2c {
-namespace sg {
+namespace f2c::sg {
 
 template <typename T>
 F2CSwaths BruteForce<T>::generateBestSwaths(
@@ -43,7 +42,6 @@ F2CSwathsByCells BruteForce<T>::generateBestSwaths(
 }
 
 
-}  // namespace sg
-}  // namespace f2c
+}  // namespace f2c::sg
 
 #endif  // FIELDS2COVER_SWATH_GENERATOR_BRUTE_FORCE_IMPL_HPP_

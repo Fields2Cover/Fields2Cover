@@ -12,8 +12,7 @@
 #include <vector>
 #include <string>
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 template <class T, OGRwkbGeometryType R>
 Geometry<T, R>::Geometry() : data(
@@ -254,7 +253,6 @@ void Geometry<T, R>::importFromWkt(const std::string& text) {
 }
 
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
 
 #endif  // FIELDS2COVER_TYPES_GEOMETRY_IMPL_HPP_

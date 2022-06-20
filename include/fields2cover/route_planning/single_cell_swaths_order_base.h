@@ -10,8 +10,7 @@
 
 #include "fields2cover/types.h"
 
-namespace f2c {
-namespace rp {
+namespace f2c::rp {
 
 
 class SingleCellSwathsOrderBase {
@@ -36,7 +35,6 @@ class SingleCellSwathsOrderBase {
 
 
 
-}  // namespace rp
-}  // namespace f2c
+}  // namespace f2c::rp
 
 #endif  // FIELDS2COVER_ROUTE_PLANNING_SINGLE_CELL_SWATHS_ORDER_BASE_H_

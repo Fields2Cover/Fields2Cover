@@ -6,8 +6,7 @@
 
 #include "fields2cover/types/MultiPoint.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 MultiPoint::MultiPoint() {
   data = std::shared_ptr<OGRMultiPoint>(
@@ -70,5 +69,5 @@ void MultiPoint::operator*=(double b) {
   }
 }
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
+

@@ -6,8 +6,7 @@
 
 #include "fields2cover/path_planning/path_planning.h"
 
-namespace f2c {
-namespace pp {
+namespace f2c::pp {
 
 F2CPath PathPlanning::searchBestPath(const F2CSwaths& swaths,
     TurningBase& turn) {
@@ -33,6 +32,5 @@ F2CPath PathPlanning::searchBestPath(const F2CSwaths& swaths,
   return path;
 }
 
-}  // namespace pp
-}  // namespace f2c
+}  // namespace f2c::pp
 

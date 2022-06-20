@@ -6,8 +6,7 @@
 
 #include "fields2cover/types/Field.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 Field::Field() = default;
 Field::Field(const Cells& cells, const std::string& id_p) : id(id_p) {
@@ -74,6 +73,5 @@ void Field::setUTMCoordSystem(const std::string& utm) {
   coord_sys = "UTM:" + utm;
 }
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
 

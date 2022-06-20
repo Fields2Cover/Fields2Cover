@@ -6,8 +6,7 @@
 
 #include "fields2cover/types/LinearRing.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 LinearRing::LinearRing() {
   data = std::shared_ptr<OGRLinearRing>(
@@ -97,5 +96,5 @@ Point LinearRing::EndPoint() const {
 }
 
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
+

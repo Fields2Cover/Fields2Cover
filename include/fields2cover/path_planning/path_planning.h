@@ -13,8 +13,7 @@
 #include "fields2cover/objectives/optimization_class.h"
 #include "fields2cover/path_planning/turning_base.h"
 
-namespace f2c {
-namespace pp {
+namespace f2c::pp {
 
 /// Path planning class to connect a path using a TurningBase class method
 class PathPlanning {
@@ -26,7 +25,6 @@ class PathPlanning {
   double turn_point_dist {0.1};
 };
 
-}  // namespace pp
-}  // namespace f2c
+}  // namespace f2c::pp
 
 #endif  // FIELDS2COVER_PATH_PLANNING_PATH_PLANNING_H_

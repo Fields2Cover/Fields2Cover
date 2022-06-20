@@ -17,8 +17,7 @@
 #include "fields2cover/types/LineString.h"
 #include "fields2cover/types/MultiLineString.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 // Function to concat string easily with numbers
 template < typename... Args >
@@ -93,7 +92,6 @@ struct Cell : public Geometries<Cell, OGRPolygon, wkbPolygon, LinearRing> {
   LineString createLineUntilBorder(const f2c::types::Point& p, double ang);
 };
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
 
 #endif  // FIELDS2COVER_TYPES_CELL_H_

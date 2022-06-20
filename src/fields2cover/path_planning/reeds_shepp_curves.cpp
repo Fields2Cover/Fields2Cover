@@ -8,8 +8,7 @@
 #include "fields2cover/path_planning/steer_to_path.hpp"
 #include "fields2cover/path_planning/reeds_shepp_curves.h"
 
-namespace f2c {
-namespace pp {
+namespace f2c::pp {
 
 ReedsSheppCurves::ReedsSheppCurves(const F2CRobot& params) {
   setRobotParams(params);
@@ -38,5 +37,5 @@ F2CPath ReedsSheppCurves::createSimpleTurn(double dist_start_pos,
       robot.max_vel ? *robot.max_vel : robot.cruise_speed);
 }
 
-}  // namespace pp
-}  // namespace f2c
+}  // namespace f2c::pp
+

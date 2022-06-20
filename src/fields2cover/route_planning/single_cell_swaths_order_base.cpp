@@ -7,8 +7,7 @@
 #include <algorithm>
 #include "fields2cover/route_planning/single_cell_swaths_order_base.h"
 
-namespace f2c {
-namespace rp {
+namespace f2c::rp {
 
 SingleCellSwathsOrderBase::SingleCellSwathsOrderBase(F2CSwaths& swaths) {
   setSwaths(swaths);
@@ -40,6 +39,5 @@ void SingleCellSwathsOrderBase::changeStartPoint() {
 
 
 
-}  // namespace rp
-}  // namespace f2c
+}  // namespace f2c::rp
 

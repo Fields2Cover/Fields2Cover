@@ -8,8 +8,7 @@
 #include <numeric>
 #include "fields2cover/types/Path.h"
 
-namespace f2c {
-namespace types {
+namespace f2c::types {
 
 Path& Path::operator+=(const Path& path) {
   for (auto&& p : path.points) {
@@ -247,5 +246,5 @@ Path& Path::reduce(double min_dist_equal) {
 
 
 
-}  // namespace types
-}  // namespace f2c
+}  // namespace f2c::types
+

@@ -6,8 +6,7 @@
 
 #include "fields2cover/objectives/direct_dist_path_obj.h"
 
-namespace f2c {
-namespace obj {
+namespace f2c::obj {
 
 double DirectDistPathObj::computeCost(
     const F2CPoint& p1, double ang1,
@@ -15,6 +14,5 @@ double DirectDistPathObj::computeCost(
   return p1.Distance(p2);
 }
 
-}  // namespace obj
-}  // namespace f2c
+}  // namespace f2c::obj
 

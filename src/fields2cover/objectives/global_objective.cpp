@@ -6,8 +6,7 @@
 
 #include "fields2cover/objectives/global_objective.h"
 
-namespace f2c {
-namespace obj {
+namespace f2c::obj {
 
 bool GlobalObjective::isMinimizing() const {
   return true;
@@ -194,6 +193,5 @@ double GlobalObjective::computeCost(
 }
 
 
-}  // namespace obj
-}  // namespace f2c
+}  // namespace f2c::obj
 

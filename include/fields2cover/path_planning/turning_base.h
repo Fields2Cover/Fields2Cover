@@ -18,8 +18,7 @@
 #include "fields2cover/objectives/optimization_class.h"
 #include "fields2cover/utils/random.h"
 
-namespace f2c {
-namespace pp {
+namespace f2c::pp {
 
 /// Base class for turn planners
 class TurningBase {
@@ -96,7 +95,6 @@ class TurningBase {
   Random rand_;
 };
 
-}  // namespace pp
-}  // namespace f2c
+}  // namespace f2c::pp
 
 #endif  // FIELDS2COVER_PATH_PLANNING_TURNING_BASE_H_
