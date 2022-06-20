@@ -23,14 +23,14 @@ struct Cells : public Geometries<Cells, OGRMultiPolygon, wkbMultiPolygon,
  public:
   using Geometries<Cells, OGRMultiPolygon, wkbMultiPolygon, Cell>::Geometries;
   Cells();
-  explicit Cells(const OGRGeometry* _geom);
+  explicit Cells(const OGRGeometry* geom);
 
-  explicit Cells(const Cell& _c);
+  explicit Cells(const Cell& c);
 
   void operator*=(double b);
 
-  void addGeometry(const Cell& _c);
-  void addRing(int i, const LinearRing& _ring);
+  void addGeometry(const Cell& c);
+  void addRing(int i, const LinearRing& ring);
 
   size_t size() const;
 
@@ -50,47 +50,47 @@ struct Cells : public Geometries<Cells, OGRMultiPolygon, wkbMultiPolygon,
 
   bool isConvex() const;
 
-  Cells Intersection(const Cells& _c) const;
+  Cells Intersection(const Cells& c) const;
 
-  Cells Difference(const Cells& _c) const;
+  Cells Difference(const Cells& c) const;
 
-  Cells splitByLine(const LineString& _line) const;
+  Cells splitByLine(const LineString& line) const;
 
-  Cells splitByLine(const MultiLineString& _lines) const;
+  Cells splitByLine(const MultiLineString& lines) const;
 
-  Cells Intersection(const Cell& _c) const;
+  Cells Intersection(const Cell& c) const;
 
   static Cells Intersection(
-      const Cell& cell, const Cell& _c);
+      const Cell& cell, const Cell& c);
 
-  LineString getSemiLongCurve(const Point& _point, double _angle) const;
+  LineString getSemiLongCurve(const Point& point, double angle) const;
 
-  LineString getStraightLongCurve(const Point& _point, double _angle) const;
+  LineString getStraightLongCurve(const Point& point, double angle) const;
 
-  MultiLineString getLinesInside(const LineString& _line) const;
+  MultiLineString getLinesInside(const LineString& line) const;
 
-  MultiLineString getLinesInside(const MultiLineString& _lines) const;
+  MultiLineString getLinesInside(const MultiLineString& lines) const;
 
-  Cells getCellsInside(const Cells& _cell) const;
+  Cells getCellsInside(const Cells& cell) const;
 
   bool isPointInBorder(const Point& p) const;
 
-  bool isPointIn(const Point& _p) const;
+  bool isPointIn(const Point& p) const;
 
   Cell getCellWherePoint(const Point& p) const;
 
   LineString createLineUntilBorder(
-      const f2c::types::Point& _p, double _ang) const;
+      const f2c::types::Point& p, double ang) const;
 
   template <class T, OGRwkbGeometryType R>
-  static Cells Buffer(const Geometry<T, R>& _geom, double width);
+  static Cells Buffer(const Geometry<T, R>& geom, double width);
 };
 
 
 
 template <class T, OGRwkbGeometryType R>
-Cells Cells::Buffer(const Geometry<T, R>& _geom, double width) {
-  auto buffer = _geom->Buffer(width);
+Cells Cells::Buffer(const Geometry<T, R>& geom, double width) {
+  auto buffer = geom->Buffer(width);
   Cells cells {buffer};
   OGRGeometryFactory::destroyGeometry(buffer);
   return cells;

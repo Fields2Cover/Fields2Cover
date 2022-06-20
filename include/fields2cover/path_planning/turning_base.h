@@ -31,58 +31,58 @@ class TurningBase {
 
  public:
   /// Setter for robot parameters
-  void setRobotParams(const F2CRobot& _params);
+  void setRobotParams(const F2CRobot& params);
 
   /// @brief Create a turn that goes from one point with a certain angle to
   /// another point.
   /// @details Start and end point are connected with a line that creates the
   /// inferior border of the turn. The top border is declared in the robot
   /// parameters.
-  /// @param _start_pos Start point
-  /// @param _start_angle Start angle
-  /// @param _end_pos End point
-  /// @param _end_angle End angle
+  /// @param start_pos Start point
+  /// @param start_angle Start angle
+  /// @param end_pos End point
+  /// @param end_angle End angle
   /// @return Path with the computed turn
-  F2CPath createTurn(const F2CPoint& _start_pos, double _start_angle,
-      const F2CPoint& _end_pos, double _end_angle);
+  F2CPath createTurn(const F2CPoint& start_pos, double start_angle,
+      const F2CPoint& end_pos, double end_angle);
 
   /// @brief Generate a turn if it has not been computed before.
-  /// @param _dist_start_pos Distance between start and end point
-  /// @param _start_angle Angle when going into the headland
+  /// @param dist_start_pos Distance between start and end point
+  /// @param start_angle Angle when going into the headland
   /// (0 deg is the angle of the headland)
-  /// @param _end_angle Angle when going out of the headland
-  F2CPath createTurnIfNotCached(double _dist_start_pos,
-      double _start_angle, double _end_angle);
+  /// @param end_angle Angle when going out of the headland
+  F2CPath createTurnIfNotCached(double dist_start_pos,
+      double start_angle, double end_angle);
 
   /// @brief Create a turn.
-  /// @param _dist_start_pos Distance between start and end point
-  /// @param _start_angle Angle when going into the headland
+  /// @param dist_start_pos Distance between start and end point
+  /// @param start_angle Angle when going into the headland
   /// (0 deg is the angle of the headland)
-  /// @param _end_angle Angle when going out of the headland
-  virtual F2CPath createSimpleTurn(double _dist_start_pos, double _start_angle,
-      double _end_angle) = 0;
+  /// @param end_angle Angle when going out of the headland
+  virtual F2CPath createSimpleTurn(double dist_start_pos, double start_angle,
+      double end_angle) = 0;
 
   /// @brief Transform the turn parameters representation from two points with
   /// two angles to one distance and two angles.
-  /// @param _start_pos Start point
-  /// @param _start_angle Start angle
-  /// @param _end_pos End point
-  /// @param _end_angle End angle
+  /// @param start_pos Start point
+  /// @param start_angle Start angle
+  /// @param end_pos End point
+  /// @param end_angle End angle
   /// @return Vector with the values of the new representation
-  static std::vector<double> transformToNormalTurn(const F2CPoint& _start_pos,
-      double _start_angle, const F2CPoint& _end_pos, double _end_angle);
+  static std::vector<double> transformToNormalTurn(const F2CPoint& start_pos,
+      double start_angle, const F2CPoint& end_pos, double end_angle);
 
   /// Check if turn is valid
-  static bool isTurnValid(const F2CPath& _path, double _dist_start_end,
-      double _end_angle, double _max_dist_error = 0.05,
-      double _max_rot_error = 0.1);
+  static bool isTurnValid(const F2CPath& path, double dist_start_end,
+      double end_angle, double max_dist_error = 0.05,
+      double max_rot_error = 0.1);
 
 
  private:
-  static void correctPath(F2CPath& _path,
-      const F2CPoint& _start_pos,
-      const F2CPoint& _end_pos,
-      float _max_error_dist = 0.05);
+  static void correctPath(F2CPath& path,
+      const F2CPoint& start_pos,
+      const F2CPoint& end_pos,
+      float max_error_dist = 0.05);
 
  public:
   F2CRobot robot;

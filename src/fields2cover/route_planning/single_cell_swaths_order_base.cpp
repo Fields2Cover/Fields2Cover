@@ -10,8 +10,8 @@
 namespace f2c {
 namespace rp {
 
-SingleCellSwathsOrderBase::SingleCellSwathsOrderBase(F2CSwaths& _swaths) {
-  setSwaths(_swaths);
+SingleCellSwathsOrderBase::SingleCellSwathsOrderBase(F2CSwaths& swaths) {
+  setSwaths(swaths);
 }
 
 SingleCellSwathsOrderBase::~SingleCellSwathsOrderBase() = default;
@@ -25,8 +25,8 @@ F2CSwaths& SingleCellSwathsOrderBase::genSortedSwaths() {
   return swaths_;
 }
 
-void SingleCellSwathsOrderBase::setSwaths(F2CSwaths& _swaths) {
-  swaths_ = _swaths;
+void SingleCellSwathsOrderBase::setSwaths(F2CSwaths& swaths) {
+  swaths_ = swaths;
 }
 
 void SingleCellSwathsOrderBase::changeStartPoint() {

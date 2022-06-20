@@ -50,12 +50,12 @@ void MultiPoint::setGeometry(int i, const Point& p) {
 }
 
 
-void MultiPoint::addGeometry(const Point& _p) {
-  this->addPoint(_p);
+void MultiPoint::addGeometry(const Point& p) {
+  this->addPoint(p);
 }
 
-void MultiPoint::addPoint(const Point& _p) {
-  this->data->addGeometry(_p.get());
+void MultiPoint::addPoint(const Point& p) {
+  this->data->addGeometry(p.get());
 }
 
 void MultiPoint::addPoint(double x, double y, double z) {

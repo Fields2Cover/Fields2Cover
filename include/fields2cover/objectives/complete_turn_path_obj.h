@@ -29,7 +29,7 @@ class CompleteTurnPathObj : public PathObjective {
 
  public:
   using PathObjective::PathObjective;
-  explicit CompleteTurnPathObj(const F2CRobot& _params);
+  explicit CompleteTurnPathObj(const F2CRobot& params);
 
  public:
   using PathObjective::computeCost;
@@ -42,7 +42,7 @@ class CompleteTurnPathObj : public PathObjective {
 
  public:
   /// Planner that derives from f2c::pp::TurningBase
-  T turn_planner_;
+  T turn_planner;
 
  private:
   R objective_;
@@ -50,8 +50,8 @@ class CompleteTurnPathObj : public PathObjective {
 
 
 template <class T, class R>
-CompleteTurnPathObj<T, R>::CompleteTurnPathObj(const F2CRobot& _robot) {
-  turn_planner_.setRobotParams(_robot);
+CompleteTurnPathObj<T, R>::CompleteTurnPathObj(const F2CRobot& robot) {
+  turn_planner.setRobotParams(robot);
 }
 
 
@@ -59,7 +59,7 @@ template <class T, class R>
 double CompleteTurnPathObj<T, R>::computeCost(
     const F2CPoint& p1, double ang1,
     const F2CPoint& p2, double ang2) {
-  return objective_.computeCost(turn_planner_.createTurn(p1, ang1, p2, ang2));
+  return objective_.computeCost(turn_planner.createTurn(p1, ang1, p2, ang2));
 }
 
 

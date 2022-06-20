@@ -16,14 +16,14 @@ namespace hg {
 
 template <typename T>
 F2CCells ConstHL<T>::generateHeadlands(
-    const F2CCells& _field, double _dist_headland) {
-  F2CCells red_field = _field.clone();
-  for (auto&& poly : _field) {
+    const F2CCells& field, double dist_headland) {
+  F2CCells red_field = field.clone();
+  for (auto&& poly : field) {
     for (auto&& ring : poly) {
       auto lines = F2CMultiLineString::getLineSegments(F2CLineString(ring));
       for (auto&& line : lines) {
         red_field = red_field.Difference(
-              F2CCells::Buffer(line, _dist_headland));
+              F2CCells::Buffer(line, dist_headland));
       }
     }
   }

@@ -9,11 +9,11 @@
 namespace f2c {
 namespace types {
 
-double Route::getLength(void) const {
+double Route::getLength() const {
   return getRouteAsLine().getLength();
 }
 
-LineString Route::getRouteAsLine(void) const {
+LineString Route::getRouteAsLine() const {
   if (isEmpty() || !isValid()) {
     return LineString();
   }
@@ -38,15 +38,15 @@ LineString Route::getRouteAsLine(void) const {
   return route;
 }
 
-bool Route::isValid(void) const {
+bool Route::isValid() const {
   return v_swaths.size() == (connections.size()-1);
 }
 
-bool Route::isEmpty(void) const {
+bool Route::isEmpty() const {
   return v_swaths.empty() && connections.empty();
 }
 
-Route Route::clone(void) const {
+Route Route::clone() const {
   Route new_r;
   for (auto&& s : this->v_swaths) {
     new_r.v_swaths.emplace_back(s.clone());

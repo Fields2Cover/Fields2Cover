@@ -39,10 +39,10 @@ struct Path {
   std::vector<PathDirection> directions;
   std::vector<PathSectionType> type;
   double task_time {0.0};
-  double measure_error_ {0.1};
+  double measure_error {0.1};
 
  public:
-  Path& operator+=(const Path& _path);
+  Path& operator+=(const Path& path);
   Path clone() const;
   size_t size() const;
 
@@ -50,15 +50,15 @@ struct Path {
 
   double length(void) const;
 
-  void appendSwath(const Swath& _swath, double cruise_speed);
+  void appendSwath(const Swath& swath, double cruise_speed);
 
   std::string serializePath(void) const;
-  void saveToFile(const std::string& _file) const;
-  void loadFile(const std::string& _file);
+  void saveToFile(const std::string& file) const;
+  void loadFile(const std::string& file);
 
   bool isValid() const;
-  Path& populate(int _number_points = 100);
-  Path& reduce(double _min_dist_equal = 0.1);
+  Path& populate(int number_points = 100);
+  Path& reduce(double min_dist_equal = 0.1);
 };
 
 }  // namespace types

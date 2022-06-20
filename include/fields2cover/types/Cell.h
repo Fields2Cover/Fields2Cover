@@ -33,7 +33,7 @@ struct Cell : public Geometries<Cell, OGRPolygon, wkbPolygon, LinearRing> {
  public:
   using Geometries<Cell, OGRPolygon, wkbPolygon, LinearRing>::Geometries;
   Cell();
-  explicit Cell(const OGRGeometry* _geom);
+  explicit Cell(const OGRGeometry* geom);
 
   explicit Cell(const f2c::types::LinearRing& ring);
 
@@ -53,16 +53,16 @@ struct Cell : public Geometries<Cell, OGRPolygon, wkbPolygon, LinearRing> {
   /// Scale this Cell by a scale factor
   void operator*=(double b);
 
-  static Cell Buffer(const Cell& _geom, double width);
+  static Cell Buffer(const Cell& geom, double width);
 
-  static Cell Buffer(const LineString& _geom, double width);
+  static Cell Buffer(const LineString& geom, double width);
 
-  static Cell Buffer(const Point& _geom, double width);
+  static Cell Buffer(const Point& geom, double width);
 
-  Cell Intersection(const Cell& _c) const;
+  Cell Intersection(const Cell& c) const;
 
-  void addRing(const LinearRing& _ring);
-  void addGeometry(const LinearRing& _ring);
+  void addRing(const LinearRing& ring);
+  void addGeometry(const LinearRing& ring);
 
   LinearRing getExteriorRing() const;
   LinearRing getInteriorRing(int i_ring) const;
@@ -72,25 +72,25 @@ struct Cell : public Geometries<Cell, OGRPolygon, wkbPolygon, LinearRing> {
 
   /// Get a line that starts from a custom point with a custom angle.
   /// If the point is in this geometry, the line crosses the border.
-  LineString getSemiLongCurve(const Point& _point, double _angle) const;
+  LineString getSemiLongCurve(const Point& point, double angle) const;
 
   /// Get a line that goes through a custom point with a custom angle.
   /// If the point is in this geometry, the line also crosses it.
-  LineString getStraightLongCurve(const Point& _point, double _angle) const;
+  LineString getStraightLongCurve(const Point& point, double angle) const;
 
   /// Compute the sections of a LineString that is inside this Cell
-  MultiLineString getLinesInside(const LineString& _line) const;
+  MultiLineString getLinesInside(const LineString& line) const;
 
   /// Compute the sections of a MultiLineString that is inside this Cell
-  MultiLineString getLinesInside(const MultiLineString& _lines) const;
+  MultiLineString getLinesInside(const MultiLineString& lines) const;
 
   /// Check if a point is in the border of this Cell
-  bool isPointInBorder(const Point& _p) const;
+  bool isPointInBorder(const Point& p) const;
 
-  bool isPointIn(const Point& _p) const;
+  bool isPointIn(const Point& p) const;
 
   /// Generate a line from a point to the border of this Cell
-  LineString createLineUntilBorder(const f2c::types::Point& _p, double _ang);
+  LineString createLineUntilBorder(const f2c::types::Point& p, double ang);
 };
 
 }  // namespace types

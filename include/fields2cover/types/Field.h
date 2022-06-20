@@ -25,7 +25,7 @@ struct Field {
 
  public:
   Field();
-  explicit Field(const Cells& cells, const std::string& _id = "");
+  explicit Field(const Cells& cells, const std::string& id = "");
   ~Field();
   Field(const Field&);
   Field(Field&&);
@@ -34,17 +34,17 @@ struct Field {
 
  public:
   Field clone() const;
-  double getArea(void) const;
-  static bool isCoordSystemUTM(const std::string& _coord_sys);
+  double getArea() const;
+  static bool isCoordSystemUTM(const std::string& coord_sys);
   bool isCoordSystemUTM() const;
-  static std::string getUTMCoordSystem(const std::string& _coord_sys);
+  static std::string getUTMCoordSystem(const std::string& coord_sys);
   std::string getUTMCoordSystem() const;
-  static bool isCoordSystemEPSG(const std::string& _coord_sys);
+  static bool isCoordSystemEPSG(const std::string& coord_sys);
   bool isCoordSystemEPSG() const;
-  static int getEPSGCoordSystem(const std::string& _coord_sys);
+  static int getEPSGCoordSystem(const std::string& coord_sys);
   int getEPSGCoordSystem() const;
-  void setEPSGCoordSystem(int _epsg);
-  void setUTMCoordSystem(const std::string& _utm);
+  void setEPSGCoordSystem(int epsg);
+  void setUTMCoordSystem(const std::string& utm);
 };
 
 }  // namespace types

@@ -52,36 +52,36 @@ struct Point : public Geometry<OGRPoint, wkbPoint> {
   void setPoint(const OGRPoint& p);
   void setPoint(const Point& p);
 
-  double getAngleFromPoints(const Point& _end) const;
+  double getAngleFromPoints(const Point& end) const;
   double getAngleFromPoint() const;
-  Point getPointFromAngle(double _angle, double _dist) const;
+  Point getPointFromAngle(double angle, double dist) const;
 
-  Point rotateFromPoint(double _angle, const Point& _p_r) const;
-
-  template <class T>
-  std::vector<T> rotateFromPoint(double _angle, const std::vector<T>& _t) const;
+  Point rotateFromPoint(double angle, const Point& p_r) const;
 
   template <class T>
-  T rotateFromPoint(double _angle, const T& _t) const;
+  std::vector<T> rotateFromPoint(double angle, const std::vector<T>& t) const;
+
+  template <class T>
+  T rotateFromPoint(double angle, const T& t) const;
 };
 
 std::ostream& operator<<(std::ostream& os, const Point& p);
 
 template <class T>
 std::vector<T> Point::rotateFromPoint(
-    double _angle, const std::vector<T>& _t) const {
+    double angle, const std::vector<T>& t) const {
   std::vector<T> res;
-  for (auto&& p : _t) {
-    res.emplace_back(this->rotateFromPoint(_angle, p));
+  for (auto&& p : t) {
+    res.emplace_back(this->rotateFromPoint(angle, p));
   }
   return res;
 }
 
 template <class T>
-T Point::rotateFromPoint(double _angle, const T& _t) const {
+T Point::rotateFromPoint(double angle, const T& t) const {
   T res;
-  for (auto&& p : _t) {
-    res.addGeometry(this->rotateFromPoint(_angle, p));
+  for (auto&& p : t) {
+    res.addGeometry(this->rotateFromPoint(angle, p));
   }
   return res;
 }
@@ -118,57 +118,57 @@ inline OGRPoint operator*(const OGRPoint& a, double b) {
 
 template <class T>
 inline std::vector<T> operator+(
-    const std::vector<T>& _t, const f2c::types::Point& _dir) {
+    const std::vector<T>& t, const f2c::types::Point& dir) {
   std::vector<T> res;
-  for (auto&& p : _t) {
-    res.emplace_back(p + _dir);
+  for (auto&& p : t) {
+    res.emplace_back(p + dir);
   }
   return res;
 }
 
 template <class T>
 inline std::vector<T> operator-(
-    const f2c::types::Point& _dir, const std::vector<T>& _t) {
+    const f2c::types::Point& dir, const std::vector<T>& t) {
   std::vector<T> res;
-  for (auto&& p : _t) {
-    res.emplace_back(_dir - p);
+  for (auto&& p : t) {
+    res.emplace_back(dir - p);
   }
   return res;
 }
 
 template <class T>
 inline std::vector<T> operator-(
-    const std::vector<T>& _t, const f2c::types::Point& _dir) {
+    const std::vector<T>& t, const f2c::types::Point& dir) {
   std::vector<T> res;
-  for (auto&& p : _t) {
-    res.emplace_back(p - _dir);
+  for (auto&& p : t) {
+    res.emplace_back(p - dir);
   }
   return res;
 }
 
 template <class T>
-inline T operator+(const T& _t, const f2c::types::Point& _dir) {
+inline T operator+(const T& t, const f2c::types::Point& dir) {
   T res;
-  for (auto&& p : _t) {
-    res.addGeometry(p + _dir);
+  for (auto&& p : t) {
+    res.addGeometry(p + dir);
   }
   return res;
 }
 
 template <class T>
-inline T operator-(const f2c::types::Point& _dir, const T& _t) {
+inline T operator-(const f2c::types::Point& dir, const T& t) {
   T res;
-  for (auto&& p : _t) {
-    res.addGeometry(_dir - p);
+  for (auto&& p : t) {
+    res.addGeometry(dir - p);
   }
   return res;
 }
 
 template <class T>
-inline T operator-(const T& _t, const f2c::types::Point& _dir) {
+inline T operator-(const T& t, const f2c::types::Point& dir) {
   T res;
-  for (auto&& p : _t) {
-    res.addGeometry(p - _dir);
+  for (auto&& p : t) {
+    res.addGeometry(p - dir);
   }
   return res;
 }

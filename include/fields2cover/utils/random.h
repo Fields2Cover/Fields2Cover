@@ -1,7 +1,7 @@
 //=============================================================================
 //    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
-//                        BSD-3 License
+//                           BSD-3 License
 //=============================================================================
 
 #pragma once
@@ -23,8 +23,8 @@ class Random {
  public:
   /// Constructor to initialize the seed to a known value to make experiments
   /// reproducible
-  explicit Random(uint32_t _seed = static_cast<uint32_t>(time(NULL))) :
-    seed_(_seed) {}
+  explicit Random(uint32_t seed = static_cast<uint32_t>(time(NULL))) :
+    seed_(seed) {}
 
   /// @cond DOXYGEN_SHOULD_SKIP_THIS
   ~Random() = default;
@@ -37,41 +37,41 @@ class Random {
  public:
   /// Get a random double \f$\in [0, 1]\f$
   /// @return Double \f$\in [0, 1]\f$
-  double getRandomDouble(void);
+  double getRandomDouble();
 
   /// Get a random double in a range with uniform probability
-  /// @param _min Minimum of the range
-  /// @param _max Maximum of the range
-  /// @return Double \f$\in [_min, _max]\f$
-  double getRandomLinear(double _min, double _max);
+  /// @param min Minimum of the range
+  /// @param max Maximum of the range
+  /// @return Double \f$\in [min, max]\f$
+  double getRandomLinear(double min, double max);
 
   /// Get a random double in a range with exponential probability.
   /// Lower values are more probable than higher ones.
-  /// @param _min Minimum of the range
-  /// @param _max Maximum of the range
-  /// @return Double \f$\in [_min, _max]\f$
-  double getRandomExp(double _min, double _max);
+  /// @param min Minimum of the range
+  /// @param max Maximum of the range
+  /// @return Double \f$\in [min, max]\f$
+  double getRandomExp(double min, double max);
 
   /// Return a random angle in radians.
   /// @return random angle \f$ \in [0, 2\pi) \f$
-  double getAngleRandom(void);
+  double getAngleRandom();
 
   /// Random field generator to make tests.
-  /// @param _n_sides Number of sides of the generated field.
-  /// @param _area Area of the generated field
-  /// @param _min_width Minimum distance to the center for the base field.
-  /// @param _max_width Maximum distance to the center for the base field.
-  /// @return Field with area _area an _n_sides.
-  f2c::types::Field generateRandField(int _n_sides, double _area,
-      double _min_width = 0.5, double _max_width = 1.0);
+  /// @param n_sides Number of sides of the generated field.
+  /// @param area Area of the generated field
+  /// @param min_width Minimum distance to the center for the base field.
+  /// @param max_width Maximum distance to the center for the base field.
+  /// @return Field with area area an n_sides.
+  f2c::types::Field generateRandField(int n_sides, double area,
+      double min_width = 0.5, double max_width = 1.0);
 
   /// Generate a convex field
-  /// @param _area Area of the generated field
-  f2c::types::Field genConvexField(double _area);
+  /// @param area Area of the generated field
+  f2c::types::Field genConvexField(double area);
 
   /// Generate a non-convex field
-  /// @param _area Area of the generated field
-  f2c::types::Field genNonConvexField(double _area);
+  /// @param area Area of the generated field
+  f2c::types::Field genNonConvexField(double area);
 
  private:
   uint32_t seed_;

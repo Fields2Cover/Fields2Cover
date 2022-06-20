@@ -21,14 +21,14 @@ namespace types {
 struct Swaths {
   Swaths();
   explicit Swaths(int i);
-  Swaths(const std::initializer_list<Swath>& _s);
+  Swaths(const std::initializer_list<Swath>& s);
   ~Swaths();
 
-  void emplace_back(const Swath& _s);
+  void emplace_back(const Swath& s);
 
-  void emplace_back(const LineString& _l, double _w, int _id = 0);
+  void emplace_back(const LineString& l, double w, int id = 0);
 
-  void push_back(const Swath& _s);
+  void push_back(const Swath& s);
 
   std::vector<Swath>::iterator begin();
   std::vector<Swath>::iterator end();
@@ -47,15 +47,15 @@ struct Swaths {
 
   const Swath& operator[] (int i) const;
 
-  void append(const LineString& _line, double _width = 0);
-  void append(const MultiLineString& _line, double _width = 0);
-  void append(const LineString& _line, const Cell& _poly, double _width = 0);
-  void append(const MultiLineString& _lines, const Cell& _poly,
-      double _width = 0);
-  void append(const LineString& _line, const Cells& _polys,
-      double _width = 0);
-  void append(const MultiLineString& _lines, const Cells& _poly,
-      double _width = 0);
+  void append(const LineString& line, double width = 0);
+  void append(const MultiLineString& line, double width = 0);
+  void append(const LineString& line, const Cell& poly, double width = 0);
+  void append(const MultiLineString& lines, const Cell& poly,
+      double width = 0);
+  void append(const LineString& line, const Cells& polys,
+      double width = 0);
+  void append(const MultiLineString& lines, const Cells& poly,
+      double width = 0);
   void sort();
   void reverseDirOddSwaths();
 

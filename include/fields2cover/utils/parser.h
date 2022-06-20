@@ -1,7 +1,7 @@
 //=============================================================================
 //    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
-//                        BSD-3 License
+//                           BSD-3 License
 //=============================================================================
 
 #pragma once
@@ -20,18 +20,18 @@ namespace f2c {
 class Parser {
  public:
     /// Function to import file with gml extension.
-    /// @param _file Path to the imported file.
-    /// @param _fields Set of fields saved on _file.
+    /// @param file Path to the imported file.
+    /// @param fields Set of fields saved on _file.
     /// @return return 0 if the file was parsed correctly.
     /// Otherwise, return a negative number.
-    static int importGml(const std::string& _file, F2CFields& _fields);
+    static int importGml(const std::string& file, F2CFields& fields);
 
     /// Function to import file with Json extension.
-    /// @param _file Path to the imported file.
-    /// @param _fields Set of fields saved on _file.
+    /// @param file Path to the imported file.
+    /// @param fields Set of fields saved on _file.
     /// @return return 0 if the file was parsed correctly.
     /// Otherwise, return a negative number.
-    static int importJson(const std::string& _file, F2CFields& _fields);
+    static int importJson(const std::string& file, F2CFields& fields);
 };
 
 }  // namespace f2c

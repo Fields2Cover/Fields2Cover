@@ -16,29 +16,29 @@ Cells::Cells() {
     [](OGRMultiPolygon* f) {OGRGeometryFactory::destroyGeometry(f);});
 }
 
-Cells::Cells(const OGRGeometry* _geom) {
-  if (wkbFlatten(_geom->getGeometryType()) == OGRwkbGeometryType::wkbPolygon) {
+Cells::Cells(const OGRGeometry* geom) {
+  if (wkbFlatten(geom->getGeometryType()) == OGRwkbGeometryType::wkbPolygon) {
     this->data = std::shared_ptr<OGRMultiPolygon>(static_cast<OGRMultiPolygon*>(
         OGRGeometryFactory::createGeometry(wkbMultiPolygon)),
         [](OGRMultiPolygon* f) {OGRGeometryFactory::destroyGeometry(f);});
-    this->data->addGeometry(_geom->toPolygon());
-  } else if (wkbFlatten(_geom->getGeometryType()) ==
+    this->data->addGeometry(geom->toPolygon());
+  } else if (wkbFlatten(geom->getGeometryType()) ==
     OGRwkbGeometryType::wkbMultiPolygon) {
     this->data = std::shared_ptr<OGRMultiPolygon>(
-        _geom->clone()->toMultiPolygon(),
+        geom->clone()->toMultiPolygon(),
         [](OGRMultiPolygon* f) {OGRGeometryFactory::destroyGeometry(f);});
   } else {
     throw std::invalid_argument(sstr(
         "Cells(const OGRGeometry*): Type of OGRGeometry* is " ,
-        wkbFlatten(_geom->getGeometryType()) , " instead of wkbPolygon(",
+        wkbFlatten(geom->getGeometryType()) , " instead of wkbPolygon(",
           OGRwkbGeometryType::wkbPolygon , ") or wkbMultiPolygon(",
           OGRwkbGeometryType::wkbMultiPolygon , ")"));
   }
 }
 
 
-Cells::Cells(const Cell& _c) {
-  data->addGeometry(_c.get());
+Cells::Cells(const Cell& c) {
+  data->addGeometry(c.get());
 }
 
 void Cells::operator*=(double b) {
@@ -77,12 +77,12 @@ void Cells::setGeometry(int i, const Cell& cell) {
   this->addGeometry(cell);
 }
 
-void Cells::addGeometry(const Cell& _c) {
-  this->data->addGeometry(_c.get());
+void Cells::addGeometry(const Cell& c) {
+  this->data->addGeometry(c.get());
 }
 
-void Cells::addRing(int i, const LinearRing& _ring) {
-  this->data->getGeometryRef(i)->addRing(_ring.get());
+void Cells::addRing(int i, const LinearRing& ring) {
+  this->data->getGeometryRef(i)->addRing(ring.get());
 }
 
 size_t Cells::size() const {
@@ -108,8 +108,8 @@ bool Cells::isConvex() const {
     getCell(0).isConvex();
 }
 
-Cells Cells::Intersection(const Cells& _c) const {
-  auto inter = data->Intersection(_c.get());
+Cells Cells::Intersection(const Cells& c) const {
+  auto inter = data->Intersection(c.get());
   if (wkbFlatten(inter->getGeometryType()) ==
         OGRwkbGeometryType::wkbPolygon ||
       wkbFlatten(inter->getGeometryType()) ==
@@ -123,58 +123,58 @@ Cells Cells::Intersection(const Cells& _c) const {
   }
 }
 
-Cells Cells::Difference(const Cells& _c) const {
-  auto diff = data->Difference(_c.get());
+Cells Cells::Difference(const Cells& c) const {
+  auto diff = data->Difference(c.get());
   Cells cells(diff);
   OGRGeometryFactory::destroyGeometry(diff);
   return cells;
 }
 
-Cells Cells::splitByLine(const LineString& _line) const {
+Cells Cells::splitByLine(const LineString& line) const {
   // This trick could be faster using Polygonize
-  return this->Difference(Buffer(_line, 1e-8));
+  return this->Difference(Buffer(line, 1e-8));
 }
 
-Cells Cells::splitByLine(const MultiLineString& _lines) const {
+Cells Cells::splitByLine(const MultiLineString& lines) const {
   Cells cells{*this};
-  for (auto&& line : _lines) {
+  for (auto&& line : lines) {
     cells = cells.splitByLine(line);
   }
   return cells;
 }
 
-Cells Cells::Intersection(const Cell& _c) const {
-  return Cells(_c).Intersection(*this);
+Cells Cells::Intersection(const Cell& c) const {
+  return Cells(c).Intersection(*this);
 }
 
 Cells Cells::Intersection(
-    const Cell& cell, const Cell& _c) {
-  return Cells(cell).Intersection(_c);
+    const Cell& cell, const Cell& c) {
+  return Cells(cell).Intersection(c);
 }
 
-LineString Cells::getSemiLongCurve(const Point& _point, double _angle) const {
-  return LineString({_point,
-    _point.getPointFromAngle(_angle, this->getMinSafeLength())});
+LineString Cells::getSemiLongCurve(const Point& point, double angle) const {
+  return LineString({point,
+    point.getPointFromAngle(angle, this->getMinSafeLength())});
 }
 
 LineString Cells::getStraightLongCurve(
-    const Point& _point, double _angle) const {
+    const Point& point, double angle) const {
   return LineString({
-    _point.getPointFromAngle(_angle, this->getMinSafeLength()),
-    _point.getPointFromAngle(
-    boost::math::constants::pi<double>() + _angle, this->getMinSafeLength())});
+    point.getPointFromAngle(angle, this->getMinSafeLength()),
+    point.getPointFromAngle(
+    boost::math::constants::pi<double>() + angle, this->getMinSafeLength())});
 }
 
-MultiLineString Cells::getLinesInside(const LineString& _line) const {
-  return MultiLineString::Intersection(_line, *this);
+MultiLineString Cells::getLinesInside(const LineString& line) const {
+  return MultiLineString::Intersection(line, *this);
 }
 
-MultiLineString Cells::getLinesInside(const MultiLineString& _lines) const {
-  return _lines.Intersection(*this);
+MultiLineString Cells::getLinesInside(const MultiLineString& lines) const {
+  return lines.Intersection(*this);
 }
 
-Cells Cells::getCellsInside(const Cells& _cell) const {
-  return this->Intersection(_cell);
+Cells Cells::getCellsInside(const Cells& cell) const {
+  return this->Intersection(cell);
 }
 
 bool Cells::isPointInBorder(const Point& p) const {
@@ -186,8 +186,8 @@ bool Cells::isPointInBorder(const Point& p) const {
   return false;
 }
 
-bool Cells::isPointIn(const Point& _p) const {
-  return _p.Touches(*this);
+bool Cells::isPointIn(const Point& p) const {
+  return p.Touches(*this);
 }
 
 Cell Cells::getCellWherePoint(const Point& p) const {
@@ -200,8 +200,8 @@ Cell Cells::getCellWherePoint(const Point& p) const {
 }
 
 LineString Cells::createLineUntilBorder(
-    const f2c::types::Point& _p, double _ang) const {
-  return this->getCellWherePoint(_p).createLineUntilBorder(_p, _ang);
+    const f2c::types::Point& p, double ang) const {
+  return this->getCellWherePoint(p).createLineUntilBorder(p, ang);
 }
 
 

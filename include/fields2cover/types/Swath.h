@@ -22,9 +22,9 @@ namespace types {
 struct Swath {
  public:
   Swath();
-  explicit Swath(const LineString& _path);
-  explicit Swath(double _width);
-  Swath(const LineString& _path, double _width, int _id = 0);
+  explicit Swath(const LineString& path);
+  explicit Swath(double width);
+  Swath(const LineString& path, double width, int id = 0);
   Swath(const Swath&);
   virtual ~Swath();
   virtual Swath& operator=(Swath&&);
@@ -37,36 +37,36 @@ struct Swath {
   bool operator<(const Swath& s) const;
 
  public:
-  void setId(int _id);
+  void setId(int id);
   int getId() const;
 
-  void setPath(const LineString& _path);
+  void setPath(const LineString& path);
   LineString getPath() const;
 
-  void setWidth(double _width);
+  void setWidth(double width);
   double getWidth() const;
 
   bool getCreationDir() const;
-  void setCreationDir(bool _creation_dir);
+  void setCreationDir(bool creation_dir);
 
  public:
-  double getLength(void) const;
+  double getLength() const;
 
-  double getArea(void) const;
-  double getArea(const Cells& _polys) const;
+  double getArea() const;
+  double getArea(const Cells& polys) const;
 
-  void reverse(void);
+  void reverse();
 
-  double getInAngle(void) const;
+  double getInAngle() const;
 
-  double getOutAngle(void) const;
+  double getOutAngle() const;
 
-  Point startPoint(void) const;
+  Point startPoint() const;
 
-  Point endPoint(void) const;
+  Point endPoint() const;
 
-  Cells computeAreaCovered(void) const;
-  Cells computeAreaCovered(const Cells& _polys) const;
+  Cells computeAreaCovered() const;
+  Cells computeAreaCovered(const Cells& polys) const;
   Swath clone() const;
 
   size_t getNumPoints() const;

@@ -41,7 +41,7 @@ struct LineString : public Geometries<LineString, OGRLineString, wkbLineString,
 
   void addPoint(double x, double y, double z = 0);
   void addPoint(const Point& p);
-  void addGeometry(const Point& _p) {addPoint(_p);}
+  void addGeometry(const Point& p) {this->addPoint(p);}
 
   Point StartPoint() const;
 

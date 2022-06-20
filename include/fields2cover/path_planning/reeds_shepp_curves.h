@@ -17,7 +17,7 @@ namespace pp {
 /// Reeds-Shepp's curves planner
 class ReedsSheppCurves : public TurningBase {
  public:
-  explicit ReedsSheppCurves(const F2CRobot& _params);
+  explicit ReedsSheppCurves(const F2CRobot& params);
   /// @cond DOXYGEN_SHOULD_SKIP_THIS
   ~ReedsSheppCurves() = default;
   ReedsSheppCurves(ReedsSheppCurves &&) = default;
@@ -27,11 +27,11 @@ class ReedsSheppCurves : public TurningBase {
   ReedsSheppCurves &operator=(ReedsSheppCurves&&) = default;
   /// @endcond
 
-  F2CPath createSimpleTurn(double _dist_start_pos, double _start_angle,
-      double _end_angle) override;
+  F2CPath createSimpleTurn(double dist_start_pos, double start_angle,
+      double end_angle) override;
 
  public:
-  double discretization_ {0.01};
+  double discretization {0.01};
 };
 
 }  // namespace pp

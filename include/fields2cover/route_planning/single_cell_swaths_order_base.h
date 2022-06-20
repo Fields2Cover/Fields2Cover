@@ -16,12 +16,12 @@ namespace rp {
 
 class SingleCellSwathsOrderBase {
  public:
-  explicit SingleCellSwathsOrderBase(F2CSwaths& _swaths);
+  explicit SingleCellSwathsOrderBase(F2CSwaths& swaths);
   virtual ~SingleCellSwathsOrderBase();
 
   virtual F2CSwaths& genSortedSwaths();
 
-  virtual void setSwaths(F2CSwaths& _swaths);
+  virtual void setSwaths(F2CSwaths& swaths);
   virtual F2CSwaths& getSwaths() {return swaths_;}
   void setCounter(uint32_t new_count) {counter_ = new_count;}
 

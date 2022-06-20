@@ -72,38 +72,38 @@ struct Geometry {
 
   /// Check if this and another geometry are disjoint.
   template <class T2, OGRwkbGeometryType R2>
-  bool Disjoint(const Geometry<T2, R2>& _geom) const;
+  bool Disjoint(const Geometry<T2, R2>& geom) const;
 
   /// Check if this and another geometry are disjoint.
-  bool Disjoint(const OGRGeometry* _geom) const;
+  bool Disjoint(const OGRGeometry* geom) const;
 
   /// Check if this and another geometry cross.
   template <class T2, OGRwkbGeometryType R2>
-  bool Crosses(const Geometry<T2, R2>& _geom) const;
+  bool Crosses(const Geometry<T2, R2>& geom) const;
 
   /// Check if this and another geometry cross.
-  bool Crosses(const OGRGeometry* _geom) const;
+  bool Crosses(const OGRGeometry* geom) const;
 
   /// Check if this and another geometry touch each other.
   template <class T2, OGRwkbGeometryType R2>
-  bool Touches(const Geometry<T2, R2>& _geom) const;
+  bool Touches(const Geometry<T2, R2>& geom) const;
 
   /// Check if this and another geometry touch each other.
-  bool Touches(const OGRGeometry* _geom) const;
+  bool Touches(const OGRGeometry* geom) const;
 
   /// Check if this geometry is inside another geometry.
   template <class T2, OGRwkbGeometryType R2>
-  bool Within(const Geometry<T2, R2>& _geom) const;
+  bool Within(const Geometry<T2, R2>& geom) const;
 
   /// Check if this geometry is inside another geometry.
-  bool Within(const OGRGeometry* _geom) const;
+  bool Within(const OGRGeometry* geom) const;
 
   /// Check if this and another geometry intersects.
   template <class T2, OGRwkbGeometryType R2>
-  bool Intersects(const Geometry<T2, R2>& _geom) const;
+  bool Intersects(const Geometry<T2, R2>& geom) const;
 
   /// Check if this and another geometry intersects.
-  bool Intersects(const OGRGeometry* _geom) const;
+  bool Intersects(const OGRGeometry* geom) const;
 
   /// Transform from \f$ [-\inf, \inf) \f$ to \f$ [0, 2\pi) \f$ applying
   /// \f$2\pi\f$ modulus.

@@ -34,8 +34,8 @@ struct MultiPoint :
 
   void setGeometry(int i, const Point& p);
 
-  void addGeometry(const Point& _p);
-  void addPoint(const Point& _p);
+  void addGeometry(const Point& p);
+  void addPoint(const Point& p);
   void addPoint(double x, double y, double z = 0);
 
   void operator*=(double b);

@@ -28,13 +28,13 @@ struct Route {
   RouteType type;
 
  public:
-  double getLength(void) const;
+  double getLength() const;
 
-  LineString getRouteAsLine(void) const;
+  LineString getRouteAsLine() const;
 
-  bool isValid(void) const;
-  bool isEmpty(void) const;
-  Route clone(void) const;
+  bool isValid() const;
+  bool isEmpty() const;
+  Route clone() const;
 };
 
 

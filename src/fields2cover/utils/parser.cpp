@@ -14,14 +14,14 @@ using json = nlohmann::json;
 
 namespace f2c {
 
-int Parser::importGml(const std::string& _file, F2CFields& _fields) {
+int Parser::importGml(const std::string& file, F2CFields& fields) {
   // Tinyxml2 depends on locale when parsing files. It may expect float numbers
   // as "1,5" instead of "1.5", which is parsed as "1". The next line solves
   // the issue.
   std::locale::global(std::locale::classic());
 
   tinyxml2::XMLDocument doc;
-  doc.LoadFile(_file.c_str());
+  doc.LoadFile(file.c_str());
   auto* p_parcel = doc.RootElement();
 
   if (p_parcel == nullptr) {
@@ -72,12 +72,12 @@ int Parser::importGml(const std::string& _file, F2CFields& _fields) {
   field.coord_sys = coord_sys;
   OGRGeometryFactory::destroyGeometry(new_geom);
 
-  _fields.emplace_back(field);
+  fields.emplace_back(field);
   return 0;
 }
 
-int Parser::importJson(const std::string& _file, F2CFields& _fields) {
-  std::ifstream f(_file);
+int Parser::importJson(const std::string& file, F2CFields& fields) {
+  std::ifstream f(file);
   json imported_field = json::parse(f);
 
   F2CLinearRing line;
@@ -91,7 +91,7 @@ int Parser::importJson(const std::string& _file, F2CFields& _fields) {
   F2CField field(F2CCells(poly),
       imported_field["features"][0]["properties"]["Name"]);
 
-  _fields.emplace_back(field);
+  fields.emplace_back(field);
   return 0;
 }
 

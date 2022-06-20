@@ -21,9 +21,9 @@ namespace sg {
 template <typename T>
 class BruteForce : public SwathGeneratorBase<T> {
  public:
-  F2CSwaths generateBestSwaths(double _op_width, const F2CCell& _poly) override;
+  F2CSwaths generateBestSwaths(double op_width, const F2CCell& poly) override;
   F2CSwathsByCells generateBestSwaths(
-      double _op_width, const F2CCells& _poly) override;
+      double op_width, const F2CCells& poly) override;
 
  public:
   double step_angle {boost::math::constants::degree<double>()};  // radians

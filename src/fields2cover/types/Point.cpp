@@ -87,17 +87,17 @@ void Point::setPoint(const Point& p) {
   data->setZ(p.getZ());
 }
 
-Point Point::rotateFromPoint(double _angle, const Point& _p_r) const {
-  double s = sin(_angle);
-  double c = cos(_angle);
-  auto p = _p_r - *this;
+Point Point::rotateFromPoint(double angle, const Point& p_r) const {
+  double s = sin(angle);
+  double c = cos(angle);
+  auto p = p_r - *this;
   return Point(p.getX() * c - p.getY() * s + data->getX(),
       p.getX() * s + p.getY() * c + data->getY());
 }
 
-double Point::getAngleFromPoints(const Point& _end) const {
-  auto dot = data->getX() * _end.getX() + data->getY() * _end.getY();
-  auto det = data->getX() * _end.getY() - data->getY() * _end.getX();
+double Point::getAngleFromPoints(const Point& end) const {
+  auto dot = data->getX() * end.getX() + data->getY() * end.getY();
+  auto det = data->getX() * end.getY() - data->getY() * end.getX();
   return mod_2pi(atan2(det, dot));
 }
 
@@ -105,9 +105,9 @@ double Point::getAngleFromPoint() const {
   return f2c::types::Point(1.0, 0.0).getAngleFromPoints(*this);
 }
 
-Point Point::getPointFromAngle(double _angle, double _dist) const {
-  return Point(data->getX() + _dist * cos(_angle),
-       data->getY() + _dist * sin(_angle));
+Point Point::getPointFromAngle(double angle, double dist) const {
+  return Point(data->getX() + dist * cos(angle),
+       data->getY() + dist * sin(angle));
 }
 
 

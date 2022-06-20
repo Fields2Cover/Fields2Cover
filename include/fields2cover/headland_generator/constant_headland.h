@@ -19,8 +19,8 @@ namespace hg {
 template <typename T = f2c::obj::NSwath>
 class ConstHL : public HeadlandGeneratorBase<T> {
  public:
-  F2CCells generateHeadlands(const F2CCells& _field,
-      double _dist_headland) override;
+  F2CCells generateHeadlands(const F2CCells& field,
+      double dist_headland) override;
 };
 
 }  // namespace hg

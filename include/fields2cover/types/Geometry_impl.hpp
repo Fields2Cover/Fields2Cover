@@ -73,52 +73,52 @@ bool Geometry<T, R>::operator==(const Geometry<T, R>& geom2) const {
 
 template <class T, OGRwkbGeometryType R>
 double Geometry<T, R>::getDimMinX() const {
-  OGREnvelope _envelope;
-  data->getEnvelope(&_envelope);
-  return _envelope.MinX;
+  OGREnvelope envelope;
+  data->getEnvelope(&envelope);
+  return envelope.MinX;
 }
 
 template <class T, OGRwkbGeometryType R>
 double Geometry<T, R>::getDimMaxX() const {
-  OGREnvelope _envelope;
-  data->getEnvelope(&_envelope);
-  return _envelope.MaxX;
+  OGREnvelope envelope;
+  data->getEnvelope(&envelope);
+  return envelope.MaxX;
 }
 
 template <class T, OGRwkbGeometryType R>
 double Geometry<T, R>::getDimMinY() const {
-  OGREnvelope _envelope;
-  data->getEnvelope(&_envelope);
-  return _envelope.MinY;
+  OGREnvelope envelope;
+  data->getEnvelope(&envelope);
+  return envelope.MinY;
 }
 
 template <class T, OGRwkbGeometryType R>
 double Geometry<T, R>::getDimMaxY() const {
-  OGREnvelope _envelope;
-  data->getEnvelope(&_envelope);
-  return _envelope.MaxY;
+  OGREnvelope envelope;
+  data->getEnvelope(&envelope);
+  return envelope.MaxY;
 }
 
 template <class T, OGRwkbGeometryType R>
 double Geometry<T, R>::getHeight() const {
-  OGREnvelope _envelope;
-  data->getEnvelope(&_envelope);
-  return _envelope.MaxY - _envelope.MinY;
+  OGREnvelope envelope;
+  data->getEnvelope(&envelope);
+  return envelope.MaxY - envelope.MinY;
 }
 
 template <class T, OGRwkbGeometryType R>
 double Geometry<T, R>::getWidth() const {
-  OGREnvelope _envelope;
-  data->getEnvelope(&_envelope);
-  return _envelope.MaxX - _envelope.MinX;
+  OGREnvelope envelope;
+  data->getEnvelope(&envelope);
+  return envelope.MaxX - envelope.MinX;
 }
 
 template <class T, OGRwkbGeometryType R>
 double Geometry<T, R>::getMinSafeLength() const {
-  OGREnvelope _envelope;
-  data->getEnvelope(&_envelope);
-  return (_envelope.MaxX - _envelope.MinX) +
-    (_envelope.MaxY - _envelope.MinY);
+  OGREnvelope envelope;
+  data->getEnvelope(&envelope);
+  return (envelope.MaxX - envelope.MinX) +
+    (envelope.MaxY - envelope.MinY);
 }
 
 template <class T, OGRwkbGeometryType R>
@@ -129,57 +129,57 @@ double Geometry<T, R>::Distance(const Geometry<T2, R2>& p) const {
 
 template <class T, OGRwkbGeometryType R>
 template <class T2, OGRwkbGeometryType R2>
-bool Geometry<T, R>::Disjoint(const Geometry<T2, R2>& _geom) const {
-  return data->Disjoint(_geom.get());
+bool Geometry<T, R>::Disjoint(const Geometry<T2, R2>& geom) const {
+  return data->Disjoint(geom.get());
 }
 
 template <class T, OGRwkbGeometryType R>
-bool Geometry<T, R>::Disjoint(const OGRGeometry* _geom) const {
-  return data->Disjoint(_geom);
-}
-
-template <class T, OGRwkbGeometryType R>
-template <class T2, OGRwkbGeometryType R2>
-bool Geometry<T, R>::Crosses(const Geometry<T2, R2>& _geom) const {
-  return data->Crosses(_geom.get());
-}
-
-template <class T, OGRwkbGeometryType R>
-bool Geometry<T, R>::Crosses(const OGRGeometry* _geom) const {
-  return data->Crosses(_geom);
+bool Geometry<T, R>::Disjoint(const OGRGeometry* geom) const {
+  return data->Disjoint(geom);
 }
 
 template <class T, OGRwkbGeometryType R>
 template <class T2, OGRwkbGeometryType R2>
-bool Geometry<T, R>::Touches(const Geometry<T2, R2>& _geom) const {
-  return data->Touches(_geom.get());
+bool Geometry<T, R>::Crosses(const Geometry<T2, R2>& geom) const {
+  return data->Crosses(geom.get());
 }
 
 template <class T, OGRwkbGeometryType R>
-bool Geometry<T, R>::Touches(const OGRGeometry* _geom) const {
-  return data->Touches(_geom);
-}
-
-template <class T, OGRwkbGeometryType R>
-template <class T2, OGRwkbGeometryType R2>
-bool Geometry<T, R>::Within(const Geometry<T2, R2>& _geom) const {
-  return data->Within(_geom.get());
-}
-
-template <class T, OGRwkbGeometryType R>
-bool Geometry<T, R>::Within(const OGRGeometry* _geom) const {
-  return data->Within(_geom);
+bool Geometry<T, R>::Crosses(const OGRGeometry* geom) const {
+  return data->Crosses(geom);
 }
 
 template <class T, OGRwkbGeometryType R>
 template <class T2, OGRwkbGeometryType R2>
-bool Geometry<T, R>::Intersects(const Geometry<T2, R2>& _geom) const {
-  return data->Intersects(_geom.get());
+bool Geometry<T, R>::Touches(const Geometry<T2, R2>& geom) const {
+  return data->Touches(geom.get());
 }
 
 template <class T, OGRwkbGeometryType R>
-bool Geometry<T, R>::Intersects(const OGRGeometry* _geom) const {
-  return data->Intersects(_geom);
+bool Geometry<T, R>::Touches(const OGRGeometry* geom) const {
+  return data->Touches(geom);
+}
+
+template <class T, OGRwkbGeometryType R>
+template <class T2, OGRwkbGeometryType R2>
+bool Geometry<T, R>::Within(const Geometry<T2, R2>& geom) const {
+  return data->Within(geom.get());
+}
+
+template <class T, OGRwkbGeometryType R>
+bool Geometry<T, R>::Within(const OGRGeometry* geom) const {
+  return data->Within(geom);
+}
+
+template <class T, OGRwkbGeometryType R>
+template <class T2, OGRwkbGeometryType R2>
+bool Geometry<T, R>::Intersects(const Geometry<T2, R2>& geom) const {
+  return data->Intersects(geom.get());
+}
+
+template <class T, OGRwkbGeometryType R>
+bool Geometry<T, R>::Intersects(const OGRGeometry* geom) const {
+  return data->Intersects(geom);
 }
 
 template <class T, OGRwkbGeometryType R>

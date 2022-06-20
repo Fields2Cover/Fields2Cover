@@ -9,44 +9,44 @@
 namespace f2c {
 namespace pp {
 
-void TurningBase::setRobotParams(const F2CRobot& _params) {
-  robot = _params;
+void TurningBase::setRobotParams(const F2CRobot& params) {
+  robot = params;
 }
 
 std::vector<double> TurningBase::transformToNormalTurn(
-    const F2CPoint& _start_pos, double _start_angle,
-    const F2CPoint& _end_pos, double _end_angle) {
-  double dist_start_end = _start_pos.Distance(_end_pos);
-  auto dir = _end_pos - _start_pos;
+    const F2CPoint& start_pos, double start_angle,
+    const F2CPoint& end_pos, double end_angle) {
+  double dist_start_end = start_pos.Distance(end_pos);
+  auto dir = end_pos - start_pos;
   auto angle = F2CPoint::mod_2pi(dir.getAngleFromPoint());
   bool inverted {false};
-  _start_angle = F2CPoint::mod_2pi(_start_angle - angle);
-  _end_angle = F2CPoint::mod_2pi(_end_angle - angle);
-  if (_start_angle > boost::math::constants::pi<double>()) {
-    _start_angle = F2CPoint::mod_2pi(-_start_angle);
-    _end_angle = F2CPoint::mod_2pi(-_end_angle);
+  start_angle = F2CPoint::mod_2pi(start_angle - angle);
+  end_angle = F2CPoint::mod_2pi(end_angle - angle);
+  if (start_angle > boost::math::constants::pi<double>()) {
+    start_angle = F2CPoint::mod_2pi(-start_angle);
+    end_angle = F2CPoint::mod_2pi(-end_angle);
     inverted = true;
   }
-  return {dist_start_end, angle, _start_angle, _end_angle,
+  return {dist_start_end, angle, start_angle, end_angle,
     static_cast<double>(inverted)};
 }
 
 
-F2CPath TurningBase::createTurn(const F2CPoint& _start_pos,
-    double _start_angle, const F2CPoint& _end_pos, double _end_angle) {
+F2CPath TurningBase::createTurn(const F2CPoint& start_pos,
+    double start_angle, const F2CPoint& end_pos, double end_angle) {
   auto turn_values =
-    transformToNormalTurn(_start_pos, _start_angle, _end_pos, _end_angle);
+    transformToNormalTurn(start_pos, start_angle, end_pos, end_angle);
   double dist_start_end = turn_values[0];
   double rot_angle = turn_values[1];
-  double start_angle = turn_values[2];
-  double end_angle = turn_values[3];
+  double start_angle_t = turn_values[2];
+  double end_angle_t = turn_values[3];
   double inverted = turn_values[4];
 
   F2CPath path;
   if (using_cache) {
-    path = createTurnIfNotCached(dist_start_end, start_angle, end_angle);
+    path = createTurnIfNotCached(dist_start_end, start_angle_t, end_angle_t);
   } else {
-    path = createSimpleTurn(dist_start_end, start_angle, end_angle);
+    path = createSimpleTurn(dist_start_end, start_angle_t, end_angle_t);
   }
   if (!path.isValid() || path.points.size() <= 1) {return F2CPath();}
 
@@ -62,34 +62,34 @@ F2CPath TurningBase::createTurn(const F2CPoint& _start_pos,
       ang = F2CPoint::mod_2pi(ang + rot_angle);});
 
   std::for_each(path.points.begin(), path.points.end(), [&](auto& p) {
-      p = p + _start_pos;});
+      p = p + start_pos;});
 
-  correctPath(path, _start_pos, _end_pos);
+  correctPath(path, start_pos, end_pos);
   return path;
 }
 
-void TurningBase::correctPath(F2CPath& _path, const F2CPoint& _start_pos,
-    const F2CPoint& _end_pos, float _max_error_dist) {
-  if (_path.points.size() < 2) {return;}
+void TurningBase::correctPath(F2CPath& path, const F2CPoint& start_pos,
+    const F2CPoint& end_pos, float max_error_dist) {
+  if (path.points.size() < 2) {return;}
 
   auto is_near = [&](const F2CPoint& a, const F2CPoint& b) {
-      return (a.Distance(b) < _max_error_dist);
+      return (a.Distance(b) < max_error_dist);
   };
-  if (is_near(_path.points[0], _start_pos)) {
-    _path.points[0] = _start_pos;
+  if (is_near(path.points[0], start_pos)) {
+    path.points[0] = start_pos;
   }
-  if (is_near(_path.points.back(), _end_pos)) {
-    _path.points.back() = _end_pos;
+  if (is_near(path.points.back(), end_pos)) {
+    path.points.back() = end_pos;
   }
 }
 
 
-F2CPath TurningBase::createTurnIfNotCached(double _dist_start_end,
-    double _start_angle, double _end_angle) {
+F2CPath TurningBase::createTurnIfNotCached(double dist_start_end,
+    double start_angle, double end_angle) {
   std::vector<int> v_turn {
-        static_cast<int>(1e3 * _dist_start_end),
-        static_cast<int>(1e3 * _start_angle),
-        static_cast<int>(1e3 * _end_angle)
+        static_cast<int>(1e3 * dist_start_end),
+        static_cast<int>(1e3 * start_angle),
+        static_cast<int>(1e3 * end_angle)
   };
   if (max_headland_width < 1e5) {
     v_turn.emplace_back(static_cast<int>(1e3 * max_headland_width));
@@ -99,7 +99,7 @@ F2CPath TurningBase::createTurnIfNotCached(double _dist_start_end,
   if (it != path_cache_.end()) {
     return it->second.clone();
   }
-  auto path = createSimpleTurn(_dist_start_end, _start_angle, _end_angle);
+  auto path = createSimpleTurn(dist_start_end, start_angle, end_angle);
   path_cache_.insert({v_turn, path.clone()});
   return path;
 }

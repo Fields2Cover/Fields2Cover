@@ -36,13 +36,13 @@ struct Robot {
 
  public:
   explicit Robot(
-      double _robot_width,
-      double _op_width) : op_width(_op_width), robot_width(_robot_width) {
-    if (_op_width < _robot_width) {
+      double robot_width_p,
+      double op_width_p) : op_width(op_width_p), robot_width(robot_width_p) {
+    if (op_width_p < robot_width_p) {
       throw std::out_of_range(
           "Operational width have to be equal or greater than Robot width.");
     }
-    if (_robot_width <= 0.0) {
+    if (robot_width_p <= 0.0) {
       throw std::out_of_range(
           "Robot width has to be greater than 0.");
     }

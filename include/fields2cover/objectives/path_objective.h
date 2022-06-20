@@ -35,9 +35,9 @@ class PathObjective {
 
  public:
   /// Return true if the objective is to minimize the cost function
-  virtual bool isMinimizing(void) const { return true;}
+  virtual bool isMinimizing() const { return true;}
   /// Return true if the objective is to maximize the cost function
-  virtual bool isMaximizing(void) const { return !isMinimizing();}
+  virtual bool isMaximizing() const { return !isMinimizing();}
 
 
  public:

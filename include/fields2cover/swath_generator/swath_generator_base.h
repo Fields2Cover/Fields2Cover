@@ -24,16 +24,16 @@ template <typename T>
 class SwathGeneratorBase : public obj::OptimizationClass<T> {
  public:
   virtual F2CSwaths generateBestSwaths(
-      double _op_width, const F2CCell& _poly) = 0;
+      double op_width, const F2CCell& poly) = 0;
 
   virtual F2CSwathsByCells generateBestSwaths(
-      double _op_width, const F2CCells& _polys);
+      double op_width, const F2CCells& polys);
 
-  virtual F2CSwaths generateSwaths(double _angle,
-      double _op_width, const F2CCell& _poly);
+  virtual F2CSwaths generateSwaths(double angle,
+      double op_width, const F2CCell& poly);
 
-  virtual F2CSwathsByCells generateSwaths(double _angle,
-      double _op_width, const F2CCells& _polys);
+  virtual F2CSwathsByCells generateSwaths(double angle,
+      double op_width, const F2CCells& polys);
 
   double getBestAngle() const;
 

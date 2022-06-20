@@ -10,7 +10,7 @@ namespace f2c {
 namespace types {
 
 Field::Field() = default;
-Field::Field(const Cells& cells, const std::string& _id) : id(_id) {
+Field::Field(const Cells& cells, const std::string& id_p) : id(id_p) {
   if (!cells.isEmpty()) {
     ref_point = cells.getCellBorder(0).StartPoint().clone();
   }
@@ -33,45 +33,45 @@ double Field::getArea(void) const {
   return field.getArea();
 }
 
-bool Field::isCoordSystemUTM(const std::string& _coord_sys) {
-  return _coord_sys.find("UTM:") != std::string::npos;
+bool Field::isCoordSystemUTM(const std::string& coord_sys) {
+  return coord_sys.find("UTM:") != std::string::npos;
 }
 
 bool Field::isCoordSystemUTM() const {
   return isCoordSystemUTM(coord_sys);
 }
 
-std::string Field::getUTMCoordSystem(const std::string& _coord_sys) {
-  return isCoordSystemUTM(_coord_sys) ? _coord_sys.substr(4) : "";
+std::string Field::getUTMCoordSystem(const std::string& coord_sys) {
+  return isCoordSystemUTM(coord_sys) ? coord_sys.substr(4) : "";
 }
 
 std::string Field::getUTMCoordSystem() const {
   return getUTMCoordSystem(coord_sys);
 }
 
-bool Field::isCoordSystemEPSG(const std::string& _coord_sys) {
-  return _coord_sys.find("EPSG:") != std::string::npos;
+bool Field::isCoordSystemEPSG(const std::string& coord_sys) {
+  return coord_sys.find("EPSG:") != std::string::npos;
 }
 
 bool Field::isCoordSystemEPSG() const {
   return isCoordSystemEPSG(coord_sys);
 }
 
-int Field::getEPSGCoordSystem(const std::string& _coord_sys) {
-  return isCoordSystemEPSG(_coord_sys) ?
-    std::stoi(_coord_sys.substr(5)) : -1;
+int Field::getEPSGCoordSystem(const std::string& coord_sys) {
+  return isCoordSystemEPSG(coord_sys) ?
+    std::stoi(coord_sys.substr(5)) : -1;
 }
 
 int Field::getEPSGCoordSystem() const {
   return getEPSGCoordSystem(coord_sys);
 }
 
-void Field::setEPSGCoordSystem(int _epsg) {
-  coord_sys = "EPSG:" + std::to_string(_epsg);
+void Field::setEPSGCoordSystem(int epsg) {
+  coord_sys = "EPSG:" + std::to_string(epsg);
 }
 
-void Field::setUTMCoordSystem(const std::string& _utm) {
-  coord_sys = "UTM:" + _utm;
+void Field::setUTMCoordSystem(const std::string& utm) {
+  coord_sys = "UTM:" + utm;
 }
 
 }  // namespace types

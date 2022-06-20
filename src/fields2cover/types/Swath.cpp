@@ -10,15 +10,15 @@ namespace f2c {
 namespace types {
 
 Swath::Swath() = default;
-Swath::Swath(const LineString& _path) : path_(_path) {}
+Swath::Swath(const LineString& path) : path_(path) {}
 
-Swath::Swath(double _width) {
-  this->setWidth(_width);
+Swath::Swath(double width) {
+  this->setWidth(width);
 }
 
-Swath::Swath(const LineString& _path, double _width, int _id) :
-    id_(_id), path_(_path) {
-  this->setWidth(_width);
+Swath::Swath(const LineString& path, double width, int id) :
+    id_(id), path_(path) {
+  this->setWidth(width);
 }
 
 Swath::Swath(const Swath&) = default;
@@ -58,24 +58,24 @@ bool Swath::operator<=(const Swath& s) const {
       (this->getId() == s.getId() && *this == s));
 }
 
-double Swath::getLength(void) const {
+double Swath::getLength() const {
   return this->path_.getLength();
 }
 
-double Swath::getArea(void) const {
+double Swath::getArea() const {
   return this->computeAreaCovered().getArea();
 }
 
-double Swath::getArea(const Cells& _polys) const {
-  return this->computeAreaCovered(_polys).getArea();
+double Swath::getArea(const Cells& polys) const {
+  return this->computeAreaCovered(polys).getArea();
 }
 
-void Swath::reverse(void) {
+void Swath::reverse() {
   this->path_.reversePoints();
   this->creation_dir_ = !this->creation_dir_;
 }
 
-double Swath::getInAngle(void) const {
+double Swath::getInAngle() const {
   if (path_.isEmpty()) {
     return -1.0;
   }
@@ -83,7 +83,7 @@ double Swath::getInAngle(void) const {
     .getAngleFromPoint();
 }
 
-double Swath::getOutAngle(void) const {
+double Swath::getOutAngle() const {
   if (this->path_.isEmpty()) {
     return -1.0;
   }
@@ -92,29 +92,29 @@ double Swath::getOutAngle(void) const {
       path_.getY(n) - path_.getY(n-1)).getAngleFromPoint();
 }
 
-Point Swath::startPoint(void) const {
+Point Swath::startPoint() const {
   if (path_.isEmpty()) {
     return Point();
   }
   return path_.StartPoint();
 }
 
-Point Swath::endPoint(void) const {
+Point Swath::endPoint() const {
   if (path_.isEmpty()) {
     return Point();
   }
   return path_.EndPoint();
 }
 
-Cells Swath::computeAreaCovered(void) const {
+Cells Swath::computeAreaCovered() const {
   if (path_.isEmpty()) {
     return Cells();
   }
   return Cells::Buffer(path_, width_ / 2.0);
 }
 
-Cells Swath::computeAreaCovered(const Cells& _polys) const {
-  return _polys.getCellsInside(computeAreaCovered());
+Cells Swath::computeAreaCovered(const Cells& polys) const {
+  return polys.getCellsInside(computeAreaCovered());
 }
 
 Swath Swath::clone() const {
@@ -155,35 +155,35 @@ int Swath::getId() const {
   return this->id_;
 }
 
-void Swath::setId(int _id) {
-  this->id_ = _id;
+void Swath::setId(int id) {
+  this->id_ = id;
 }
 
 LineString Swath::getPath() const {
   return this->path_;
 }
 
-void Swath::setPath(const LineString& _path) {
-  this->path_ = _path;
+void Swath::setPath(const LineString& path) {
+  this->path_ = path;
 }
 
 double Swath::getWidth() const {
   return this->width_;
 }
 
-void Swath::setWidth(double _width) {
-  if (0 >= _width) {
+void Swath::setWidth(double width) {
+  if (0 >= width) {
     throw std::invalid_argument("Width needs to be positive");
   }
-  this->width_ = _width;
+  this->width_ = width;
 }
 
 bool Swath::getCreationDir() const {
   return this->creation_dir_;
 }
 
-void Swath::setCreationDir(bool _creation_dir) {
-  this->creation_dir_ = _creation_dir;
+void Swath::setCreationDir(bool creation_dir) {
+  this->creation_dir_ = creation_dir;
 }
 
 

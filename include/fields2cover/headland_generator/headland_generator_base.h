@@ -27,8 +27,8 @@ class HeadlandGeneratorBase : public obj::OptimizationClass<T> {
   /// @param _field Original field
   /// @param _dist_headland Width of the headland
   /// @return Field without headlands
-  virtual F2CCells generateHeadlands(const F2CCells& _field,
-      double _dist_headland) = 0;
+  virtual F2CCells generateHeadlands(const F2CCells& field,
+      double dist_headland) = 0;
 };
 
 }  // namespace hg
