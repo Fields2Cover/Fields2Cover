@@ -28,8 +28,8 @@ double GlobalObjective::computeCost(const F2CSwaths&) const {
 
 double GlobalObjective::computeCost(const F2CSwathsByCells& swaths) const {
   return std::accumulate(swaths.begin(), swaths.end(), 0.0,
-      [&](double init, const auto& s) {
-      return init + computeCost(s);});
+      [this] (double init, const auto& s) {
+      return init + this->computeCost(s);});
 }
 
 double GlobalObjective::computeCost(const F2CCells&) const {
@@ -61,7 +61,7 @@ double GlobalObjective::computeCost(
 double GlobalObjective::computeCost(const F2CCell& c,
     const F2CSwathsByCells& swaths) const {
   return std::accumulate(swaths.begin(), swaths.end(), 0.0,
-    [&](double init, const auto& s) {return init + computeCost(c, s);});
+    [this, &c] (double init, const auto& s) {return init + computeCost(c, s);});
 }
 
 double GlobalObjective::computeCost(
@@ -77,7 +77,7 @@ double GlobalObjective::computeCost(
 double GlobalObjective::computeCost(const F2CCells& c,
     const F2CSwathsByCells& swaths) const {
   return std::accumulate(swaths.begin(), swaths.end(), 0.0,
-    [&](double init, const auto& s) {return init + computeCost(c, s);});
+    [this, &c] (double init, const auto& s) {return init + computeCost(c, s);});
 }
 
 double GlobalObjective::computeCost(

@@ -51,17 +51,17 @@ F2CPath TurningBase::createTurn(const F2CPoint& start_pos,
   if (!path.isValid() || path.points.size() <= 1) {return F2CPath();}
 
   if (inverted) {
-    std::for_each(path.points.begin(), path.points.end(), [&](auto& p) {
+    std::for_each(path.points.begin(), path.points.end(), [] (auto& p) {
         p.setY(-p.getY());});
-    std::for_each(path.angles.begin(), path.angles.end(), [&](auto& ang) {
+    std::for_each(path.angles.begin(), path.angles.end(), [] (auto& ang) {
       ang = F2CPoint::mod_2pi(-ang) ;});
   }
   path.points = F2CPoint(0.0, 0.0).rotateFromPoint(rot_angle, path.points);
 
-  std::for_each(path.angles.begin(), path.angles.end(), [&](auto& ang) {
+  std::for_each(path.angles.begin(), path.angles.end(), [rot_angle](auto& ang) {
       ang = F2CPoint::mod_2pi(ang + rot_angle);});
 
-  std::for_each(path.points.begin(), path.points.end(), [&](auto& p) {
+  std::for_each(path.points.begin(), path.points.end(), [&start_pos](auto& p) {
       p = p + start_pos;});
 
   correctPath(path, start_pos, end_pos);
@@ -72,7 +72,7 @@ void TurningBase::correctPath(F2CPath& path, const F2CPoint& start_pos,
     const F2CPoint& end_pos, float max_error_dist) {
   if (path.points.size() < 2) {return;}
 
-  auto is_near = [&](const F2CPoint& a, const F2CPoint& b) {
+  auto is_near = [max_error_dist](const F2CPoint& a, const F2CPoint& b) {
       return (a.Distance(b) < max_error_dist);
   };
   if (is_near(path.points[0], start_pos)) {
