@@ -1,0 +1,46 @@
+# Include python
+find_package(Python REQUIRED COMPONENTS Interpreter Development)
+
+if(Python_VERSION VERSION_GREATER_EQUAL 3)
+  list(APPEND CMAKE_SWIG_FLAGS "-py3;-DPY3")
+endif()
+
+
+set(CMAKE_SWIG_FLAGS "")
+set_source_files_properties(../${PROJECT_NAME}.i PROPERTIES CPLUSPLUS ON)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../include/ ${Python_INCLUDE_DIRS} )
+file(GLOB_RECURSE Swig_SRC "${CMAKE_CURRENT_SOURCE_DIR}/../../include/fields2cover.h")
+
+# Add swig module
+SWIG_ADD_LIBRARY(fields2cover_python LANGUAGE python SOURCES ../${PROJECT_NAME}.i)
+swig_link_libraries(fields2cover_python Fields2Cover ${Python_LIBRARIES} ${PROJ_LIBRARY} ${GDAL_LIBRARIES})
+
+file(MAKE_DIRECTORY ${LIBRARY_OUTPUT_PATH})
+
+# Files to install with Python
+set(PYTHON_INSTALL_FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/fields2cover.py
+        ${LIBRARY_OUTPUT_PATH}/_fields2cover_python.so)
+
+# Configure setup.py and copy to output directory
+set(SETUP_PY_IN ${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in)
+set(SETUP_PY_OUT ${CMAKE_CURRENT_BINARY_DIR}/setup.py)
+configure_file(${SETUP_PY_IN} ${SETUP_PY_OUT})
+
+
+# Install target to call setup.py
+if(Python_VERSION VERSION_GREATER_EQUAL 3)
+add_custom_target(install-python
+        DEPENDS _fields2cover_python
+        COMMAND python3 ${SETUP_PY_OUT} install)
+install(CODE "execute_process(COMMAND python3 ${SETUP_PY_OUT} install)")
+
+elseif(Python_VERSION VERSION_GREATER_EQUAL 2)
+add_custom_target(install-python
+        DEPENDS _fields2cover_python
+        COMMAND python ${SETUP_PY_OUT} install)
+install(CODE "execute_process(COMMAND python ${SETUP_PY_OUT} install)")
+endif()
+
+
+

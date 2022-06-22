@@ -14,12 +14,18 @@ set(PACKAGE_MAINTAINER "Gonzalo Mier")
 option(BUILD_CPP "Build Cpp package" ON)
 option(BUILD_TUTORIALS "Build tutorials" ON)
 option(BUILD_TESTS "Build tests" ON)
+option(BUILD_SWIG "Build Swig" OFF)
 option(BUILD_DOC "Build Documentation" OFF)
 
 option(USING_MATPLOTLIB "Use Matplotlib" ON)
 
 
-cmake_minimum_required(VERSION 3.11)
+if (BUILD_SWIG)
+  cmake_minimum_required(VERSION 3.12.4)
+else()
+  cmake_minimum_required(VERSION 3.11)
+endif()
+
 if(${CMAKE_VERSION} VERSION_LESS 3.22)
     cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 else()
@@ -223,6 +229,14 @@ endif()
 
 if (BUILD_TUTORIALS)
     add_subdirectory(tutorials)
+endif() 
+
+#####################################################
+######################### swig ######################
+#####################################################
+
+if (BUILD_SWIG)
+    add_subdirectory(swig)
 endif() 
 endif()  # BUILD_CPP
 

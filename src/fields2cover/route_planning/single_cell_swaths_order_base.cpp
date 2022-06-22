@@ -9,6 +9,8 @@
 
 namespace f2c::rp {
 
+SingleCellSwathsOrderBase::SingleCellSwathsOrderBase() = default;
+
 SingleCellSwathsOrderBase::SingleCellSwathsOrderBase(F2CSwaths& swaths) {
   setSwaths(swaths);
 }
