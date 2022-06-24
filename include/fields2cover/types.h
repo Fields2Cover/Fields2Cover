@@ -29,24 +29,24 @@
 #include "fields2cover/types/OptimizationParams.h"
 #include "fields2cover/types/Robot.h"
 
-typedef f2c::types::Robot F2CRobot;
-typedef f2c::types::OptimizationParams F2COptim;
+using F2CRobot = f2c::types::Robot;
+using F2COptim = f2c::types::OptimizationParams;
 
-typedef f2c::types::Point F2CPoint;
-typedef f2c::types::MultiPoint F2CMultiPoint;
-typedef f2c::types::LineString F2CLineString;
-typedef f2c::types::LinearRing F2CLinearRing;
-typedef f2c::types::MultiLineString F2CMultiLineString;
-typedef f2c::types::Cell F2CCell;
-typedef f2c::types::Cells F2CCells;
-typedef f2c::types::Field F2CField;
-typedef f2c::types::Path F2CPath;
-typedef f2c::types::Route F2CRoute;
-typedef f2c::types::Swath F2CSwath;
-typedef f2c::types::Swaths F2CSwaths;
+using F2CPoint = f2c::types::Point;
+using F2CMultiPoint = f2c::types::MultiPoint;
+using F2CLineString = f2c::types::LineString;
+using F2CLinearRing = f2c::types::LinearRing;
+using F2CMultiLineString = f2c::types::MultiLineString;
+using F2CCell = f2c::types::Cell;
+using F2CCells = f2c::types::Cells;
+using F2CField = f2c::types::Field;
+using F2CPath = f2c::types::Path;
+using F2CRoute = f2c::types::Route;
+using F2CSwath = f2c::types::Swath;
+using F2CSwaths = f2c::types::Swaths;
 
-typedef std::vector<F2CRobot> F2CRobots;
-typedef std::vector<F2CField> F2CFields;
-typedef std::vector<F2CSwaths> F2CSwathsByCells;
+using F2CRobots = std::vector<F2CRobot>;
+using F2CFields = std::vector<F2CField>;
+using F2CSwathsByCells = std::vector<F2CSwaths>;
 
 #endif  //  FIELDS2COVER_TYPES_H_
