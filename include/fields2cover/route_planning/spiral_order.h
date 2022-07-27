@@ -9,15 +9,15 @@ namespace f2c::rp {
 
 class SpiralOrder : public SingleCellSwathsOrderBase {
  public:
-  SpiralOrder(int spiral_size);
-  using SingleCellSwathsOrderBase::SingleCellSwathsOrderBase;
+  SpiralOrder(F2CSwaths& swaths, int spiral_size);
 
  private:
   int spiral_size;
   void sortSwaths() override;
-  void spiral(size_t offset, int size)
+  void spiral(size_t offset, int size);
 };
+
 
 }  // namespace f2c::rp
 
-#endif  // FIELDS2COVER_ROUTE_PLANNING_SNAKE_ORDER_H_
+#endif  // FIELDS2COVER_ROUTE_PLANNING_SPIRAL_ORDER_H_

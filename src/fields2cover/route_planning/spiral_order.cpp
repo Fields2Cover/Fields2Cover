@@ -1,15 +1,9 @@
-//=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
-//                     Author: Gonzalo Mier
-//                        BSD-3 License
-//=============================================================================
-
 #include "fields2cover/route_planning/spiral_order.h"
 
 namespace f2c::rp {
 
-SpiralOrder::SpiralOrder(int size){
-  spiral_size = size;
+SpiralOrder::SpiralOrder(F2CSwaths& swaths, int spiral_size) : SingleCellSwathsOrderBase(swaths) {
+  this->spiral_size = spiral_size;
 }
 
 void SpiralOrder::sortSwaths() {
@@ -21,7 +15,7 @@ void SpiralOrder::sortSwaths() {
   }
 
   int swaths_left = swaths_.size() - spiral_count * spiral_size;
-  if (swaths_left > 0) {
+  if (swaths_left > 1) {
     spiral(spiral_count * spiral_size, swaths_left);
   }
 }

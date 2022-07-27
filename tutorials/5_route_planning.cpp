@@ -46,7 +46,7 @@ int main() {
   f2c::Visualizer::plot(cells);
   f2c::Visualizer::plot(no_hl);
   f2c::Visualizer::plot(swaths);
-  f2c::Visualizer::save("Tutorial_5_1_Snake_1");
+  f2c::Visualizer::save("Tutorial_5_2_Snake_1");
 
   for (int i = 1; i < 4; ++i) {
     f2c::Visualizer::figure(21 + i);
@@ -54,6 +54,25 @@ int main() {
     f2c::Visualizer::plot(no_hl);
     f2c::Visualizer::plot(snake_sorter.genSortedSwaths());
     f2c::Visualizer::save("Tutorial_5_2_Snake_" + std::to_string(i+1));
+  }
+
+  swaths = bf.generateSwaths(M_PI, robot.op_width, no_hl.getGeometry(0));
+  std::cout << "####### Tutorial 5.3 Spiral order ######" << std::endl;
+  f2c::rp::SpiralOrder spiral_sorter(swaths, 5);
+  swaths = spiral_sorter.genSortedSwaths();
+
+  f2c::Visualizer::figure(31);
+  f2c::Visualizer::plot(cells);
+  f2c::Visualizer::plot(no_hl);
+  f2c::Visualizer::plot(swaths);
+  f2c::Visualizer::save("Tutorial_5_3_Spiral_1");
+
+  for (int i = 1; i < 4; ++i) {
+    f2c::Visualizer::figure(31 + i);
+    f2c::Visualizer::plot(cells);
+    f2c::Visualizer::plot(no_hl);
+    f2c::Visualizer::plot(spiral_sorter.genSortedSwaths());
+    f2c::Visualizer::save("Tutorial_5_3_Spiral_" + std::to_string(i+1));
   }
 
   return 0;
