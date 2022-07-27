@@ -58,7 +58,7 @@ int main() {
 
   swaths = bf.generateSwaths(M_PI, robot.op_width, no_hl.getGeometry(0));
   std::cout << "####### Tutorial 5.3 Spiral order ######" << std::endl;
-  f2c::rp::SpiralOrder spiral_sorter(swaths, 4);
+  f2c::rp::SpiralOrder spiral_sorter(swaths, 6);
   swaths = spiral_sorter.genSortedSwaths();
 
   f2c::Visualizer::figure(31);

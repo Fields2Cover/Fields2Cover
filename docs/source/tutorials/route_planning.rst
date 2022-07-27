@@ -100,19 +100,25 @@ Spiral order
 -------------------------------
 
 Spiral order covers the field in multiple spirals with predefined size.
-This pattern is commonly used when harvesting a field.
+This pattern is commonly used when harvesting.
+Harvesters have a limited capacity and sometimes have to unload onto a truck.
+
+Because the side to which they can unload is usually fixed (either left, or right), it is best to minimize the number of occasions,
+of the truck having to drive into the unharvested part of the field, or the harvester making way for the truck and waiting until it is unloaded.
+
+With this order, there is always only one swath in entire spiral, where this event can occur.
 
 The higher the spiral size, the lower the chance of having to unload onto an unharvested path of the field,
 at the price of longer distance travelled between the swaths.
 
-With the spiral size of 4, the order of swaths travelled is:
-1, 4, 2, 3, 5, 8, 6, 7 and so on...
+With the spiral size of 6, the order of swaths travelled is:
+1, 6, 2, 5, 3, 4, 7, 12, 8, 11 and so on...
 
 Same as previous patterns, spiral pattern also has 4 variants:
 
 .. code-block:: cpp
 
-  f2c::rp::SpiralOrder spiral_sorter(swaths, 4);
+  f2c::rp::SpiralOrder spiral_sorter(swaths, 6);
   swaths = spiral_sorter.genSortedSwaths();
 
 +-----------+-----------+
