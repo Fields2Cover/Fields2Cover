@@ -112,7 +112,8 @@
 %include "fields2cover/route_planning/boustrophedon_order.h"
 %rename(RP_Snake) f2c::rp::SnakeOrder;
 %include "fields2cover/route_planning/snake_order.h"
-
+%rename(RP_Spiral) f2c::rp::SpiralOrder;
+%include "fields2cover/route_planning/spiral_order.h"
 
 %rename(PP_Turning_base_class) f2c::pp::TurningBase;
 %include "fields2cover/path_planning/turning_base.h"
