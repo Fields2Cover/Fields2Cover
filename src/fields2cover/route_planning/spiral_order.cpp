@@ -3,6 +3,14 @@
 namespace f2c::rp {
 
 SpiralOrder::SpiralOrder(F2CSwaths& swaths, int spiral_size) : SingleCellSwathsOrderBase(swaths) {
+  set_spiral_size(spiral_size);
+}
+
+SpiralOrder::SpiralOrder(F2CSwaths& swaths) : SingleCellSwathsOrderBase(swaths) {
+  set_spiral_size(1);
+}
+
+void SpiralOrder::set_spiral_size(int spiral_size){
   this->spiral_size = spiral_size;
 }
 
