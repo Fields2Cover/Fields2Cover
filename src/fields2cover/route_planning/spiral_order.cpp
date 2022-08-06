@@ -6,10 +6,6 @@ SpiralOrder::SpiralOrder(F2CSwaths& swaths, int spiral_size) : SingleCellSwathsO
   this->spiral_size = spiral_size;
 }
 
-SpiralOrder::SpiralOrder(int spiral_size) : SingleCellSwathsOrderBase() {
-  this->spiral_size = spiral_size;
-}
-
 void SpiralOrder::sortSwaths() {
   this->changeStartPoint();
 
