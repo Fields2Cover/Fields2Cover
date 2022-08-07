@@ -8,6 +8,9 @@
 
 namespace f2c::rp {
 
+SnakeOrder::SnakeOrder(F2CSwaths& swaths) : SingleCellSwathsOrderBase(swaths) {
+}
+
 void SnakeOrder::sortSwaths() {
   this->changeStartPoint();
 
