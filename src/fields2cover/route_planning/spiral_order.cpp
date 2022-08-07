@@ -2,7 +2,7 @@
 
 namespace f2c::rp {
 
-SpiralOrder::SpiralOrder() : SingleCellSwathsOrderBase {
+SpiralOrder::SpiralOrder() : SingleCellSwathsOrderBase() {
 }
 
 SpiralOrder::SpiralOrder(F2CSwaths& swaths) : SingleCellSwathsOrderBase(swaths) {
