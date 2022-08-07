@@ -15,6 +15,7 @@ namespace f2c::rp {
 
 class SingleCellSwathsOrderBase {
  public:
+  SingleCellSwathsOrderBase();
   explicit SingleCellSwathsOrderBase(F2CSwaths& swaths);
   virtual ~SingleCellSwathsOrderBase();
 
