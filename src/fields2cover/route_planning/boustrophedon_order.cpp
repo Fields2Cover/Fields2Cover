@@ -8,9 +8,6 @@
 
 namespace f2c::rp {
 
-BoustrophedonOrder::BoustrophedonOrder(F2CSwaths& swaths) : SingleCellSwathsOrderBase(swaths) {
-}
-
 void BoustrophedonOrder::sortSwaths() {
   this->changeStartPoint();
 }
