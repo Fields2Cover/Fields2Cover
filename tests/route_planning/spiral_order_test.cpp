@@ -111,16 +111,16 @@ TEST(fields2cover_route_spiral, genSortedSwaths_default_size) {
 
   swaths = swath_sorter.genSortedSwaths();
 
-  EXPECT_EQ(swaths[0].getWidth(), 2);
-  EXPECT_EQ(swaths[1].getWidth(), 1);
-  EXPECT_EQ(swaths[2].getWidth(), 4);
-  EXPECT_EQ(swaths[3].getWidth(), 3);
-  EXPECT_EQ(swaths[4].getWidth(), 6);
-  EXPECT_EQ(swaths[5].getWidth(), 5);
-  EXPECT_EQ(swaths[6].getWidth(), 8);
-  EXPECT_EQ(swaths[7].getWidth(), 7);
-  EXPECT_EQ(swaths[8].getWidth(), 10);
-  EXPECT_EQ(swaths[9].getWidth(), 9);
+  EXPECT_EQ(swaths[0].getWidth(), 1);
+  EXPECT_EQ(swaths[1].getWidth(), 2);
+  EXPECT_EQ(swaths[2].getWidth(), 3);
+  EXPECT_EQ(swaths[3].getWidth(), 4);
+  EXPECT_EQ(swaths[4].getWidth(), 5);
+  EXPECT_EQ(swaths[5].getWidth(), 6);
+  EXPECT_EQ(swaths[6].getWidth(), 7);
+  EXPECT_EQ(swaths[7].getWidth(), 8);
+  EXPECT_EQ(swaths[8].getWidth(), 9);
+  EXPECT_EQ(swaths[9].getWidth(), 10);
 }
 
 TEST(fields2cover_route_spiral, genSortedSwaths_default_cstr) {
@@ -132,18 +132,17 @@ TEST(fields2cover_route_spiral, genSortedSwaths_default_cstr) {
 
   f2c::rp::SpiralOrder swath_sorter;
   swath_sorter.setSwaths(swaths);
-  swath_sorter.set_spiral_size(1);
 
   swaths = swath_sorter.genSortedSwaths();
 
-  EXPECT_EQ(swaths[0].getWidth(), 2);
-  EXPECT_EQ(swaths[1].getWidth(), 1);
-  EXPECT_EQ(swaths[2].getWidth(), 4);
-  EXPECT_EQ(swaths[3].getWidth(), 3);
-  EXPECT_EQ(swaths[4].getWidth(), 6);
-  EXPECT_EQ(swaths[5].getWidth(), 5);
-  EXPECT_EQ(swaths[6].getWidth(), 8);
-  EXPECT_EQ(swaths[7].getWidth(), 7);
-  EXPECT_EQ(swaths[8].getWidth(), 10);
-  EXPECT_EQ(swaths[9].getWidth(), 9);
+  EXPECT_EQ(swaths[0].getWidth(), 1);
+  EXPECT_EQ(swaths[1].getWidth(), 2);
+  EXPECT_EQ(swaths[2].getWidth(), 3);
+  EXPECT_EQ(swaths[3].getWidth(), 4);
+  EXPECT_EQ(swaths[4].getWidth(), 5);
+  EXPECT_EQ(swaths[5].getWidth(), 6);
+  EXPECT_EQ(swaths[6].getWidth(), 7);
+  EXPECT_EQ(swaths[7].getWidth(), 8);
+  EXPECT_EQ(swaths[8].getWidth(), 9);
+  EXPECT_EQ(swaths[9].getWidth(), 10);
 }
