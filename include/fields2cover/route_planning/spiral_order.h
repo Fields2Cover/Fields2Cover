@@ -9,8 +9,10 @@ namespace f2c::rp {
 
 class SpiralOrder : public SingleCellSwathsOrderBase {
  public:
-  SpiralOrder(F2CSwaths& swaths, int spiral_size);
-
+  SpiralOrder();
+  SpiralOrder(F2CSwaths& swaths);
+  SpiralOrder(F2CSwaths& swaths, int sp_size);
+  void set_spiral_size(int sp_size);
  private:
   int spiral_size;
   void sortSwaths() override;
