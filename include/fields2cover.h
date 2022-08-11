@@ -37,6 +37,7 @@
 #include "fields2cover/route_planning/single_cell_swaths_order_base.h"
 #include "fields2cover/route_planning/boustrophedon_order.h"
 #include "fields2cover/route_planning/snake_order.h"
+#include "fields2cover/route_planning/spiral_order.h"
 
 #include "fields2cover/path_planning/turning_base.h"
 #include "fields2cover/path_planning/dubins_curves.h"

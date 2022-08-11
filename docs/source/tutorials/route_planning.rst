@@ -17,6 +17,14 @@ Part 5: Route planning
     :scale: 60%
 .. |snake4| image:: ../../figures/Tutorial_5_2_Snake_4.png
     :scale: 60%
+.. |spiral1| image:: ../../figures/Tutorial_5_3_Spiral_1.png
+    :scale: 60%
+.. |spiral2| image:: ../../figures/Tutorial_5_3_Spiral_2.png
+    :scale: 60%
+.. |spiral3| image:: ../../figures/Tutorial_5_3_Spiral_3.png
+    :scale: 60%
+.. |spiral4| image:: ../../figures/Tutorial_5_3_Spiral_4.png
+    :scale: 60%
 
 
 A route planner searches the best order to cover previously generated swaths.
@@ -87,3 +95,34 @@ As with boustrophedon pattern, snake pattern also has 4 variants:
 +----------+----------+
 | |snake3| | |snake4| |
 +----------+----------+
+
+Spiral order
+-------------------------------
+
+Spiral order covers the field in multiple spirals with predefined size.
+This pattern is commonly used when harvesting.
+Harvesters have a limited capacity and sometimes have to unload onto a truck.
+
+Because the side to which they can unload is usually fixed (either left, or right), it is best to minimize the number of occasions,
+of the truck having to drive into the unharvested part of the field, or the harvester making way for the truck and waiting until it is unloaded.
+
+With this order, there is always only one swath in entire spiral, where this event can occur.
+
+The higher the spiral size, the lower the chance of having to unload onto an unharvested path of the field,
+at the price of longer distance travelled between the swaths.
+
+With the spiral size of 6, the order of swaths travelled is:
+1, 6, 2, 5, 3, 4, 7, 12, 8, 11 and so on...
+
+Same as previous patterns, spiral pattern also has 4 variants:
+
+.. code-block:: cpp
+
+  f2c::rp::SpiralOrder spiral_sorter(swaths, 6);
+  swaths = spiral_sorter.genSortedSwaths();
+
++-----------+-----------+
+| |spiral1| | |spiral2| |
++-----------+-----------+
+| |spiral3| | |spiral4| |
++-----------+-----------+
