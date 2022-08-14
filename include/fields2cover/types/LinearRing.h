@@ -19,6 +19,7 @@ struct LinearRing : public Geometries<LinearRing, OGRLinearRing, wkbLinearRing,
  public:
   using Geometries<LinearRing, OGRLinearRing, wkbLinearRing, Point>::Geometries;
   LinearRing();
+  LinearRing(const std::vector<Point>& ps);
   LinearRing(const std::initializer_list<Point>& ps);
 
   void operator*=(double b);
