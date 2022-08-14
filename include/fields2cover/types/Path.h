@@ -18,12 +18,12 @@
 
 namespace f2c::types {
 
-enum PathSectionType {
+enum class PathSectionType {
   SWATH = 1,
   TURN = 2,
 };
 
-enum PathDirection {
+enum class PathDirection {
   FORWARD = 1,
   BACKWARD = -1,
   // STOP = 0,
