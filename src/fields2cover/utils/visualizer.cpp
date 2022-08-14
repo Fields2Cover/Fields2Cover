@@ -4,7 +4,6 @@
 //                        BSD-3 License
 //=============================================================================
 
-#ifdef F2C_DEF_MATPLOTLIB
 
 #include <matplotlibcpp.h>
 #include "fields2cover/utils/visualizer.h"
@@ -152,4 +151,3 @@ std::vector<std::string> Visualizer::color_linspace(
 
 
 }  // namespace f2c
-#endif  // F2C_DEF_MATPLOTLIB

@@ -8,7 +8,6 @@
 #ifndef FIELDS2COVER_UTILS_VISUALIZER_H_
 #define FIELDS2COVER_UTILS_VISUALIZER_H_
 
-#ifdef F2C_DEF_MATPLOTLIB
 
 #include <vector>
 #include <string>
@@ -125,5 +124,4 @@ void Visualizer::plot(const T& t) {
 }  // namespace f2c
 
 
-#endif  // F2C_DEF_MATPLOTLIB
 #endif  // FIELDS2COVER_UTILS_VISUALIZER_H_
