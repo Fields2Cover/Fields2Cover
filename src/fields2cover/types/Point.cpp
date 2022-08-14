@@ -50,10 +50,11 @@ Point Point::operator-(const Point& b) const {
       data->getZ() - b->getZ());
 }
 
-void Point::operator*=(double b) {
+Point& Point::operator*=(double b) {
   data->setX(data->getX() * b);
   data->setY(data->getY() * b);
   data->setZ(data->getZ() * b);
+  return *this;
 }
 
 Point Point::operator*(double b) const {
