@@ -8,10 +8,7 @@
 #include <gtest/gtest.h>
 #include "fields2cover/utils/parser.h"
 #include "fields2cover/utils/transformation.h"
-
-#ifdef F2C_DEF_MATPLOTLIB
 #include "fields2cover/utils/visualizer.h"
-#endif  // F2C_DEF_MATPLOTLIB
 
 TEST(fields2cover_utils_parser, import_gml) {
   F2CFields fields;
@@ -49,11 +46,9 @@ TEST(fields2cover_utils_parser, import_json) {
   EXPECT_EQ(field.id, "test parcel");
   EXPECT_EQ(field.coord_sys, "UTM:32U");
 
-  #ifdef F2C_DEF_MATPLOTLIB
-    f2c::Visualizer::figure(200);
-    f2c::Visualizer::plot(field);
-    f2c::Visualizer::show(false);
-    //f2c::Visualizer::show(true);
-  #endif  // F2C_DEF_MATPLOTLIB
+  f2c::Visualizer::figure(200);
+  f2c::Visualizer::plot(field);
+  f2c::Visualizer::show(false);
+  //f2c::Visualizer::show(true);
 }
 
