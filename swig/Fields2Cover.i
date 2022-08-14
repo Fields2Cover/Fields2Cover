@@ -9,8 +9,9 @@
  %include <typemaps.i>
  %include <std_vector.i>
  %include <optional.i>
+ %include <exception.i>
 
-#define __version__ "1.0.1"
+#define __version__ "1.0.2"
 
 %inline %{
   #include "fields2cover.h"
@@ -54,15 +55,32 @@
 }
 
 
+%ignore f2c::types::MultiPoint::MultiPoint(std::initializer_list<Point> const &);
 %include "fields2cover/types/MultiPoint.h"
+%ignore f2c::types::LinearRing::LinearRing(std::initializer_list<Point> const &);
 %include "fields2cover/types/LinearRing.h"
+%ignore f2c::types::LineString::LineString(std::initializer_list<Point> const &);
 %include "fields2cover/types/LineString.h"
 %include "fields2cover/types/MultiLineString.h"
 %include "fields2cover/types/Cell.h"
 %include "fields2cover/types/Cells.h"
-
 %include "fields2cover/types/Swath.h"
+%ignore f2c::types::Swaths::operator[];
 %include "fields2cover/types/Swaths.h"
+%extend f2c::types::Swaths {
+  inline size_t __len__() const { return self->size(); }
+  inline f2c::types::Swath& __getitem__(size_t i) throw(std::out_of_range) {
+    if (i >= self->size() || i < 0)
+      throw std::out_of_range("out of bounds access");
+    return self->at(i);
+  }
+  inline void __setitem__(size_t i, const f2c::types::Swath& v) throw(std::out_of_range) {
+    if (i >= self->size() || i < 0)
+      throw std::out_of_range("out of bounds access");
+    self->at(i) = v;
+  }
+}
+
 %include "fields2cover/types/Field.h"
 %include "fields2cover/types/Route.h"
 %include "fields2cover/types/Path.h"
@@ -76,13 +94,15 @@
 %template(VectorDouble) std::vector<double>;
 %template(VectorInt) std::vector<int>;
 %template(VectorPoint) std::vector<F2CPoint>;
+%template(VectorMultiPoint) std::vector<F2CMultiPoint>;
 %template(SwathsByCells) std::vector<f2c::types::Swaths>;
 %template(Fields) std::vector<f2c::types::Field>;
+%template(VectorPathDirection) std::vector<f2c::types::PathDirection>;
+%template(VectorPathSectionType) std::vector<f2c::types::PathSectionType>;
 
 %include "fields2cover/utils/random.h"
 %include "fields2cover/utils/parser.h"
 %include "fields2cover/utils/visualizer.h"
-
 
 %include "fields2cover/objectives/global_objective.h"
 %import "fields2cover/objectives/optimization_class.h"
@@ -170,4 +190,5 @@ TEMPLATE_GLOBAL_COST_FUNC_WRAP(HG_Const_gen, f2c::hg::ConstHL)
 %template(HG_Const_gen) f2c::hg::ConstHL<>;
 
 TEMPLATE_GLOBAL_COST_FUNC_WRAP(SwathGen_BruteForce, f2c::sg::BruteForce)
+
 
