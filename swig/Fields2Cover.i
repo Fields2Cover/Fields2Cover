@@ -183,12 +183,12 @@ DEFINE_PP("fields2cover/path_planning/reeds_shepp_curves_hc.h", ReedsSheppCurves
 
 TEMPLATE_GLOBAL_COST_FUNC_WRAP(Optimization_base_class, f2c::obj::OptimizationClass)
 TEMPLATE_GLOBAL_COST_FUNC_WRAP(HG_base_class, f2c::hg::HeadlandGeneratorBase)
-TEMPLATE_GLOBAL_COST_FUNC_WRAP(SwathGen_base_class, f2c::sg::SwathGeneratorBase)
+TEMPLATE_GLOBAL_COST_FUNC_WRAP(SG_base_class, f2c::sg::SwathGeneratorBase)
 
 
 TEMPLATE_GLOBAL_COST_FUNC_WRAP(HG_Const_gen, f2c::hg::ConstHL)
 %template(HG_Const_gen) f2c::hg::ConstHL<>;
 
-TEMPLATE_GLOBAL_COST_FUNC_WRAP(SwathGen_BruteForce, f2c::sg::BruteForce)
+TEMPLATE_GLOBAL_COST_FUNC_WRAP(SG_BruteForce, f2c::sg::BruteForce)
 
 
