@@ -129,6 +129,7 @@ EXTEND_ALGS(Point, rotateFromPoint)
 %template(VectorInt) std::vector<int>;
 %template(VectorPoint) std::vector<F2CPoint>;
 %template(VectorMultiPoint) std::vector<F2CMultiPoint>;
+%template(VectorSwath) std::vector<f2c::types::Swath>;
 %template(SwathsByCells) std::vector<f2c::types::Swaths>;
 %template(Fields) std::vector<f2c::types::Field>;
 %template(VectorPathDirection) std::vector<f2c::types::PathDirection>;
