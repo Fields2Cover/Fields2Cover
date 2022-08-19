@@ -23,14 +23,31 @@ namespace f2c::obj {
 /// turns.
 class PathObjective {
  public:
+  // Avoid using variadic templates. SWIG don't work well with it
+
   /// @brief Compute the cost function with minimizing sign.
   ///
   /// If the objective is to maximize the cost function, the cost is
   /// multiplied by -1.
-  template <typename... Ts>
-  double computeCostWithMinimizingSign(const Ts... args) {
-    return (isMinimizing() ? 1.0 : -1.0) * computeCost(args...);
+  template <typename T1>
+  double computeCostWithMinimizingSign(const T1& t1) {
+    return (isMinimizing() ? 1.0 : -1.0) * computeCost(t1);
   }
+  template <typename T1, typename T2>
+  double computeCostWithMinimizingSign(const T1& t1, const T2& t2) {
+    return (isMinimizing() ? 1.0 : -1.0) * computeCost(t1, t2);
+  }
+  template <typename T1, typename T2, typename T3>
+  double computeCostWithMinimizingSign(
+      const T1& t1, const T2& t2, const T3& t3) {
+    return (isMinimizing() ? 1.0 : -1.0) * computeCost(t1, t2, t3);
+  }
+  template <typename T1, typename T2, typename T3, typename T4>
+  double computeCostWithMinimizingSign(
+      const T1& t1, const T2& t2, const T3& t3, const T4& t4) {
+    return (isMinimizing() ? 1.0 : -1.0) * computeCost(t1, t2, t3, t4);
+  }
+
 
  public:
   /// Return true if the objective is to minimize the cost function
@@ -61,7 +78,7 @@ class PathObjective {
   /// @param ang2 Angle of the robot in p2
   /// @return Cost value
   virtual double computeCost(
-      const F2CPoint& p1, double ang1, const F2CPoint& p2, double ang2) = 0;
+      const F2CPoint& p1, double ang1, const F2CPoint& p2, double ang2);  // = 0
 
   /// Return the cost of going from point p1 to point p2
   /// @param p1 Start point

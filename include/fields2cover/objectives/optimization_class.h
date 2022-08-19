@@ -22,14 +22,30 @@ class OptimizationClass {
       "T must derive from GlobalObjective");
 
  public:
+  // Avoid using variadic templates. SWIG don't work well with it
+
   /// Compute the cost returned by the global cost function inherited
   /// (OptimizationClass<T>::objective_).
   /// @param t All the data structures that could be needed by
   /// OptimizationClass<T>::objective_
   /// @return Cost value
-  template <typename ...Ts>
-  double computeCost(Ts... t) const {
-    return objective_.computeCost(t...);
+  template <typename T1>
+  double computeCost(const T1& t1) const {
+    return objective_.computeCost(t1);
+  }
+  template <typename T1, typename T2>
+  double computeCost(const T1& t1, const T2& t2) const {
+    return objective_.computeCost(t1, t2);
+  }
+  template <typename T1, typename T2, typename T3>
+  double computeCost(
+      const T1& t1, const T2& t2, const T3& t3) const {
+    return objective_.computeCost(t1, t2, t3);
+  }
+  template <typename T1, typename T2, typename T3, typename T4>
+  double computeCost(
+      const T1& t1, const T2& t2, const T3& t3, const T4& t4) const {
+    return objective_.computeCost(t1, t2, t3, t4);
   }
 
   /// Compute the cost returned by the global cost function inherited.
@@ -38,9 +54,23 @@ class OptimizationClass {
   /// @param t All the data structures that could be needed by
   /// OptimizationClass<T>::objective_
   /// @return Cost value
-  template <typename ...Ts>
-  double computeCostWithMinimizingSign(Ts... t) const {
-    return objective_.computeCostWithMinimizingSign(t...);
+  template <typename T1>
+  double computeCostWithMinimizingSign(const T1& t1) const {
+    return objective_.computeCostWithMinimizingSign(t1);
+  }
+  template <typename T1, typename T2>
+  double computeCostWithMinimizingSign(const T1& t1, const T2& t2) const {
+    return objective_.computeCostWithMinimizingSign(t1, t2);
+  }
+  template <typename T1, typename T2, typename T3>
+  double computeCostWithMinimizingSign(
+      const T1& t1, const T2& t2, const T3& t3) const {
+    return objective_.computeCostWithMinimizingSign(t1, t2, t3);
+  }
+  template <typename T1, typename T2, typename T3, typename T4>
+  double computeCostWithMinimizingSign(
+      const T1& t1, const T2& t2, const T3& t3, const T4& t4) const {
+    return objective_.computeCostWithMinimizingSign(t1, t2, t3, t4);
   }
 
  protected:

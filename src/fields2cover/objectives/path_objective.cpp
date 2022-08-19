@@ -24,6 +24,11 @@ double PathObjective::computeCost(
   return computeCost(p1, p2);
 }
 
+double PathObjective::computeCost(
+    const F2CPoint& p1, double ang1, const F2CPoint& p2, double ang2) {
+  return 0.0;
+}
+
 double PathObjective::computeCost(const F2CSwath& s, const F2CPoint& p) {
   return computeCost(s.endPoint(), s.getOutAngle(), p);
 }
