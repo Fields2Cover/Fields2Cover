@@ -22,11 +22,27 @@
 %ignore f2c::types::Geometries::ConstIterator;
 %ignore f2c::types::Geometries::begin;
 %ignore f2c::types::Geometries::end;
-%ignore Transform::generateCoordTransf;
-%ignore Transform::createSptRef;
-%ignore Transform::createCoordTransf;
+
+%define DEFINE_GEOM_ALGS(alg)
+  %extend f2c::types::Geometry {
+    %template(alg) alg<OGRPoint, wkbPoint>;
+    %template(alg) alg<OGRMultiPoint, wkbMultiPoint>;
+    %template(alg) alg<OGRLinearRing, wkbLinearRing>;
+    %template(alg) alg<OGRLineString, wkbLineString>;
+    %template(alg) alg<OGRMultiLineString, wkbMultiLineString>;
+    %template(alg) alg<OGRPolygon, wkbPolygon>;
+    %template(alg) alg<OGRMultiPolygon, wkbMultiPolygon>;
+  }
+%enddef
+
 
 %include "fields2cover/types/Geometry.h"
+DEFINE_GEOM_ALGS(Distance)
+DEFINE_GEOM_ALGS(Disjoint)
+DEFINE_GEOM_ALGS(Crosses)
+DEFINE_GEOM_ALGS(Touches)
+DEFINE_GEOM_ALGS(Within)
+DEFINE_GEOM_ALGS(Intersects)
 %template(GeomPoint) f2c::types::Geometry<OGRPoint, wkbPoint>;
 %template(GeomMultiPoint) f2c::types::Geometry<OGRMultiPoint, wkbMultiPoint>;
 %template(GeomLinearRing) f2c::types::Geometry<OGRLinearRing, wkbLinearRing>;
@@ -34,6 +50,9 @@
 %template(GeomMultiLineString) f2c::types::Geometry<OGRMultiLineString, wkbMultiLineString>;
 %template(GeomPolygon) f2c::types::Geometry<OGRPolygon, wkbPolygon>;
 %template(GeomMultiPolygon) f2c::types::Geometry<OGRMultiPolygon, wkbMultiPolygon>;
+
+
+
 
 %include "fields2cover/types/Geometries.h"
 %template(GeomsMultiPoint) f2c::types::Geometries<f2c::types::MultiPoint, OGRMultiPoint, wkbMultiPoint, f2c::types::Point>;
@@ -44,7 +63,20 @@
 %template(GeomsMultiPolygon) f2c::types::Geometries<f2c::types::Cells, OGRMultiPolygon, wkbMultiPolygon, f2c::types::Cell>;
 
 
+%define EXTEND_ALGS(geom, alg)
+  %extend f2c::types::geom {
+    %template(alg) alg<f2c::types::LineString>;
+    %template(alg) alg<f2c::types::MultiLineString>;
+    %template(alg) alg<f2c::types::LinearRing>;
+    %template(alg) alg<f2c::types::MultiPoint>;
+    %template(alg) alg<f2c::types::Cell>;
+    %template(alg) alg<f2c::types::Cells>;
+  }
+%enddef
+
+
 %include "fields2cover/types/Point.h"
+EXTEND_ALGS(Point, rotateFromPoint)
 
 %extend f2c::types::Point {
   char *__str__() {
@@ -65,6 +97,7 @@
 %include "fields2cover/types/Cell.h"
 %include "fields2cover/types/Cells.h"
 %include "fields2cover/types/Swath.h"
+%ignore f2c::types::Swaths::Swaths(std::initializer_list<Swath> const &);
 %ignore f2c::types::Swaths::operator[];
 %include "fields2cover/types/Swaths.h"
 %extend f2c::types::Swaths {
@@ -80,6 +113,7 @@
     self->at(i) = v;
   }
 }
+
 
 %include "fields2cover/types/Field.h"
 %include "fields2cover/types/Route.h"
@@ -104,17 +138,105 @@
 %include "fields2cover/utils/parser.h"
 %include "fields2cover/utils/visualizer.h"
 
+%template(plot) f2c::Visualizer::plot<f2c::types::Point>;
+%template(plot) f2c::Visualizer::plot<f2c::types::MultiPoint>;
+%template(plot) f2c::Visualizer::plot<f2c::types::LineString>;
+%template(plot) f2c::Visualizer::plot<f2c::types::LinearRing>;
+
+
+
+%define DEFINE_GLOBAL_COSTS(class_name, alg)
+  %extend f2c::obj::class_name {
+    %template(alg) alg<F2CSwath>;
+    %template(alg) alg<F2CSwaths>;
+    %template(alg) alg<F2CSwathsByCells>;
+    %template(alg) alg<F2CCell>;
+    %template(alg) alg<F2CCells>;
+    %template(alg) alg<F2CRoute>;
+    %template(alg) alg<F2CPath>;
+    %template(alg) alg<F2CCell, F2CSwath>;
+    %template(alg) alg<F2CCell, F2CSwaths>;
+    %template(alg) alg<F2CCell, F2CSwathsByCells>;
+    %template(alg) alg<F2CCells, F2CSwath>;
+    %template(alg) alg<F2CCells, F2CSwaths>;
+    %template(alg) alg<F2CCells, F2CSwathsByCells>;
+    %template(alg) alg<F2CRoute, F2CPath>;
+    %template(alg) alg<F2CCell, F2CSwath, F2CRoute>;
+    %template(alg) alg<F2CCell, F2CSwath, F2CPath>;
+    %template(alg) alg<F2CCell, F2CSwath, F2CRoute, F2CPath>;
+    %template(alg) alg<F2CCell, F2CSwaths, F2CRoute>;
+    %template(alg) alg<F2CCell, F2CSwaths, F2CPath>;
+    %template(alg) alg<F2CCell, F2CSwaths, F2CRoute, F2CPath>;
+    %template(alg) alg<F2CCell, F2CSwathsByCells, F2CRoute>;
+    %template(alg) alg<F2CCell, F2CSwathsByCells, F2CPath>;
+    %template(alg) alg<F2CCell, F2CSwathsByCells, F2CRoute, F2CPath>;
+    %template(alg) alg<F2CCells, F2CSwath, F2CRoute>;
+    %template(alg) alg<F2CCells, F2CSwath, F2CPath>;
+    %template(alg) alg<F2CCells, F2CSwath, F2CRoute, F2CPath>;
+    %template(alg) alg<F2CCells, F2CSwaths, F2CRoute>;
+    %template(alg) alg<F2CCells, F2CSwaths, F2CPath>;
+    %template(alg) alg<F2CCells, F2CSwaths, F2CRoute, F2CPath>;
+    %template(alg) alg<F2CCells, F2CSwathsByCells, F2CRoute>;
+    %template(alg) alg<F2CCells, F2CSwathsByCells, F2CPath>;
+    %template(alg) alg<F2CCells, F2CSwathsByCells, F2CRoute, F2CPath>;
+  }
+%enddef
+%define DEFINE_PATH_COSTS(class_name, alg)
+  %extend f2c::obj::class_name {
+    %template(alg) alg<F2CPoint, F2CPoint>;
+    %template(alg) alg<F2CPoint, double, F2CPoint>;
+    %template(alg) alg<F2CPoint, double, F2CPoint, double>;
+    %template(alg) alg<F2CPoint, F2CPoint, double>;
+    %template(alg) alg<F2CSwath, F2CPoint>;
+    %template(alg) alg<F2CSwath, F2CSwath>;
+    %template(alg) alg<F2CSwath, F2CPoint, double>;
+    %template(alg) alg<F2CPoint, F2CSwath>;
+    %template(alg) alg<F2CPoint, double, F2CSwath>;
+    %template(alg) alg<std::vector<F2CPoint>>;
+    %template(alg) alg<F2CMultiPoint>;
+    %template(alg) alg<F2CSwath, F2CMultiPoint>;
+    %template(alg) alg<F2CSwaths, F2CMultiPoint>;
+    %template(alg) alg<F2CMultiPoint, F2CSwath>;
+    %template(alg) alg<F2CMultiPoint, F2CSwaths>;
+    %template(alg) alg<F2CSwath>;
+    %template(alg) alg<F2CSwaths>;
+    %template(alg) alg<F2CRoute>;
+    %template(alg) alg<F2CPath>;
+  }
+%enddef
+
 %include "fields2cover/objectives/global_objective.h"
-%import "fields2cover/objectives/optimization_class.h"
+DEFINE_GLOBAL_COSTS(GlobalObjective, computeCostWithMinimizingSign)
+
+%include "fields2cover/objectives/optimization_class.h"
+DEFINE_GLOBAL_COSTS(OptimizationClass, computeCost)
+DEFINE_GLOBAL_COSTS(OptimizationClass, computeCostWithMinimizingSign)
+
+%rename(OBJ_NSwath) f2c::obj::NSwath;
 %include "fields2cover/objectives/n_swath.h"
+%rename(OBJ_FieldCoverage) f2c::obj::FieldCoverage;
 %include "fields2cover/objectives/field_coverage.h"
+%rename(OBJ_Overlaps) f2c::obj::Overlaps;
 %include "fields2cover/objectives/overlaps.h"
+%rename(OBJ_SwathLength) f2c::obj::SwathLength;
 %include "fields2cover/objectives/swath_length.h"
 
 %include "fields2cover/objectives/path_objective.h"
+DEFINE_PATH_COSTS(PathObjective, computeCostWithMinimizingSign)
+
+%rename(OBJ_DirectDistPathObj) f2c::obj::DirectDistPathObj;
 %include "fields2cover/objectives/direct_dist_path_obj.h"
 %include "fields2cover/objectives/complete_turn_path_obj.h"
 
+%template(OBJ_Optimization_NSwath) f2c::obj::OptimizationClass<f2c::obj::NSwath>;
+%template(OBJ_Optimization_FieldCoverage) f2c::obj::OptimizationClass<f2c::obj::FieldCoverage>;
+%template(OBJ_Optimization_Overlaps) f2c::obj::OptimizationClass<f2c::obj::Overlaps>;
+%template(OBJ_Optimization_SwathLength) f2c::obj::OptimizationClass<f2c::obj::SwathLength>;
+
+%template(OBJ_CompleteTurnPathObj_Dubins) f2c::obj::CompleteTurnPathObj<f2c::pp::DubinsCurves>;
+%template(OBJ_CompleteTurnPathObj_DubinsCC) f2c::obj::CompleteTurnPathObj<f2c::pp::DubinsCurvesCC>;
+%template(OBJ_CompleteTurnPathObj_ReedsShepp) f2c::obj::CompleteTurnPathObj<f2c::pp::ReedsSheppCurves>;
+%template(OBJ_CompleteTurnPathObj_ReedsSheppHC) f2c::obj::CompleteTurnPathObj<f2c::pp::ReedsSheppCurvesHC>;
 
 %include "fields2cover/headland_generator/headland_generator_base.h"
 %include "fields2cover/headland_generator/constant_headland.h"
@@ -139,21 +261,16 @@
 %include "fields2cover/path_planning/turning_base.h"
 
 %define DEFINE_PP(file_src, alg)
-%ignore f2c::pp::alg::alg();
-%include file_src
-%extend f2c::pp::alg {
-    alg(const f2c::types::Robot& robot) {
-      f2c::pp::alg* newAlg = new f2c::pp::alg();
-      newAlg->setRobotParams(robot);
-      return newAlg;
-    }
-};
+  %ignore f2c::pp::alg::alg();
+  %rename(PP_ ## alg) f2c::pp::alg;
+  %include file_src
 %enddef
 
 DEFINE_PP("fields2cover/path_planning/dubins_curves.h", DubinsCurves)
 DEFINE_PP("fields2cover/path_planning/dubins_curves_cc.h", DubinsCurvesCC)
 DEFINE_PP("fields2cover/path_planning/reeds_shepp_curves.h", ReedsSheppCurves)
 DEFINE_PP("fields2cover/path_planning/reeds_shepp_curves_hc.h", ReedsSheppCurvesHC)
+%rename(PP_PathPlanning) f2c::pp::PathPlanning;
 %include "fields2cover/path_planning/path_planning.h"
 
 
