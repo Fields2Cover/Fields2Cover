@@ -44,6 +44,12 @@ void Visualizer::plot(const F2CSwath& swath, std::string opt) {
   plot(F2CPoint(comps[0].back(), comps[1].back()), "kx");
 }
 
+void Visualizer::plot(const F2CSwathsByCells& swaths) {
+  for (int i = 0; i < swaths.size(); ++i) {
+    plot(swaths[i]);
+  }
+}
+
 void Visualizer::plot(const F2CSwaths& swaths) {
   auto colors = color_linspace(
       std::vector({0x00, 0xff, 0x0}),
