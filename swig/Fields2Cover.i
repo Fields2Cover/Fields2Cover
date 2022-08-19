@@ -11,11 +11,20 @@
  %include <optional.i>
  %include <exception.i>
 
-#define __version__ "1.0.2"
+#define __version__ "1.1.0"
 
 %inline %{
   #include "fields2cover.h"
 %}
+
+%exception {
+  try {
+    $action
+  } catch (const std::exception& e) {
+    SWIG_exception(SWIG_RuntimeError, e.what());
+  }
+}
+
 
 
 %ignore f2c::types::Geometries::Iterator;
