@@ -12,7 +12,9 @@ class SpiralOrder : public SingleCellSwathsOrderBase {
   SpiralOrder();
   SpiralOrder(F2CSwaths& swaths);
   SpiralOrder(F2CSwaths& swaths, int sp_size);
+  ~SpiralOrder();
   void set_spiral_size(int sp_size);
+
  private:
   int spiral_size;
   void sortSwaths() override;
