@@ -5,6 +5,7 @@
 #==============================================================================
 
 import pytest
+import math
 import fields2cover as f2c
 
 def near(a, b, error = 1e-7):
@@ -21,7 +22,8 @@ def test_fields2cover_pp_pp_turnDist():
   path2.addPoint( 3.0, 0.0);
   swath1 = f2c.Swath(path1);
   swath2 = f2c.Swath(path2);
-  swaths = f2c.Swaths([swath1, swath2]);
+  swaths = f2c.Swaths();
+  [swaths.push_back(i) for i in [swath1, swath2]]
 
   robot = f2c.Robot();
   robot.max_icc = 1.0 / 1.5;
@@ -30,6 +32,6 @@ def test_fields2cover_pp_pp_turnDist():
 
   path = path_planner.searchBestPath(swaths, dubins);
   # Precision is quite low so this is just checking a prediction is done
-  near(path.length(), 2 + 1.5 * M_PI, 0.1);
+  near(path.length(), 2 + 1.5 * math.pi, 0.1);
 
 

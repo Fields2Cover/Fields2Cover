@@ -7,8 +7,8 @@
 import pytest
 import fields2cover as f2c
 
-def near(a, b):
-  assert pytest.approx(a) == pytest.approx(b)
+def near(a, b, error = 1e-7):
+  assert abs(a - b) < error
 
 
 def test_fields2cover_obj_overlaps_computeCost():
@@ -26,11 +26,16 @@ def test_fields2cover_obj_overlaps_computeCost():
   swath2 = f2c.Swath(path2, width);
   swath3 = f2c.Swath(path3, width);
   	
-  swaths_no_overlap = f2c.Swaths([swath1, swath2]);
-  swaths_overlap_025 = f2c.Swaths([swath1, swath3]);
-  swaths_overlap_050_1 = f2c.Swaths([swath1, swath2, swath3]);
-  swaths_overlap_050_2 = f2c.Swaths([swath2, swath1, swath3]);
-  swaths_overlap_050_3 = f2c.Swaths([swath2, swath2]);
+  swaths_no_overlap = f2c.Swaths();
+  [swaths_no_overlap.push_back(i) for i in [swath1, swath2]]
+  swaths_overlap_025 = f2c.Swaths();
+  [swaths_overlap_025.push_back(i) for i in [swath1, swath3]]
+  swaths_overlap_050_1 = f2c.Swaths();
+  [swaths_overlap_050_1.push_back(i) for i in [swath1, swath2, swath3]]
+  swaths_overlap_050_2 = f2c.Swaths();
+  [swaths_overlap_050_2.push_back(i) for i in [swath2, swath1, swath3]]
+  swaths_overlap_050_3 = f2c.Swaths();
+  [swaths_overlap_050_3.push_back(i) for i in [swath2, swath2]]
   
   field = f2c.Cell();
   fields = f2c.Cells();

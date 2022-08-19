@@ -7,8 +7,8 @@
 import pytest
 import fields2cover as f2c
 
-def near(a, b):
-  assert pytest.approx(a) == pytest.approx(b)
+def near(a, b, error = 1e-7):
+  assert abs(a - b) < error
 
 def test_fields2cover_obj_field_coverage_getBestValue():
   width = 2.0;
@@ -20,7 +20,8 @@ def test_fields2cover_obj_field_coverage_getBestValue():
   swath3 = f2c.Swath(f2c.LineString(f2c.VectorPoint(
       [f2c.Point(0.0, 2.0), f2c.Point(4.0, 2.0)])), width);
 
-  swaths = f2c.Swaths([swath1]);
+  swaths = f2c.Swaths();
+  [swaths.push_back(i) for i in [swath1]]
 
   field = f2c.Cell();
   line = f2c.LinearRing();
@@ -60,9 +61,12 @@ def test_fields2cover_obj_field_coverage_computeCost():
   swath2 = f2c.Swath(path2, width);
   swath3 = f2c.Swath(path3, width);
   	
-  swaths_full = f2c.Swaths([swath1,swath2]);
-  swaths_overlaps = f2c.Swaths([swath1,swath3]);
-  swaths_half = f2c.Swaths([swath1]);
+  swaths_full = f2c.Swaths();
+  [swaths_full.push_back(i) for i in [swath1,swath2]]
+  swaths_overlap = f2c.Swaths();
+  [swaths_overlap.push_back(i) for i in [swath1,swath3]]
+  swaths_half = f2c.Swaths();
+  [swaths_half.push_back(i) for i in [swath1]]
   
   fields = f2c.Cells();
   field = f2c.Cell();

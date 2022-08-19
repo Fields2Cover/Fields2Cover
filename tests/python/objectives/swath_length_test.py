@@ -7,8 +7,8 @@
 import pytest
 import fields2cover as f2c
 
-def near(a, b):
-  assert pytest.approx(a) == pytest.approx(b)
+def near(a, b, error = 1e-7):
+  assert abs(a - b) < error
 
 
 def test_fields2cover_obj_swath_length_computeCost():
@@ -25,12 +25,16 @@ def test_fields2cover_obj_swath_length_computeCost():
   swath2 = f2c.Swath(path2);
   swath3 = f2c.Swath(path3);
   	
-  swaths1 = f2c.Swaths([swath1]);
-  swaths2 = f2c.Swaths([swath3]);
-  swaths3 = f2c.Swaths([swath1, swath2]);
-  swaths4 = f2c.Swaths([swath1, swath2, swath1, swath2]);
+  swaths1 = f2c.Swaths();
+  [swaths1.push_back(i) for i in [swath1]]
+  swaths2 = f2c.Swaths();
+  [swaths2.push_back(i) for i in [swath3]]
+  swaths3 = f2c.Swaths();
+  [swaths3.push_back(i) for i in [swath1, swath2]]
+  swaths4 = f2c.Swaths();
+  [swaths4.push_back(i) for i in [swath1, swath2, swath1, swath2]]
   
-  objective = f2c.OBJ_SwathLength();
+  length = f2c.OBJ_SwathLength();
 
 
   near(length.computeCost(swath1), 4.0);
