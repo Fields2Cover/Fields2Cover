@@ -38,8 +38,7 @@ f2c.Visualizer.plot(path_dubins);
 f2c.Visualizer.plot(swaths);
 f2c.Visualizer.save("Tutorial_6_1_Dubins");
 
-print(), print()
-print("####### Tutorial 6.2 Dubins curves with Continuous curvature ######");
+print("\n\n####### Tutorial 6.2 Dubins curves with Continuous curvature ######");
 dubins_cc = f2c.PP_DubinsCurvesCC(robot);
 path_dubins_cc = path_planner.searchBestPath(swaths, dubins_cc);
 
@@ -50,8 +49,7 @@ f2c.Visualizer.plot(path_dubins_cc);
 f2c.Visualizer.plot(swaths);
 f2c.Visualizer.save("Tutorial_6_2_Dubins_CC");
 
-print(), print()
-print("####### Tutorial 6.3 Reeds-Shepp curves ######")
+print("\n\n####### Tutorial 6.3 Reeds-Shepp curves ######")
 reeds_shepp = f2c.PP_ReedsSheppCurves(robot);
 path_reeds_shepp = path_planner.searchBestPath(swaths, reeds_shepp);
 
@@ -62,8 +60,7 @@ f2c.Visualizer.plot(path_reeds_shepp);
 f2c.Visualizer.plot(swaths);
 f2c.Visualizer.save("Tutorial_6_3_Reeds_Shepp");
 
-print(), print()
-print("####### Tutorial 6.4 Reeds-Shepp curves with Continuous curvature ######")
+print("\n\n####### Tutorial 6.4 Reeds-Shepp curves with Continuous curvature ######")
 reeds_shepp_hc = f2c.PP_ReedsSheppCurvesHC(robot);
 path_reeds_shepp_hc = path_planner.searchBestPath(swaths, reeds_shepp_hc);
 
