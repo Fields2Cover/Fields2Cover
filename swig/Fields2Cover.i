@@ -31,6 +31,7 @@
 %ignore f2c::types::Geometries::ConstIterator;
 %ignore f2c::types::Geometries::begin;
 %ignore f2c::types::Geometries::end;
+%ignore f2c::types::EmptyDestructor;
 
 %define DEFINE_GEOM_ALGS(alg)
   %extend f2c::types::Geometry {
@@ -46,6 +47,7 @@
 
 
 %include "fields2cover/types/Geometry.h"
+
 DEFINE_GEOM_ALGS(Distance)
 DEFINE_GEOM_ALGS(Disjoint)
 DEFINE_GEOM_ALGS(Crosses)
@@ -154,7 +156,6 @@ EXTEND_ALGS(Point, rotateFromPoint)
 %template(plot) f2c::Visualizer::plot<f2c::types::LinearRing>;
 
 
-
 %define DEFINE_GLOBAL_COSTS(class_name, alg)
   %extend f2c::obj::class_name {
     %template(alg) alg<F2CSwath>;
@@ -215,6 +216,7 @@ EXTEND_ALGS(Point, rotateFromPoint)
   }
 %enddef
 
+%rename(OBJ_GlobalObjective) f2c::obj::GlobalObjective;
 %include "fields2cover/objectives/global_objective.h"
 DEFINE_GLOBAL_COSTS(GlobalObjective, computeCostWithMinimizingSign)
 
@@ -231,6 +233,7 @@ DEFINE_GLOBAL_COSTS(OptimizationClass, computeCostWithMinimizingSign)
 %rename(OBJ_SwathLength) f2c::obj::SwathLength;
 %include "fields2cover/objectives/swath_length.h"
 
+%rename(OBJ_PathObjective) f2c::obj::PathObjective;
 %include "fields2cover/objectives/path_objective.h"
 DEFINE_PATH_COSTS(PathObjective, computeCostWithMinimizingSign)
 
@@ -308,7 +311,7 @@ DEFINE_PP("fields2cover/path_planning/reeds_shepp_curves_hc.h", ReedsSheppCurves
   TEMPLATE_COST_FUNC_NAME(prefix, T, DistReedsSheppHC, CompleteTurnPathObj<f2c::pp::ReedsSheppCurvesHC>)
 %enddef
 
-TEMPLATE_GLOBAL_COST_FUNC_WRAP(Optimization_base_class, f2c::obj::OptimizationClass)
+TEMPLATE_GLOBAL_COST_FUNC_WRAP(OBJ_Optimization_base_class, f2c::obj::OptimizationClass)
 TEMPLATE_GLOBAL_COST_FUNC_WRAP(HG_base_class, f2c::hg::HeadlandGeneratorBase)
 TEMPLATE_GLOBAL_COST_FUNC_WRAP(SG_base_class, f2c::sg::SwathGeneratorBase)
 
@@ -319,3 +322,5 @@ TEMPLATE_GLOBAL_COST_FUNC_WRAP(HG_Const_gen, f2c::hg::ConstHL)
 TEMPLATE_GLOBAL_COST_FUNC_WRAP(SG_BruteForce, f2c::sg::BruteForce)
 
 
+
+%include "python/Fields2Cover.i"
