@@ -51,7 +51,6 @@ cloned_p *= 5.0
 print("Old point is: ", old_p, " and cloned point is: ", cloned_p)
 copy_p = old_p
 
-# operator*= NOT WORKING
 copy_p *= 5.5
 print("Old point is: ", old_p, " and copied point is: ", copy_p)
 
@@ -64,32 +63,32 @@ line1.addPoint(3,0)
 line1.addPoint(p5)
 print("Length of line 1: ", line1.getLength())
 
-# NOT WORKING
-# line2 = f2c.LineString([f2c.Point(1, 0), f2c.Point(1, 1), f2c.Point(0, 1)]);
-# print("Length of line 2: ", line2.getLength());
+line2 = f2c.LineString();
+[line2.addPoint(p) for p in [f2c.Point(1, 0), f2c.Point(1, 1), f2c.Point(0, 1)]];
+print("Length of line 2: ", line2.getLength());
 
 
 print()
 print()
 print("####### Tutorial 1.4 Initialize a F2CLinearRing ######")
 
-# NOT WORKING
-# ring = f2c.LinearRing(F2CPoint(1,1), F2CPoint(1,2), F2CPoint(2,2), F2CPoint(1,1));
-# print("Area of the ring: ", ring.getArea())
+ring = f2c.LinearRing();
+[ring.addPoint(p) for p in [f2c.Point(1,1), f2c.Point(1,2), f2c.Point(2,2), f2c.Point(1,1)]];
+print("Area of the ring: ", ring.getArea())
 
 print()
 print()
 print("####### Tutorial 1.5 Initializing other collections ######")
-lines = f2c.MultiLineString()
+lines = f2c.MultiLineString();
 lines.addGeometry(line1);
-"""
 lines.addGeometry(line2);
 print("Lines have length: ", end="")
-for line in lines:
-  print(line.getLength(), end = ", ")
+for i in range(lines.size()):
+  print(lines.getGeometry(i).getLength(), end = ", ")
 print()
 print()
 
+"""
   F2CLinearRing outter_ring{
     F2CPoint(0, 0), F2CPoint(2, 0),F2CPoint(2, 2), F2CPoint(0, 2), F2CPoint(0, 0)};
   F2CLinearRing inner_ring{
