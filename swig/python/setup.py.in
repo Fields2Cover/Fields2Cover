@@ -1,6 +1,9 @@
-import setuptools.command.install
-import shutil
+import os
 from distutils.sysconfig import get_python_lib
+from setuptools import setup
+import setuptools.command.install
+from setuptools.extension import Extension
+import shutil
 
 
 class CompiledLibInstall(setuptools.command.install.install):
@@ -23,13 +26,25 @@ class CompiledLibInstall(setuptools.command.install.install):
         [shutil.copy(filename, install_dir) for filename in filenames]
 
 
-if __name__ == '__main__':
-    setuptools.setup(
-        name='fields2cover',
-        version='1.1.0-dev',
-        packages=['fields2cover'],
-        license='BSD-3',
-        author='Wageningen University',
-        author_email='gonzalo.miermunoz@wur.nl',
-        cmdclass={'install': CompiledLibInstall}
-    )
+
+setup(
+    name='fields2cover',
+    version='1.1.0',
+    author='Wageningen University',
+    description='Robust and efficient coverage paths for autonomous agricultural vehicles',
+    long_description='Robust and efficient coverage paths for autonomous agricultural vehicles. A modular and extensible Coverage Path Planning library',
+    url='https://github.com/Fields2Cover/Fields2Cover',
+    classifiers=[
+        "License :: OSI Approved :: BSD License",
+
+    ],
+    zip_safe=False,
+    include_package_data=True,
+    author_email='gonzalo.miermunoz@wur.nl',
+    packages=['fields2cover'],
+    package_dir={'': '.'},
+    license='BSD-3',
+    cmdclass={'install': CompiledLibInstall}
+)
+    
+
