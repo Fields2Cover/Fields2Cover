@@ -14,13 +14,12 @@ set(PACKAGE_MAINTAINER "Gonzalo Mier")
 option(BUILD_CPP "Build Cpp package" ON)
 option(BUILD_TUTORIALS "Build tutorials" ON)
 option(BUILD_TESTS "Build tests" ON)
-option(BUILD_SWIG "Build Swig" OFF)
-option(BUILD_PYTHON "Build Python SWIG module" ON)
+option(BUILD_PYTHON "Build Python SWIG module" OFF)
 option(BUILD_DOC "Build Documentation" OFF)
 
 
 
-if (BUILD_SWIG)
+if (BUILD_PYTHON)
   cmake_minimum_required(VERSION 3.12.4)
 else()
   cmake_minimum_required(VERSION 3.11)
@@ -30,6 +29,10 @@ if(${CMAKE_VERSION} VERSION_LESS 3.22)
     cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 else()
     cmake_policy(VERSION 3.22)
+endif()
+
+if(POLICY CMP0135)
+  cmake_policy(SET CMP0135 NEW)
 endif()
 
 project(Fields2Cover
@@ -125,7 +128,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
   target_compile_options(Fields2Cover PRIVATE -g -O0 --coverage -fprofile-arcs -ftest-coverage)
   set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -lgcov")
 else ()
-  target_compile_options(Fields2Cover PRIVATE -O3)
+  target_compile_options(Fields2Cover PRIVATE -O2)
 endif()
 
 
@@ -212,7 +215,7 @@ endif()
 ######################### swig ######################
 #####################################################
 
-if (BUILD_SWIG)
+if (BUILD_PYTHON)
     add_subdirectory(swig)
 endif() 
 
