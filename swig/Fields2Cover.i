@@ -21,9 +21,9 @@
 %ignore f2c::types::Geometries::ConstIterator;
 %ignore f2c::types::Geometries::begin;
 %ignore f2c::types::Geometries::end;
-%ignore Transform::generateCoordTransf;
-%ignore Transform::createSptRef;
-%ignore Transform::createCoordTransf;
+%ignore f2c::Transform::generateCoordTransf;
+%ignore f2c::Transform::createSptRef;
+%ignore f2c::Transform::createCoordTransf;
 
 %include "fields2cover/types/Geometry.h"
 %template(GeomPoint) f2c::types::Geometry<OGRPoint, wkbPoint>;
@@ -82,7 +82,7 @@
 %include "fields2cover/utils/random.h"
 %include "fields2cover/utils/parser.h"
 %include "fields2cover/utils/visualizer.h"
-
+%include "fields2cover/utils/transformation.h"
 
 %include "fields2cover/objectives/global_objective.h"
 %import "fields2cover/objectives/optimization_class.h"
