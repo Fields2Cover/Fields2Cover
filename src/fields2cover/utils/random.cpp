@@ -54,7 +54,7 @@ f2c::types::Field Random::generateRandField(int n_sides, double area,
 f2c::types::Field Random::genConvexField(double area) {
   f2c::types::Field field;
   do {
-    field = generateRandField(4, area);
+    field = generateRandField(6, area);
   } while (!field.field.isConvex());
   return field;
 }
@@ -62,7 +62,7 @@ f2c::types::Field Random::genConvexField(double area) {
 f2c::types::Field Random::genNonConvexField(double area) {
   f2c::types::Field field;
   do {
-    field = generateRandField(7, area);
+    field = generateRandField(9, area);
   } while (field.field.isConvex());
   return field;
 }
