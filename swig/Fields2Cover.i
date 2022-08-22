@@ -155,6 +155,12 @@ EXTEND_ALGS(Point, rotateFromPoint)
 %template(plot) f2c::Visualizer::plot<f2c::types::LineString>;
 %template(plot) f2c::Visualizer::plot<f2c::types::LinearRing>;
 
+%ignore f2c::Transform::generateCoordTransf;
+%ignore f2c::Transform::createSptRef;
+%ignore f2c::Transform::createCoordTransf;
+%include "fields2cover/utils/transformation.h"
+
+
 
 %define DEFINE_GLOBAL_COSTS(class_name, alg)
   %extend f2c::obj::class_name {
