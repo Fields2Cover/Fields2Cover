@@ -1,7 +1,7 @@
 include_directories(${CMAKE_BINARY_DIR})
 
 file(GLOB_RECURSE TEST_HEADERS LIST_DIRECTORIES false */*.hpp)
-file(GLOB_RECURSE TEST_SOURCES LIST_DIRECTORIES false unittests.cpp */*.cpp)
+file(GLOB_RECURSE TEST_SOURCES LIST_DIRECTORIES false unittests.cpp cpp/*/*.cpp)
 
 add_executable(unittests ${TEST_SOURCES})
 
@@ -12,6 +12,8 @@ target_link_libraries(unittests PUBLIC Fields2Cover gtest)
 
 add_test(NAME unittests COMMAND unittests WORKING_DIRECTORY ${UNIT_TEST_BIN_OUTPUT_DIR})
 add_dependencies(check unittests)
+
+
 
 
 if (CMAKE_BUILD_TYPE STREQUAL "Coverage")

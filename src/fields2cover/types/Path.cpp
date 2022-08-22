@@ -121,8 +121,8 @@ std::string Path::serializePath() const {
     res += to_string(angles[i]) + " ";
     res += to_string(velocities[i]) + " ";
     res += to_string(durations[i]) + " ";
-    res += to_string(directions[i]) + " ";
-    res += to_string(type[i]) + "\n";
+    res += to_string(static_cast<int>(directions[i])) + " ";
+    res += to_string(static_cast<int>(type[i])) + "\n";
   }
   return res;
 }

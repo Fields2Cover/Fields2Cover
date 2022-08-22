@@ -1,7 +1,7 @@
 
 set(FIELDS2COVER_MAJOR_VERSION "1")
 set(FIELDS2COVER_MINOR_VERSION "0")
-set(FIELDS2COVER_PATCH_VERSION "1")
+set(FIELDS2COVER_PATCH_VERSION "2")
 set(FIELDS2COVER_VERSION_STRING "${FIELDS2COVER_MAJOR_VERSION}.${FIELDS2COVER_MINOR_VERSION}.${FIELDS2COVER_PATCH_VERSION}")
 set(FIELDS2COVER_VERSION ${FIELDS2COVER_MAJOR_VERSION}.${FIELDS2COVER_MINOR_VERSION}.${FIELDS2COVER_PATCH_VERSION})
 
@@ -15,9 +15,9 @@ option(BUILD_CPP "Build Cpp package" ON)
 option(BUILD_TUTORIALS "Build tutorials" ON)
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_SWIG "Build Swig" OFF)
+option(BUILD_PYTHON "Build Python SWIG module" ON)
 option(BUILD_DOC "Build Documentation" OFF)
 
-option(USING_MATPLOTLIB "Use Matplotlib" ON)
 
 
 if (BUILD_SWIG)
@@ -74,17 +74,13 @@ FetchContent_Declare(steering_functions FETCHCONTENT_UPDATES_DISCONNECTED
   GIT_REPOSITORY https://github.com/Fields2Cover-group/steering_functions.git)
 FetchContent_Declare(spline FETCHCONTENT_UPDATES_DISCONNECTED
   GIT_REPOSITORY https://github.com/Fields2Cover-group/spline.git)
-if(USING_MATPLOTLIB)
 FetchContent_Declare(matplotlib_cpp FETCHCONTENT_UPDATES_DISCONNECTED
   GIT_REPOSITORY https://github.com/Fields2Cover-group/matplotlib-cpp.git)
-endif()
 
 FetchContent_MakeAvailable(json tinyxml2 steering_functions spline)
-if(USING_MATPLOTLIB)
 FetchContent_MakeAvailable(matplotlib_cpp)
-endif()
 
-find_package(GDAL 2.0 REQUIRED)
+find_package(GDAL 3.0 REQUIRED)
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
@@ -133,10 +129,6 @@ else ()
 endif()
 
 
-if(USING_MATPLOTLIB)
-  target_compile_definitions(Fields2Cover PUBLIC F2C_DEF_MATPLOTLIB)
-endif()
-
 
 target_include_directories(Fields2Cover PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -154,11 +146,8 @@ target_link_libraries(Fields2Cover
     tinyxml2::tinyxml2
     steering_functions
     spline
+    matplotlib_cpp
 )
-
-if(USING_MATPLOTLIB)  
-  target_link_libraries(Fields2Cover PRIVATE matplotlib_cpp)
-endif()
 
 set_target_properties(Fields2Cover PROPERTIES
   INTERPROCEDURAL_OPTIMIZATION TRUE PUBLIC_HEADER "include/fields2cover.h")
@@ -212,18 +201,6 @@ include(CPack)
 
 
 #####################################################
-######################### test ######################
-#####################################################
-
-if (BUILD_TESTS)
-  include(CTest)
-  enable_testing()
-  add_custom_target(check COMMAND GTEST_COLOR=1 ${CMAKE_CTEST_COMMAND}
-      --verbose --test-dir tests/)
-  add_subdirectory(tests)
-endif()
-
-#####################################################
 #################### tutorials ######################
 #####################################################
 
@@ -238,6 +215,18 @@ endif()
 if (BUILD_SWIG)
     add_subdirectory(swig)
 endif() 
+
+#####################################################
+######################### test ######################
+#####################################################
+
+if (BUILD_TESTS)
+  include(CTest)
+  enable_testing()
+  add_custom_target(check COMMAND GTEST_COLOR=1 ${CMAKE_CTEST_COMMAND}
+      --verbose --test-dir tests/)
+  add_subdirectory(tests)
+endif()
 endif()  # BUILD_CPP
 
 #####################################################

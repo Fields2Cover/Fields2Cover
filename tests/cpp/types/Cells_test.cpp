@@ -56,13 +56,6 @@ TEST(fields2cover_types_cells, Buffer) {
   EXPECT_GT(cells.getArea(), 4);
 }
 
-TEST(fields2cover_types_cells, isConvex) {
-  F2CLineString line {
-    F2CPoint(0,0), F2CPoint(2,0),F2CPoint(2,2),F2CPoint(0,2), F2CPoint(0,0)};
-  F2CCells cells = F2CCells::Buffer(line, 2);
-  EXPECT_GT(cells.getArea(), 4);
-}
-
 TEST(fields2cover_types_cells, Intersection) {
   F2CCell cell1, cell2;
   F2CLinearRing ring1{F2CPoint(0,0), F2CPoint(2,0),F2CPoint(2,2),F2CPoint(0,2), F2CPoint(0,0)};

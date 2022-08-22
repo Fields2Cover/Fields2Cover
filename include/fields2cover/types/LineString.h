@@ -21,6 +21,7 @@ struct LineString : public Geometries<LineString, OGRLineString, wkbLineString,
   using Geometries<LineString, OGRLineString, wkbLineString, Point>::Geometries;
   LineString();
   explicit LineString(const LinearRing& ring);
+  LineString(const std::vector<Point>& ps);
   LineString(const std::initializer_list<Point>& ps);
 
   void operator*=(double b);

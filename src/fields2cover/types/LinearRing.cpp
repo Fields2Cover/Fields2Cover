@@ -15,6 +15,12 @@ LinearRing::LinearRing() {
     [](OGRLinearRing* f) {OGRGeometryFactory::destroyGeometry(f);});
 }
 
+LinearRing::LinearRing(const std::vector<Point>& ps) {
+  for (auto&& p : ps) {
+    this->addPoint(p);
+  }
+}
+
 LinearRing::LinearRing(const std::initializer_list<Point>& ps) {
   for (auto&& p : ps) {
     this->addPoint(p);
