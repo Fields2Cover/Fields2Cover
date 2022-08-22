@@ -18,13 +18,29 @@ namespace f2c::obj {
 /// the field. Some of the could be f2c::obj::NSwath or f2c::obj::FieldCoverage
 class GlobalObjective {
  public:
+  // Avoid using variadic templates. SWIG don't work well with it
+
   /// @brief Compute the cost function with minimizing sign.
   ///
   /// If the objective is to maximize the cost function, the cost is
   /// multiplied by -1.
-  template <typename... Ts>
-  double computeCostWithMinimizingSign(const Ts... args) const {
-    return (isMinimizing() ? 1.0 : -1.0) * computeCost(args...);
+  template <typename T1>
+  double computeCostWithMinimizingSign(const T1& t1) const {
+    return (isMinimizing() ? 1.0 : -1.0) * computeCost(t1);
+  }
+  template <typename T1, typename T2>
+  double computeCostWithMinimizingSign(const T1& t1, const T2& t2) const {
+    return (isMinimizing() ? 1.0 : -1.0) * computeCost(t1, t2);
+  }
+  template <typename T1, typename T2, typename T3>
+  double computeCostWithMinimizingSign(
+      const T1& t1, const T2& t2, const T3& t3) const {
+    return (isMinimizing() ? 1.0 : -1.0) * computeCost(t1, t2, t3);
+  }
+  template <typename T1, typename T2, typename T3, typename T4>
+  double computeCostWithMinimizingSign(
+      const T1& t1, const T2& t2, const T3& t3, const T4& t4) const {
+    return (isMinimizing() ? 1.0 : -1.0) * computeCost(t1, t2, t3, t4);
   }
 
  public:

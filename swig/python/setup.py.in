@@ -26,10 +26,10 @@ class CompiledLibInstall(setuptools.command.install.install):
 if __name__ == '__main__':
     setuptools.setup(
         name='fields2cover',
-        version='1.0.1-dev',
+        version='1.1.0-dev',
         packages=['fields2cover'],
         license='BSD-3',
-        author='Gonzalo Mier',
+        author='Wageningen University',
         author_email='gonzalo.miermunoz@wur.nl',
         cmdclass={'install': CompiledLibInstall}
     )

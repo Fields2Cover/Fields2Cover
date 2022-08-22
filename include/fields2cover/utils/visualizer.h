@@ -32,6 +32,8 @@ class Visualizer {
   static void plot(const F2CCells& cells);
   /// Plot swaths
   static void plot(const F2CSwaths& swaths);
+  /// Plot swaths by cells
+  static void plot(const F2CSwathsByCells& swaths);
   /// Plot a swath
   static void plot(const F2CSwath& swath, std::string opt = "");
   /// Plot a field

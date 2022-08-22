@@ -10,7 +10,7 @@
 #include "fields2cover/types.h"
 
 TEST(fields2cover_obj_optimization_class, computeCost_cost) { 
-  F2CSwaths swaths50 {F2CSwaths(50)};
+  F2CSwaths swaths50(50);
 
   f2c::obj::OptimizationClass<f2c::obj::NSwath> opt;
 

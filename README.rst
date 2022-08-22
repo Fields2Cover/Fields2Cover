@@ -105,7 +105,7 @@ Fields2Cover project is under `BSD-3 license <https://tldrlegal.com/license/bsd-
 TODO
 -------
 
-- Create SWIG interface with Python/Lua/R
+- Create SWIG interface with Lua/R
 - Support Route planners with metaheuristics
 - Support non-convex fields
 - Consider the start and end point of the vehicle

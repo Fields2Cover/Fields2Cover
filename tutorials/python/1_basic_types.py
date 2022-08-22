@@ -39,10 +39,7 @@ p5.importFromWkt("POINT (0 4 4)")
 print("Point 5: ", p5)
 
   
-print()
-print()
-print("####### Tutorial 1.2 Basic types are shared pointers ######")
-# Access to pointers
+print("\n\n####### Tutorial 1.2 Basic types are shared pointers ######")
 # Difference between cloning and copying a point
 old_p = f2c.Point(1, 2)
 cloned_p = old_p.clone()
@@ -51,94 +48,82 @@ cloned_p *= 5.0
 print("Old point is: ", old_p, " and cloned point is: ", cloned_p)
 copy_p = old_p
 
-# operator*= NOT WORKING
 copy_p *= 5.5
 print("Old point is: ", old_p, " and copied point is: ", copy_p)
 
-print()
-print()
-print("####### Tutorial 1.3 Initialize a F2CLineString ######")
+print("\n\n####### Tutorial 1.3 Initialize a LineString ######")
 
 line1 = f2c.LineString()
 line1.addPoint(3,0)
 line1.addPoint(p5)
 print("Length of line 1: ", line1.getLength())
 
-# NOT WORKING
-# line2 = f2c.LineString([f2c.Point(1, 0), f2c.Point(1, 1), f2c.Point(0, 1)]);
-# print("Length of line 2: ", line2.getLength());
+line2 = f2c.LineString();
+[line2.addPoint(p) for p in [f2c.Point(1, 0), f2c.Point(1, 1), f2c.Point(0, 1)]];
+print("Length of line 2: ", line2.getLength());
 
 
-print()
-print()
-print("####### Tutorial 1.4 Initialize a F2CLinearRing ######")
+print("\n\n####### Tutorial 1.4 Initialize a LinearRing ######")
 
-# NOT WORKING
-# ring = f2c.LinearRing(F2CPoint(1,1), F2CPoint(1,2), F2CPoint(2,2), F2CPoint(1,1));
-# print("Area of the ring: ", ring.getArea())
+ring = f2c.LinearRing();
+[ring.addPoint(p) for p in [f2c.Point(1,1), f2c.Point(1,2), f2c.Point(2,2), f2c.Point(1,1)]];
+print("Area of the ring: ", ring.getArea())
 
-print()
-print()
-print("####### Tutorial 1.5 Initializing other collections ######")
-lines = f2c.MultiLineString()
+print("\n\n####### Tutorial 1.5 Initializing other collections ######")
+lines = f2c.MultiLineString();
 lines.addGeometry(line1);
-"""
 lines.addGeometry(line2);
 print("Lines have length: ", end="")
-for line in lines:
-  print(line.getLength(), end = ", ")
-print()
-print()
+for i in range(lines.size()):
+  print(lines.getGeometry(i).getLength(), end = ", ")
+print("\n")
 
-  F2CLinearRing outter_ring{
-    F2CPoint(0, 0), F2CPoint(2, 0),F2CPoint(2, 2), F2CPoint(0, 2), F2CPoint(0, 0)};
-  F2CLinearRing inner_ring{
-    F2CPoint(0.5, 0.5), F2CPoint(1.5, 0.5), F2CPoint(1.5, 1.5),
-    F2CPoint(0.5, 1.5), F2CPoint(0.5, 0.5)};
-  F2CCell cell;
-  cell.addRing(outter_ring);
-  cell.addRing(inner_ring);
-  std::cout << "The area of the cell is: " << cell.getArea()
-    << std::endl << std::endl;
-  F2CCells cells;
-  cells.addGeometry(cell);
-  std::cout << "The area of the cells is: " << cells.getArea() << std::endl;
+outter_ring = f2c.LinearRing();
+[outter_ring.addGeometry(p) for p in [  \
+    f2c.Point(0, 0), f2c.Point(2, 0), f2c.Point(2, 2), f2c.Point(0, 2), f2c.Point(0, 0)]];
+inner_ring = f2c.LinearRing();
+[inner_ring.addGeometry(p) for p in [  \
+    f2c.Point(0.5, 0.5), f2c.Point(1.5, 0.5), f2c.Point(1.5, 1.5),  \
+    f2c.Point(0.5, 1.5), f2c.Point(0.5, 0.5)]];
+cell = f2c.Cell();
+cell.addRing(outter_ring);
+cell.addRing(inner_ring);
+print("The area of the cell is: ", cell.getArea(), "\n");
 
-  std::cout << std::endl << std::endl;
-  F2CMultiPoint points {F2CPoint(1, 2), F2CPoint(3, 4)};
-  std::cout << "Points contains " << points.size() << " points." << std::endl;
-  points.addPoint(5, 6);
-  std::cout << "Points contains " << points.size() << " points." << std::endl;
-  points.addPoint(p5);
-  std::cout << "Points contains " << points.size() << " points." << std::endl;
+cells = f2c.Cells();
+cells.addGeometry(cell);
+print("The area of the cells is: ", cells.getArea(), "\n\n")
+
+points = f2c.MultiPoint();
+[points.addGeometry(p) for p in [f2c.Point(1, 2), f2c.Point(3, 4)]];
+
+print("Points contains ", points.size(), " points.");
+points.addPoint(5, 6);
+print("Points contains ", points.size(), " points.");
+points.addPoint(p5);
+print("Points contains ", points.size(), " points.");
 
 
-  std::cout << std::endl << std::endl;
-  std::cout << "####### Tutorial 1.6 Accessing elements in collections ######"
-    << std::endl;
+print("\n\n####### Tutorial 1.6 Accessing elements in collections ######")
 
-  F2CPoint p_0 = points.getGeometry(0);
-  std::cout << "First point in points: " << p_0 << std::endl;
-  std::cout << std::endl;
+p_0 = points.getGeometry(0);
+print("First point in points: ", p_0, "\n")
 
-  p_0 *= 1e5;
-  std::cout << "Modified p_0: " << p_0 << std::endl;
-  std::cout << "First point in points without modification: "
-    << points.getGeometry(0) << std::endl;
-  points.setGeometry(0, p_0);
-  std::cout << "Modified first point in points: " << points.getGeometry(0) << std::endl;
+p_0 *= 1e5;
+print("Modified p_0: ", p_0);
+print("First point in points without modification: ", points.getGeometry(0));
+points.setGeometry(0, p_0);
+print("Modified first point in points: ", points.getGeometry(0));
 
   
-  std::cout << std::endl << std::endl;
-  std::cout << "####### Tutorial 1.9 Visualizing Fields2Cover data ######"
-    << std::endl;
+print("\n\n####### Tutorial 1.9 Visualizing Fields2Cover data ######")
 
-  f2c::Visualizer::figure(100);
-  f2c::Visualizer::plot(lines);
-  //f2c::Visualizer::show();
-  f2c::Visualizer::save("Tutorial_image");
+f2c.Visualizer.figure(100);
+f2c.Visualizer.plot(lines);
+f2c.Visualizer.show();
 
-  return 0;
-}
+f2c.Visualizer.figure(101);
+f2c.Visualizer.plot(lines);
+f2c.Visualizer.save("Tutorial_image");
 
-"""
+
