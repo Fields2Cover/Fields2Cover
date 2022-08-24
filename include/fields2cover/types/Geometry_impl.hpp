@@ -195,7 +195,7 @@ double Geometry<T, R>::getAngContinuity(double prev_val, double val) {
   const auto two_pi = boost::math::constants::two_pi<double>();
   auto val_id = round(prev_val / two_pi);
   auto getNearVal =
-    [two_pi] (int i, double val) {return i * two_pi + mod_2pi(val);};
+    [two_pi] (int i, double value) {return i * two_pi + mod_2pi(value);};
   for (int i = -3; i <= 3; ++i) {
     if (fabs(getNearVal(val_id + i + 1, val) - prev_val) >
       fabs(getNearVal(val_id + i, val) - prev_val)) {
