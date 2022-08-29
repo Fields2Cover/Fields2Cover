@@ -8,39 +8,36 @@ CustomOrder::CustomOrder() : SingleCellSwathsOrderBase(){
 CustomOrder::CustomOrder(F2CSwaths& swaths) : SingleCellSwathsOrderBase(swaths) {
 }
 
-CustomOrder::CustomOrder(F2CSwaths& swaths, std::vector<int> order) : SingleCellSwathsOrderBase(swaths) {
+CustomOrder::CustomOrder(F2CSwaths& swaths, std::vector<size_t> order) : SingleCellSwathsOrderBase(swaths) {
   set_custom_order(order);
 }
 
-void CustomOrder::set_custom_order(std::vector<int> order){
+void CustomOrder::set_custom_order(std::vector<size_t> order){
   this->custom_order = order;
 }
 
 void CustomOrder::sortSwaths() {
   this->changeStartPoint();
-  sort_swaths(this->custom_order, swaths_);
+  sort_swaths(swaths_, this->custom_order);
 }
 
-void CustomOrder::reorder(F2CSwaths& vect, std::vector<std::size_t> index) {
-  for (std::size_t i = 0; i < vect.size(); i++) {
-    if (index[i] != i) {
-      std::swap(vect[index[i]], vect[i]);
-      std::swap(index[index[i]], index[i]);
+
+void CustomOrder::sort_swaths(F2CSwaths& swaths, std::vector<size_t>& order) {
+  size_t i, j, k;
+  F2CSwath sw;
+  for(i = 0; i < swaths.size(); i++){
+    if(i != order[i]){
+        sw = swaths[i];
+        k = i;
+        while(i != (j = order[k])){
+            swaths[k] = swaths[j];
+            order[k] = k;
+            k = j;
+        }
+        swaths[k] = sw;
+        order[k] = k;
     }
   }
-}
-
-void CustomOrder::sort_swaths(std::vector<int>& order_vector, F2CSwaths& swaths) {
-  std::vector<std::size_t> index(order_vector.size());
-  std::iota(index.begin(), index.end(), 0);
-  std::sort(index.begin(), index.end(),
-            [&](std::size_t a, std::size_t b) { return order_vector[a] < order_vector[b]; });
-  for (size_t i = 0; i < index.size(); i++)
-  {
-    std::cout << index[i] << ' ';
-  }
-  
-  reorder(swaths, index);
 }
 
 } // namespace f2c::rp

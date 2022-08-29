@@ -16,14 +16,12 @@ class CustomOrder : public SingleCellSwathsOrderBase {
  public:
   CustomOrder();
   CustomOrder(F2CSwaths& swaths);
-  CustomOrder(F2CSwaths& swaths, std::vector<int> order);
-  void set_custom_order(std::vector<int> order);
-  void sort_swaths(std::vector<int>& keyvector, F2CSwaths& swaths);
-  //int order_size;
+  CustomOrder(F2CSwaths& swaths, std::vector<size_t> order);
+  void set_custom_order(std::vector<size_t> order);
  private:
-  std::vector<int> custom_order;
+  std::vector<size_t> custom_order;
+  void sort_swaths(F2CSwaths& swaths, std::vector<size_t>& order);
   void sortSwaths() override;
-  void reorder(F2CSwaths& vect, std::vector<std::size_t> index);
 };
 
 
