@@ -5,10 +5,7 @@
 #include <vector>
 #include "fields2cover/types.h"
 #include "fields2cover/route_planning/single_cell_swaths_order_base.h"
-#include <algorithm>
-#include <numeric>
-#include <cassert>
-#include <variant>
+
 
 namespace f2c::rp {
 
