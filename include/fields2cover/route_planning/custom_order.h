@@ -3,6 +3,9 @@
 #define FIELDS2COVER_ROUTE_PLANNING_CUSTOM_ORDER_H_
 
 #include <vector>
+#include <set>
+#include <string>
+#include <stdexcept>
 #include "fields2cover/types.h"
 #include "fields2cover/route_planning/single_cell_swaths_order_base.h"
 
@@ -13,11 +16,11 @@ class CustomOrder : public SingleCellSwathsOrderBase {
  public:
   CustomOrder();
   CustomOrder(F2CSwaths& swaths);
-  CustomOrder(F2CSwaths& swaths, std::vector<size_t> order);
-  void set_custom_order(std::vector<size_t> order);
+  CustomOrder(F2CSwaths& swaths, const std::vector<size_t>& order);
+  void setCustomOrder(const std::vector<size_t>& order);
  private:
   std::vector<size_t> custom_order;
-  void sort_swaths(F2CSwaths& swaths, std::vector<size_t>& order);
+  void check();
   void sortSwaths() override;
 };
 
