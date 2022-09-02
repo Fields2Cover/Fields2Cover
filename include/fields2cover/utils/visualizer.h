@@ -79,6 +79,13 @@ class Visualizer {
   /// @param file Name of the file
   static void save(const std::string& file);
 
+  /// Add title to the figure
+  /// @param text Title text
+  static void title(const std::string& text);
+
+  static void xlim(double min, double max);
+  static void ylim(double min, double max);
+
  private:
   template<class T>
   static std::vector<F2CPoint> data2vector(const T& t);

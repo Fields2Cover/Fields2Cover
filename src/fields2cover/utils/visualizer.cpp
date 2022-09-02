@@ -112,7 +112,23 @@ void Visualizer::show(bool block) {
 
 void Visualizer::save(const std::string& file) {
   plt::save(file);
+  plt::close();
 }
+
+
+void Visualizer::title(const std::string& text) {
+  plt::title(text);
+}
+
+void Visualizer::xlim(double min, double max) {
+  plt::xlim(min, max);
+}
+
+void Visualizer::ylim(double min, double max) {
+  plt::ylim(min, max);
+}
+
+
 
 std::vector<std::vector<double>> Visualizer::getComponents(
     const std::vector<F2CPoint>& points) {
