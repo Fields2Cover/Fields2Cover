@@ -17,7 +17,9 @@ double Geometries<SAMETYPE, T, R, CHILDRENTYPE>::getArea() const {
 
 template <class SAMETYPE, class T, OGRwkbGeometryType R, class CHILDRENTYPE>
 SAMETYPE Geometries<SAMETYPE, T, R, CHILDRENTYPE>::clone() const {
-  return static_cast<SAMETYPE>(this->data.get());
+  SAMETYPE cloned;
+  cloned.importFromWkt(this->exportToWkt());
+  return cloned;
 }
 
 template <class SAMETYPE, class T, OGRwkbGeometryType R, class CHILDRENTYPE>

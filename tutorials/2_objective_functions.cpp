@@ -4,7 +4,6 @@
 //                        BSD-3 License
 //=============================================================================
 
-#ifdef F2C_DEF_MATPLOTLIB
 
 #include "fields2cover.h"
 #include <iostream>
@@ -69,4 +68,3 @@ int main() {
   return 0;
 }
 
-#endif  // F2C_DEF_MATPLOTLIB

@@ -21,6 +21,12 @@ LineString::LineString(const LinearRing& ring) {
   }
 }
 
+LineString::LineString(const std::vector<Point>& ps) {
+  for (auto&& p : ps) {
+    this->addPoint(p);
+  }
+}
+
 LineString::LineString(const std::initializer_list<Point>& ps) {
   for (auto&& p : ps) {
     this->addPoint(p);

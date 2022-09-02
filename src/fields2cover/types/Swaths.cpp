@@ -18,6 +18,12 @@ Swaths::Swaths(const std::initializer_list<Swath>& v_s) {
   }
 }
 
+Swaths::Swaths(std::vector<Swath>& v_s) {
+  for (auto&& s : v_s) {
+    emplace_back(s);
+  }
+}
+
 Swaths::~Swaths() = default;
 
 void Swaths::emplace_back(const Swath& s) {

@@ -1,0 +1,30 @@
+# pyproject.toml
+
+[build-system]
+requires      = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fields2cover"
+version = "1.1.0"
+description = "Robust and efficient coverage paths for autonomous agricultural vehicles. A modular and extensible Coverage Path Planning library"
+readme = "README.rst"
+authors = [{ name = "Wageningen University", email = "gonzalo.miermunoz@wur.nl" }]
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: BSD-3 License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+keywords = ["agtech", "fields2cover", "coverage path planning", "path planning", "coverage", "agriculture", "tractor"]
+dependencies = [
+]
+requires-python = ">=3.0"
+
+[project.optional-dependencies]
+dev = ["pip-tools", "pytest"]
+
+[project.urls]
+Homepage = "https://github.com/Fields2Cover/Fields2Cover"
+
+

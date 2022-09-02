@@ -21,6 +21,7 @@ struct Swaths {
   Swaths();
   explicit Swaths(int i);
   Swaths(const std::initializer_list<Swath>& s);
+  Swaths(std::vector<Swath>& s);
   ~Swaths();
 
   void emplace_back(const Swath& s);

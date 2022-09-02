@@ -4,7 +4,6 @@
 //                        BSD-3 License
 //=============================================================================
 
-#ifdef F2C_DEF_MATPLOTLIB
 
 #include <iostream>
 #include <gtest/gtest.h>
@@ -69,4 +68,3 @@ TEST(fields2cover_utils_visualizer, plot_cell) {
   f2c::Visualizer::show(false);
 }
 
-#endif  // F2C_DEF_MATPLOTLIB

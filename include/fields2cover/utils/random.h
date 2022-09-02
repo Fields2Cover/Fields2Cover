@@ -67,7 +67,7 @@ class Random {
 
   /// Generate a convex field
   /// @param area Area of the generated field
-  f2c::types::Field genConvexField(double area);
+  f2c::types::Field genConvexField(double area, size_t n_sides = 4);
 
   /// Generate a non-convex field
   /// @param area Area of the generated field

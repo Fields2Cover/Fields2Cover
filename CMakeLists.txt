@@ -1,7 +1,7 @@
 
 set(FIELDS2COVER_MAJOR_VERSION "1")
-set(FIELDS2COVER_MINOR_VERSION "0")
-set(FIELDS2COVER_PATCH_VERSION "1")
+set(FIELDS2COVER_MINOR_VERSION "1")
+set(FIELDS2COVER_PATCH_VERSION "0")
 set(FIELDS2COVER_VERSION_STRING "${FIELDS2COVER_MAJOR_VERSION}.${FIELDS2COVER_MINOR_VERSION}.${FIELDS2COVER_PATCH_VERSION}")
 set(FIELDS2COVER_VERSION ${FIELDS2COVER_MAJOR_VERSION}.${FIELDS2COVER_MINOR_VERSION}.${FIELDS2COVER_PATCH_VERSION})
 
@@ -14,16 +14,25 @@ set(PACKAGE_MAINTAINER "Gonzalo Mier")
 option(BUILD_CPP "Build Cpp package" ON)
 option(BUILD_TUTORIALS "Build tutorials" ON)
 option(BUILD_TESTS "Build tests" ON)
+option(BUILD_PYTHON "Build Python SWIG module" OFF)
 option(BUILD_DOC "Build Documentation" OFF)
 
-option(USING_MATPLOTLIB "Use Matplotlib" ON)
 
 
-cmake_minimum_required(VERSION 3.11)
+if (BUILD_PYTHON)
+  cmake_minimum_required(VERSION 3.12.4)
+else()
+  cmake_minimum_required(VERSION 3.11)
+endif()
+
 if(${CMAKE_VERSION} VERSION_LESS 3.22)
     cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 else()
     cmake_policy(VERSION 3.22)
+endif()
+
+if(POLICY CMP0135)
+  cmake_policy(SET CMP0135 NEW)
 endif()
 
 project(Fields2Cover
@@ -68,17 +77,13 @@ FetchContent_Declare(steering_functions FETCHCONTENT_UPDATES_DISCONNECTED
   GIT_REPOSITORY https://github.com/Fields2Cover-group/steering_functions.git)
 FetchContent_Declare(spline FETCHCONTENT_UPDATES_DISCONNECTED
   GIT_REPOSITORY https://github.com/Fields2Cover-group/spline.git)
-if(USING_MATPLOTLIB)
 FetchContent_Declare(matplotlib_cpp FETCHCONTENT_UPDATES_DISCONNECTED
   GIT_REPOSITORY https://github.com/Fields2Cover-group/matplotlib-cpp.git)
-endif()
 
 FetchContent_MakeAvailable(json tinyxml2 steering_functions spline)
-if(USING_MATPLOTLIB)
 FetchContent_MakeAvailable(matplotlib_cpp)
-endif()
 
-find_package(GDAL 2.0 REQUIRED)
+find_package(GDAL 3.0 REQUIRED)
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
@@ -116,20 +121,16 @@ add_library(Fields2Cover SHARED ${fields2cover_src})
 target_compile_features(Fields2Cover PUBLIC cxx_std_17) 
 target_compile_options(Fields2Cover PRIVATE -pedantic -Wall -Wfatal-errors
   -Werror -Wno-dev -Wextra -Wno-unused-parameter -Wno-sign-compare
-  -Wno-attributes -Wl,--no-undefined)
+  -Wno-attributes -Wl,--no-undefined -Wshadow)
 
 if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
   include(cmake/Modules/CodeCoverage.cmake)
   target_compile_options(Fields2Cover PRIVATE -g -O0 --coverage -fprofile-arcs -ftest-coverage)
   set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -lgcov")
 else ()
-  target_compile_options(Fields2Cover PRIVATE -O3)
+  target_compile_options(Fields2Cover PRIVATE -O2)
 endif()
 
-
-if(USING_MATPLOTLIB)
-  target_compile_definitions(Fields2Cover PUBLIC F2C_DEF_MATPLOTLIB)
-endif()
 
 
 target_include_directories(Fields2Cover PUBLIC
@@ -148,11 +149,8 @@ target_link_libraries(Fields2Cover
     tinyxml2::tinyxml2
     steering_functions
     spline
+    matplotlib_cpp
 )
-
-if(USING_MATPLOTLIB)  
-  target_link_libraries(Fields2Cover PRIVATE matplotlib_cpp)
-endif()
 
 set_target_properties(Fields2Cover PROPERTIES
   INTERPROCEDURAL_OPTIMIZATION TRUE PUBLIC_HEADER "include/fields2cover.h")
@@ -206,6 +204,22 @@ include(CPack)
 
 
 #####################################################
+#################### tutorials ######################
+#####################################################
+
+if (BUILD_TUTORIALS)
+    add_subdirectory(tutorials)
+endif() 
+
+#####################################################
+######################### swig ######################
+#####################################################
+
+if (BUILD_PYTHON)
+    add_subdirectory(swig)
+endif() 
+
+#####################################################
 ######################### test ######################
 #####################################################
 
@@ -216,14 +230,6 @@ if (BUILD_TESTS)
       --verbose --test-dir tests/)
   add_subdirectory(tests)
 endif()
-
-#####################################################
-#################### tutorials ######################
-#####################################################
-
-if (BUILD_TUTORIALS)
-    add_subdirectory(tutorials)
-endif() 
 endif()  # BUILD_CPP
 
 #####################################################

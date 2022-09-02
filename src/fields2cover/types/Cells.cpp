@@ -26,6 +26,12 @@ Cells::Cells(const OGRGeometry* geom) {
     this->data = std::shared_ptr<OGRMultiPolygon>(
         geom->clone()->toMultiPolygon(),
         [](OGRMultiPolygon* f) {OGRGeometryFactory::destroyGeometry(f);});
+  } else if (wkbFlatten(geom->getGeometryType()) ==
+    OGRwkbGeometryType::wkbGeometryCollection) {
+      data = std::shared_ptr<OGRMultiPolygon>(
+        static_cast<OGRMultiPolygon*>(
+          OGRGeometryFactory::createGeometry(wkbMultiPolygon)),
+            [](OGRMultiPolygon* f) {OGRGeometryFactory::destroyGeometry(f);});
   } else {
     throw std::invalid_argument(sstr(
         "Cells(const OGRGeometry*): Type of OGRGeometry* is " ,

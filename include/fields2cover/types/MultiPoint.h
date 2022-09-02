@@ -19,6 +19,7 @@ struct MultiPoint :
  public:
   using Geometries<MultiPoint, OGRMultiPoint, wkbMultiPoint, Point>::Geometries;
   MultiPoint();
+  MultiPoint(const std::vector<Point>& ps);
   MultiPoint(const std::initializer_list<Point>& ps);
 
   size_t size() const;

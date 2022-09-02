@@ -29,7 +29,7 @@ Then, from the main folder of the project:
 .. code-block:: console
 
    cd build;
-   cmake -DCMAKE_BUILD_TYPE=Release ..;
+   cmake ..;
    make -j$(nproc);
    sudo make install;
 
@@ -44,6 +44,27 @@ To add Fields2Cover into your CMakeLists.txt, it is as easy as:
    find_package(Fields2Cover REQUIRED)
    target_link_libraries(<<<your_package>>> Fields2Cover)
 
+
+Compilation with python interface
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+As without the interface, clone this repository. 
+Then, from the main folder of the project:
+
+.. code-block:: console
+
+   cd build;
+   cmake -DBUILD_PYTHON=ON ..;
+   make -j$(nproc);
+   sudo make install;
+
+To test if the compilation and installation of the python interface is correct, run on python:
+
+.. code-block:: python
+
+  import fields2cover
+  
+  
 
 
 
