@@ -33,7 +33,7 @@ struct Point : public Geometry<OGRPoint, wkbPoint> {
 
   Point operator-(const Point& b) const;
 
-  void operator*=(double b);
+  Point& operator*=(double b);
 
   Point operator*(double b) const;
 

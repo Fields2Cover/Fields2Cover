@@ -16,17 +16,21 @@ TEST(fields2cover_types_path, appendSwath) {
   EXPECT_EQ(path1.points[0].getY(), 1.0);
   EXPECT_EQ(path1.velocities[0], 2.0);
   EXPECT_EQ(path1.durations[0], 0.5);
-  EXPECT_EQ(path1.type[0], f2c::types::PathSectionType::SWATH);
+  EXPECT_EQ(static_cast<int>(path1.type[0]),
+      static_cast<int>(f2c::types::PathSectionType::SWATH));
   EXPECT_EQ(path1.points[1].getX(), 1.0);
   EXPECT_EQ(path1.points[1].getY(), 1.0);
   EXPECT_EQ(path1.velocities[1], 2.0);
   EXPECT_EQ(path1.durations[1], 1.5);
-  EXPECT_EQ(path1.type[1], f2c::types::PathSectionType::SWATH);
+  EXPECT_EQ(static_cast<int>(path1.type[1]),
+      static_cast<int>(f2c::types::PathSectionType::SWATH));
+
   EXPECT_EQ(path1.points[2].getX(), 1.0);
   EXPECT_EQ(path1.points[2].getY(), 4.0);
   EXPECT_EQ(path1.velocities[2], 2.0);
   EXPECT_EQ(path1.durations[2], 0.0);
-  EXPECT_EQ(path1.type[2], f2c::types::PathSectionType::SWATH);
+  EXPECT_EQ(static_cast<int>(path1.type[2]),
+      static_cast<int>(f2c::types::PathSectionType::SWATH));
   EXPECT_EQ(path1.task_time, 2.0);
 }
 
@@ -42,32 +46,38 @@ TEST(fields2cover_types_path, op_plus_equal) {
   EXPECT_EQ(path1.points[0].getY(), 1.0);
   EXPECT_EQ(path1.velocities[0], 2.0);
   EXPECT_EQ(path1.durations[0], 0.5);
-  EXPECT_EQ(path1.type[0], f2c::types::PathSectionType::SWATH);
+  EXPECT_EQ(static_cast<int>(path1.type[0]),
+      static_cast<int>(f2c::types::PathSectionType::SWATH));
   EXPECT_EQ(path1.points[1].getX(), 1.0);
   EXPECT_EQ(path1.points[1].getY(), 1.0);
   EXPECT_EQ(path1.velocities[1], 2.0);
   EXPECT_EQ(path1.durations[1], 1.5);
-  EXPECT_EQ(path1.type[1], f2c::types::PathSectionType::SWATH);
+  EXPECT_EQ(static_cast<int>(path1.type[1]),
+      static_cast<int>(f2c::types::PathSectionType::SWATH));
   EXPECT_EQ(path1.points[2].getX(), 1.0);
   EXPECT_EQ(path1.points[2].getY(), 4.0);
   EXPECT_EQ(path1.velocities[2], 2.0);
   EXPECT_EQ(path1.durations[2], 0.0);
-  EXPECT_EQ(path1.type[2], f2c::types::PathSectionType::SWATH);
+  EXPECT_EQ(static_cast<int>(path1.type[2]),
+      static_cast<int>(f2c::types::PathSectionType::SWATH));
   EXPECT_EQ(path1.points[3].getX(), 1.0);
   EXPECT_EQ(path1.points[3].getY(), 4.0);
   EXPECT_EQ(path1.velocities[3], 1.0);
   EXPECT_EQ(path1.durations[3], 4.0);
-  EXPECT_EQ(path1.type[3], f2c::types::PathSectionType::SWATH);
+  EXPECT_EQ(static_cast<int>(path1.type[3]),
+      static_cast<int>(f2c::types::PathSectionType::SWATH));
   EXPECT_EQ(path1.points[4].getX(), 1.0);
   EXPECT_EQ(path1.points[4].getY(), 0.0);
   EXPECT_EQ(path1.velocities[4], 1.0);
   EXPECT_EQ(path1.durations[4], 1.0);
-  EXPECT_EQ(path1.type[4], f2c::types::PathSectionType::SWATH);
+  EXPECT_EQ(static_cast<int>(path1.type[4]),
+      static_cast<int>(f2c::types::PathSectionType::SWATH));
   EXPECT_EQ(path1.points[5].getX(), 0.0);
   EXPECT_EQ(path1.points[5].getY(), 0.0);
   EXPECT_EQ(path1.velocities[5], 1.0);
   EXPECT_EQ(path1.durations[5], 0.0);
-  EXPECT_EQ(path1.type[5], f2c::types::PathSectionType::SWATH);
+  EXPECT_EQ(static_cast<int>(path1.type[5]),
+      static_cast<int>(f2c::types::PathSectionType::SWATH));
   EXPECT_EQ(path1.task_time, 7.0);
   EXPECT_EQ(path1.points.size(), 6);
   EXPECT_EQ(path1.durations.size(), 6);
@@ -93,7 +103,8 @@ TEST(fields2cover_types_path, populate_and_reduce) {
   EXPECT_EQ(path1.length(), 9);
   EXPECT_NEAR(path1.task_time, 6.5, 1e-6);
   for (auto d : path1.directions) {
-    EXPECT_EQ(d, f2c::types::PathDirection::FORWARD);
+    EXPECT_EQ( static_cast<int>(d),
+        static_cast<int>(f2c::types::PathDirection::FORWARD));
   }
   auto path_c = path1.clone();
   path1.populate(200);
@@ -108,10 +119,12 @@ TEST(fields2cover_types_path, populate_and_reduce) {
   EXPECT_EQ(path1.type.size(), 200);
   EXPECT_NEAR(path1.task_time, 6.5, 1e-6);
   for (auto d : path1.directions) {
-    EXPECT_EQ(d, f2c::types::PathDirection::FORWARD);
+    EXPECT_EQ(static_cast<int>(d),
+        static_cast<int>(f2c::types::PathDirection::FORWARD));
   }
   for (auto t : path1.type) {
-    EXPECT_EQ(t, f2c::types::PathSectionType::SWATH);
+    EXPECT_EQ(static_cast<int>(t),
+        static_cast<int>(f2c::types::PathSectionType::SWATH));
   }
   path1.populate(10);
   EXPECT_TRUE(path1.isValid());
@@ -125,10 +138,12 @@ TEST(fields2cover_types_path, populate_and_reduce) {
   EXPECT_EQ(path1.type.size(), 10);
   EXPECT_NEAR(path1.task_time, 6.5, 1e-6);
   for (auto d : path1.directions) {
-    EXPECT_EQ(d, f2c::types::PathDirection::FORWARD);
+    EXPECT_EQ(static_cast<int>(d),
+        static_cast<int>(f2c::types::PathDirection::FORWARD));
   }
   for (auto t : path1.type) {
-    EXPECT_EQ(t, f2c::types::PathSectionType::SWATH);
+    EXPECT_EQ(static_cast<int>(t),
+        static_cast<int>(f2c::types::PathSectionType::SWATH));
   }
   path1.populate(500);
   EXPECT_GT(path1.length(), 9.0);
@@ -151,10 +166,12 @@ TEST(fields2cover_types_path, populate_and_reduce) {
   // Unexpected behaviour
   // EXPECT_NEAR(path1.task_time, 6.5, 1e-6);
   for (auto d : path1.directions) {
-    EXPECT_EQ(d, f2c::types::PathDirection::FORWARD);
+    EXPECT_EQ(static_cast<int>(d),
+        static_cast<int>(f2c::types::PathDirection::FORWARD));
   }
   for (auto t : path1.type) {
-    EXPECT_EQ(t, f2c::types::PathSectionType::SWATH);
+    EXPECT_EQ(static_cast<int>(t),
+        static_cast<int>(f2c::types::PathSectionType::SWATH));
   }
 }
 

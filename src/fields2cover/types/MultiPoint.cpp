@@ -15,6 +15,12 @@ MultiPoint::MultiPoint() {
     [](OGRMultiPoint* f) {OGRGeometryFactory::destroyGeometry(f);});
 }
 
+MultiPoint::MultiPoint(const std::vector<Point>& ps) {
+  for (auto&& p : ps) {
+    this->addGeometry(p);
+  }
+}
+
 MultiPoint::MultiPoint(const std::initializer_list<Point>& ps) {
   for (auto&& p : ps) {
     this->addGeometry(p);

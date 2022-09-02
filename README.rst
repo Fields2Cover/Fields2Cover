@@ -87,6 +87,27 @@ To add Fields2Cover into your CMakeLists.txt, it is as easy as:
    target_link_libraries(<<<your_package>>> Fields2Cover)
 
 
+Compilation with python interface
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+As without the interface, clone this repository. 
+Then, from the main folder of the project:
+
+.. code-block:: console
+
+   cd build;
+   cmake -DBUILD_PYTHON=ON ..;
+   make -j$(nproc);
+   sudo make install;
+
+To test if the compilation and installation of the python interface is correct, run on python:
+
+.. code-block:: python
+
+  import fields2cover
+
+
+
 Contribute
 -----------
 
@@ -105,7 +126,7 @@ Fields2Cover project is under `BSD-3 license <https://tldrlegal.com/license/bsd-
 TODO
 -------
 
-- Create SWIG interface with Python/Lua/R
+- Create SWIG interface with Lua/R
 - Support Route planners with metaheuristics
 - Support non-convex fields
 - Consider the start and end point of the vehicle

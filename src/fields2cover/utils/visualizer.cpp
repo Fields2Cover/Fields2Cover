@@ -4,7 +4,6 @@
 //                        BSD-3 License
 //=============================================================================
 
-#ifdef F2C_DEF_MATPLOTLIB
 
 #include <matplotlibcpp.h>
 #include "fields2cover/utils/visualizer.h"
@@ -43,6 +42,12 @@ void Visualizer::plot(const F2CSwath& swath, std::string opt) {
   plt::plot(comps[0], comps[1], opt);
   plot(F2CPoint(comps[0][0], comps[1][0]), "og");
   plot(F2CPoint(comps[0].back(), comps[1].back()), "kx");
+}
+
+void Visualizer::plot(const F2CSwathsByCells& swaths) {
+  for (int i = 0; i < swaths.size(); ++i) {
+    plot(swaths[i]);
+  }
 }
 
 void Visualizer::plot(const F2CSwaths& swaths) {
@@ -107,7 +112,23 @@ void Visualizer::show(bool block) {
 
 void Visualizer::save(const std::string& file) {
   plt::save(file);
+  plt::close();
 }
+
+
+void Visualizer::title(const std::string& text) {
+  plt::title(text);
+}
+
+void Visualizer::xlim(double min, double max) {
+  plt::xlim(min, max);
+}
+
+void Visualizer::ylim(double min, double max) {
+  plt::ylim(min, max);
+}
+
+
 
 std::vector<std::vector<double>> Visualizer::getComponents(
     const std::vector<F2CPoint>& points) {
@@ -152,4 +173,3 @@ std::vector<std::string> Visualizer::color_linspace(
 
 
 }  // namespace f2c
-#endif  // F2C_DEF_MATPLOTLIB

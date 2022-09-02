@@ -8,7 +8,6 @@
 #ifndef FIELDS2COVER_UTILS_VISUALIZER_H_
 #define FIELDS2COVER_UTILS_VISUALIZER_H_
 
-#ifdef F2C_DEF_MATPLOTLIB
 
 #include <vector>
 #include <string>
@@ -33,6 +32,8 @@ class Visualizer {
   static void plot(const F2CCells& cells);
   /// Plot swaths
   static void plot(const F2CSwaths& swaths);
+  /// Plot swaths by cells
+  static void plot(const F2CSwathsByCells& swaths);
   /// Plot a swath
   static void plot(const F2CSwath& swath, std::string opt = "");
   /// Plot a field
@@ -77,6 +78,13 @@ class Visualizer {
   /// Save figure to a file
   /// @param file Name of the file
   static void save(const std::string& file);
+
+  /// Add title to the figure
+  /// @param text Title text
+  static void title(const std::string& text);
+
+  static void xlim(double min, double max);
+  static void ylim(double min, double max);
 
  private:
   template<class T>
@@ -125,5 +133,4 @@ void Visualizer::plot(const T& t) {
 }  // namespace f2c
 
 
-#endif  // F2C_DEF_MATPLOTLIB
 #endif  // FIELDS2COVER_UTILS_VISUALIZER_H_

@@ -1,0 +1,50 @@
+import os
+from distutils.sysconfig import get_python_lib
+from setuptools import setup
+import setuptools.command.install
+from setuptools.extension import Extension
+import shutil
+
+
+class CompiledLibInstall(setuptools.command.install.install):
+    """
+    Specialized install to install to python libs
+    """
+
+    def run(self):
+        """
+        Run method called by setup
+        :return:
+        """
+        # Get filenames from CMake variable
+        filenames = '${PYTHON_INSTALL_FILES}'.split(';')
+
+        # Directory to install to
+        install_dir = get_python_lib()
+
+        # Install files
+        [shutil.copy(filename, install_dir) for filename in filenames]
+
+
+
+setup(
+    name='fields2cover',
+    version='1.1.0',
+    author='Wageningen University',
+    description='Robust and efficient coverage paths for autonomous agricultural vehicles',
+    long_description='Robust and efficient coverage paths for autonomous agricultural vehicles. A modular and extensible Coverage Path Planning library',
+    url='https://github.com/Fields2Cover/Fields2Cover',
+    classifiers=[
+        "License :: OSI Approved :: BSD License",
+
+    ],
+    zip_safe=False,
+    include_package_data=True,
+    author_email='gonzalo.miermunoz@wur.nl',
+    packages=['fields2cover'],
+    package_dir={'': '.'},
+    license='BSD-3',
+    cmdclass={'install': CompiledLibInstall}
+)
+    
+

@@ -1,6 +1,7 @@
 Tutorials
 =========
 
+
 On these tutorials, you will learn how to create a coverage path for a field.
 Fields2Cover library is made by several modules.
 Each of them solves an individual part of the Coverage Path Planning (CPP) problem.
@@ -12,6 +13,8 @@ Here, you will learn how to concatenate them to solve the CPP.
 
 All the code examples shown in the tutorials are located on the ``tutorials`` folder.
 
+C++ tutorials 
+^^^^^^^^^^^^^
 
 .. toctree::
     :maxdepth: 3
@@ -22,4 +25,16 @@ All the code examples shown in the tutorials are located on the ``tutorials`` fo
     tutorials/swath_generator.rst
     tutorials/route_planning.rst
     tutorials/path_planning.rst
+
+Python tutorials 
+^^^^^^^^^^^^^
+.. toctree::
+    :maxdepth: 3
+
+    tutorials/python_basic_types.rst
+    tutorials/python_objective_functions.rst
+    tutorials/python_headland_generator.rst
+    tutorials/python_swath_generator.rst
+    tutorials/python_route_planning.rst
+    tutorials/python_path_planning.rst
 
