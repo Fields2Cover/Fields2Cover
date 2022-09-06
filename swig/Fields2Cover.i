@@ -275,6 +275,8 @@ DEFINE_PATH_COSTS(PathObjective, computeCostWithMinimizingSign)
 %include "fields2cover/route_planning/snake_order.h"
 %rename(RP_Spiral) f2c::rp::SpiralOrder;
 %include "fields2cover/route_planning/spiral_order.h"
+%rename(RP_CustomOrder) f2c::rp::CustomOrder;
+%include "fields2cover/route_planning/custom_order.h"
 
 %rename(PP_Turning_base_class) f2c::pp::TurningBase;
 %include "fields2cover/path_planning/turning_base.h"

@@ -28,7 +28,6 @@ void CustomOrder::sortSwaths() {
 
 void CustomOrder::check() {
   // unique vector
-  std::vector<size_t> diff;
   std::vector<size_t> unique(custom_order.begin(), custom_order.end());
   // sort the unique vector
   std::sort(unique.begin(), unique.end());
@@ -42,6 +41,7 @@ void CustomOrder::check() {
   std::vector<size_t> cv(unique.size());
   std::iota (cv.begin(), cv.end(), 0);
   // create the difference
+  std::vector<size_t> diff;
   std::set_difference(unique.begin(), unique.end(), cv.begin(), cv.end(), std::back_inserter(diff));
 
   if (swaths_.size() != custom_order.size()) {

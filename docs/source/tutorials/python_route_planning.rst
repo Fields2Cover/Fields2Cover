@@ -127,3 +127,28 @@ Same as previous patterns, spiral pattern also has 4 variants:
 +-----------+-----------+
 | |spiral3| | |spiral4| |
 +-----------+-----------+
+
+
+Custom order
+-------------------------------
+
+To support more general approach for coverage path planning it's possible to define 
+custom order of the swaths for the path planning process.
+
+.. code-block:: python
+    
+    custom_order = f2c.RP_CustomOrder(swaths, [0, 1, 2, 3, 4])
+    swaths = custom_order.genSortedSwaths()
+
+.. code-block:: python
+
+    custom_order = f2c.RP_CustomOrder(swaths)
+    custom_order = custom_order.setCustomOrder([0, 1 , 2, 3, 4])
+    swaths = custom_order.genSortedSwaths()
+
+.. note::
+    There are several checks whether the customer order can be used or not.
+
+    - The custom order may not contain any elements more than once
+    - The supplied list/vector length must be the same as the number of the swaths
+    - The order vector may contain only elements from the swath range: `<0, swaths.size() - 1>`
