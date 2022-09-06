@@ -80,18 +80,14 @@ int Parser::importJson(const std::string& file, F2CFields& fields) {
   std::ifstream f(file);
   json imported_field = json::parse(f);
 
-  F2CLinearRing line;
-  F2CCell poly;
-  for (auto&& ps :
-      imported_field["features"][0]["geometry"]["coordinates"][0]) {
-    F2CPoint point(ps[0], ps[1], ps[2]);
-    line.addPoint(point);
+  for (auto&& imported_cell : imported_field["features"]) {
+    F2CLinearRing line;
+    for (auto&& ps : imported_cell["geometry"]["coordinates"][0]) {
+      line.addPoint(ps[0], ps[1], ps[2]);
+    }
+    fields.emplace_back(
+        F2CField(F2CCells(F2CCell(line)), imported_cell["properties"]["Name"]));
   }
-  poly.addRing(line);
-  F2CField field(F2CCells(poly),
-      imported_field["features"][0]["properties"]["Name"]);
-
-  fields.emplace_back(field);
   return 0;
 }
 
