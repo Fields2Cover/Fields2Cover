@@ -50,3 +50,10 @@ def test_fields2cover_utils_parser_importJson():
   f2c.Visualizer.show(False);
   #f2c.Visualizer.show(True);
 
+def test_fields2cover_utils_parser_importJson_2_cell():
+  fields = f2c.Fields();
+  f2c.Parser.importJson(DATA_PATH + "test_2_cell.json", fields);
+  assert (fields.size() == 2);
+  assert (fields[0].id == "field1");
+  assert (fields[1].id == "field2");
+
