@@ -62,3 +62,11 @@ TEST(fields2cover_utils_parser, import_json_two_cells) {
   EXPECT_GT(fields[1].getArea(), 0);
 }
 
+TEST(fields2cover_utils_parser, import_json_ring) {
+  F2CFields fields;
+  f2c::Parser::importJson(std::string(DATA_PATH) + "test_ring.json", fields);
+  EXPECT_EQ(fields.size(), 1);
+  EXPECT_EQ(fields[0].id, "Ring");
+  EXPECT_EQ(fields[0].getArea(), 10*10 - 8*8);
+}
+

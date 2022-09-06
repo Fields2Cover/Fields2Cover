@@ -81,12 +81,21 @@ int Parser::importJson(const std::string& file, F2CFields& fields) {
   json imported_field = json::parse(f);
 
   for (auto&& imported_cell : imported_field["features"]) {
-    F2CLinearRing line;
+    F2CLinearRing outer_ring;
     for (auto&& ps : imported_cell["geometry"]["coordinates"][0]) {
-      line.addPoint(ps[0], ps[1], ps[2]);
+      outer_ring.addPoint(ps[0], ps[1], ps[2]);
     }
+    F2CCell cell(outer_ring);
+    for (int i = 1; i < imported_cell["geometry"]["coordinates"].size(); ++i) {
+      F2CLinearRing inner_ring;
+      for (auto&& ps : imported_cell["geometry"]["coordinates"][i]) {
+        inner_ring.addPoint(ps[0], ps[1], ps[2]);
+      }
+      cell.addRing(inner_ring);
+    }
+
     fields.emplace_back(
-        F2CField(F2CCells(F2CCell(line)), imported_cell["properties"]["Name"]));
+        F2CField(F2CCells(cell), imported_cell["properties"]["Name"]));
   }
   return 0;
 }
