@@ -138,6 +138,10 @@ EXTEND_ALGS(Point, rotateFromPoint)
 
 %template(VectorDouble) std::vector<double>;
 %template(VectorInt) std::vector<int>;
+%inline %{
+typedef long unsigned int size_t;
+%}
+%template(VectorSize) std::vector<size_t>;
 %template(VectorPoint) std::vector<F2CPoint>;
 %template(VectorMultiPoint) std::vector<F2CMultiPoint>;
 %template(VectorSwath) std::vector<f2c::types::Swath>;
