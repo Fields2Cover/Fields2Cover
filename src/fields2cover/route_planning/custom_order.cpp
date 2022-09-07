@@ -37,28 +37,14 @@ void CustomOrder::check() {
   if (unique.size() != custom_order.size()) {
     throw std::invalid_argument("Order vector does not contain unique elements.");
   }
-  // create the vector for comparison
-  std::vector<size_t> cv(unique.size());
-  std::iota (cv.begin(), cv.end(), 0);
-  // create the difference
-  std::vector<size_t> diff;
-  std::set_difference(unique.begin(), unique.end(), cv.begin(), cv.end(), std::back_inserter(diff));
-
+  
   if (swaths_.size() != custom_order.size()) {
     throw std::length_error("Lengths of the order vector and swaths must be the same.");
   }
-  auto max = *std::max_element(custom_order.begin(), custom_order.end());
-  if (max > swaths_.size() - 1){
-    throw std::invalid_argument("Custom order element is out of the swath range [" + std::to_string(max) + "]");
+  auto max_el = *std::max_element(custom_order.begin(), custom_order.end());
+  if (max_el > swaths_.size() - 1){
+    throw std::invalid_argument("Custom order element is out of the swath range [" + std::to_string(max_el) + "]");
   }
-  //
-  if (diff.size() > 0) {
-    std::ostringstream oss;
-    std::copy(diff.begin(), diff.end()-1, std::ostream_iterator<int>(oss, ","));
-    oss << diff.back();
-    throw std::invalid_argument("Order vector contains incorrect elements [" + oss.str() + "]");
-  }
-  
 }
 
 } // namespace f2c::rp
