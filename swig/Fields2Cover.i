@@ -138,6 +138,10 @@ EXTEND_ALGS(Point, rotateFromPoint)
 
 %template(VectorDouble) std::vector<double>;
 %template(VectorInt) std::vector<int>;
+%inline %{
+typedef long unsigned int size_t;
+%}
+%template(VectorSize) std::vector<size_t>;
 %template(VectorPoint) std::vector<F2CPoint>;
 %template(VectorMultiPoint) std::vector<F2CMultiPoint>;
 %template(VectorSwath) std::vector<f2c::types::Swath>;
@@ -275,6 +279,8 @@ DEFINE_PATH_COSTS(PathObjective, computeCostWithMinimizingSign)
 %include "fields2cover/route_planning/snake_order.h"
 %rename(RP_Spiral) f2c::rp::SpiralOrder;
 %include "fields2cover/route_planning/spiral_order.h"
+%rename(RP_CustomOrder) f2c::rp::CustomOrder;
+%include "fields2cover/route_planning/custom_order.h"
 
 %rename(PP_Turning_base_class) f2c::pp::TurningBase;
 %include "fields2cover/path_planning/turning_base.h"
