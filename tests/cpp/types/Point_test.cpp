@@ -115,7 +115,7 @@ TEST(fields2cover_types_point, clone) {
   F2CPoint a(2, 3);
   F2CPoint b = a.clone();
   a.setX(10);
-  ASSERT_EQ(b.getX(),2);
+	EXPECT_EQ(b.getX(),2);
 }
 
 }  // namespace f2c
