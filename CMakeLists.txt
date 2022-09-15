@@ -12,6 +12,7 @@ set(PACKAGE_MAINTAINER "Gonzalo Mier")
 
 
 option(BUILD_CPP "Build Cpp package" ON)
+option(ALLOW_PARALLELIZATION "Allow parallel algorithms" OFF)
 option(BUILD_TUTORIALS "Build tutorials" ON)
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_PYTHON "Build Python SWIG module" OFF)
@@ -151,6 +152,14 @@ target_link_libraries(Fields2Cover
     spline
     matplotlib_cpp
 )
+
+if (ALLOW_PARALLELIZATION)
+target_link_libraries(Fields2Cover
+  PUBLIC
+  tbb
+)
+endif()
+
 
 set_target_properties(Fields2Cover PROPERTIES
   INTERPROCEDURAL_OPTIMIZATION TRUE PUBLIC_HEADER "include/fields2cover.h")
