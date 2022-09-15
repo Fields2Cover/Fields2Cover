@@ -111,5 +111,14 @@ TEST(fields2cover_types_point, minus_v) {
   EXPECT_NEAR(p3[1].getY(), 0.2, 1e-7);
 }
 
+TEST(fields2cover_types_point, clone) {
+  F2CPoint a(2, 3);
+  F2CPoint b = a.clone();
+  a.setX(10);
+  EXPECT_EQ(b.getX(), 2);
+}
+
+
+
 }  // namespace f2c
 
