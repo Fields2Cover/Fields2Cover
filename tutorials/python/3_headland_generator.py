@@ -22,6 +22,10 @@ print("The complete area is ", cells.getArea(),
 f2c.Visualizer.figure(1);
 f2c.Visualizer.plot(field);
 f2c.Visualizer.plot(no_hl);
+f2c.Visualizer.show();
+
+
+f2c.Visualizer.figure(2);
+f2c.Visualizer.plot(field);
+f2c.Visualizer.plot(no_hl);
 f2c.Visualizer.save("Tutorial_3_1_Const_width");
-
-
