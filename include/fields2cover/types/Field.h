@@ -44,6 +44,7 @@ struct Field {
   int getEPSGCoordSystem() const;
   void setEPSGCoordSystem(int epsg);
   void setUTMCoordSystem(const std::string& utm);
+  Cells getCellsAbsPosition() const;
 };
 
 }  // namespace f2c::types

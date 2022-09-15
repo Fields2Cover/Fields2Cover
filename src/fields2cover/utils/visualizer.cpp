@@ -26,22 +26,30 @@ void Visualizer::plot(const F2CPath& path) {
   plot(path.points, "k");
 }
 
-void Visualizer::plot(const F2CCell& cell) {
-  plot(cell, "tab:olive");
+void Visualizer::plot(const F2CCell& cell, const std::string& opt) {
+  if (opt.empty()){
+    plot(cell, "tab:olive");
+  } else {
+    plot(cell, opt);
+  }
 }
 
-void Visualizer::plot(const F2CCells& cells) {
+void Visualizer::plot(const F2CCells& cells, const std::string& opt) {
   for (auto&& cell : cells) {
-    plot(cell, "tab:olive");
+    if (opt.empty()){
+      plot(cell, "tab:olive");
+    } else {
+      plot(cell, opt);
+    }
   }
 }
 
 
-void Visualizer::plot(const F2CSwath& swath, std::string opt) {
+void Visualizer::plot(const F2CSwath& swath, const std::string& opt) {
   auto comps = getComponents(data2vector(swath.getPath()));
   plt::plot(comps[0], comps[1], opt);
-  plot(F2CPoint(comps[0][0], comps[1][0]), "og");
-  plot(F2CPoint(comps[0].back(), comps[1].back()), "kx");
+  plot(F2CPoint(comps[0][0], comps[1][0]), ".g");
+  plot(F2CPoint(comps[0].back(), comps[1].back()), ".k");
 }
 
 void Visualizer::plot(const F2CSwathsByCells& swaths) {
@@ -102,6 +110,7 @@ void Visualizer::plot(const std::vector<double>& d,
 void Visualizer::figure(int id) {
   plt::figure(id);
 }
+
 void Visualizer::figure() {
   plt::figure();
 }
@@ -126,6 +135,10 @@ void Visualizer::xlim(double min, double max) {
 
 void Visualizer::ylim(double min, double max) {
   plt::ylim(min, max);
+}
+
+void Visualizer::axis(const std::string& opt) {
+  plt::axis(opt);
 }
 
 

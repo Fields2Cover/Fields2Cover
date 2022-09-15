@@ -46,8 +46,8 @@ cloned_p = old_p.clone()
 print("The old point is ", old_p)
 cloned_p *= 5.0
 print("Old point is: ", old_p, " and cloned point is: ", cloned_p)
-copy_p = old_p
 
+copy_p = old_p
 copy_p *= 5.5
 print("Old point is: ", old_p, " and copied point is: ", copy_p)
 

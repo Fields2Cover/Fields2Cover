@@ -73,5 +73,9 @@ void Field::setUTMCoordSystem(const std::string& utm) {
   coord_sys = "UTM:" + utm;
 }
 
+Cells Field::getCellsAbsPosition() const {
+  return this->field + this->ref_point;
+}
+
 }  // namespace f2c::types
 

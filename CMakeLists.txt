@@ -12,6 +12,7 @@ set(PACKAGE_MAINTAINER "Gonzalo Mier")
 
 
 option(BUILD_CPP "Build Cpp package" ON)
+option(ALLOW_PARALLELIZATION "Allow parallel algorithms" OFF)
 option(BUILD_TUTORIALS "Build tutorials" ON)
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_PYTHON "Build Python SWIG module" OFF)
@@ -74,11 +75,11 @@ FetchContent_Declare(json FETCHCONTENT_UPDATES_DISCONNECTED
 FetchContent_Declare(tinyxml2 FETCHCONTENT_UPDATES_DISCONNECTED
   URL https://github.com/leethomason/tinyxml2/archive/refs/tags/9.0.0.tar.gz)
 FetchContent_Declare(steering_functions FETCHCONTENT_UPDATES_DISCONNECTED
-  GIT_REPOSITORY https://github.com/Fields2Cover-group/steering_functions.git)
+  GIT_REPOSITORY https://github.com/Fields2Cover/steering_functions.git)
 FetchContent_Declare(spline FETCHCONTENT_UPDATES_DISCONNECTED
-  GIT_REPOSITORY https://github.com/Fields2Cover-group/spline.git)
+  GIT_REPOSITORY https://github.com/Fields2Cover/spline.git)
 FetchContent_Declare(matplotlib_cpp FETCHCONTENT_UPDATES_DISCONNECTED
-  GIT_REPOSITORY https://github.com/Fields2Cover-group/matplotlib-cpp.git)
+  GIT_REPOSITORY https://github.com/Fields2Cover/matplotlib-cpp.git)
 
 FetchContent_MakeAvailable(json tinyxml2 steering_functions spline)
 FetchContent_MakeAvailable(matplotlib_cpp)
@@ -152,6 +153,14 @@ target_link_libraries(Fields2Cover
     matplotlib_cpp
 )
 
+if (ALLOW_PARALLELIZATION)
+target_link_libraries(Fields2Cover
+  PUBLIC
+  tbb
+)
+endif()
+
+
 set_target_properties(Fields2Cover PROPERTIES
   INTERPROCEDURAL_OPTIMIZATION TRUE PUBLIC_HEADER "include/fields2cover.h")
 
@@ -197,6 +206,8 @@ set(CPACK_PACKAGE_VERSION_MINOR ${FIELDS2COVER_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${FIELDS2COVER_VERSION_PATCH})
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.rst")
+set(CPACK_PACKAGE_CONTACT "gonzalo.miermunoz@wur.nl")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Gonzalo Mier<${CPACK_PACKAGE_CONTACT}>")
 
 set(CPACK_SOURCE_GENERATOR "TGZ;ZIP")
 set(CPACK_SOURCE_IGNORE_FILES .git dist .*build.* \\\\.DS_Store .dockerignore)

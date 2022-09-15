@@ -27,15 +27,15 @@ class Visualizer {
   static void plot(const F2CPath& path);
   static void plot(const F2CMultiLineString& lines);
   /// Plot a cell
-  static void plot(const F2CCell& cell);
+  static void plot(const F2CCell& cell, const std::string& opt = "");
   /// Plot cells
-  static void plot(const F2CCells& cells);
+  static void plot(const F2CCells& cells, const std::string& opt = "");
   /// Plot swaths
   static void plot(const F2CSwaths& swaths);
   /// Plot swaths by cells
   static void plot(const F2CSwathsByCells& swaths);
   /// Plot a swath
-  static void plot(const F2CSwath& swath, std::string opt = "");
+  static void plot(const F2CSwath& swath, const std::string& opt = "");
   /// Plot a field
   static void plot(const F2CField& field);
   /// Plot a vector of fields
@@ -85,6 +85,7 @@ class Visualizer {
 
   static void xlim(double min, double max);
   static void ylim(double min, double max);
+  static void axis(const std::string& opt);
 
  private:
   template<class T>
