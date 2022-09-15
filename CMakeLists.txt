@@ -75,11 +75,11 @@ FetchContent_Declare(json FETCHCONTENT_UPDATES_DISCONNECTED
 FetchContent_Declare(tinyxml2 FETCHCONTENT_UPDATES_DISCONNECTED
   URL https://github.com/leethomason/tinyxml2/archive/refs/tags/9.0.0.tar.gz)
 FetchContent_Declare(steering_functions FETCHCONTENT_UPDATES_DISCONNECTED
-  GIT_REPOSITORY https://github.com/Fields2Cover-group/steering_functions.git)
+  GIT_REPOSITORY https://github.com/Fields2Cover/steering_functions.git)
 FetchContent_Declare(spline FETCHCONTENT_UPDATES_DISCONNECTED
-  GIT_REPOSITORY https://github.com/Fields2Cover-group/spline.git)
+  GIT_REPOSITORY https://github.com/Fields2Cover/spline.git)
 FetchContent_Declare(matplotlib_cpp FETCHCONTENT_UPDATES_DISCONNECTED
-  GIT_REPOSITORY https://github.com/Fields2Cover-group/matplotlib-cpp.git)
+  GIT_REPOSITORY https://github.com/Fields2Cover/matplotlib-cpp.git)
 
 FetchContent_MakeAvailable(json tinyxml2 steering_functions spline)
 FetchContent_MakeAvailable(matplotlib_cpp)
