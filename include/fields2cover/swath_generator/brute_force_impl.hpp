@@ -38,9 +38,9 @@ F2CSwaths BruteForce<T>::generateBestSwaths(
   #endif
 
   int min_cost_pos = std::min_element(costs.begin(), costs.end()) - costs.begin();
+  this->best_angle = ids[min_cost_pos] * step_angle;
 
-  return BruteForce<T>::generateSwaths(
-      ids[min_cost_pos] * step_angle, op_width, poly);
+  return BruteForce<T>::generateSwaths(this->best_angle, op_width, poly);
 }
 
 template <typename T>
