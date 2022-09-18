@@ -107,6 +107,11 @@ To test if the compilation and installation of the python interface is correct, 
   import fields2cover
 
 
+Stability
+---------
+
+Fields2Cover is still in early development, so feedback and bug reports are appreciated.  At the moment, it should expected that breaking changes may be introduced as new functionality is added, bugs are fixed, and APIs are streamlined.
+
 
 Contribute
 -----------
