@@ -58,7 +58,7 @@ Some packages are needed before compiling the package:
    sudo apt-get -y update
    sudo apt-get install -y --no-install-recommends build-essential ca-certificates cmake \
         doxygen g++ git libeigen3-dev libgdal-dev libpython3-dev python3 python3-pip \
-        python3-matplotlib lcov libgtest-dev 
+        python3-matplotlib lcov libgtest-dev libtbb-dev
    python -m pip install gcovr
 
 
@@ -91,6 +91,14 @@ Compilation with python interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 As without the interface, clone this repository. 
+
+Install the packages required as:
+
+.. code-block:: console
+   
+   sudo apt install swig python3-pytest
+
+
 Then, from the main folder of the project:
 
 .. code-block:: console
@@ -105,6 +113,12 @@ To test if the compilation and installation of the python interface is correct, 
 .. code-block:: python
 
   import fields2cover
+  
+Or run on the main folder:
+
+.. code-block:: console
+
+  pytest-3 tests/python/
 
 
 Stability
