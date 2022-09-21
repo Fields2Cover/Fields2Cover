@@ -26,21 +26,13 @@ void Visualizer::plot(const F2CPath& path) {
   plot(path.points, "k");
 }
 
-void Visualizer::plot(const F2CCell& cell, const std::string& opt) {
-  if (opt.empty()){
-    plot(cell, "tab:olive");
-  } else {
-    plot(cell, opt);
-  }
+void Visualizer::plot(const F2CCell& cell) {
+  plot(cell, "tab:olive");
 }
 
-void Visualizer::plot(const F2CCells& cells, const std::string& opt) {
+void Visualizer::plot(const F2CCells& cells) {
   for (auto&& cell : cells) {
-    if (opt.empty()){
-      plot(cell, "tab:olive");
-    } else {
-      plot(cell, opt);
-    }
+    plot(cell, "tab:olive");
   }
 }
 
