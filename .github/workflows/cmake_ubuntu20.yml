@@ -1,4 +1,4 @@
-name: CMake
+name: Ubuntu-20.04
 
 on: [push, pull_request]
 
@@ -8,7 +8,7 @@ env:
 
 jobs:
   build-on-ubuntu:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v3
     
