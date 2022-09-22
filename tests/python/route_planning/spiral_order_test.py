@@ -64,7 +64,7 @@ def test_fields2cover_route_spiral_genSortedSwathsEvenSize():
         [f2c.Point(0, i), f2c.Point(1, i)])), i, i));
 
   swath_sorter = f2c.RP_Spiral(swaths);
-  swath_sorter.set_spiral_size(size);
+  swath_sorter.setSpiralSize(size);
 
   swaths = swath_sorter.genSortedSwaths();
 
@@ -88,7 +88,7 @@ def test_fields2cover_route_spiral_genSortedSwathsOddSize():
         [f2c.Point(0, i), f2c.Point(1, i)])), i, i));
 
   swath_sorter = f2c.RP_Spiral(swaths);
-  swath_sorter.set_spiral_size(size);
+  swath_sorter.setSpiralSize(size);
 
   swaths = swath_sorter.genSortedSwaths();
 
