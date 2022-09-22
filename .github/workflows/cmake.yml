@@ -15,12 +15,23 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
+    - name: Create Build Directory
+      run: cmake -E make_directory ${{github.workspace}}/build    
+        
+    - name: Install Packages
+      run: |
+            sudo add-apt-repository -y ppa:ubuntugis/ppa
+            sudo apt-get -y update -qq
+            sudo apt-get install -y --no-install-recommends build-essential ca-certificates cmake doxygen g++ git libeigen3-dev libgdal-dev libpython3-dev python3 python3-pip python3-matplotlib lcov libgtest-dev libtbb-dev swig python3-pytest
+            python -m pip install gcovr
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_PYTHON=ON -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      working-directory: ${{github.workspace}}/build
+      run: make -j$(nproc)
 
     - name: Test
       working-directory: ${{github.workspace}}/build
