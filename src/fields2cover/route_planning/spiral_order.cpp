@@ -9,12 +9,12 @@ SpiralOrder::SpiralOrder(F2CSwaths& swaths) :
 
 SpiralOrder::SpiralOrder(F2CSwaths& swaths, int sp_size) :
     SingleCellSwathsOrderBase(swaths) {
-  set_spiral_size(std::max(2, sp_size));
+  setSpiralSize(std::max(2, sp_size));
 }
 
 SpiralOrder::~SpiralOrder() = default;
 
-void SpiralOrder::set_spiral_size(int sp_size){
+void SpiralOrder::setSpiralSize(int sp_size){
   this->spiral_size = sp_size;
 }
 

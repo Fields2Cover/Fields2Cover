@@ -59,7 +59,7 @@ TEST(fields2cover_route_spiral, genSortedSwaths_even_size) {
   }
 
   f2c::rp::SpiralOrder swath_sorter(swaths);
-  swath_sorter.set_spiral_size(size);
+  swath_sorter.setSpiralSize(size);
 
   swaths = swath_sorter.genSortedSwaths();
 
@@ -84,7 +84,7 @@ TEST(fields2cover_route_spiral, genSortedSwaths_odd_size) {
   }
 
   f2c::rp::SpiralOrder swath_sorter(swaths);
-  swath_sorter.set_spiral_size(size);
+  swath_sorter.setSpiralSize(size);
 
   swaths = swath_sorter.genSortedSwaths();
 
