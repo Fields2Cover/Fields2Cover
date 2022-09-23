@@ -120,14 +120,13 @@ list(REMOVE_ITEM fields2cover_src
 add_library(Fields2Cover SHARED ${fields2cover_src})
 
 target_compile_features(Fields2Cover PUBLIC cxx_std_17) 
-target_compile_options(Fields2Cover PRIVATE -pedantic -Wall -Wfatal-errors
-  -Werror -Wno-dev -Wextra -Wno-unused-parameter -Wno-sign-compare
+
+target_compile_options(Fields2Cover PRIVATE -Wall
+  -Werror -Wextra -Wno-unused-parameter -Wno-sign-compare
   -Wno-attributes -Wl,--no-undefined -Wshadow)
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-  target_compile_options(Fields2Cover PRIVATE
-	  -Wno-error=unused-command-line-argument
-	  -Wno-error=-Wunknown-warning-option)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(Fields2Cover PRIVATE -pedantic -Wno-dev -Wfatal-errors)
 endif()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Coverage")

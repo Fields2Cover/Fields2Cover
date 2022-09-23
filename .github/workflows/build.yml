@@ -15,17 +15,6 @@ jobs:
       matrix:
         config:
         - {
-            name: "Windows Latest MSVC",
-            os: windows-latest,
-            artifact: "windows_msvc.7z",
-            build_type: "Release",
-            cc: "cl",
-            cxx: "cl",
-            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
-            archiver: "7z a",
-            generators: "Visual Studio 16 2019"
-          }
-        - {
             name: "Windows Latest MinGW",
             os: windows-latest,
             artifact: "windows_mingw.7z",
