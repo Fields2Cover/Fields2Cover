@@ -76,7 +76,7 @@ jobs:
         if: startsWith(matrix.config.os, 'windows')
         run: |
           choco install cmake make
-          choco install eigen gdal
+          choco install eigen gdal python
           cmake --version
         # cmd "${{ matrix.config.environment_script }}"
       - name: Install dependencies on ubuntu
@@ -111,7 +111,7 @@ jobs:
       - name: Install dependencies on macos
         if: startsWith(matrix.config.os, 'macos')
         run: |
-          brew install p7zip cmake make eigen swig gdal
+          brew install p7zip cmake make eigen swig gdal python3
           cmake --version
           
       - name: Configure
@@ -133,7 +133,7 @@ jobs:
 
       - name: Build
         working-directory: ${{github.workspace}}/build
-        run: make -j$(nproc)
+        run: make -j2
 
       - name: Install Strip
         working-directory: ${{github.workspace}}/build
