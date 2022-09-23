@@ -33,7 +33,7 @@ jobs:
             cc: "gcc",
             cxx: "g++",
             archiver: "7z a",
-            generators: "Ninja"
+            generators: "Unix Makefiles"
           }
         - {
             name: "Ubuntu_Latest_GCC",
@@ -63,7 +63,7 @@ jobs:
             cc: "clang",
             cxx: "clang++",
             archiver: "7za a",
-            generators: "Ninja"
+            generators: "Unix Makefiles"
           }
 
     steps:
@@ -75,9 +75,8 @@ jobs:
       - name: Install dependencies on windows
         if: startsWith(matrix.config.os, 'windows')
         run: |
-          choco install ninja cmake make
+          choco install cmake make
           choco install eigen gdal
-          ninja --version
           cmake --version
         # cmd "${{ matrix.config.environment_script }}"
       - name: Install dependencies on ubuntu
@@ -112,8 +111,7 @@ jobs:
       - name: Install dependencies on macos
         if: startsWith(matrix.config.os, 'macos')
         run: |
-          brew install p7zip cmake ninja eigen swig gdal
-          ninja --version
+          brew install p7zip cmake make eigen swig gdal
           cmake --version
           
       - name: Configure
@@ -123,7 +121,7 @@ jobs:
           mkdir instdir
           cmake \
             -S . \
-            -B . \
+            -B build \
             -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
             -G "${{ matrix.config.generators }}" \
             -DCMAKE_INSTALL_PREFIX:PATH=instdir  \
