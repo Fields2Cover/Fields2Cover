@@ -35,7 +35,7 @@ jobs:
       run: sudo make install
       
 
-    - name: Test C++
+    - name: Test C++ 
       working-directory: ${{github.workspace}}/build
       run: make check
       

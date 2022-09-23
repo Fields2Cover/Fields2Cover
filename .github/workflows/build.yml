@@ -43,7 +43,7 @@ jobs:
             cc: "gcc",
             cxx: "g++",
             archiver: "7z a",
-            generators: "Ninja"
+            generators: "Unix Makefiles"
           }
         - {
             name: "Ubuntu_GCC_9",
@@ -53,7 +53,7 @@ jobs:
             cc: "gcc",
             cxx: "g++",
             archiver: "7z a",
-            generators: "Ninja"
+            generators: "Unix Makefiles"
           }
         - {
             name: "macOS Latest Clang",
@@ -75,7 +75,8 @@ jobs:
       - name: Install dependencies on windows
         if: startsWith(matrix.config.os, 'windows')
         run: |
-          choco install ninja cmake
+          choco install ninja cmake make
+          choco install eigen gdal
           ninja --version
           cmake --version
         # cmd "${{ matrix.config.environment_script }}"
@@ -84,11 +85,10 @@ jobs:
         run: |
           sudo add-apt-repository -y ppa:ubuntugis/ppa
           sudo apt-get -y update -qq
-          sudo apt-get install ninja-build cmake
+          sudo apt-get install cmake make
           sudo apt-get install -y python3 curl zip unzip -qq
           sudo apt-get install -y --no-install-recommends ca-certificates  doxygen git libeigen3-dev libgdal-dev libpython3-dev python3-pip python3-matplotlib lcov  libgtest-dev libtbb-dev swig python3-pytest -qq
           python -m pip install gcovr
-          ninja --version
           cmake --version
           gcc --version
       - name: Install dependencies on ubuntu9
@@ -99,28 +99,20 @@ jobs:
           gcc --version
           sudo add-apt-repository ppa:ubuntu-toolchain-r/test
           sudo apt-get update -qq
-          sudo apt-get install ninja-build cmake gcc-9 g++-9
+          sudo apt-get install make cmake gcc-9 g++-9
           sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 90 --slave /usr/bin/g++ g++ /usr/bin/g++-9 --slave /usr/bin/gcov gcov /usr/bin/gcov-9
-          echo gcc version after
-          gcc --version
-          cmake --version
-          echo Update ninja =======================================================================
-          echo ninja version before
-          ninja --version
-          # wget https://github.com/ninja-build/ninja/releases/download/v1.10.0/ninja-linux.zip
-          wget https://github.com/ninja-build/ninja/releases/latest/download/ninja-linux.zip
-          sudo unzip ninja-linux.zip -d /usr/local/bin/
-          sudo update-alternatives --install /usr/bin/ninja ninja /usr/local/bin/ninja 1 --force
-          echo ninja version after
           sudo add-apt-repository -y ppa:ubuntugis/ppa
           sudo apt-get install -y gcc-multilib python3 curl zip unzip -qq
           sudo apt-get install -y --no-install-recommends ca-certificates  doxygen git libeigen3-dev libgdal-dev libpython3-dev python3-pip python3-matplotlib lcov  libgtest-dev libtbb-dev swig python3-pytest -qq
           python -m pip install gcovr
-          ninja --version
+          echo gcc version after
+          gcc --version
+          cmake --version
+
       - name: Install dependencies on macos
         if: startsWith(matrix.config.os, 'macos')
         run: |
-          brew install p7zip cmake ninja
+          brew install p7zip cmake ninja eigen swig gdal
           ninja --version
           cmake --version
           
@@ -142,12 +134,21 @@ jobs:
             -DBUILD_DOC=OFF
 
       - name: Build
-        shell: bash
-        run: cmake --build . --config ${{ matrix.config.build_type }}
+        working-directory: ${{github.workspace}}/build
+        run: make -j$(nproc)
 
       - name: Install Strip
-        shell: bash
-        run: cmake --install . --strip
+        working-directory: ${{github.workspace}}/build
+        run: sudo make install
+        
+      - name: Test C++
+        working-directory: ${{github.workspace}}/build
+        run: make check
+
+      - name: Test Python
+        working-directory: ${{github.workspace}}
+        run: pytest-3 tests/python/
+
 
       - name: Pack
         shell: bash
