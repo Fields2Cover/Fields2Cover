@@ -128,6 +128,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   target_compile_options(Fields2Cover PRIVATE
 	  -Wno-error=unused-command-line-argument
 	  -Wno-error=-Wunknown-warning-option)
+endif()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
   include(cmake/Modules/CodeCoverage.cmake)
