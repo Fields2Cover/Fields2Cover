@@ -121,14 +121,6 @@ add_library(Fields2Cover SHARED ${fields2cover_src})
 
 target_compile_features(Fields2Cover PUBLIC cxx_std_17) 
 
-message("#################################################")
-message("#################################################")
-message("#################################################")
-message(${CMAKE_CXX_COMPILER_ID})
-message("#################################################")
-message("#################################################")
-message("#################################################")
-
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
   target_compile_options(Fields2Cover PRIVATE -pedantic -Wall -Wfatal-errors
@@ -136,12 +128,11 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
     -Wno-attributes -Wl,--no-undefined -Wshadow)
 elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
   target_compile_options(Fields2Cover PRIVATE /W4)
-elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
+elseif (${CMAKE_CXX_COMPILER_ID} MATCHES "^(Apple)?Clang$")
 
 endif()
 
 
-message("1")
 
 if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
   include(cmake/Modules/CodeCoverage.cmake)
@@ -161,7 +152,6 @@ else ()
 endif()
 
 
-message("2")
 
 target_include_directories(Fields2Cover PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -182,7 +172,6 @@ target_link_libraries(Fields2Cover
     matplotlib_cpp
 )
 
-message("3")
 if (ALLOW_PARALLELIZATION)
 target_link_libraries(Fields2Cover
   PUBLIC
@@ -191,7 +180,6 @@ target_link_libraries(Fields2Cover
 endif()
 
 
-message("4")
 set_target_properties(Fields2Cover PROPERTIES
   INTERPROCEDURAL_OPTIMIZATION TRUE PUBLIC_HEADER "include/fields2cover.h")
 
