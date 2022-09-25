@@ -63,9 +63,9 @@ jobs:
       - name: Install dependencies on windows
         if: startsWith(matrix.config.os, 'windows')
         run: |
-          choco install cmake make eigen python
-          curl --output osgeo4w-setup.exe --url https://download.osgeo.org/osgeo4w/osgeo4w-setup.exe
-          start osgeo4w-setup.exe 
+          choco install --no-progress -y cmake make eigen python
+          curl --output gdal-core.msi --url https://download.gisinternals.com/sdk/downloads/release-1930-x64-gdal-3-5-2-mapserver-8-0-0/gdal-305-1930-x64-core.msi
+          start gdal-core.msi
 
 
         # cmd "${{ matrix.config.environment_script }}"
