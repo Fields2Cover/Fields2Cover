@@ -65,8 +65,7 @@ jobs:
         run: |
           choco install cmake make eigen python
           curl --output osgeo4w-setup.exe --url https://download.osgeo.org/osgeo4w/osgeo4w-setup.exe
-          ls
-          osgeo4w-setup.exe -q -k -r -A -s https://download.osgeo.org/osgeo4w/v2/ -P proj
+          start osgeo4w-setup.exe -q -k -r -A -s https://download.osgeo.org/osgeo4w/v2/ -P proj
 
 
         # cmd "${{ matrix.config.environment_script }}"
@@ -93,7 +92,7 @@ jobs:
         if: startsWith(matrix.config.os, 'macos')
         run: |
           brew install p7zip cmake make eigen swig python3
-          brew install gdal
+          brew install gdal geos
           
       - name: Configure
         shell: bash
