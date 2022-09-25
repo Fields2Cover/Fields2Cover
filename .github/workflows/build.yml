@@ -92,7 +92,7 @@ jobs:
         if: startsWith(matrix.config.os, 'macos')
         run: |
           brew install p7zip cmake make eigen swig python3
-          brew install gdal geos
+          sudo port install gdal py34-gdal
           
       - name: Configure
         shell: bash
