@@ -64,8 +64,17 @@ jobs:
         if: startsWith(matrix.config.os, 'windows')
         run: |
           choco install cmake make
-          choco install eigen gdal python
+          choco install eigen python
           cmake --version
+          curl --output gdal-305-1916-core.msi --url https://download.gisinternals.com/sdk/downloads/release-1916-gdal-3-5-2-mapserver-8-0-0/gdal-305-1916-core.msi
+          curl --output GDAL-3.5.2.win32-py3.8.msi --url https://download.gisinternals.com/sdk/downloads/release-1916-gdal-3-5-2-mapserver-8-0-0/GDAL-3.5.2.win32-py3.8.msi
+          gdal-305-1916-core.msi
+          GDAL-3.5.2.win32-py3.8.msi
+          setx /m path "%path%;C:\Program Files\GDAL;"
+          setx /m GDAL_DATA "C:\Program Files\GDAL\gdal-data"
+          setx /m GDAL_DRIVER_PATH "C:\Program Files\GDAL\gdalplugins"
+          setx /m GDAL_VERSION "3.5.2"
+
         # cmd "${{ matrix.config.environment_script }}"
       - name: Install dependencies on ubuntu
         if: startsWith(matrix.config.name, 'Ubuntu_Latest_GCC')
