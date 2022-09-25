@@ -63,17 +63,8 @@ jobs:
       - name: Install dependencies on windows
         if: startsWith(matrix.config.os, 'windows')
         run: |
-          choco install cmake make
-          choco install eigen python
-          cmake --version
-          curl --output gdal-305-1916-core.msi --url https://download.gisinternals.com/sdk/downloads/release-1916-gdal-3-5-2-mapserver-8-0-0/gdal-305-1916-core.msi
-          curl --output GDAL-3.5.2.win32-py3.8.msi --url https://download.gisinternals.com/sdk/downloads/release-1916-gdal-3-5-2-mapserver-8-0-0/GDAL-3.5.2.win32-py3.8.msi
-          gdal-305-1916-core.msi
-          GDAL-3.5.2.win32-py3.8.msi
-          setx /m path "%path%;C:\Program Files\GDAL;"
-          setx /m GDAL_DATA "C:\Program Files\GDAL\gdal-data"
-          setx /m GDAL_DRIVER_PATH "C:\Program Files\GDAL\gdalplugins"
-          setx /m GDAL_VERSION "3.5.2"
+          choco install cmake make eigen python
+
 
         # cmd "${{ matrix.config.environment_script }}"
       - name: Install dependencies on ubuntu
@@ -84,15 +75,9 @@ jobs:
           sudo apt-get install cmake make
           sudo apt-get install -y python3 curl zip unzip -qq
           sudo apt-get install -y --no-install-recommends ca-certificates  doxygen git libeigen3-dev libgdal-dev libpython3-dev python3-pip python3-matplotlib lcov  libgtest-dev libtbb-dev swig python3-pytest -qq
-          python -m pip install gcovr
-          cmake --version
-          gcc --version
       - name: Install dependencies on ubuntu9
         if: startsWith(matrix.config.name, 'Ubuntu_GCC_9')
         run: |
-          echo Update gcc-9 =======================================================================
-          echo gcc version before
-          gcc --version
           sudo add-apt-repository ppa:ubuntu-toolchain-r/test
           sudo apt-get update -qq
           sudo apt-get install make cmake gcc-9 g++-9
@@ -100,16 +85,12 @@ jobs:
           sudo add-apt-repository -y ppa:ubuntugis/ppa
           sudo apt-get install -y gcc-multilib python3 curl zip unzip -qq
           sudo apt-get install -y --no-install-recommends ca-certificates  doxygen git libeigen3-dev libgdal-dev libpython3-dev python3-pip python3-matplotlib lcov  libgtest-dev libtbb-dev swig python3-pytest -qq
-          python -m pip install gcovr
-          echo gcc version after
-          gcc --version
-          cmake --version
 
       - name: Install dependencies on macos
         if: startsWith(matrix.config.os, 'macos')
         run: |
-          brew install p7zip cmake make eigen swig gdal python3
-          cmake --version
+          brew install p7zip cmake make eigen swig python3
+          brew install gdal --HEAD
           
       - name: Configure
         shell: bash
