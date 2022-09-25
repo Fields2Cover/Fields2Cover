@@ -92,7 +92,7 @@ jobs:
         if: startsWith(matrix.config.os, 'macos')
         run: |
           brew tap osgeo/osgeo4mac && brew tap --repair
-          brew install p7zip cmake make eigen swig python3 osgeo/gdal ogseo/gdal-python
+          brew install p7zip cmake make eigen swig python3 osgeo/osgeo4mac/osgeo-gdal osgeo/osgeo4mac/osgeo-gdal-python
           
       - name: Configure
         shell: bash
