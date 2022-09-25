@@ -65,6 +65,7 @@ jobs:
         run: |
           choco install cmake make eigen python
           curl --output osgeo4w-setup.exe --url https://download.osgeo.org/osgeo4w/osgeo4w-setup.exe
+          ls
           osgeo4w-setup.exe -q -k -r -A -s https://download.osgeo.org/osgeo4w/v2/ -P proj
 
 
