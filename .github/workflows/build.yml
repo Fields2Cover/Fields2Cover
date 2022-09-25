@@ -91,8 +91,8 @@ jobs:
       - name: Install dependencies on macos
         if: startsWith(matrix.config.os, 'macos')
         run: |
-          brew tap osgeo/osgeo4mac && brew tap --repair
-          brew install p7zip cmake make eigen swig python3 osgeo/osgeo4mac/osgeo-gdal osgeo/osgeo4mac/osgeo-gdal-python
+          brew install p7zip cmake make eigen swig python3
+          brew install gdal --HEAD
           
       - name: Configure
         shell: bash
