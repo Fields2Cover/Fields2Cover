@@ -243,9 +243,9 @@ DEFINE_GLOBAL_COSTS(OptimizationClass, computeCostWithMinimizingSign)
 %rename(OBJ_SwathLength) f2c::obj::SwathLength;
 %include "fields2cover/objectives/swath_length.h"
 
-%rename(OBJ_PathObjective) f2c::obj::PathObjective;
-%include "fields2cover/objectives/path_objective.h"
-DEFINE_PATH_COSTS(PathObjective, computeCostWithMinimizingSign)
+%rename(OBJ_RPObjective) f2c::obj::RPObjective;
+%include "fields2cover/objectives/rp_objective.h"
+DEFINE_PATH_COSTS(RPObjective, computeCostWithMinimizingSign)
 
 %rename(OBJ_DirectDistPathObj) f2c::obj::DirectDistPathObj;
 %include "fields2cover/objectives/direct_dist_path_obj.h"

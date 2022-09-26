@@ -16,7 +16,7 @@
 #include "fields2cover/utils/parser.h"
 #include "fields2cover/utils/visualizer.h"
 
-#include "fields2cover/objectives/path_objective.h"
+#include "fields2cover/objectives/rp_objective.h"
 #include "fields2cover/objectives/direct_dist_path_obj.h"
 #include "fields2cover/objectives/complete_turn_path_obj.h"
 

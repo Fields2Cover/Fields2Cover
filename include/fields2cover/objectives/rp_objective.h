@@ -5,8 +5,8 @@
 //=============================================================================
 
 #pragma once
-#ifndef FIELDS2COVER_OBJECTIVES_PATH_OBJECTIVE_H_
-#define FIELDS2COVER_OBJECTIVES_PATH_OBJECTIVE_H_
+#ifndef FIELDS2COVER_OBJECTIVES_RP_OBJECTIVE_H_
+#define FIELDS2COVER_OBJECTIVES_RP_OBJECTIVE_H_
 
 #include <vector>
 #include "fields2cover/types.h"
@@ -14,14 +14,14 @@
 namespace f2c::obj {
 
 
-/// @brief Base class for objectives that are affected by the final path.
+/// @brief Base class for objective functions of route planners.
 ///
 /// There are some cost functions that do not change once a swaths
 /// are generated. For example, the number of swaths or the sum of
 /// the length of those swaths. The cost functions that inherit from
 /// this class should be modified by the swath coverage order and/or
 /// turns.
-class PathObjective {
+class RPObjective {
  public:
   // Avoid using variadic templates. SWIG don't work well with it
 
@@ -183,4 +183,4 @@ class PathObjective {
 
 }  // namespace f2c::obj
 
-#endif  // FIELDS2COVER_OBJECTIVES_PATH_OBJECTIVE_H_
+#endif  // FIELDS2COVER_OBJECTIVES_RP_OBJECTIVE_H_

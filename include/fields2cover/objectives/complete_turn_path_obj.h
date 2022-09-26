@@ -9,7 +9,7 @@
 #define FIELDS2COVER_OBJECTIVES_COMPLETE_TURN_PATH_OBJ_H_
 
 #include "fields2cover/types.h"
-#include "fields2cover/objectives/path_objective.h"
+#include "fields2cover/objectives/rp_objective.h"
 #include "fields2cover/objectives/direct_dist_path_obj.h"
 #include "fields2cover/path_planning/turning_base.h"
 
@@ -22,16 +22,16 @@ namespace f2c::obj {
 /// @warning Do not use this objective function with slow planners as
 /// too many turns may need to be computed for a simple path.
 template <class T, class R = DirectDistPathObj>
-class CompleteTurnPathObj : public PathObjective {
+class CompleteTurnPathObj : public RPObjective {
   static_assert(std::is_base_of<pp::TurningBase, T>::value,
       "T must derive from f2c::pp::TurningBase");
 
  public:
-  using PathObjective::PathObjective;
+  using RPObjective::RPObjective;
   explicit CompleteTurnPathObj(const F2CRobot& params);
 
  public:
-  using PathObjective::computeCost;
+  using RPObjective::computeCost;
 
   /// Compute the cost of doing the turn between p1 with angle ang1 to
   /// p2 with angle ang2
