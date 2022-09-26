@@ -62,16 +62,12 @@ jobs:
           echo github.event_name: ${{ github.event_name }}
       - name: Install dependencies on windows
         if: startsWith(matrix.config.os, 'windows')
+        uses: NuGet/setup-nuget@v1.0.7
         run: |
-          choco install --no-progress -y cmake make eigen python
+          choco install --no-progress -y cmake make eigen python numpy
           curl --output gdal-core.msi --url https://download.gisinternals.com/sdk/downloads/release-1930-x64-gdal-3-5-2-mapserver-8-0-0/gdal-305-1930-x64-core.msi
           start gdal-core.msi
           $env:PATH="C:\hostedtoolcache\windows\Python\$env:PYTHON_VERSION\$env:platform;C:\hostedtoolcache\windows\Python\$env:PYTHON_VERSION\$env:platform\Scripts;$env:PATH"
-          echo "PATH=$env:PATH" >> $env:GITHUB_ENV
-          echo PATH=%PATH%>> %GITHUB_ENV%
-          echo INCLUDE=%INCLUDE%>> %GITHUB_ENV%
-          echo LIB=%LIB%>> %GITHUB_ENV%
-          echo LIBPATH=%LIBPATH%>> %GITHUB_ENV%
           $env:GDAL_DATA="$env:GITHUB_WORKSPACE\data"
 
 
@@ -136,7 +132,7 @@ jobs:
 
       - name: Pack
         shell: bash
-        working-directory: instdir
+        working-directory: ${{github.workspace}}/build
         run: |
           ls -laR
           ${{ matrix.config.archiver }} ../${{ matrix.config.artifact }} .
