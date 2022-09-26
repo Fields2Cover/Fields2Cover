@@ -63,9 +63,11 @@ jobs:
       - name: Install dependencies on windows
         if: startsWith(matrix.config.os, 'windows')
         run: |
+          set -e
+          conda update -n base -c defaults conda
+          conda config --set channel_priority strict
+          conda install --yes --quiet proj libgdal gdal
           choco install --no-progress -y cmake make eigen python
-          curl --output gdal-core.msi --url https://download.gisinternals.com/sdk/downloads/release-1930-x64-gdal-3-5-2-mapserver-8-0-0/gdal-305-1930-x64-core.msi
-          start gdal-core.msi
 
 
         # cmd "${{ matrix.config.environment_script }}"
@@ -94,7 +96,6 @@ jobs:
           set -e
           conda update -n base -c defaults conda
           conda config --set channel_priority strict
-          conda install --yes --quiet python=3.8
           conda install --yes --quiet proj libgdal gdal
           brew install p7zip cmake make eigen swig
           
