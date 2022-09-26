@@ -65,10 +65,7 @@ jobs:
         uses: NuGet/setup-nuget@v1.0.7
         run: |
           choco install --no-progress -y cmake make eigen python numpy
-          curl --output gdal-core.msi --url https://download.gisinternals.com/sdk/downloads/release-1930-x64-gdal-3-5-2-mapserver-8-0-0/gdal-305-1930-x64-core.msi
-          start gdal-core.msi
-          $env:PATH="C:\hostedtoolcache\windows\Python\$env:PYTHON_VERSION\$env:platform;C:\hostedtoolcache\windows\Python\$env:PYTHON_VERSION\$env:platform\Scripts;$env:PATH"
-          $env:GDAL_DATA="$env:GITHUB_WORKSPACE\data"
+          nuget install gdal
 
 
         # cmd "${{ matrix.config.environment_script }}"
