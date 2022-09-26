@@ -2,9 +2,12 @@ Fields2Cover
 ============
 
 
-  **Robust and efficient coverage paths for autonomous agricultural vehicles**
 
-.. image:: https://github.com/Fields2Cover/Fields2Cover/actions/workflows/build.yml/badge.svg
+
+  **Robust and efficient coverage paths for autonomous agricultural vehicles**
+  
+|badge1| |badge2| |badge3| |license| 
+
 
 .. image:: docs/figures/logo_fields2cover.jpeg
    :align: center
@@ -165,5 +168,13 @@ Other great libraries that made Fields2Cover possible are `hbanzhaf/steering_fun
 
 
 This code repository is part of the project Fields2Cover which is (partly) financed by the Dutch Research Council (NWO).
+
+
+.. |badge1| image:: https://github.com/Fields2Cover/Fields2Cover/actions/workflows/build.yml/badge.svg
+.. |badge2| image:: http://githubbadges.com/star.svg?user=fields2cover&repo=fields2cover&style=flat&color=fff&background=007ec6
+.. |badge3| image:: http://githubbadges.com/fork.svg?user=fields2cover&repo=fields2cover&style=flat&color=fff&background=007ec6
+.. |license| image:: https://img.shields.io/badge/license-BDS3-orange.svg
+   :target: https://gitlab.com/pgjones/hypercorn/blob/main/LICENSE
+
 
 
