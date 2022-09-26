@@ -94,8 +94,8 @@ jobs:
           set -e
           conda update -n base -c defaults conda
           conda config --set channel_priority strict
-          conda install --yes --quiet proj=7.1.1=h45baca5_3 python=3.8  -y
-          conda install --yes --quiet libgdal gdal
+          conda install --yes --quiet python=3.8
+          conda install --yes --quiet proj libgdal gdal
           brew install p7zip cmake make eigen swig
           
       - name: Configure
