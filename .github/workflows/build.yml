@@ -1,4 +1,4 @@
-name: CMake Build Matrix
+name: Build and test
 
 on: 
   push:
