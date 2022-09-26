@@ -174,7 +174,7 @@ This code repository is part of the project Fields2Cover which is (partly) finan
 .. |badge2| image:: http://githubbadges.com/star.svg?user=fields2cover&repo=fields2cover&style=flat&color=fff&background=007ec6
 .. |badge3| image:: http://githubbadges.com/fork.svg?user=fields2cover&repo=fields2cover&style=flat&color=fff&background=007ec6
 .. |license| image:: https://img.shields.io/badge/license-BDS3-orange.svg
-   :target: https://gitlab.com/pgjones/hypercorn/blob/main/LICENSE
+   :target: https://gitlab.com/Fields2Cover/Fields2Cover/blob/main/LICENSE
 
 
 
