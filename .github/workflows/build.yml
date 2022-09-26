@@ -13,16 +13,16 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - {
-            name: "Windows Latest MinGW",
-            os: windows-latest,
-            artifact: "windows_mingw.7z",
-            build_type: "Release",
-            cc: "gcc",
-            cxx: "g++",
-            archiver: "7z a",
-            generators: "Unix Makefiles"
-          }
+        #- {
+        #  name: "Windows Latest MinGW",
+        #  os: windows-latest,
+        #  artifact: "windows_mingw.7z",
+        #  build_type: "Release",
+        #  cc: "gcc",
+        #  cxx: "g++",
+        #  archiver: "7z a",
+        #  generators: "Unix Makefiles"
+        #  }
         - {
             name: "Ubuntu_Latest_GCC",
             os: ubuntu-latest,
@@ -43,16 +43,16 @@ jobs:
             archiver: "7z a",
             generators: "Unix Makefiles"
           }
-        - {
-            name: "macOS Latest Clang",
-            os: macos-latest,
-            artifact: "macos_clang.7z",
-            build_type: "Release",
-            cc: "clang",
-            cxx: "clang++",
-            archiver: "7za a",
-            generators: "Unix Makefiles"
-          }
+          #- {
+          #  name: "macOS Latest Clang",
+          #  os: macos-latest,
+          #  artifact: "macos_clang.7z",
+          #  build_type: "Release",
+          #  cc: "clang",
+          #  cxx: "clang++",
+          #  archiver: "7za a",
+          #  generators: "Unix Makefiles"
+          #}
 
     steps:
       - uses: actions/checkout@v2
@@ -62,10 +62,8 @@ jobs:
           echo github.event_name: ${{ github.event_name }}
       - name: Install dependencies on windows
         if: startsWith(matrix.config.os, 'windows')
-        uses: NuGet/setup-nuget@v1.0.7
         run: |
           choco install --no-progress -y cmake make eigen python numpy
-          nuget install gdal
 
 
         # cmd "${{ matrix.config.environment_script }}"
@@ -126,26 +124,3 @@ jobs:
         working-directory: ${{github.workspace}}
         run: pytest-3 tests/python/
 
-
-      - name: Pack
-        shell: bash
-        working-directory: ${{github.workspace}}/build
-        run: |
-          ls -laR
-          ${{ matrix.config.archiver }} ../${{ matrix.config.artifact }} .
-      - name: Upload
-        uses: actions/upload-artifact@v1
-        with:
-          path: ./${{ matrix.config.artifact }}
-          name: ${{ matrix.config.artifact }}
-
-      - name: Upload release asset
-        if: github.event_name == 'release' && (github.event.action == 'published' || github.event.action == 'created')
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./${{ matrix.config.artifact }}
-          asset_name: ${{ matrix.config.artifact }}.zip
-          asset_content_type: application/zip
