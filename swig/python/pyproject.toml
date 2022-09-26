@@ -1,7 +1,7 @@
 # pyproject.toml
 
 [build-system]
-requires      = ["setuptools>=61.0.0", "setuptools_scm[toml]>=6.2", "wheel"]
+requires      = ["setuptools>=61.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -27,11 +27,4 @@ dev = ["pip-tools", "pytest"]
 
 [project.urls]
 Homepage = "https://github.com/Fields2Cover/Fields2Cover"
-
-[tool.setuptools_scm]
-version_scheme = "no-guess-dev"
-root = "../../.."
-relative_to = "setup.py"
-
-
 
