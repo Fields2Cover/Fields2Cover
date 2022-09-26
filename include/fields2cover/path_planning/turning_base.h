@@ -15,7 +15,6 @@
 #include <limits>
 #include <functional>
 #include "fields2cover/types.h"
-#include "fields2cover/objectives/optimization_class.h"
 #include "fields2cover/utils/random.h"
 
 namespace f2c::pp {

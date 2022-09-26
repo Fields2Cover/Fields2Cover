@@ -9,8 +9,6 @@
 #define FIELDS2COVER_PATH_PLANNING_PATH_PLANNING_H_
 
 #include "fields2cover/types.h"
-#include "fields2cover/objectives/path_objective.h"
-#include "fields2cover/objectives/optimization_class.h"
 #include "fields2cover/path_planning/turning_base.h"
 
 namespace f2c::pp {
