@@ -13,6 +13,7 @@ authors = [{ name = "Wageningen University", email = "gonzalo.miermunoz@wur.nl" 
 license = { file = "LICENSE" }
 classifiers = [
     "License :: OSI Approved :: BSD-3 License",
+    "Programming Language :: C++",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
 ]
@@ -26,5 +27,4 @@ dev = ["pip-tools", "pytest"]
 
 [project.urls]
 Homepage = "https://github.com/Fields2Cover/Fields2Cover"
-
 

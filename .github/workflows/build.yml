@@ -1,0 +1,126 @@
+name: Build and test
+
+on: 
+  push:
+  pull_request:
+  release:
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        #- {
+        #  name: "Windows Latest MinGW",
+        #  os: windows-latest,
+        #  artifact: "windows_mingw.7z",
+        #  build_type: "Release",
+        #  cc: "gcc",
+        #  cxx: "g++",
+        #  archiver: "7z a",
+        #  generators: "Unix Makefiles"
+        #  }
+        - {
+            name: "Ubuntu_Latest_GCC",
+            os: ubuntu-latest,
+            artifact: "ubuntu_gcc.7z",
+            build_type: "Release",
+            cc: "gcc",
+            cxx: "g++",
+            archiver: "7z a",
+            generators: "Unix Makefiles"
+          }
+        - {
+            name: "Ubuntu_GCC_9",
+            os: ubuntu-latest,
+            artifact: "ubuntu_gcc9.7z",
+            build_type: "Release",
+            cc: "gcc",
+            cxx: "g++",
+            archiver: "7z a",
+            generators: "Unix Makefiles"
+          }
+          #- {
+          #  name: "macOS Latest Clang",
+          #  os: macos-latest,
+          #  artifact: "macos_clang.7z",
+          #  build_type: "Release",
+          #  cc: "clang",
+          #  cxx: "clang++",
+          #  archiver: "7za a",
+          #  generators: "Unix Makefiles"
+          #}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Print env
+        run: |
+          echo github.event.action: ${{ github.event.action }}
+          echo github.event_name: ${{ github.event_name }}
+      - name: Install dependencies on windows
+        if: startsWith(matrix.config.os, 'windows')
+        run: |
+          choco install --no-progress -y cmake make eigen python numpy
+
+
+        # cmd "${{ matrix.config.environment_script }}"
+      - name: Install dependencies on ubuntu
+        if: startsWith(matrix.config.name, 'Ubuntu_Latest_GCC')
+        run: |
+          sudo add-apt-repository -y ppa:ubuntugis/ppa
+          sudo apt-get -y update -qq
+          sudo apt-get install cmake make
+          sudo apt-get install -y python3 curl zip unzip -qq
+          sudo apt-get install -y --no-install-recommends ca-certificates  doxygen git libeigen3-dev libgdal-dev libpython3-dev python3-pip python3-matplotlib lcov  libgtest-dev libtbb-dev swig python3-pytest -qq
+      - name: Install dependencies on ubuntu9
+        if: startsWith(matrix.config.name, 'Ubuntu_GCC_9')
+        run: |
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+          sudo apt-get update -qq
+          sudo apt-get install make cmake gcc-9 g++-9
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 90 --slave /usr/bin/g++ g++ /usr/bin/g++-9 --slave /usr/bin/gcov gcov /usr/bin/gcov-9
+          sudo add-apt-repository -y ppa:ubuntugis/ppa
+          sudo apt-get install -y gcc-multilib python3 curl zip unzip -qq
+          sudo apt-get install -y --no-install-recommends ca-certificates  doxygen git libeigen3-dev libgdal-dev libpython3-dev python3-pip python3-matplotlib lcov  libgtest-dev libtbb-dev swig python3-pytest -qq
+
+      - name: Install dependencies on macos
+        if: startsWith(matrix.config.os, 'macos')
+        run: |
+          brew install p7zip cmake make eigen swig numpy gdal
+          
+      - name: Configure
+        shell: bash
+        run: |
+          mkdir build
+          mkdir instdir
+          cmake \
+            -S . \
+            -B build \
+            -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
+            -G "${{ matrix.config.generators }}" \
+            -DCMAKE_INSTALL_PREFIX:PATH=instdir  \
+            -DBUILD_PYTHON=ON   \
+            -DALLOW_PARALLELIZATION=ON  \
+            -DBUILD_TUTORIALS=OFF \
+            -DBUILD_TESTS=ON   \
+            -DBUILD_DOC=OFF
+
+      - name: Build
+        working-directory: ${{github.workspace}}/build
+        run: make -j2
+
+      - name: Install Strip
+        working-directory: ${{github.workspace}}/build
+        run: sudo make install
+        
+      - name: Test C++
+        working-directory: ${{github.workspace}}/build
+        run: make check
+
+      - name: Test Python
+        working-directory: ${{github.workspace}}
+        run: pytest-3 tests/python/
+

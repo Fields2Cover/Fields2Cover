@@ -44,8 +44,11 @@ configure_file(
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/__init__.py.in
   ${CMAKE_CURRENT_BINARY_DIR}/__init__.py COPYONLY)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../src DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../include DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/__init__.py.in
+  ${CMAKE_CURRENT_BINARY_DIR}/fields2cover/__init__.py COPYONLY)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../src DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/fields2cover)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../include DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/fields2cover)
 
 
 # Install target to call setup.py

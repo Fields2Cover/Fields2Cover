@@ -26,19 +26,30 @@ class CompiledLibInstall(setuptools.command.install.install):
         [shutil.copy(filename, install_dir) for filename in filenames]
 
 
+# optional, use README.md as long_description
+this_directory = os.path.abspath(os.path.dirname(__file__))
+with open(os.path.join(this_directory, 'README.rst')) as f:
+    long_description = f.read()
+
+
 
 setup(
     name='fields2cover',
     version='1.1.0',
     author='Wageningen University',
     description='Robust and efficient coverage paths for autonomous agricultural vehicles',
-    long_description='Robust and efficient coverage paths for autonomous agricultural vehicles. A modular and extensible Coverage Path Planning library',
+    long_description=long_description,
+    long_description_content_type="text/reStructuredText",
     url='https://github.com/Fields2Cover/Fields2Cover',
     classifiers=[
         "License :: OSI Approved :: BSD License",
 
     ],
     zip_safe=False,
+    package_data={'fields2cover': [
+        '../../lib/_fields2cover_python.so',
+        '../../lib/libFields2Cover.so'
+    ]},
     include_package_data=True,
     author_email='gonzalo.miermunoz@wur.nl',
     packages=['fields2cover'],

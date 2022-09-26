@@ -120,16 +120,35 @@ list(REMOVE_ITEM fields2cover_src
 add_library(Fields2Cover SHARED ${fields2cover_src})
 
 target_compile_features(Fields2Cover PUBLIC cxx_std_17) 
-target_compile_options(Fields2Cover PRIVATE -pedantic -Wall -Wfatal-errors
-  -Werror -Wno-dev -Wextra -Wno-unused-parameter -Wno-sign-compare
-  -Wno-attributes -Wl,--no-undefined -Wshadow)
+
+
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+  target_compile_options(Fields2Cover PRIVATE -pedantic -Wall -Wfatal-errors
+    -Werror -Wno-dev -Wextra -Wno-unused-parameter -Wno-sign-compare
+    -Wno-attributes -Wl,--no-undefined -Wshadow)
+elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
+  target_compile_options(Fields2Cover PRIVATE /W4)
+elseif (${CMAKE_CXX_COMPILER_ID} MATCHES "^(Apple)?Clang$")
+
+endif()
+
+
 
 if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
   include(cmake/Modules/CodeCoverage.cmake)
-  target_compile_options(Fields2Cover PRIVATE -g -O0 --coverage -fprofile-arcs -ftest-coverage)
+  target_compile_options(Fields2Cover PRIVATE -g --coverage -fprofile-arcs -ftest-coverage)
+  if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    target_compile_options(Fields2Cover PRIVATE /O0)
+  else()
+    target_compile_options(Fields2Cover PRIVATE -O0)
+  endif()
   set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -lgcov")
 else ()
-  target_compile_options(Fields2Cover PRIVATE -O2)
+  if (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
+    target_compile_options(Fields2Cover PRIVATE /O2)
+  else()
+    target_compile_options(Fields2Cover PRIVATE -O2)
+  endif()
 endif()
 
 
