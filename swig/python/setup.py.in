@@ -1,8 +1,9 @@
 import os
 from distutils.sysconfig import get_python_lib
-from setuptools import setup
+from setuptools import setup, dist
 import setuptools.command.install
 from setuptools.extension import Extension
+import cmake_build_extension
 import shutil
 
 
@@ -26,25 +27,50 @@ class CompiledLibInstall(setuptools.command.install.install):
         [shutil.copy(filename, install_dir) for filename in filenames]
 
 
+class BinaryDistribution(dist.Distribution):
+    def has_ext_modules(foo):
+        return True
+
+# optional, use README.md as long_description
+this_directory = os.path.abspath(os.path.dirname(__file__))
+with open(os.path.join(this_directory, 'README.rst')) as f:
+    long_description = f.read()
+
+
 
 setup(
     name='fields2cover',
     version='1.1.0',
     author='Wageningen University',
     description='Robust and efficient coverage paths for autonomous agricultural vehicles',
-    long_description='Robust and efficient coverage paths for autonomous agricultural vehicles. A modular and extensible Coverage Path Planning library',
+    long_description=long_description,
+    long_description_content_type="text/reStructuredText",
     url='https://github.com/Fields2Cover/Fields2Cover',
     classifiers=[
         "License :: OSI Approved :: BSD License",
 
     ],
-    zip_safe=False,
+    package_data={'fields2cover': [
+        '../../lib/_fields2cover_python.so',
+        '../../lib/libFields2Cover.so'
+    ]},
     include_package_data=True,
+    distclass=BinaryDistribution,
+    zip_safe=False,
     author_email='gonzalo.miermunoz@wur.nl',
     packages=['fields2cover'],
     package_dir={'': '.'},
     license='BSD-3',
-    cmdclass={'install': CompiledLibInstall}
+    cmdclass={
+        'install': CompiledLibInstall,
+        'sdist': cmake_build_extension.GitSdistTree
+        },
+    use_scm_version = {
+        "root": "../../..",
+        "relative_to": __file__,
+        "local_scheme": "node-and-timestamp"
+    },
+    setup_requires=['setuptools_scm']
 )
     
 

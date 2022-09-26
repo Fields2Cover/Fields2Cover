@@ -1,7 +1,7 @@
 # pyproject.toml
 
 [build-system]
-requires      = ["setuptools>=61.0.0", "wheel"]
+requires      = ["setuptools>=61.0.0", "setuptools_scm[toml]>=6.2", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -13,6 +13,7 @@ authors = [{ name = "Wageningen University", email = "gonzalo.miermunoz@wur.nl" 
 license = { file = "LICENSE" }
 classifiers = [
     "License :: OSI Approved :: BSD-3 License",
+    "Programming Language :: C++",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
 ]
@@ -26,5 +27,11 @@ dev = ["pip-tools", "pytest"]
 
 [project.urls]
 Homepage = "https://github.com/Fields2Cover/Fields2Cover"
+
+[tool.setuptools_scm]
+version_scheme = "no-guess-dev"
+root = "../../.."
+relative_to = "setup.py"
+
 
 
