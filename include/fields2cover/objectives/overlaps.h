@@ -11,14 +11,14 @@
 #include <utility>
 #include <vector>
 #include "fields2cover/types.h"
-#include "fields2cover/objectives/global_objective.h"
+#include "fields2cover/objectives/sg_objective.h"
 
 namespace f2c::obj {
 
-/// Global cost function as the percentage of the field overlapped
-class Overlaps : public GlobalObjective {
+/// SG cost function as the percentage of the field overlapped
+class Overlaps : public SGObjective {
  public:
-  using GlobalObjective::computeCost;
+  using SGObjective::computeCost;
 
   double computeCost(const F2CCell& poly, const F2CSwaths& swaths)
     const override;

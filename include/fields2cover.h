@@ -20,7 +20,7 @@
 #include "fields2cover/objectives/direct_dist_path_obj.h"
 #include "fields2cover/objectives/complete_turn_path_obj.h"
 
-#include "fields2cover/objectives/global_objective.h"
+#include "fields2cover/objectives/sg_objective.h"
 #include "fields2cover/objectives/optimization_class.h"
 #include "fields2cover/objectives/n_swath.h"
 #include "fields2cover/objectives/field_coverage.h"

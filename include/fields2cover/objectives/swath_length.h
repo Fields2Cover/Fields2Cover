@@ -10,14 +10,14 @@
 
 #include <numeric>
 #include "fields2cover/types.h"
-#include "fields2cover/objectives/global_objective.h"
+#include "fields2cover/objectives/sg_objective.h"
 
 namespace f2c::obj {
 
 /// Global cost function as the length of the swaths
-class SwathLength : public GlobalObjective {
+class SwathLength : public SGObjective {
  public:
-  using GlobalObjective::computeCost;
+  using SGObjective::computeCost;
   double computeCost(const F2CSwath& s) const override;
   double computeCost(const F2CSwaths& swaths) const override;
 };

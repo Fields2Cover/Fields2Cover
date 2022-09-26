@@ -227,8 +227,8 @@ typedef long unsigned int size_t;
 %enddef
 
 %rename(OBJ_GlobalObjective) f2c::obj::GlobalObjective;
-%include "fields2cover/objectives/global_objective.h"
-DEFINE_GLOBAL_COSTS(GlobalObjective, computeCostWithMinimizingSign)
+%include "fields2cover/objectives/sg_objective.h"
+DEFINE_GLOBAL_COSTS(SGObjective, computeCostWithMinimizingSign)
 
 %include "fields2cover/objectives/optimization_class.h"
 DEFINE_GLOBAL_COSTS(OptimizationClass, computeCost)

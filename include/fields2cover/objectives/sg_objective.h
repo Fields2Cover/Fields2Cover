@@ -5,18 +5,18 @@
 //=============================================================================
 
 #pragma once
-#ifndef FIELDS2COVER_OBJECTIVES_GLOBAL_OBJECTIVE_H_
-#define FIELDS2COVER_OBJECTIVES_GLOBAL_OBJECTIVE_H_
+#ifndef FIELDS2COVER_OBJECTIVES_SG_OBJECTIVE_H_
+#define FIELDS2COVER_OBJECTIVES_SG_OBJECTIVE_H_
 
 #include "fields2cover/types.h"
 
 namespace f2c::obj {
 
-/// @brief Base class for global objectives.
+/// @brief Base class for objective functions of swath generators.
 ///
-/// Global objectives are those objectives that affect the planning of
-/// the field. Some of the could be f2c::obj::NSwath or f2c::obj::FieldCoverage
-class GlobalObjective {
+/// SG objectives are those objectives that depends on the swaths generation
+/// Some of the could be f2c::obj::NSwath or f2c::obj::FieldCoverage
+class SGObjective {
  public:
   // Avoid using variadic templates. SWIG don't work well with it
 
@@ -140,4 +140,4 @@ class GlobalObjective {
 
 }  // namespace f2c::obj
 
-#endif  // FIELDS2COVER_OBJECTIVES_GLOBAL_OBJECTIVE_H_
+#endif  // FIELDS2COVER_OBJECTIVES_SG_OBJECTIVE_H_

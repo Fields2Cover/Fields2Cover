@@ -11,20 +11,20 @@
 #include <memory>
 #include <type_traits>
 #include "fields2cover/types.h"
-#include "fields2cover/objectives/global_objective.h"
+#include "fields2cover/objectives/sg_objective.h"
 
 namespace f2c::obj {
 
-/// @brief Base class to classes that have a global cost function as objective.
+/// @brief Base class to classes that have a SG cost function as objective.
 template <typename T>
 class OptimizationClass {
-  static_assert(std::is_base_of<GlobalObjective, T>::value,
-      "T must derive from GlobalObjective");
+  static_assert(std::is_base_of<SGObjective, T>::value,
+      "T must derive from SGObjective");
 
  public:
   // Avoid using variadic templates. SWIG don't work well with it
 
-  /// Compute the cost returned by the global cost function inherited
+  /// Compute the cost returned by the SG cost function inherited
   /// (OptimizationClass<T>::objective_).
   /// @param t All the data structures that could be needed by
   /// OptimizationClass<T>::objective_
@@ -48,7 +48,7 @@ class OptimizationClass {
     return objective_.computeCost(t1, t2, t3, t4);
   }
 
-  /// Compute the cost returned by the global cost function inherited.
+  /// Compute the cost returned by the SG cost function inherited.
   /// If the OptimizationClass<T>::objective_ is maximizing, the cost is
   /// multiplied by -1.
   /// @param t All the data structures that could be needed by
@@ -74,7 +74,7 @@ class OptimizationClass {
   }
 
  protected:
-  /// Objective that defines the global cost function
+  /// Objective that defines the SG cost function
   /// to minimize (or maximize).
   T objective_;
 };
