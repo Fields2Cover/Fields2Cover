@@ -63,11 +63,9 @@ jobs:
       - name: Install dependencies on windows
         if: startsWith(matrix.config.os, 'windows')
         run: |
-          set -e
-          conda update -n base -c defaults conda
-          conda config --set channel_priority strict
-          conda install --yes --quiet proj libgdal gdal
-          choco install --no-progress -y cmake make eigen python
+          pwd
+          ls C:\Program Files  (x86)\
+          #choco install --no-progress -y cmake make eigen python
 
 
         # cmd "${{ matrix.config.environment_script }}"
