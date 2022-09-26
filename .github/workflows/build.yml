@@ -98,11 +98,7 @@ jobs:
       - name: Install dependencies on macos
         if: startsWith(matrix.config.os, 'macos')
         run: |
-          set -e
-          conda update -n base -c defaults conda
-          conda config --set channel_priority strict
-          conda install --yes --quiet proj libgdal gdal
-          brew install p7zip cmake make eigen swig
+          brew install p7zip cmake make eigen swig numpy gdal
           
       - name: Configure
         shell: bash
