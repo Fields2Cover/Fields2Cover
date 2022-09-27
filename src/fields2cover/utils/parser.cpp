@@ -135,6 +135,17 @@ F2CSwaths Parser::importSwathsJson(const std::string& file) {
   return swaths;
 }
 
-
+F2CStrips Parser::importStripsJson(const std::string& file) {
+  std::ifstream f(file);
+  json imported_strips = json::parse(f);
+  F2CStrips strips;
+  for (auto&& imported_strip : imported_strips["features"]) {
+    F2CStrip strip;
+    strip.name = imported_strip["properties"]["crop_id"];
+    strip.cell = getCellFromJson(imported_strip);
+    strips.emplace_back(strip);
+  }
+  return strips;
+}
 
 }  // namespace f2c

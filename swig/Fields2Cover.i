@@ -126,6 +126,7 @@ EXTEND_ALGS(Point, rotateFromPoint)
 }
 
 
+%include "fields2cover/types/Strip.h"
 %include "fields2cover/types/Field.h"
 %include "fields2cover/types/Route.h"
 %include "fields2cover/types/Path.h"
@@ -146,6 +147,7 @@ typedef long unsigned int size_t;
 %template(VectorMultiPoint) std::vector<F2CMultiPoint>;
 %template(VectorSwath) std::vector<f2c::types::Swath>;
 %template(SwathsByCells) std::vector<f2c::types::Swaths>;
+%template(Strips) std::vector<f2c::types::Strip>;
 %template(Fields) std::vector<f2c::types::Field>;
 %template(VectorPathDirection) std::vector<f2c::types::PathDirection>;
 %template(VectorPathSectionType) std::vector<f2c::types::PathSectionType>;

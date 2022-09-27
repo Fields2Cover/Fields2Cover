@@ -35,6 +35,7 @@ class Parser {
 
     static F2CCell importCellJson(const std::string& file);
     static F2CSwaths importSwathsJson(const std::string& file);
+    static F2CStrips importStripsJson(const std::string& file);
 };
 
 }  // namespace f2c
