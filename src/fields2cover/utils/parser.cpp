@@ -119,6 +119,22 @@ F2CCell Parser::importCellJson(const std::string& file) {
   return getCellFromJson(imported_field["features"][0]);
 }
 
+F2CSwaths Parser::importSwathsJson(const std::string& file) {
+  std::ifstream f(file);
+  json imported_swaths = json::parse(f);
+  F2CSwaths swaths;
+  for (auto&& imported_swath : imported_swaths["features"]) {
+    F2CLineString line;
+    for (auto&& ps : imported_swath["geometry"]["coordinates"]) {
+      line.addPoint(getPointFromJson(ps));
+    }
+    swaths.emplace_back(line,
+      imported_swath["properties"]["width"],
+      imported_swath["properties"]["path_id"]);
+  }
+  return swaths;
+}
+
 
 
 }  // namespace f2c
