@@ -27,6 +27,12 @@ class Transform {
       const std::string& coord_sys_to);
 
   static void transform(F2CField& field, const std::string& coord_sys_to);
+  static F2CStrip transform(const F2CStrip& s,
+      const std::string& coord_sys_from, const std::string& coord_sys_to);
+
+  template <class T>
+  static T transform(const T& t,
+      const std::string& coord_sys_from, const std::string& coord_sys_to);
 
   template <class T>
   static T transform(const T& t, const F2CPoint& ref_point,
@@ -46,7 +52,13 @@ class Transform {
 template <class T>
 T Transform::transform(const T& t, const F2CPoint& ref_point,
     const std::string& coord_sys_from, const std::string& coord_sys_to) {
-  T new_t = t + ref_point;
+  return transform(t + ref_point, coord_sys_from, coord_sys_to);
+}
+
+template <class T>
+T Transform::transform(const T& t,
+    const std::string& coord_sys_from, const std::string& coord_sys_to) {
+  T new_t = t.clone();
   new_t->transform(generateCoordTransf(coord_sys_from, coord_sys_to).get());
   return new_t;
 }

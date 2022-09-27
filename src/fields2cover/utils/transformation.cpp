@@ -36,6 +36,15 @@ F2CPath Transform::transform(const F2CPath& path, const F2CField& field,
   return new_path;
 }
 
+F2CStrip Transform::transform(const F2CStrip& s,
+      const std::string& coord_sys_from, const std::string& coord_sys_to) {
+  F2CStrip new_strip;
+  new_strip.name = s.name;
+  new_strip.cell = transform(s.cell, coord_sys_from, coord_sys_to);
+  return new_strip;
+}
+
+
 F2CPoint Transform::getRefPointInGPS(const F2CField& field) {
   auto point = field.ref_point.clone();
   point->transform(generateCoordTransf(field.coord_sys, "EPSG:4326").get());

@@ -86,13 +86,32 @@ DEFINE_GEOM_ALGS(Intersects)
 %enddef
 
 
+
 %include "fields2cover/types/Point.h"
 EXTEND_ALGS(Point, rotateFromPoint)
+
+%define EXTEND_OPERATOR(geom)
+  %extend f2c::types::geom {
+    f2c::types::geom __add__(const f2c::types::Point& b) {
+      return *$self + b;
+    }
+  }
+%enddef
+EXTEND_OPERATOR(LineString)
+EXTEND_OPERATOR(LinearRing)
+EXTEND_OPERATOR(MultiLineString)
+EXTEND_OPERATOR(MultiPoint)
+EXTEND_OPERATOR(Cell)
+EXTEND_OPERATOR(Cells)
+
+
+
+
 
 %extend f2c::types::Point {
   char *__str__() {
   static char temp[256];
-  sprintf(temp,"Point(%g, %g, %g)", $self->getX(),$self->getY(),$self->getZ());
+  sprintf(temp,"Point(%g, %g, %g)", $self->getX(), $self->getY(), $self->getZ());
   return &temp[0];
   }
 }
