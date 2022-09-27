@@ -58,8 +58,6 @@ int Parser::importGml(const std::string& file, F2CFields& fields) {
             }
             return;
       };
-
-
   findAndReplaceAll(p_coords, ",", ";");
   findAndReplaceAll(p_coords, " ", ", ");
   findAndReplaceAll(p_coords, ";", " ");
@@ -76,28 +74,51 @@ int Parser::importGml(const std::string& file, F2CFields& fields) {
   return 0;
 }
 
+
+F2CPoint getPointFromJson(const json& ps) {
+  if (ps.size() == 3) {
+    return F2CPoint(ps[0], ps[1], ps[2]);
+  } else if (ps.size() == 2) {
+    return F2CPoint(ps[0], ps[1]);
+  }
+  return F2CPoint();
+}
+
+F2CCell getCellFromJson(const json& imported_cell) {
+  F2CLinearRing outer_ring;
+  for (auto&& ps : imported_cell["geometry"]["coordinates"][0]) {
+    outer_ring.addPoint(getPointFromJson(ps));
+  }
+  F2CCell cell(outer_ring);
+  for (int i = 1; i < imported_cell["geometry"]["coordinates"].size(); ++i) {
+    F2CLinearRing inner_ring;
+    for (auto&& ps : imported_cell["geometry"]["coordinates"][i]) {
+      inner_ring.addPoint(getPointFromJson(ps));
+    }
+    cell.addRing(inner_ring);
+  }
+  return cell;
+}
+
+
 int Parser::importJson(const std::string& file, F2CFields& fields) {
   std::ifstream f(file);
   json imported_field = json::parse(f);
 
   for (auto&& imported_cell : imported_field["features"]) {
-    F2CLinearRing outer_ring;
-    for (auto&& ps : imported_cell["geometry"]["coordinates"][0]) {
-      outer_ring.addPoint(ps[0], ps[1], ps[2]);
-    }
-    F2CCell cell(outer_ring);
-    for (int i = 1; i < imported_cell["geometry"]["coordinates"].size(); ++i) {
-      F2CLinearRing inner_ring;
-      for (auto&& ps : imported_cell["geometry"]["coordinates"][i]) {
-        inner_ring.addPoint(ps[0], ps[1], ps[2]);
-      }
-      cell.addRing(inner_ring);
-    }
-
     fields.emplace_back(
-        F2CField(F2CCells(cell), imported_cell["properties"]["Name"]));
+      F2CField(F2CCells(getCellFromJson(imported_cell)),
+        imported_cell["properties"]["Name"]));
   }
   return 0;
 }
+
+F2CCell Parser::importCellJson(const std::string& file) {
+  std::ifstream f(file);
+  json imported_field = json::parse(f);
+  return getCellFromJson(imported_field["features"][0]);
+}
+
+
 
 }  // namespace f2c
