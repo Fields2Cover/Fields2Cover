@@ -23,11 +23,17 @@ class Transform {
       generateCoordTransf(
           const std::string& coord_sys_from, const std::string& coord_sys_to);
 
-  F2CPath transform(const F2CPath& path, const F2CField& field,
+  static F2CPath transformPathWithFieldRef(const F2CPath& path, const F2CField& field,
       const std::string& coord_sys_to);
 
   static void transform(F2CField& field, const std::string& coord_sys_to);
-  static F2CStrip transform(const F2CStrip& s,
+
+
+  static F2CPath transformPath(const F2CPath& p,
+      const std::string& coord_sys_from, const std::string& coord_sys_to);
+  static F2CStrips transformStrips(const F2CStrips& s,
+      const std::string& coord_sys_from, const std::string& coord_sys_to);
+  static F2CStrip transformStrip(const F2CStrip& s,
       const std::string& coord_sys_from, const std::string& coord_sys_to);
 
   template <class T>

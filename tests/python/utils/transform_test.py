@@ -43,7 +43,6 @@ def test_fields2cover_utils_transformer_convertToF2CAndReturn():
         poly.getGeometry(0).getGeometry(i).getY(), 1e-3);
     near(final_field.getGeometry(i).getZ(),
         poly.getGeometry(0).getGeometry(i).getZ(), 1e-3);
-  """  
+
   path = f2c.Path()
-  f2c.Transform_transform(path, field, "EPSG:4326");
-  """
+  f2c.Transform_transformPathWithFieldRef(path, field, "EPSG:4326");
