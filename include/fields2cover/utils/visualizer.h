@@ -27,7 +27,7 @@ class Visualizer {
   static void plot(const F2CPath& path);
   static void plot(const F2CMultiLineString& lines);
   /// Plot a cell
-  static void plot(const F2CCell& cell);
+  static void plot(const F2CCell& cell, const std::string& opt = "tab:olive");
   /// Plot cells
   static void plot(const F2CCells& cells);
   /// Plot swaths

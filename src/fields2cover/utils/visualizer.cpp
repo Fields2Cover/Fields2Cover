@@ -26,8 +26,10 @@ void Visualizer::plot(const F2CPath& path) {
   plot(path.points, "k");
 }
 
-void Visualizer::plot(const F2CCell& cell) {
-  plot(cell, "tab:olive");
+void Visualizer::plot(const F2CCell& cell, const std::string& opts) {
+  for (auto&& rings : cell) {
+    plot(rings, opts);
+  }
 }
 
 void Visualizer::plot(const F2CCells& cells) {

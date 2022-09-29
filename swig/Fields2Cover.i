@@ -11,7 +11,7 @@
  %include <optional.i>
  %include <exception.i>
 
-#define __version__ "1.1.0"
+#define __version__ "1.1.1"
 
 %inline %{
   #include "fields2cover.h"
@@ -86,13 +86,32 @@ DEFINE_GEOM_ALGS(Intersects)
 %enddef
 
 
+
 %include "fields2cover/types/Point.h"
 EXTEND_ALGS(Point, rotateFromPoint)
+
+%define EXTEND_OPERATOR(geom)
+  %extend f2c::types::geom {
+    f2c::types::geom __add__(const f2c::types::Point& b) {
+      return *$self + b;
+    }
+  }
+%enddef
+EXTEND_OPERATOR(LineString)
+EXTEND_OPERATOR(LinearRing)
+EXTEND_OPERATOR(MultiLineString)
+EXTEND_OPERATOR(MultiPoint)
+EXTEND_OPERATOR(Cell)
+EXTEND_OPERATOR(Cells)
+
+
+
+
 
 %extend f2c::types::Point {
   char *__str__() {
   static char temp[256];
-  sprintf(temp,"Point(%g, %g, %g)", $self->getX(),$self->getY(),$self->getZ());
+  sprintf(temp,"Point(%g, %g, %g)", $self->getX(), $self->getY(), $self->getZ());
   return &temp[0];
   }
 }
@@ -126,6 +145,7 @@ EXTEND_ALGS(Point, rotateFromPoint)
 }
 
 
+%include "fields2cover/types/Strip.h"
 %include "fields2cover/types/Field.h"
 %include "fields2cover/types/Route.h"
 %include "fields2cover/types/Path.h"
@@ -146,6 +166,7 @@ typedef long unsigned int size_t;
 %template(VectorMultiPoint) std::vector<F2CMultiPoint>;
 %template(VectorSwath) std::vector<f2c::types::Swath>;
 %template(SwathsByCells) std::vector<f2c::types::Swaths>;
+%template(Strips) std::vector<f2c::types::Strip>;
 %template(Fields) std::vector<f2c::types::Field>;
 %template(VectorPathDirection) std::vector<f2c::types::PathDirection>;
 %template(VectorPathSectionType) std::vector<f2c::types::PathSectionType>;

@@ -115,3 +115,25 @@
     return ss.str();
   }  
 }
+
+%extend f2c::types::Strip {
+  std::string __repr__()
+  {
+    std::ostringstream ss;
+    ss << "Strip{ Name: '" << $self->name << "', ";
+    ss << $self->cell.exportToWkt() << "}";
+    return ss.str();
+  }  
+}
+
+
+
+
+
+
+
+
+
+
+
+

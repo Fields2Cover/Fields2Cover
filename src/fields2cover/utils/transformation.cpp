@@ -25,8 +25,8 @@ void Transform::transform(F2CField& field, const std::string& coord_sys_to) {
   field.field = field.field - field.ref_point;
 }
 
-F2CPath Transform::transform(const F2CPath& path, const F2CField& field,
-    const std::string& coord_sys_to) {
+F2CPath Transform::transformPathWithFieldRef(const F2CPath& path,
+      const F2CField& field, const std::string& coord_sys_to) {
   auto new_path = path.clone();
   auto coords = generateCoordTransf(field.coord_sys, coord_sys_to);
   for (auto&& p : new_path.points) {
@@ -35,6 +35,35 @@ F2CPath Transform::transform(const F2CPath& path, const F2CField& field,
   }
   return new_path;
 }
+
+F2CStrip Transform::transformStrip(const F2CStrip& strip,
+      const std::string& coord_sys_from, const std::string& coord_sys_to) {
+  F2CStrip new_strip;
+  new_strip.name = strip.name;
+  new_strip.cell = transform(strip.cell, coord_sys_from, coord_sys_to);
+  return new_strip;
+}
+
+F2CStrips Transform::transformStrips(const F2CStrips& strips,
+      const std::string& coord_sys_from, const std::string& coord_sys_to) {
+  F2CStrips new_strips;
+  for(auto&& strip : strips) {
+    new_strips.emplace_back(transformStrip(strip, coord_sys_from, coord_sys_to));
+  }
+  return new_strips;
+}
+
+F2CPath Transform::transformPath(const F2CPath& path,
+      const std::string& coord_sys_from, const std::string& coord_sys_to) {
+  auto new_path = path.clone();
+  auto coords = generateCoordTransf(coord_sys_from, coord_sys_to);
+  for (auto&& p : new_path.points) {
+    p->transform(coords.get());
+  }
+  return new_path;
+}
+
+
 
 F2CPoint Transform::getRefPointInGPS(const F2CField& field) {
   auto point = field.ref_point.clone();
