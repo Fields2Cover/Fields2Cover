@@ -53,6 +53,21 @@ F2CStrips Transform::transformStrips(const F2CStrips& strips,
   return new_strips;
 }
 
+F2CSwaths Transform::transformSwaths(const F2CSwaths& swaths,
+      const std::string& coord_sys_from, const std::string& coord_sys_to) {
+  F2CSwaths new_swaths;
+  for(auto&& swath : swaths) {
+    new_swaths.emplace_back(transformSwath(swath, coord_sys_from, coord_sys_to));
+  }
+  return new_swaths;
+}
+
+F2CSwath Transform::transformSwath(const F2CSwath& swath,
+      const std::string& coord_sys_from, const std::string& coord_sys_to) {
+  return F2CSwath(transform(swath.getPath(),coord_sys_from, coord_sys_to),
+                   swath.getWidth(), swath.getId());
+}
+
 F2CPath Transform::transformPath(const F2CPath& path,
       const std::string& coord_sys_from, const std::string& coord_sys_to) {
   auto new_path = path.clone();

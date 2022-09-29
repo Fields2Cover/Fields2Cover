@@ -20,7 +20,7 @@ class PathPlanning {
   F2CPath searchBestPath(const F2CSwaths& swaths, TurningBase& turn);
 
  public:
-  double turn_point_dist {0.1};
+  double turn_point_dist {0.0};
 };
 
 }  // namespace f2c::pp

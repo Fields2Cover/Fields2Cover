@@ -35,6 +35,10 @@ class Transform {
       const std::string& coord_sys_from, const std::string& coord_sys_to);
   static F2CStrip transformStrip(const F2CStrip& s,
       const std::string& coord_sys_from, const std::string& coord_sys_to);
+  static F2CSwath transformSwath(const F2CSwath& s,
+      const std::string& coord_sys_from, const std::string& coord_sys_to);
+  static F2CSwaths transformSwaths(const F2CSwaths& s,
+      const std::string& coord_sys_from, const std::string& coord_sys_to);
 
   template <class T>
   static T transform(const T& t,
