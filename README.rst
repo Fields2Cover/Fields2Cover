@@ -62,7 +62,7 @@ Some packages are needed before compiling the package:
    sudo apt-get -y update
    sudo apt-get install -y --no-install-recommends build-essential ca-certificates cmake \
         doxygen g++ git libeigen3-dev libgdal-dev libpython3-dev python3 python3-pip \
-        python3-matplotlib lcov libgtest-dev libtbb-dev
+        python3-matplotlib python3-tk lcov libgtest-dev libtbb-dev
    python -m pip install gcovr
 
 
