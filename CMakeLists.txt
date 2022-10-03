@@ -173,10 +173,7 @@ target_link_libraries(Fields2Cover
 )
 
 if (ALLOW_PARALLELIZATION)
-target_link_libraries(Fields2Cover
-  PUBLIC
-  tbb
-)
+target_link_libraries(Fields2Cover PRIVATE tbb)
 endif()
 
 

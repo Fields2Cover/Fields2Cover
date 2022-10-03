@@ -9,7 +9,9 @@
 #define FIELDS2COVER_SWATH_GENERATOR_BRUTE_FORCE_IMPL_HPP_
 
 #include <algorithm>
+#ifdef ALLOW_PARALLELIZATION
 #include <execution>
+#endif
 #include <utility>
 #include <limits>
 
