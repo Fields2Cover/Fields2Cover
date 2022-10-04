@@ -86,6 +86,7 @@ FetchContent_MakeAvailable(matplotlib_cpp)
 
 find_package(GDAL 3.0 REQUIRED)
 
+find_package(GTest REQUIRED)
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
