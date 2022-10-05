@@ -86,7 +86,6 @@ FetchContent_MakeAvailable(matplotlib_cpp)
 
 find_package(GDAL 3.0 REQUIRED)
 
-find_package(GTest REQUIRED)
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
@@ -255,6 +254,7 @@ endif()
 #####################################################
 
 if (BUILD_TESTS)
+  find_package(GTest REQUIRED)
   include(CTest)
   enable_testing()
   add_custom_target(check COMMAND GTEST_COLOR=1 ${CMAKE_CTEST_COMMAND}
