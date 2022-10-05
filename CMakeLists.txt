@@ -254,6 +254,7 @@ endif()
 #####################################################
 
 if (BUILD_TESTS)
+  find_package(GTest REQUIRED)
   include(CTest)
   enable_testing()
   add_custom_target(check COMMAND GTEST_COLOR=1 ${CMAKE_CTEST_COMMAND}
