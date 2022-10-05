@@ -57,8 +57,8 @@ class Random {
   /// probability.
   /// Lower values are more probable than higher ones.
   /// @param lambda is the rate parameter
-  /// @return Double \f$\in [min, max]\f$
-  double getRandomExp(double lambda);
+  /// @return Double > 0 
+  double getRandomExpDist(double lambda);
 
   /// Return a random angle in radians.
   /// @return random angle \f$ \in [0, 2\pi) \f$

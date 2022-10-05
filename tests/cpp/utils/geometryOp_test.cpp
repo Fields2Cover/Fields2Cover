@@ -65,7 +65,7 @@ TEST(fields2cover_utils_GeometryOp, get_linear_random) {
   }
 }
 
-TEST(fields2cover_utils_GeometryOp, get_exp_random_legacy) {
+TEST(fields2cover_utils_GeometryOp, get_exp_random) {
   f2c::Random rand;
   auto rand_val {0.0};
   for (int i = 0; i < 100; ++i) {
@@ -78,7 +78,7 @@ TEST(fields2cover_utils_GeometryOp, get_exp_random_legacy) {
   }
 }
 
-TEST(fields2cover_utils_GeometryOp, get_exp_random) {
+TEST(fields2cover_utils_GeometryOp, get_exp_distribution_random) {
   f2c::Random rand;
   auto mean {0.0};
   auto const steps{1000};
@@ -86,7 +86,7 @@ TEST(fields2cover_utils_GeometryOp, get_exp_random) {
   auto const epsilon{0.05};
 
   for (int i = 0; i < steps; ++i) {
-    mean += rand.getRandomExp(lambda);
+    mean += rand.getRandomExpDist(lambda);
   }
   mean /= steps;
   EXPECT_LT( mean, (1/lambda) + epsilon);

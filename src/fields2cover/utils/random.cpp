@@ -26,7 +26,7 @@ double Random::getRandomExp(double min, double max) {
   return exp((log(max) - log_min) * getRandomDouble() + log_min);
 }
 
-double Random::getRandomExp(double lambda) {
+double Random::getRandomExpDist(double lambda) {
   std::exponential_distribution<double> distribution(lambda);
   return distribution(mt_); 
 }

@@ -69,6 +69,20 @@ def test_fields2cover_utils_GeometryOp_getExpRandom():
     assert (rand_val < max_rand);
     assert (rand_val >= min_rand);
 
+def test_fields2cover_utils_GeometryOp_getExpDistRandom():
+  rand = f2c.Random();
+  mean = 0.0;
+  lambda_param = 1.5;
+  epsilon = 0.05;
+  steps = 1000
+
+  for i in range(steps):
+    mean += rand.getRandomExpDist(lambda_param);
+
+  mean /= steps;
+  assert (mean < (1/lambda_param) + epsilon);
+  assert (mean >= (1/lambda_param) - epsilon);
+
 def test_fields2cover_utils_GeometryOp_getAngleDiffAbs():
   rand = f2c.Random();
   pi = math.pi;
