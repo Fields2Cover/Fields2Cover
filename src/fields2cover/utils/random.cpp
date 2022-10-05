@@ -9,20 +9,31 @@
 namespace f2c {
 
 double Random::getRandomDouble() {
-  return static_cast<double>(rand_r(&seed_)) / RAND_MAX;
+  return getRandomLinear(0.0, 1.0);
 }
 
 double Random::getRandomLinear(double min, double max) {
-  return (max - min) * getRandomDouble() + min;
+  assert(min < max);
+
+  std::uniform_real_distribution<double> distribution(min, max);
+  return distribution(mt_);
 }
 
 double Random::getRandomExp(double min, double max) {
+  assert(min < max);
+
   double log_min {log(min)};
   return exp((log(max) - log_min) * getRandomDouble() + log_min);
 }
 
+double Random::getRandomExp(double lambda) {
+  std::exponential_distribution<double> distribution(lambda);
+  return distribution(mt_); 
+}
+
 double Random::getAngleRandom() {
-  return getRandomDouble() * boost::math::constants::two_pi<double>();
+  return getRandomLinear(0.0, 
+                      boost::math::constants::two_pi<double>());
 }
 
 f2c::types::Field Random::generateRandField(int n_sides, double area,

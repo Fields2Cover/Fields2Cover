@@ -65,16 +65,32 @@ TEST(fields2cover_utils_GeometryOp, get_linear_random) {
   }
 }
 
-TEST(fields2cover_utils_GeometryOp, get_exp_random) {
+TEST(fields2cover_utils_GeometryOp, get_exp_random_legacy) {
   f2c::Random rand;
   auto rand_val {0.0};
   for (int i = 0; i < 100; ++i) {
     double max_rand = rand.getRandomDouble() + 1.5;
     double min_rand = rand.getRandomDouble() + 0.5;
+
     rand_val = rand.getRandomExp(min_rand, max_rand);
     EXPECT_LT( rand_val, max_rand);
     EXPECT_GE( rand_val, min_rand);
   }
+}
+
+TEST(fields2cover_utils_GeometryOp, get_exp_random) {
+  f2c::Random rand;
+  auto mean {0.0};
+  auto const steps{1000};
+  auto const lambda{1.5};
+  auto const epsilon{0.02};
+
+  for (int i = 0; i < steps; ++i) {
+    mean += rand.getRandomExp(lambda);
+  }
+  mean /= steps;
+  EXPECT_LT( mean, (1/lambda) + epsilon);
+  EXPECT_GE( mean, (1/lambda) - epsilon);
 }
 
 

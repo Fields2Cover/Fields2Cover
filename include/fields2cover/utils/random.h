@@ -10,6 +10,7 @@
 
 #include <time.h>
 #include <limits>
+#include <random>
 #include <boost/math/constants/constants.hpp>
 #include "fields2cover/types/Point.h"
 #include "fields2cover/types/LineString.h"
@@ -24,7 +25,7 @@ class Random {
   /// Constructor to initialize the seed to a known value to make experiments
   /// reproducible
   explicit Random(uint32_t seed = static_cast<uint32_t>(time(NULL))) :
-    seed_(seed) {}
+    mt_(seed) {}
 
   /// @cond DOXYGEN_SHOULD_SKIP_THIS
   ~Random() = default;
@@ -52,6 +53,13 @@ class Random {
   /// @return Double \f$\in [min, max]\f$
   double getRandomExp(double min, double max);
 
+  /// Get a random double in a range [0;+inf) with exponential
+  /// probability.
+  /// Lower values are more probable than higher ones.
+  /// @param lambda is the rate parameter
+  /// @return Double \f$\in [min, max]\f$
+  double getRandomExp(double lambda);
+
   /// Return a random angle in radians.
   /// @return random angle \f$ \in [0, 2\pi) \f$
   double getAngleRandom();
@@ -74,7 +82,7 @@ class Random {
   f2c::types::Field genNonConvexField(double area);
 
  private:
-  uint32_t seed_;
+  std::mt19937 mt_;
 };
 
 
