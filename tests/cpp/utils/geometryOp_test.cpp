@@ -83,7 +83,7 @@ TEST(fields2cover_utils_GeometryOp, get_exp_random) {
   auto mean {0.0};
   auto const steps{1000};
   auto const lambda{1.5};
-  auto const epsilon{0.02};
+  auto const epsilon{0.05};
 
   for (int i = 0; i < steps; ++i) {
     mean += rand.getRandomExp(lambda);
