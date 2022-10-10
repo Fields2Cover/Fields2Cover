@@ -15,7 +15,7 @@ namespace f2c::rp {
 class CustomOrder : public SingleCellSwathsOrderBase {
  public:
   CustomOrder();
-  CustomOrder(F2CSwaths& swaths);
+  explicit CustomOrder(F2CSwaths& swaths);
   CustomOrder(F2CSwaths& swaths, const std::vector<size_t>& order);
   void setCustomOrder(const std::vector<size_t>& order);
  private:

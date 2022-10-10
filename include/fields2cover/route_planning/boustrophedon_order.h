@@ -16,7 +16,7 @@ namespace f2c::rp {
 class BoustrophedonOrder : public SingleCellSwathsOrderBase {
  public:
   BoustrophedonOrder();
-  BoustrophedonOrder(F2CSwaths& swaths);
+  explicit BoustrophedonOrder(F2CSwaths& swaths);
   ~BoustrophedonOrder();
 
  private:

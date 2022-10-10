@@ -23,8 +23,8 @@ class Transform {
       generateCoordTransf(
           const std::string& coord_sys_from, const std::string& coord_sys_to);
 
-  static F2CPath transformPathWithFieldRef(const F2CPath& path, const F2CField& field,
-      const std::string& coord_sys_to);
+  static F2CPath transformPathWithFieldRef(const F2CPath& path,
+      const F2CField& field, const std::string& coord_sys_to);
 
   static void transform(F2CField& field, const std::string& coord_sys_to);
 

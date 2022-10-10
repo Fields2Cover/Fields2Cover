@@ -9,6 +9,7 @@
 #define FIELDS2COVER_TYPES_LINEARRING_H_
 
 #include <gdal/ogr_geometry.h>
+#include <vector>
 #include "fields2cover/types/Geometries.h"
 #include "fields2cover/types/Point.h"
 
@@ -19,8 +20,8 @@ struct LinearRing : public Geometries<LinearRing, OGRLinearRing, wkbLinearRing,
  public:
   using Geometries<LinearRing, OGRLinearRing, wkbLinearRing, Point>::Geometries;
   LinearRing();
-  LinearRing(const std::vector<Point>& ps);
-  LinearRing(const std::initializer_list<Point>& ps);
+  explicit LinearRing(const std::vector<Point>& ps);
+  explicit LinearRing(const std::initializer_list<Point>& ps);
 
   void operator*=(double b);
 

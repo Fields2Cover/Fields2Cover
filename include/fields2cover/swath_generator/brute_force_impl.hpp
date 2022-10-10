@@ -12,6 +12,7 @@
 #ifdef ALLOW_PARALLELIZATION
 #include <execution>
 #endif
+#include <vector>
 #include <utility>
 #include <limits>
 
@@ -39,7 +40,8 @@ F2CSwaths BruteForce<T>::generateBestSwaths(
     std::transform(ids.begin(), ids.end(), costs.begin(), getCostSwaths);
   #endif
 
-  int min_cost_pos = std::min_element(costs.begin(), costs.end()) - costs.begin();
+  int min_cost_pos = std::min_element(
+      costs.begin(), costs.end()) - costs.begin();
   this->best_angle = ids[min_cost_pos] * step_angle;
 
   return BruteForce<T>::generateSwaths(this->best_angle, op_width, poly);

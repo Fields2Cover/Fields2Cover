@@ -16,7 +16,7 @@ namespace f2c::rp {
 class SnakeOrder : public SingleCellSwathsOrderBase {
  public:
   SnakeOrder();
-  SnakeOrder(F2CSwaths& swaths);
+  explicit SnakeOrder(F2CSwaths& swaths);
   ~SnakeOrder();
 
  private:

@@ -9,6 +9,7 @@
 #define FIELDS2COVER_TYPES_LINESTRING_H_
 
 #include <gdal/ogr_geometry.h>
+#include <vector>
 #include "fields2cover/types/Geometries.h"
 #include "fields2cover/types/Point.h"
 #include "fields2cover/types/LinearRing.h"
@@ -21,8 +22,8 @@ struct LineString : public Geometries<LineString, OGRLineString, wkbLineString,
   using Geometries<LineString, OGRLineString, wkbLineString, Point>::Geometries;
   LineString();
   explicit LineString(const LinearRing& ring);
-  LineString(const std::vector<Point>& ps);
-  LineString(const std::initializer_list<Point>& ps);
+  explicit LineString(const std::vector<Point>& ps);
+  explicit LineString(const std::initializer_list<Point>& ps);
 
   void operator*=(double b);
 

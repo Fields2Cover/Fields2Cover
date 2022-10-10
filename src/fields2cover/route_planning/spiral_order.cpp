@@ -14,7 +14,7 @@ SpiralOrder::SpiralOrder(F2CSwaths& swaths, int sp_size) :
 
 SpiralOrder::~SpiralOrder() = default;
 
-void SpiralOrder::setSpiralSize(int sp_size){
+void SpiralOrder::setSpiralSize(int sp_size) {
   this->spiral_size = sp_size;
 }
 
@@ -34,8 +34,8 @@ void SpiralOrder::sortSwaths() {
 
 void SpiralOrder::spiral(size_t offset, int size) {
   for (size_t j = offset % 2 ? 0 : 1; j <= (size + 1) / 2; j += 2) {
-    std::rotate(swaths_.begin() + offset + j, 
-                swaths_.begin() + offset + size - 1, 
+    std::rotate(swaths_.begin() + offset + j,
+                swaths_.begin() + offset + size - 1,
                 swaths_.begin() + offset + size);
   }
 }

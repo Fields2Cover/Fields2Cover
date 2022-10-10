@@ -9,6 +9,7 @@
 #define FIELDS2COVER_TYPES_MULTIPOINT_H_
 
 #include <gdal/ogr_geometry.h>
+#include <vector>
 #include "fields2cover/types/Geometries.h"
 #include "fields2cover/types/Point.h"
 
@@ -19,8 +20,8 @@ struct MultiPoint :
  public:
   using Geometries<MultiPoint, OGRMultiPoint, wkbMultiPoint, Point>::Geometries;
   MultiPoint();
-  MultiPoint(const std::vector<Point>& ps);
-  MultiPoint(const std::initializer_list<Point>& ps);
+  explicit MultiPoint(const std::vector<Point>& ps);
+  explicit MultiPoint(const std::initializer_list<Point>& ps);
 
   size_t size() const;
 
