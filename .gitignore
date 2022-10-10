@@ -1,3 +1,7 @@
 build/*
 .vscode/settings.json
 *.log
+docs/api/
+*/__pycache__/
+*/*/__pycache__/
+*/*/*/__pycache__/
