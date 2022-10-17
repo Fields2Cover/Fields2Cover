@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Mier"
+  given-names: "Gonzalo"
+  orcid: "https://orcid.org/0000-0002-7588-9911"
+- family-names: "Valente"
+  given-names: "João"
+  orcid: "https://orcid.org/0000-0002-6241-4124"
+- family-names: "de Bruin"
+  given-names: "Sytze"
+  orcid: "https://orcid.org/0000-0002-6884-2832"
+title: "Fields2Cover library"
+version: 1.2.0
+date-released: 2022-10-17
+url: "https://github.com/Fields2Cover/Fields2Cover"
+preferred-citation:
+  type: article
+  authors:
+  - family-names: "Mier"
+    given-names: "Gonzalo"
+    orcid: "https://orcid.org/0000-0002-7588-9911"
+  - family-names: "Valente"
+    given-names: "João"
+    orcid: "https://orcid.org/0000-0002-6241-4124"
+  - family-names: "de Bruin"
+    given-names: "Sytze"
+    orcid: "https://orcid.org/0000-0002-6884-2832"
+  doi: "https://doi.org/10.48550/arXiv.2210.07838"
+  journal: "arXiv"
+  title: "Fields2Cover: An open-source coverage path planning library for unmanned agricultural vehicles"
+  year: 2022
