@@ -30,7 +30,7 @@ Fields2Cover library provides several algorithms to plan the coverage path on co
 
 .. image:: docs/figures/diagram-F2C.jpg
    :align: center
-   :scale: 50%
+   :width: 500px 
 
 
 Although the development of this project is focused on offline planning of agricultural vehicles, the library accepts pull requests from other types of coverage planners.
