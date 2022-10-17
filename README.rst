@@ -9,7 +9,7 @@ Fields2Cover
 |badge1| |badge2| |badge3| |license| 
 
 
-.. image:: docs/figures/logo_fields2cover.jpeg
+.. image:: docs/figures/diagram-F2C.jpg
    :align: center
 
 
