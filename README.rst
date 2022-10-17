@@ -9,7 +9,7 @@ Fields2Cover
 |badge1| |badge2| |badge3| |license| 
 
 
-.. image:: docs/figures/diagram-F2C.jpg
+.. image:: docs/figures/logo_fields2cover.jpeg
    :align: center
 
 
@@ -28,8 +28,9 @@ On the other hand, CPP in agriculture knows the area to cover, but the coverage 
 
 Fields2Cover library provides several algorithms to plan the coverage path on convex fields:
 
-.. image:: docs/figures/Tutorial_6_1_Dubins.png
+.. image:: docs/figures/diagram-F2C.jpg
    :align: center
+   :scale: 50%
 
 
 Although the development of this project is focused on offline planning of agricultural vehicles, the library accepts pull requests from other types of coverage planners.
