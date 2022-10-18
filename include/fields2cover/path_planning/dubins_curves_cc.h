@@ -16,18 +16,9 @@ namespace f2c::pp {
 /// Dubins' curves planner with continuous curves
 class DubinsCurvesCC : public TurningBase {
  public:
-  explicit DubinsCurvesCC(const F2CRobot& params);
-  /// @cond DOXYGEN_SHOULD_SKIP_THIS
-  ~DubinsCurvesCC() = default;
-  DubinsCurvesCC(DubinsCurvesCC &&) = default;
-  DubinsCurvesCC() = default;
-  DubinsCurvesCC(const DubinsCurvesCC&) = default;
-  DubinsCurvesCC &operator=(const DubinsCurvesCC&) = default;
-  DubinsCurvesCC &operator=(DubinsCurvesCC&&) = default;
-  /// @endcond
-
-  F2CPath createSimpleTurn(double dist_start_pos, double start_angle,
-      double end_angle) override;
+  F2CPath createSimpleTurn(const F2CRobot& robot,
+      double dist_start_pos, double start_angle,
+      double end_angle, double max_headland_width = 1e5) override;
 
  public:
   double discretization {0.01};

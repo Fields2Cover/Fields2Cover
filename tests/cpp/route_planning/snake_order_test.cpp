@@ -16,10 +16,10 @@ TEST(fields2cover_route_snake, genSortedSwaths_even) {
     swaths.emplace_back(F2CLineString({F2CPoint(0, i), F2CPoint(1, i)}), i, i);
   }
 
-  f2c::rp::SnakeOrder swath_sorter(swaths);
+  f2c::rp::SnakeOrder swath_sorter;
   f2c::obj::DirectDistPathObj objective;
   
-  swaths = swath_sorter.genSortedSwaths();
+  swaths = swath_sorter.genSortedSwaths(swaths);
 
   EXPECT_EQ(swaths[0].getWidth(), 1);
   EXPECT_EQ(swaths[1].getWidth(), 3);
@@ -37,10 +37,10 @@ TEST(fields2cover_route_snake, genSortedSwaths_odd) {
     swaths.emplace_back(F2CLineString({F2CPoint(0, i), F2CPoint(1, i)}), i, i);
   }
 
-  f2c::rp::SnakeOrder swath_sorter(swaths);
+  f2c::rp::SnakeOrder swath_sorter;
   f2c::obj::DirectDistPathObj objective;
 
-  swaths = swath_sorter.genSortedSwaths();
+  swaths = swath_sorter.genSortedSwaths(swaths);
 
   EXPECT_EQ(swaths[0].getWidth(), 1);
   EXPECT_EQ(swaths[1].getWidth(), 3);
@@ -48,3 +48,4 @@ TEST(fields2cover_route_snake, genSortedSwaths_odd) {
   EXPECT_EQ(swaths.back().getWidth(), 2);
   EXPECT_EQ(objective.computeCost(swaths), 3*((n-1)-1));
 }
+

@@ -63,7 +63,7 @@ jobs:
       - name: Install dependencies on windows
         if: startsWith(matrix.config.os, 'windows')
         run: |
-          choco install --no-progress -y cmake make eigen python numpy
+          choco install --no-progress -y cmake make eigen python numpy mingw
 
 
         # cmd "${{ matrix.config.environment_script }}"

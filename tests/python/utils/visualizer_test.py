@@ -33,10 +33,10 @@ def test_fields2cover_utils_visualizer_saveField():
   robot.op_width = 3.0;
   optim.headland_width = 2.0 * robot.op_width;
 
-  hl_gen = f2c.HG_Const_gen_NSwath();
+  hl_gen = f2c.HG_Const_gen();
   no_headlands = hl_gen.generateHeadlands(field.field, optim.headland_width);
   
-  swath_gen = f2c.SG_BruteForce_NSwath();
+  swath_gen = f2c.SG_BruteForce();
   swaths = swath_gen.generateSwaths(0.1, robot.op_width, no_headlands);
 
   f2c.Visualizer.show(False);

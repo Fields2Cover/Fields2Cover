@@ -4,17 +4,12 @@
 //                        BSD-3 License
 //=============================================================================
 
-#pragma once
-#ifndef FIELDS2COVER_HEADLAND_GENERATOR_CONSTANT_HEADLAND_IMPL_HPP_
-#define FIELDS2COVER_HEADLAND_GENERATOR_CONSTANT_HEADLAND_IMPL_HPP_
-
 #include <utility>
+#include "fields2cover/headland_generator/constant_headland.h"
 
 namespace f2c::hg {
 
-
-template <typename T>
-F2CCells ConstHL<T>::generateHeadlands(
+F2CCells ConstHL::generateHeadlands(
     const F2CCells& field, double dist_headland) {
   F2CCells red_field = field.clone();
   for (auto&& poly : field) {
@@ -32,4 +27,3 @@ F2CCells ConstHL<T>::generateHeadlands(
 
 }  // namespace f2c::hg
 
-#endif  // FIELDS2COVER_HEADLAND_GENERATOR_CONSTANT_HEADLAND_IMPL_HPP_

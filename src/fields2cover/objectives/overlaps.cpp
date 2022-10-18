@@ -8,33 +8,24 @@
 
 namespace f2c::obj {
 
-double Overlaps::computeCost(const F2CCell& poly, const F2CSwaths& swaths) const {
+double Overlaps::computeCost(const F2CCell& poly, const F2CSwaths& swaths) {
   return computeCost(F2CCells(poly), swaths);
 }
 
-double Overlaps::computeCost(const F2CCells& poly, const F2CSwaths& swaths) const {
+double Overlaps::computeCost(const F2CCells& poly, const F2CSwaths& swaths) {
   double area_overlaped {0.0};
   std::vector<F2CCells> areas;
   for (int i = swaths.size() - 1; i >= 0; --i) {
     areas.emplace_back(swaths[i].computeAreaCovered(poly));
     for (int j = i + 1; j < areas.size(); ++j) {
       if (areas[i].Intersects(areas[j])) {
-        area_overlaped += areas[i].Intersection(areas[j]).getArea();
+        area_overlaped += F2CCells(areas[i]).Intersection(areas[j]).getArea();
       }
     }
   }
   return area_overlaped / poly.getArea();
 }
 
-double Overlaps::computeCost(const F2CCells& poly) const {
-  double area_overlaped {0.0};
-  for (int i = poly.size() - 1; i >= 0; --i) {
-    for (int j = i + 1; j < poly.size(); ++j) {
-      area_overlaped += poly.getGeometry(i).Intersection(poly.getGeometry(j)).getArea();
-    }
-  }
-  return area_overlaped / poly.getArea();
-}
 
 }  // namespace f2c::obj
 

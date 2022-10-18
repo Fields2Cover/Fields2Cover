@@ -40,5 +40,45 @@ TEST(fields2cover_utils_transformer, convert_to_F2C_and_return) {
     EXPECT_NEAR(final_field.getGeometry(i).getZ(),
         poly.getGeometry(0).getGeometry(i).getZ(), 1e-3);
   }
+
+  EXPECT_THROW( f2c::Transform::transform(field, "NONE"), std::invalid_argument);
+  field.coord_sys = "";
+  EXPECT_THROW( f2c::Transform::transform(field, "EPSG:28992"), std::invalid_argument);
 }
 
+TEST(fields2cover_utils_transformer, convert_types) {
+  F2CLineString line({
+    F2CPoint(6.062131843297665, 51.51238564279176, 0),
+    F2CPoint(6.062215149507296, 51.51204470468504, 0)});
+  F2CSwath swath{line, 30, 1};
+  F2CSwaths swaths;
+  swaths.push_back(swath);
+
+  auto moved_swaths = f2c::Transform::transformSwaths(swaths, "EPSG:4326", "EPSG:28992"); 
+  auto cells = moved_swaths.at(0).computeAreaCovered();
+  F2CField field(cells, "field");
+  field.setEPSGCoordSystem(28992);
+  EXPECT_NE(field.ref_point.getX(), 6.062131843297665);
+  EXPECT_NE(field.ref_point.getY(), 51.51238564279176);
+  EXPECT_GT(field.ref_point.getX(), 1e4);
+  EXPECT_GT(field.ref_point.getY(), 1e4);
+
+
+  F2CPath path;
+  path.appendSwath(moved_swaths.at(0), 10);
+  F2CPath path2;
+  F2CSwath swath2{F2CLineString({F2CPoint(0,0), F2CPoint(1,1)}), 40, 2};
+  path2.appendSwath(swath2, 10);
+
+
+  auto returned_path = f2c::Transform::transformPath(path, "EPSG:28992", "EPSG:4326");
+  EXPECT_NEAR(returned_path.states[0].point.getX(), 6.062131843297665, 1e-3);
+  EXPECT_NEAR(returned_path.states[0].point.getY(), 51.51238564279176, 1e-3);
+  auto returned_path2 = f2c::Transform::transformPathWithFieldRef(path2, field, "EPSG:4326");
+  EXPECT_NEAR(returned_path2.states[0].point.getX(), 6.062131843297665, 1e-3);
+  EXPECT_NEAR(returned_path2.states[0].point.getY(), 51.51238564279176, 1e-3);
+
+
+
+
+}

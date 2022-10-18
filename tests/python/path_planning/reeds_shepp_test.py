@@ -19,10 +19,10 @@ def test_fields2cover_pp_reeds_shepp_turnDist():
   robot.max_icc = 1.0;
   robot.linear_curv_change = 1.0;
 
-  turn = f2c.PP_ReedsSheppCurves(robot);
+  turn = f2c.PP_ReedsSheppCurves();
   start = f2c.Point(0.0, 0.0);
   end = f2c.Point(-3.0, 0.0);
-  path = turn.createTurn(start, 0.5 * math.pi, end, 1.5 * math.pi);
+  path = turn.createTurn(robot, start, 0.5 * math.pi, end, 1.5 * math.pi);
   IsPathCorrect(path, start, 0.5 * math.pi, end, 1.5 * math.pi, False);
 
 def test_fields2cover_pp_reeds_shepp_randomPoints():
@@ -30,11 +30,11 @@ def test_fields2cover_pp_reeds_shepp_randomPoints():
   robot.cruise_speed = 2.0;
   robot.max_icc = 1.0;
   robot.linear_curv_change = 1.0;
-  turn = f2c.PP_ReedsSheppCurves(robot);
+  turn = f2c.PP_ReedsSheppCurves();
   turn.using_cache = False;
   for ang in np.arange(0.25, math.pi, 0.25):
     start = f2c.Point(0.0, 0.0);
     end = f2c.Point(4.0, 0.0);
-    path = turn.createTurn(start, ang, end, ang + math.pi);
+    path = turn.createTurn(robot, start, ang, end, ang + math.pi);
     IsPathCorrect(path, start, ang, end, ang + math.pi, False);
 

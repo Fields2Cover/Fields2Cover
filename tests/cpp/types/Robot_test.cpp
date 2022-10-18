@@ -23,7 +23,7 @@ TEST(fields2cover_types_robot, init) {
   EXPECT_EQ(r1.op_width, 6);
   EXPECT_EQ(r1.getRobotWidth(), 3);
 
-  auto r2 = robot;
+  auto r2 {robot};
   EXPECT_EQ(r2.robot_width, 3);
   EXPECT_EQ(r2.op_width, 6);
   EXPECT_EQ(r2.getRobotWidth(), 3);
@@ -33,8 +33,15 @@ TEST(fields2cover_types_robot, init) {
   EXPECT_EQ(r3.op_width, 2);
 
   F2CRobot r4;
+  r4.setMinRadius(20.0);
   EXPECT_NEAR(r4.op_width, 0, 1e-7);
   EXPECT_NEAR(r4.robot_width, 0, 1e-7);
+  EXPECT_NEAR(r4.max_icc, 1/20.0, 1e-7);
+
+  F2CRobot r5 = std::move(r4);
+  EXPECT_NEAR(r5.op_width, 0, 1e-7);
+  EXPECT_NEAR(r5.robot_width, 0, 1e-7);
+  EXPECT_NEAR(r5.max_icc, 1/20.0, 1e-7);
 }
 
 

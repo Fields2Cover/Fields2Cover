@@ -8,26 +8,16 @@
 
 namespace f2c::rp {
 
-SnakeOrder::SnakeOrder() : SingleCellSwathsOrderBase() {}
-
-SnakeOrder::SnakeOrder(F2CSwaths& swaths) :
-  SingleCellSwathsOrderBase(swaths) {}
-
-SnakeOrder::~SnakeOrder() = default;
-
-void SnakeOrder::sortSwaths() {
-  this->changeStartPoint();
-
+void SnakeOrder::sortSwaths(F2CSwaths& swaths) const {
   size_t i;
-  for (i = 1; i < (swaths_.size() - 1) / 2 + 1; ++i) {
-    std::rotate(swaths_.begin() + i, swaths_.begin() + i + 1, swaths_.end());
+  for (i = 1; i < (swaths.size() - 1) / 2 + 1; ++i) {
+    std::rotate(swaths.begin() + i, swaths.begin() + i + 1, swaths.end());
   }
-  std::reverse(swaths_.begin() + i + 1, swaths_.end());
-  if (swaths_.size() % 2 == 1) {
-    std::rotate(swaths_.begin() + i, swaths_.begin() + i + 1, swaths_.end());
+  std::reverse(swaths.begin() + i + 1, swaths.end());
+  if (swaths.size() % 2 == 1) {
+    std::rotate(swaths.begin() + i, swaths.begin() + i + 1, swaths.end());
   }
 }
 
 
 }  // namespace f2c::rp
-

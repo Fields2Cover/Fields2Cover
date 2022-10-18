@@ -11,11 +11,11 @@
 TEST(fields2cover_obj_n_swath, get_best_value) { 
   F2CSwaths swaths3 (2);
   f2c::obj::NSwath obj;
-  obj.computeCost(swaths3);
+  EXPECT_EQ(obj.computeCost(swaths3), 2);
 
   for (int i = 0; i < 10; ++i) {
     swaths3.emplace_back(F2CSwath());
-    obj.computeCost(swaths3);
+    EXPECT_EQ(obj.computeCost(swaths3), i+3);
   }
 }
 

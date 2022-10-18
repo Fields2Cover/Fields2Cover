@@ -57,7 +57,7 @@ class Random {
   /// probability.
   /// Lower values are more probable than higher ones.
   /// @param lambda is the rate parameter
-  /// @return Double > 0 
+  /// @return Double > 0
   double getRandomExpDist(double lambda);
 
   /// Return a random angle in radians.

@@ -13,20 +13,19 @@ For these examples, we will continue from the previous tutorial:
   field = rand.generateRandField(5, 1e4)
   cells = field.field
   no_hl = const_hl.generateHeadlands(cells, 3.0 * robot.robot_width)
-  bf = f2c.SG_BruteForce_NSwath()
+  bf = f2c.SG_BruteForce()
   swaths = bf.generateSwaths(math.pi, robot.op_width, no_hl.getGeometry(0))
   snake_sorter = f2c.RP_Snake()
-  snake_sorter.setSwaths(swaths)
-  swaths = snake_sorter.genSortedSwaths()
+  swaths = snake_sorter.genSortedSwaths(swaths)
 
 
 Before continue, we will define the path planner and some parameters that will be needed for computing the turns:
 
 .. code-block:: python
 
-  path_planner = f2c.PP_PathPlanning()
   robot.setMinRadius(2)  # m
   robot.linear_curv_change = 0.1  # 1/m^2
+  path_planner = f2c.PP_PathPlanning()
 
 
 Dubins curves
@@ -40,8 +39,8 @@ Dubins produces the shortest turn possible.
 
 .. code-block:: python
 
-   dubins = f2c.PP_DubinsCurves(robot)
-   path_dubins = path_planner.searchBestPath(swaths, dubins);
+   dubins = f2c.PP_DubinsCurves()
+   path_dubins = path_planner.searchBestPath(robot, swaths, dubins);
 
 
 .. image:: ../../figures/Tutorial_6_1_Dubins.png
@@ -54,8 +53,8 @@ A vehicle could not follow a path with this issue, so this path planner implemen
 
 .. code-block:: python
 
-   dubins_cc = f2c.PP_DubinsCurvesCC(robot);
-   path_dubins_cc = path_planner.searchBestPath(swaths, dubins_cc);
+   dubins_cc = f2c.PP_DubinsCurvesCC();
+   path_dubins_cc = path_planner.searchBestPath(robot, swaths, dubins_cc);
  
 .. image:: ../../figures/Tutorial_6_2_Dubins_CC.png
 
@@ -67,8 +66,8 @@ Reeds-Shepp curves also computes the shortest path, but allowing the vehicle to 
 
 .. code-block:: python
 
-   reeds_shepp = f2c.PP_ReedsSheppCurves(robot);
-   path_reeds_shepp = path_planner.searchBestPath(swaths, reeds_shepp);
+   reeds_shepp = f2c.PP_ReedsSheppCurves();
+   path_reeds_shepp = path_planner.searchBestPath(robot, swaths, reeds_shepp);
 
 
 .. image:: ../../figures/Tutorial_6_3_Reeds_Shepp.png
@@ -82,7 +81,7 @@ This planner has an integrator to smooth the path.
 
 .. code-block:: python
 
-   reeds_shepp_hc = f2c.PP_ReedsSheppCurvesHC(robot);
-   path_reeds_shepp_hc = path_planner.searchBestPath(swaths, reeds_shepp_hc);
+   reeds_shepp_hc = f2c.PP_ReedsSheppCurvesHC();
+   path_reeds_shepp_hc = path_planner.searchBestPath(robot, swaths, reeds_shepp_hc);
 
 .. image:: ../../figures/Tutorial_6_4_Reeds_Shepp_HC.png

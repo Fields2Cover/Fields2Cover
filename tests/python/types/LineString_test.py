@@ -21,4 +21,24 @@ def test_fields2cover_types_linestring_init():
   near(line2.getX(0), 1);
   near(line2.getX(1), 3);
 
+def test_fields2cover_types_linestring_add():
+  p1 = f2c.Point(1,2,3)
+  p2 = f2c.Point(2,1,3)
+  p3 = f2c.Point(0,0,0)
+  line = f2c.LineString()
+  line.addPoint(p2)
+  line.addPoint(p3)
+  line2 = line + p1
+  near(line2.size(), 2);
+  near(line2.getX(0), 3);
+  near(line2.getX(1), 1);
+  near(line2.getY(0), 3);
+  near(line2.getY(1), 2);
+  near(line2.getZ(0), 6);
+  near(line2.getZ(1), 3);
+
+
+
+
+
 

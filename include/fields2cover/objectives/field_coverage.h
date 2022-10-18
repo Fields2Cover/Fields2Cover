@@ -11,19 +11,17 @@
 #include <utility>
 #include <memory>
 #include "fields2cover/types.h"
-#include "fields2cover/objectives/global_objective.h"
+#include "fields2cover/objectives/sg_objective.h"
 
 namespace f2c::obj {
 
 // Works only if all the swaths have same width
-/// Global cost function as the percentage of the field covered
-class FieldCoverage : public GlobalObjective {
+/// SG objective function as the percentage of the field covered
+class FieldCoverage : public SGObjective {
  public:
-  using GlobalObjective::computeCost;
-  double computeCost(const F2CCell& poly, const F2CSwaths& swaths)
-    const override;
-  double computeCost(const F2CCells& poly, const F2CSwaths& swaths)
-    const override;
+  using SGObjective::computeCost;
+  double computeCost(const F2CCell& poly, const F2CSwaths& swaths) override;
+  double computeCost(const F2CCells& poly, const F2CSwaths& swaths) override;
 
  public:
   bool isMinimizing(void) const override;

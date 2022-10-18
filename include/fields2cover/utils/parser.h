@@ -32,6 +32,10 @@ class Parser {
     /// @return return 0 if the file was parsed correctly.
     /// Otherwise, return a negative number.
     static int importJson(const std::string& file, F2CFields& fields);
+
+    static F2CCell importCellJson(const std::string& file);
+    static F2CSwaths importSwathsJson(const std::string& file);
+    static F2CStrips importStripsJson(const std::string& file);
 };
 
 }  // namespace f2c

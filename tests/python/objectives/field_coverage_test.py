@@ -43,8 +43,6 @@ def test_fields2cover_obj_field_coverage_getBestValue():
   swaths.push_back(swath2);
   near(obj.computeCost(fields, swaths), 1.0, 1e-5);
 
-  near(obj.computeCost(f2c.Route()), 0.0, 1e-5);
-
 
 def test_fields2cover_obj_field_coverage_computeCost():
   path1 = f2c.LineString();

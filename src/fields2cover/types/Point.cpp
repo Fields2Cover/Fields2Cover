@@ -61,7 +61,10 @@ Point Point::operator*(double b) const {
   return Point(data->getX() * b, data->getY() * b, data->getZ() * b);
 }
 
-Point Point::clone() const {return Point(data->getX(), data->getY(), data->getZ());}
+Point Point::clone() const {
+  return Point(data->getX(), data->getY(), data->getZ());
+}
+
 double Point::getX() const {return data->getX();}
 double Point::getY() const {return data->getY();}
 double Point::getZ() const {return data->getZ();}

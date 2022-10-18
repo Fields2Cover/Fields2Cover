@@ -28,8 +28,9 @@ This is the output if the global cost function is the number of swaths:
 
 .. code-block:: python
 
-  bf_sw_gen_nswath = f2c.SG_BruteForce_NSwath();
-  swaths_bf_nswath = bf_sw_gen_nswath.generateBestSwaths(robot.op_width, no_hl.getGeometry(0));
+  n_swath = f2c.OBJ_NSwath();
+  bf_sw_gen = f2c.SG_BruteForce();
+  swaths_bf_nswath = bf_sw_gen.generateBestSwaths(n_swath, robot.op_width, no_hl.getGeometry(0));
 
 .. image:: ../../figures/Tutorial_4_1_Brute_force_NSwath.png
 
@@ -38,8 +39,8 @@ This is the output if the global cost function is the sum of the length of swath
 
 .. code-block:: python
 
-  bf_sw_gen_swathlength = f2c.SG_BruteForce_SwathLength();
-  swaths_bf_swathlength = bf_sw_gen_swathlength.generateBestSwaths(robot.op_width, no_hl.getGeometry(0));
+  swath_length = f2c.OBJ_SwathLength();
+  swaths_bf_swathlength = bf_sw_gen.generateBestSwaths(swath_length, robot.op_width, no_hl.getGeometry(0));
 
 .. image:: ../../figures/Tutorial_4_1_Brute_force_SwathLength.png
 
@@ -47,7 +48,7 @@ Of course, you can also create swaths with a custom angle:
 
 .. code-block:: python
 
-  swaths_bf_angle = bf_sw_gen_swathlength.generateSwaths(math.pi, robot.op_width, no_hl.getGeometry(0));
+  swaths_bf_angle = bf_sw_gen.generateSwaths(math.pi, robot.op_width, no_hl.getGeometry(0));
 
 .. image:: ../../figures/Tutorial_4_1_Brute_force_Angle.png
 

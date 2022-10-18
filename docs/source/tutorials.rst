@@ -27,7 +27,7 @@ C++ tutorials
     tutorials/path_planning.rst
 
 Python tutorials 
-^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
 .. toctree::
     :maxdepth: 3
 

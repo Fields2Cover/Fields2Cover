@@ -23,11 +23,17 @@ void Visualizer::plot(const std::vector<F2CPoint>& points,
 }
 
 void Visualizer::plot(const F2CPath& path) {
-  plot(path.points, "k");
+  std::vector<F2CPoint> points;
+  for (auto&& s : path.states) {
+    points.emplace_back(s.point);
+  }
+  plot(points, "k");
 }
 
-void Visualizer::plot(const F2CCell& cell) {
-  plot(cell, "tab:olive");
+void Visualizer::plot(const F2CCell& cell, const std::string& opts) {
+  for (auto&& rings : cell) {
+    plot(rings, opts);
+  }
 }
 
 void Visualizer::plot(const F2CCells& cells) {

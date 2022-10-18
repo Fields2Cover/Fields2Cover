@@ -28,9 +28,9 @@ def test_fields2cover_pp_pp_turnDist():
   robot = f2c.Robot();
   robot.max_icc = 1.0 / 1.5;
   path_planner = f2c.PP_PathPlanning();
-  dubins = f2c.PP_DubinsCurves(robot);
+  dubins = f2c.PP_DubinsCurves();
 
-  path = path_planner.searchBestPath(swaths, dubins);
+  path = path_planner.searchBestPath(robot,swaths, dubins);
   # Precision is quite low so this is just checking a prediction is done
   near(path.length(), 2 + 1.5 * math.pi, 0.1);
 

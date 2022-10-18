@@ -9,8 +9,7 @@
 namespace f2c::obj {
 
 double DirectDistPathObj::computeCost(
-    const F2CPoint& p1, double ang1,
-    const F2CPoint& p2, double ang2) {
+    const F2CPoint& p1, const F2CPoint& p2) {
   return p1.Distance(p2);
 }
 

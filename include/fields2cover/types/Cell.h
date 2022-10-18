@@ -36,15 +36,15 @@ struct Cell : public Geometries<Cell, OGRPolygon, wkbPolygon, LinearRing> {
 
   explicit Cell(const f2c::types::LinearRing& ring);
 
-  void getGeometry(int i, LinearRing& ring);
+  void getGeometry(size_t i, LinearRing& ring);
 
-  void getGeometry(int i, LinearRing& ring) const;
+  void getGeometry(size_t i, LinearRing& ring) const;
 
-  LinearRing getGeometry(int i);
+  LinearRing getGeometry(size_t i);
 
-  LinearRing getGeometry(int i) const;
+  LinearRing getGeometry(size_t i) const;
 
-  void setGeometry(int i, const LinearRing& ring);
+  void setGeometry(size_t i, const LinearRing& ring);
 
   size_t size() const;
 
@@ -58,13 +58,11 @@ struct Cell : public Geometries<Cell, OGRPolygon, wkbPolygon, LinearRing> {
 
   static Cell Buffer(const Point& geom, double width);
 
-  Cell Intersection(const Cell& c) const;
-
   void addRing(const LinearRing& ring);
   void addGeometry(const LinearRing& ring);
 
   LinearRing getExteriorRing() const;
-  LinearRing getInteriorRing(int i_ring) const;
+  LinearRing getInteriorRing(size_t i_ring) const;
 
   /// Check if the Cell is convex
   bool isConvex() const;

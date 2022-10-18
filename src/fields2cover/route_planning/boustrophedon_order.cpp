@@ -8,16 +8,7 @@
 
 namespace f2c::rp {
 
-BoustrophedonOrder::BoustrophedonOrder() :
-  SingleCellSwathsOrderBase() {}
-
-BoustrophedonOrder::BoustrophedonOrder(F2CSwaths& swaths) :
-  SingleCellSwathsOrderBase(swaths) {}
-
-BoustrophedonOrder::~BoustrophedonOrder() = default;
-
-void BoustrophedonOrder::sortSwaths() {
-  this->changeStartPoint();
+void BoustrophedonOrder::sortSwaths(F2CSwaths& swaths) const {
 }
 
 }  // namespace f2c::rp

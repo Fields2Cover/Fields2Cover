@@ -36,8 +36,8 @@ Cells::Cells(const OGRGeometry* geom) {
     throw std::invalid_argument(sstr(
         "Cells(const OGRGeometry*): Type of OGRGeometry* is " ,
         wkbFlatten(geom->getGeometryType()) , " instead of wkbPolygon(",
-          OGRwkbGeometryType::wkbPolygon , ") or wkbMultiPolygon(",
-          OGRwkbGeometryType::wkbMultiPolygon , ")"));
+        OGRwkbGeometryType::wkbPolygon , ") or wkbMultiPolygon(",
+        OGRwkbGeometryType::wkbMultiPolygon , ")"));
   }
 }
 
@@ -52,30 +52,33 @@ void Cells::operator*=(double b) {
   }
 }
 
-void Cells::getGeometry(int i, Cell& cell) {
+void Cells::getGeometry(size_t i, Cell& cell) {
   cell = Cell(data->getGeometryRef(i), EmptyDestructor());
 }
 
-void Cells::getGeometry(int i, Cell& cell) const {
+void Cells::getGeometry(size_t i, Cell& cell) const {
   cell = Cell(data->getGeometryRef(i), EmptyDestructor());
 }
 
-Cell Cells::getGeometry(int i) {
+Cell Cells::getGeometry(size_t i) {
   return Cell(data->getGeometryRef(i));
 }
 
-const Cell Cells::getGeometry(int i) const {
+const Cell Cells::getGeometry(size_t i) const {
   return Cell(data->getGeometryRef(i));
 }
 
-void Cells::setGeometry(int i, const Cell& cell) {
+void Cells::setGeometry(size_t i, const Cell& cell) {
   auto n = this->size();
   if (i < n) {
-    auto* ref = this->getGeometry(i).get();
-    *ref = *cell.get();
+    Cells cells;
+    for (size_t j = 0; j < n; ++j) {
+      cells.addGeometry((i == j) ? cell : this->getGeometry(j));
+    }
+    *this = cells;
     return;
-  } else if (i > n) {
-    for (int j = i; j < n; ++j) {
+  } else if (i != n) {
+    for (size_t j = n; j < i; ++j) {
       this->addGeometry(Cell());
     }
   }
@@ -86,7 +89,7 @@ void Cells::addGeometry(const Cell& c) {
   this->data->addGeometry(c.get());
 }
 
-void Cells::addRing(int i, const LinearRing& ring) {
+void Cells::addRing(size_t i, const LinearRing& ring) {
   this->data->getGeometryRef(i)->addRing(ring.get());
 }
 
@@ -94,16 +97,16 @@ size_t Cells::size() const {
   return isEmpty() ? 0 : data->getNumGeometries();
 }
 
-Cell Cells::getCell(int i) const {
+Cell Cells::getCell(size_t i) const {
   return Cell(data->getGeometryRef(i));
 }
 
-LinearRing Cells::getCellBorder(int i) const {
+LinearRing Cells::getCellBorder(size_t i) const {
   return LinearRing(
       data->getGeometryRef(i)->getExteriorRing());
 }
 
-LinearRing Cells::getInteriorRing(int i_cell, int i_ring) const {
+LinearRing Cells::getInteriorRing(size_t i_cell, size_t i_ring) const {
   return LinearRing(
       data->getGeometryRef(i_cell)->getInteriorRing(i_ring));
 }
@@ -183,16 +186,11 @@ Cells Cells::getCellsInside(const Cells& cell) const {
 }
 
 bool Cells::isPointInBorder(const Point& p) const {
-  for (auto&& cell : *this) {
-    if (Cell(cell).isPointInBorder(p)) {
-      return true;
-    }
-  }
-  return false;
+  return p.Touches(*this);
 }
 
 bool Cells::isPointIn(const Point& p) const {
-  return p.Touches(*this);
+  return p.Within(*this);
 }
 
 Cell Cells::getCellWherePoint(const Point& p) const {

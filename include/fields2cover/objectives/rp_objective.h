@@ -5,57 +5,17 @@
 //=============================================================================
 
 #pragma once
-#ifndef FIELDS2COVER_OBJECTIVES_PATH_OBJECTIVE_H_
-#define FIELDS2COVER_OBJECTIVES_PATH_OBJECTIVE_H_
+#ifndef FIELDS2COVER_OBJECTIVES_RP_OBJECTIVE_H_
+#define FIELDS2COVER_OBJECTIVES_RP_OBJECTIVE_H_
 
 #include <vector>
 #include "fields2cover/types.h"
+#include "fields2cover/objectives/base_objective.h"
 
 namespace f2c::obj {
 
-
-/// @brief Base class for objectives that are affected by the final path.
-///
-/// There are some cost functions that do not change once a swaths
-/// are generated. For example, the number of swaths or the sum of
-/// the length of those swaths. The cost functions that inherit from
-/// this class should be modified by the swath coverage order and/or
-/// turns.
-class PathObjective {
- public:
-  // Avoid using variadic templates. SWIG don't work well with it
-
-  /// @brief Compute the cost function with minimizing sign.
-  ///
-  /// If the objective is to maximize the cost function, the cost is
-  /// multiplied by -1.
-  template <typename T1>
-  double computeCostWithMinimizingSign(const T1& t1) {
-    return (isMinimizing() ? 1.0 : -1.0) * computeCost(t1);
-  }
-  template <typename T1, typename T2>
-  double computeCostWithMinimizingSign(const T1& t1, const T2& t2) {
-    return (isMinimizing() ? 1.0 : -1.0) * computeCost(t1, t2);
-  }
-  template <typename T1, typename T2, typename T3>
-  double computeCostWithMinimizingSign(
-      const T1& t1, const T2& t2, const T3& t3) {
-    return (isMinimizing() ? 1.0 : -1.0) * computeCost(t1, t2, t3);
-  }
-  template <typename T1, typename T2, typename T3, typename T4>
-  double computeCostWithMinimizingSign(
-      const T1& t1, const T2& t2, const T3& t3, const T4& t4) {
-    return (isMinimizing() ? 1.0 : -1.0) * computeCost(t1, t2, t3, t4);
-  }
-
-
- public:
-  /// Return true if the objective is to minimize the cost function
-  virtual bool isMinimizing() const { return true;}
-  /// Return true if the objective is to maximize the cost function
-  virtual bool isMaximizing() const { return !isMinimizing();}
-
-
+/// @brief Base class for objective functions of route planners.
+class RPObjective : public BaseObjective<RPObjective> {
  public:
   /// Return the cost of going from point p1 to point p2
   /// @param p1 Start point
@@ -173,14 +133,9 @@ class PathObjective {
   /// @param r Route
   /// @return Cost value
   virtual double computeCost(const F2CRoute& r);
-
-  /// Return the cost of covering a path
-  /// @param p Path
-  /// @return Cost value
-  virtual double computeCost(const F2CPath& p);
 };
 
 
 }  // namespace f2c::obj
 
-#endif  // FIELDS2COVER_OBJECTIVES_PATH_OBJECTIVE_H_
+#endif  // FIELDS2COVER_OBJECTIVES_RP_OBJECTIVE_H_

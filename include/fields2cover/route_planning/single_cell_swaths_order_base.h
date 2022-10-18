@@ -15,23 +15,12 @@ namespace f2c::rp {
 
 class SingleCellSwathsOrderBase {
  public:
-  SingleCellSwathsOrderBase();
-  explicit SingleCellSwathsOrderBase(F2CSwaths& swaths);
-  virtual ~SingleCellSwathsOrderBase();
-
-  virtual F2CSwaths& genSortedSwaths();
-
-  virtual void setSwaths(F2CSwaths& swaths);
-  virtual F2CSwaths& getSwaths() {return swaths_;}
-  void setCounter(uint32_t new_count) {counter_ = new_count;}
+  virtual F2CSwaths genSortedSwaths(
+      const F2CSwaths& swaths, uint32_t variant = 0) const;
 
  protected:
-  virtual void sortSwaths() = 0;
-  virtual void changeStartPoint();
-
- protected:
-  F2CSwaths swaths_;
-  uint32_t counter_ {0};
+  virtual void changeStartPoint(F2CSwaths& swaths, uint32_t variant) const;
+  virtual void sortSwaths(F2CSwaths& swaths) const = 0;
 };
 
 

@@ -1,6 +1,6 @@
 
 set(FIELDS2COVER_MAJOR_VERSION "1")
-set(FIELDS2COVER_MINOR_VERSION "1")
+set(FIELDS2COVER_MINOR_VERSION "2")
 set(FIELDS2COVER_PATCH_VERSION "0")
 set(FIELDS2COVER_VERSION_STRING "${FIELDS2COVER_MAJOR_VERSION}.${FIELDS2COVER_MINOR_VERSION}.${FIELDS2COVER_PATCH_VERSION}")
 set(FIELDS2COVER_VERSION ${FIELDS2COVER_MAJOR_VERSION}.${FIELDS2COVER_MINOR_VERSION}.${FIELDS2COVER_PATCH_VERSION})
@@ -136,7 +136,8 @@ endif()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
   include(cmake/Modules/CodeCoverage.cmake)
-  target_compile_options(Fields2Cover PRIVATE -g --coverage -fprofile-arcs -ftest-coverage)
+  APPEND_COVERAGE_COMPILER_FLAGS()
+  target_compile_options(Fields2Cover PRIVATE -g --coverage -fprofile-arcs -ftest-coverage -fno-inline)
   if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(Fields2Cover PRIVATE /O0)
   else()
@@ -173,10 +174,7 @@ target_link_libraries(Fields2Cover
 )
 
 if (ALLOW_PARALLELIZATION)
-target_link_libraries(Fields2Cover
-  PUBLIC
-  tbb
-)
+target_link_libraries(Fields2Cover PRIVATE tbb)
 endif()
 
 

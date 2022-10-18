@@ -73,36 +73,21 @@ struct Geometry {
   template <class T2, OGRwkbGeometryType R2>
   bool Disjoint(const Geometry<T2, R2>& geom) const;
 
-  /// Check if this and another geometry are disjoint.
-  bool Disjoint(const OGRGeometry* geom) const;
-
   /// Check if this and another geometry cross.
   template <class T2, OGRwkbGeometryType R2>
   bool Crosses(const Geometry<T2, R2>& geom) const;
-
-  /// Check if this and another geometry cross.
-  bool Crosses(const OGRGeometry* geom) const;
 
   /// Check if this and another geometry touch each other.
   template <class T2, OGRwkbGeometryType R2>
   bool Touches(const Geometry<T2, R2>& geom) const;
 
-  /// Check if this and another geometry touch each other.
-  bool Touches(const OGRGeometry* geom) const;
-
   /// Check if this geometry is inside another geometry.
   template <class T2, OGRwkbGeometryType R2>
   bool Within(const Geometry<T2, R2>& geom) const;
 
-  /// Check if this geometry is inside another geometry.
-  bool Within(const OGRGeometry* geom) const;
-
   /// Check if this and another geometry intersects.
   template <class T2, OGRwkbGeometryType R2>
   bool Intersects(const Geometry<T2, R2>& geom) const;
-
-  /// Check if this and another geometry intersects.
-  bool Intersects(const OGRGeometry* geom) const;
 
   /// Transform from \f$ [-\inf, \inf) \f$ to \f$ [0, 2\pi) \f$ applying
   /// \f$2\pi\f$ modulus.
@@ -133,16 +118,5 @@ struct Geometry {
 }  // namespace f2c::types
 
 #include "fields2cover/types/Geometry_impl.hpp"
-
-namespace f2c::types {
-template struct Geometry<OGRPoint, wkbPoint>;
-template struct Geometry<OGRMultiPoint, wkbMultiPoint>;
-template struct Geometry<OGRLinearRing, wkbLinearRing>;
-template struct Geometry<OGRLineString, wkbLineString>;
-template struct Geometry<OGRMultiLineString, wkbMultiLineString>;
-template struct Geometry<OGRPolygon, wkbPolygon>;
-template struct Geometry<OGRMultiPolygon, wkbMultiPolygon>;
-}  // namespace f2c::types
-
 
 #endif  // FIELDS2COVER_TYPES_GEOMETRY_H_

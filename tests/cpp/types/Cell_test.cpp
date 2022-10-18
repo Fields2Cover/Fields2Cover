@@ -12,10 +12,46 @@ TEST(fields2cover_types_cell, constructor) {
     F2CPoint(0,0), F2CPoint(2,0),F2CPoint(2,2),F2CPoint(0,2), F2CPoint(0,0)};
   F2CCell cell {line};
   F2CCell cell_clone{cell.get()->clone()};
+  F2CCell cell2 {cell};
+  F2CCell cell3 {static_cast<OGRGeometry*>(cell.get())};
 
   EXPECT_EQ(cell.getArea(), 4);
+  EXPECT_EQ(cell2.getArea(), 4);
+  EXPECT_EQ(cell3.getArea(), 4);
   EXPECT_EQ(cell_clone.getArea(), 4);
+  EXPECT_EQ(F2CCell(cell.get()->clone()).getArea(), 4);
+  EXPECT_EQ(F2CCell(cell->clone()).getArea(), 4);
   EXPECT_THROW(F2CCell(line.get()->clone()), std::invalid_argument);
+}
+
+TEST(fields2cover_types_cell, setGeometry) {
+  F2CLinearRing line {
+    F2CPoint(0,0), F2CPoint(2,0), F2CPoint(2,2), F2CPoint(0,2), F2CPoint(0,0)};
+  F2CLinearRing line2 {
+    F2CPoint(0,0), F2CPoint(4,0), F2CPoint(4,4), F2CPoint(0,4), F2CPoint(0,0)};
+  F2CCell cell;
+  EXPECT_EQ(cell.getArea(), 0);
+  EXPECT_EQ(cell.size(), 0);
+
+  cell.setGeometry(0, line2);
+  EXPECT_EQ(cell.getArea(), 16);
+  EXPECT_EQ(cell.size(), 1);
+
+  cell.setGeometry(0, line);
+  EXPECT_EQ(cell.getArea(), 4);
+  EXPECT_EQ(cell.size(), 1);
+
+  cell.setGeometry(1, F2CLinearRing());
+  EXPECT_EQ(cell.getArea(), 4);
+  EXPECT_EQ(cell.size(), 2);
+
+  cell.setGeometry(10, line);
+  EXPECT_EQ(cell.getArea(), 0);
+  EXPECT_EQ(cell.size(), 11);
+
+  cell.setGeometry(0, line2);
+  EXPECT_EQ(cell.getArea(), 12);
+  EXPECT_EQ(cell.size(), 11);
 }
 
 TEST(fields2cover_types_cell, getArea) {
@@ -105,6 +141,18 @@ TEST(fields2cover_types_cell, isPointInBorder) {
   EXPECT_FALSE(cell.isPointInBorder(F2CPoint(10,10)));
 }
 
+TEST(fields2cover_types_cell, isPointIn) {
+  F2CCell cell;
+  F2CLinearRing ring{
+    F2CPoint(0,0), F2CPoint(2,0),F2CPoint(2,2),F2CPoint(0,2), F2CPoint(0,0)};
+  cell.addRing(ring);
+
+  EXPECT_TRUE(cell.isPointIn(F2CPoint(1,1)));
+  EXPECT_FALSE(cell.isPointIn(F2CPoint(2,2)));
+  EXPECT_FALSE(cell.isPointIn(F2CPoint(-1,1)));
+  EXPECT_FALSE(cell.isPointIn(F2CPoint(10,-10)));
+}
+
 TEST(fields2cover_types_cell, Buffer) {
   F2CCell cell(F2CLinearRing({
     F2CPoint(0,0), F2CPoint(1,0),F2CPoint(1,1),F2CPoint(0,1), F2CPoint(0,0)}));
@@ -124,3 +172,4 @@ TEST(fields2cover_types_cell, Buffer) {
   auto line_buffer = F2CCell::Buffer(line, 4.0);
   EXPECT_NEAR(line_buffer.getArea(), 2 * 2 * 4 + 4 * 4 * M_PI, 1e-1);
 }
+

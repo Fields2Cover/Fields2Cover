@@ -12,10 +12,11 @@ namespace f2c::sg {
 
 template <typename T>
 F2CSwathsByCells SwathGeneratorBase<T>::generateBestSwaths(
+    f2c::obj::SGObjective& obj,
     double op_width, const F2CCells& polys) {
   F2CSwathsByCells swaths;
   for (auto&& p : polys) {
-    swaths.emplace_back(generateBestSwaths(op_width, p));
+    swaths.emplace_back(generateBestSwaths(obj, op_width, p));
   }
   return swaths;
 }
@@ -48,11 +49,6 @@ F2CSwaths SwathGeneratorBase<T>::generateSwaths(double angle,
     swaths.append(path, poly, op_width);
   }
   return swaths;
-}
-
-template <typename T>
-double SwathGeneratorBase<T>::getBestAngle() const {
-  return this->best_angle;
 }
 
 }  // namespace f2c::sg

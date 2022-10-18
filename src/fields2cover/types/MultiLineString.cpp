@@ -62,31 +62,34 @@ void MultiLineString::append(const OGRGeometry* geom) {
   }
 }
 
-void MultiLineString::getGeometry(int i, LineString& line) {
+void MultiLineString::getGeometry(size_t i, LineString& line) {
   line = LineString(this->data->getGeometryRef(i), EmptyDestructor());
 }
 
-void MultiLineString::getGeometry(int i, LineString& line) const {
+void MultiLineString::getGeometry(size_t i, LineString& line) const {
   line = LineString(this->data->getGeometryRef(i),
       EmptyDestructor());
 }
 
-LineString MultiLineString::getGeometry(int i) {
+LineString MultiLineString::getGeometry(size_t i) {
   return LineString(this->data->getGeometryRef(i));
 }
 
-const LineString MultiLineString::getGeometry(int i) const {
+const LineString MultiLineString::getGeometry(size_t i) const {
   return LineString(this->data->getGeometryRef(i));
 }
 
-void MultiLineString::setGeometry(int i, const LineString& line) {
+void MultiLineString::setGeometry(size_t i, const LineString& line) {
   auto n = this->size();
   if (i < n) {
-    OGRLineString* ref = this->data->getGeometryRef(i);
-    *ref = *line.get();
+    MultiLineString lines;
+    for (size_t j = 0; j < n; ++j) {
+      lines.addGeometry((i == j) ? line : this->getGeometry(j));
+    }
+    *this = lines;
     return;
-  } else if (i > n) {
-    for (int j = i; j < n; ++j) {
+  } else if (i != n) {
+    for (size_t j = n; j < i; ++j) {
       this->addGeometry(LineString());
     }
   }

@@ -5,16 +5,12 @@
 //=============================================================================
 
 #include <gtest/gtest.h>
-#include "fields2cover/objectives/optimization_class.h"
-#include "fields2cover/objectives/n_swath.h"
 #include "fields2cover/types.h"
+#include "fields2cover/objectives/pp_objective.h"
 
-TEST(fields2cover_obj_optimization_class, computeCost_cost) { 
-  F2CSwaths swaths50(50);
-
-  f2c::obj::OptimizationClass<f2c::obj::NSwath> opt;
-
-  EXPECT_EQ(opt.computeCost(swaths50), 50.0);
-  swaths50.emplace_back(F2CSwath());
-  EXPECT_EQ(opt.computeCost(swaths50), 51.0);
+TEST(fields2cover_obj_pp_obj, isMinimizing) {
+  f2c::obj::PPObjective obj;
+  EXPECT_TRUE(obj.isMinimizing());
+  EXPECT_FALSE(obj.isMaximizing());
 }
+

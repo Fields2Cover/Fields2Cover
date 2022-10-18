@@ -5,12 +5,34 @@ One of the main problems in the Coverage Path Planning problem is to define the 
 The objective function defines how good a path is.
 By default, the objective functions are defined as minimization problems.
 
-Fields2Cover defines two kind of objective functions: Global objective functions and path objective functions.
+Fields2Cover defines different objective functions for each module: HG (Headland Generator), SG (Swath Generator), RP (Route Planner) and PP (Path Planner).
 
-Global objective functions
+HG objective functions
 --------------------------
 
-Global objective functions are objective functions where the order of the swaths are not important. This kind of objective functions are used before the route planning. Thanks to global functions, early problems as swath generation can be solved without computing the complete path in each step. Global objective functions provided are:
+Remaining area
+^^^^^^^^^^^^^^
+
+Compute the percentage of main field over the total field. The cost is a value between [0, 1], and it is defined as a maximization problem.
+
+.. code-block:: python
+
+    total_field = f2c.Cells(f2c.Cell(f2c.LinearRing(f2c.VectorPoint([
+        f2c.Point(-2,-2), f2c.Point(6,-2), f2c.Point(6,6),
+        f2c.Point(-2,6), f2c.Point(-2,-2)]))));
+    field = f2c.Cells(f2c.Cell(f2c.LinearRing(f2c.VectorPoint([
+        f2c.Point(0,0), f2c.Point(4,0), f2c.Point(4,4),
+        f2c.Point(0,4), f2c.Point(0,0)]))));
+
+    rem_area = f2c.OBJ_RemArea();
+    print("The remaining area is ",
+        rem_area.computeCost(total_field, field), ", and with sign is ",
+        rem_area.computeCostWithMinimizingSign(total_field, field));
+
+*The remaining area is  0.25 , and with sign is  -0.25*
+
+SG objective functions
+-----------------------
 
 Field coverage
 ^^^^^^^^^^^^^^
@@ -30,10 +52,6 @@ Compute the percentage of the field covered by the swaths. The cost is a value b
        f2c.Point(0.0, 3.0), f2c.Point(4.0, 3.0)])), width);
    swath3 = f2c.Swath(f2c.LineString(f2c.VectorPoint([
        f2c.Point(0.0, 2.0), f2c.Point(4.0, 2.0)])), width);
-
-   field = f2c.Cells(f2c.Cell(f2c.LinearRing(f2c.VectorPoint([
-       f2c.Point(0,0), f2c.Point(4,0), f2c.Point(4,4),
-       f2c.Point(0,4), f2c.Point(0,0)]))));
 
    swaths1 = f2c.Swaths();
    swaths1.push_back(swath1);
@@ -107,12 +125,8 @@ Compute the sum of the path length of each swath.
 
 *The swath length with swath1 is 4 and with all of the swaths 12*
 
-Path objective functions
+RP objective functions
 ------------------------
-
-Path objective functions are those in which the order of the swaths matter.
-Those objective functions depends directly on the final path that is going to be generated.
-
 
 Distance with turns
 ^^^^^^^^^^^^^^^^^^^
@@ -153,6 +167,23 @@ This is faster than computing the turns and doesn't require to provide a class t
 *The aproximated length is: 3*
 
 
+
+PP objective functions
+-----------------------
+
+Path length
+^^^^^^^^^^^
+
+.. code-block:: python
+  
+    path = f2c.Path()
+    path.appendSwath(swaths_path.at(0), 1);
+    path.appendSwath(swaths_path.at(1), 1);
+
+    path_length = f2c.OBJ_PathLength();
+    print("The path length is: ", path_length.computeCost(path));
+
+*The path length is: 3*
 
 
 

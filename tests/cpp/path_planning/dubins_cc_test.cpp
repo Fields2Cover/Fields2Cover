@@ -17,11 +17,11 @@ TEST(fields2cover_pp_dubins_cc, turn_dist) {
   robot.max_icc = 1.0;
   robot.linear_curv_change = 2.0;
 
-  f2c::pp::DubinsCurvesCC turn(robot);
+  f2c::pp::DubinsCurvesCC turn;
   F2CPoint start(0.0, 0.0), end(-3.0, 0.0);
-  auto path = turn.createTurn(
+  auto path = turn.createTurn(robot,
       start, boost::math::constants::half_pi<double>(),
-      end, 3.0 * boost::math::constants::half_pi<double>());
+      end, 3.0 * boost::math::constants::half_pi<double>(), 10);
 
   EXPECT_TRUE(IsPathCorrect(path, start, boost::math::constants::half_pi<double>(),
       end, 3.0 * boost::math::constants::half_pi<double>()));
@@ -32,12 +32,12 @@ TEST(fields2cover_pp_dubins_cc, random_points) {
   robot.cruise_speed = 2.0;
   robot.max_icc = 1.0;
   robot.linear_curv_change = 1.0;
-  f2c::pp::DubinsCurvesCC turn(robot);
+  f2c::pp::DubinsCurvesCC turn;
   turn.using_cache = false;
   for (double ang = 0.25; ang < boost::math::constants::pi<double>(); ang += 0.25) {
     F2CPoint start(0.0, 0.0), end(4.0, 0.0);
-    auto path = turn.createTurn(start, ang,
-      end, ang + boost::math::constants::pi<double>());
+    auto path = turn.createTurn(robot, start, ang,
+      end, ang + boost::math::constants::pi<double>(), 10);
     EXPECT_TRUE(IsPathCorrect(path, start, ang,
       end, ang + boost::math::constants::pi<double>()));
   }

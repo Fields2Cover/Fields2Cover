@@ -8,13 +8,8 @@
 
 namespace f2c::obj {
 
-double SwathLength::computeCost(const F2CSwath& s) const {
+double SwathLength::computeCost(const F2CSwath& s) {
   return s.getLength();
-}
-
-double SwathLength::computeCost(const F2CSwaths& swaths) const {
-  return std::accumulate(swaths.begin(), swaths.end(), 0.0,
-    [] (int init, const F2CSwath& s) {return init + s.getLength();});
 }
 
 }  // namespace f2c::obj

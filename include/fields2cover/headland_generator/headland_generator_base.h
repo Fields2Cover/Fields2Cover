@@ -9,18 +9,11 @@
 #define FIELDS2COVER_HEADLAND_GENERATOR_HEADLAND_GENERATOR_BASE_H_
 
 #include "fields2cover/types.h"
-#include "fields2cover/objectives/optimization_class.h"
 
 namespace f2c::hg {
 
 /// Base class to generate the headlands.
-template <typename T>
-class HeadlandGeneratorBase : public obj::OptimizationClass<T> {
- public:
-  /// @cond DOXYGEN_SHOULD_SKIP_THIS
-  virtual ~HeadlandGeneratorBase() = default;
-  /// @endcond
-
+class HeadlandGeneratorBase {
  public:
   /// Get the regions of the field without headlands.
   /// @param _field Original field

@@ -31,7 +31,12 @@ def test_fields2cover_types_robot_init():
   near(r3.op_width, 0);
   near(r3.getRobotWidth(), 0);
 
-"""
+  r4 = f2c.Robot();
+  r4.setMinRadius(20.0);
+  near(r4.op_width, 0);
+  near(r4.robot_width, 0);
+  near(r4.max_icc, 1/20.0);
+
   with pytest.raises(Exception) as e_info:
     f2c.Robot(0, 0);
   with pytest.raises(Exception) as e_info:
@@ -40,4 +45,3 @@ def test_fields2cover_types_robot_init():
     f2c.Robot(3, -3);
   with pytest.raises(Exception) as e_info:
     f2c.Robot(6, 3);
-"""

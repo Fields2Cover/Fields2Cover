@@ -21,28 +21,28 @@ def test_fields2cover_route_boustrophedon_genSortedSwaths():
   #auto rng = std.default_random_engine {};
   #std.shuffle(swaths.begin(), swaths.end(), rng);
 
-  swath_sorter = f2c.RP_Boustrophedon(swaths);
+  swath_sorter = f2c.RP_Boustrophedon();
   objective = f2c.OBJ_DirectDistPathObj();
 
-  swaths = swath_sorter.genSortedSwaths();
+  swaths = swath_sorter.genSortedSwaths(swaths);
   near(swaths.size(), n - 1);
   near(swaths[0].startPoint().getY(), 0);
   for i in range(1, n):
     near(swaths[i - 1].getWidth(), i);
   near(objective.computeCost(swaths), 2*(n-1)-1);
-  swaths = swath_sorter.genSortedSwaths();
+  swaths = swath_sorter.genSortedSwaths(swaths, 1);
   near(swaths[0].startPoint().getY(), 0);
   near(swaths[0].getWidth(), n-1);
   near(swaths[1].getWidth(), n-2);
   near(swaths[2].getWidth(), n-3);
   near(objective.computeCost(swaths), 2*(n-1)-1);
-  swaths = swath_sorter.genSortedSwaths();
+  swaths = swath_sorter.genSortedSwaths(swaths, 2);
   near(swaths[0].startPoint().getY(), 1);
   near(swaths[0].getWidth(), 1);
   near(swaths[1].getWidth(), 2);
   near(swaths[2].getWidth(), 3);
   near(objective.computeCost(swaths), 2*(n-1)-1);
-  swaths = swath_sorter.genSortedSwaths();
+  swaths = swath_sorter.genSortedSwaths(swaths, 3);
   near(swaths[0].startPoint().getY(), 1);
   near(swaths[0].getWidth(), n-1);
   near(swaths[1].getWidth(), n-2);

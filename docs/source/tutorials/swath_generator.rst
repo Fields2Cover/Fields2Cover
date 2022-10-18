@@ -27,8 +27,9 @@ This is the output if the global cost function is the number of swaths:
 
 .. code-block:: cpp
 
-  f2c::sg::BruteForce<f2c::obj::NSwath> bf_sw_gen_nswath;
-  F2CSwaths swaths_bf_nswath = bf_sw_gen_nswath.generateBestSwaths(robot.op_width, no_hl.getGeometry(0));
+  f2c::obj::NSwath n_swath_obj;
+  f2c::sg::BruteForce bf_sw_gen_nswath;
+  F2CSwaths swaths_bf_nswath = bf_sw_gen_nswath.generateBestSwaths(n_swath_obj, robot.op_width, no_hl.getGeometry(0));
 
 .. image:: ../../figures/Tutorial_4_1_Brute_force_NSwath.png
 
@@ -37,8 +38,8 @@ This is the output if the global cost function is the sum of the length of swath
 
 .. code-block:: cpp
 
-  f2c::sg::BruteForce<f2c::obj::SwathLength> bf_sw_gen_swathlength;
-  F2CSwaths swaths_bf_swathlength = bf_sw_gen_swathlength.generateBestSwaths(robot.op_width, no_hl.getGeometry(0));
+  f2c::obj::SwathLength swathlength_obj;
+  F2CSwaths swaths_bf_swathlength = bf_sw_gen_swathlength.generateBestSwaths(swathlength_obj, robot.op_width, no_hl.getGeometry(0));
 
 .. image:: ../../figures/Tutorial_4_1_Brute_force_SwathLength.png
 

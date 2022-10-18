@@ -86,13 +86,6 @@ T Point::rotateFromPoint(double angle, const T& t) const {
 }
 
 
-inline OGRPoint operator+(const OGRPoint& a, const OGRPoint& b) {
-  return std::move(OGRPoint(
-      a.getX() + b.getX(),
-      a.getY() + b.getY(),
-      a.getZ() + b.getZ()));
-}
-
 inline OGRPoint operator+(const OGRPoint& a, const f2c::types::Point& b) {
   return std::move(OGRPoint(
       a.getX() + b->getX(),
@@ -105,12 +98,6 @@ inline OGRPoint operator-(const OGRPoint& a, const f2c::types::Point& b) {
       a.getX() - b->getX(),
       a.getY() - b->getY(),
       a.getZ() - b->getZ()));
-}
-inline OGRPoint operator*(const OGRPoint& a, double b) {
-  return std::move(OGRPoint(
-      a.getX() * b,
-      a.getY() * b,
-      a.getZ() * b));
 }
 
 template <class T>

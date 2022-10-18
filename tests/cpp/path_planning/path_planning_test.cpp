@@ -24,9 +24,10 @@ TEST(fields2cover_pp_pp, turn_dist) {
   F2CRobot robot;
   robot.max_icc = 1.0 / 1.5;
   f2c::pp::PathPlanning path_planner;
-  f2c::pp::DubinsCurves dubins(robot);
+  path_planner.turn_point_dist = 0.1;
+  f2c::pp::DubinsCurves dubins;
 
-  auto path = path_planner.searchBestPath(swaths, dubins);
+  auto path = path_planner.searchBestPath(robot, swaths, dubins);
   // Precision is quite low so this is just checking a prediction is done
   EXPECT_NEAR(path.length(), 2 + 1.5 * M_PI, 0.1);
 }

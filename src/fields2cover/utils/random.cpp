@@ -28,12 +28,11 @@ double Random::getRandomExp(double min, double max) {
 
 double Random::getRandomExpDist(double lambda) {
   std::exponential_distribution<double> distribution(lambda);
-  return distribution(mt_); 
+  return distribution(mt_);
 }
 
 double Random::getAngleRandom() {
-  return getRandomLinear(0.0, 
-                      boost::math::constants::two_pi<double>());
+  return getRandomLinear(0.0, boost::math::constants::two_pi<double>());
 }
 
 f2c::types::Field Random::generateRandField(int n_sides, double area,

@@ -29,14 +29,21 @@ enum class PathDirection {
   // STOP = 0,
 };
 
+struct PathState {
+  Point point;
+  double angle;
+  double velocity;
+  double duration;
+  PathDirection dir;
+  PathSectionType type;
+
+ public:
+  PathState clone() const;
+};
+
 struct Path {
  public:
-  std::vector<Point> points;
-  std::vector<double> angles;
-  std::vector<double> velocities;
-  std::vector<double> durations;
-  std::vector<PathDirection> directions;
-  std::vector<PathSectionType> type;
+  std::vector<PathState> states;
   double task_time {0.0};
   double measure_error {0.1};
 
@@ -55,7 +62,6 @@ struct Path {
   void saveToFile(const std::string& file) const;
   void loadFile(const std::string& file);
 
-  bool isValid() const;
   Path& populate(int number_points = 100);
   Path& reduce(double min_dist_equal = 0.1);
 };

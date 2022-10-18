@@ -9,19 +9,19 @@
 #define FIELDS2COVER_OBJECTIVES_N_SWATH_H_
 
 #include "fields2cover/types.h"
-#include "fields2cover/objectives/global_objective.h"
+#include "fields2cover/objectives/sg_objective.h"
 
 namespace f2c::obj {
 
-/// @brief Global cost function as the number of swaths.
+/// @brief SG cost function as the number of swaths.
 ///
 /// This cost function assumes that turn are slower than going through the
 /// swaths. Then, less swaths means less turns and faster paths.
-class NSwath : public GlobalObjective {
+class NSwath : public SGObjective {
  public:
-  using GlobalObjective::computeCost;
-  double computeCost(const F2CSwath& s) const override;
-  double computeCost(const F2CSwaths& swaths) const override;
+  using SGObjective::computeCost;
+  double computeCost(const F2CSwath& s) override;
+  double computeCost(const F2CSwaths& swaths) override;
 };
 
 }  // namespace f2c::obj

@@ -18,10 +18,10 @@ def test_fields2cover_route_snake_genSortedSwathsEven():
     swaths.push_back(f2c.Swath(f2c.LineString(f2c.VectorPoint(  \
         [f2c.Point(0, i), f2c.Point(1, i)])), i, i));
 
-  swath_sorter = f2c.RP_Snake(swaths);
+  swath_sorter = f2c.RP_Snake();
   objective = f2c.OBJ_DirectDistPathObj();
   
-  swaths = swath_sorter.genSortedSwaths();
+  swaths = swath_sorter.genSortedSwaths(swaths, 0);
 
   near(swaths[0].getWidth(), 1);
   near(swaths[1].getWidth(), 3);
@@ -38,10 +38,10 @@ def test_fields2cover_route_snake_genSortedSwathsOdd():
     swaths.push_back(f2c.Swath(f2c.LineString(f2c.VectorPoint(  \
         [f2c.Point(0, i), f2c.Point(1, i)])), i, i));
 
-  swath_sorter = f2c.RP_Snake(swaths);
+  swath_sorter = f2c.RP_Snake();
   objective = f2c.OBJ_DirectDistPathObj();
 
-  swaths = swath_sorter.genSortedSwaths();
+  swaths = swath_sorter.genSortedSwaths(swaths, 0);
 
   near(swaths[0].getWidth(), 1);
   near(swaths[1].getWidth(), 3);

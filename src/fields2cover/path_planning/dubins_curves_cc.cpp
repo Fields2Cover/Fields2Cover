@@ -10,12 +10,9 @@
 
 namespace f2c::pp {
 
-DubinsCurvesCC::DubinsCurvesCC(const F2CRobot& params) {
-  setRobotParams(params);
-}
-
-F2CPath DubinsCurvesCC::createSimpleTurn(double dist_start_pos,
-    double start_angle, double end_angle) {
+F2CPath DubinsCurvesCC::createSimpleTurn(const F2CRobot& robot,
+    double dist_start_pos, double start_angle, double end_angle,
+    double max_headland_width) {
   steer::State start, end;
 
   start.x = 0.0;

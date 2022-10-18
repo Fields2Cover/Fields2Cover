@@ -27,16 +27,19 @@ inline types::Path steerStatesToPath(
         F2CPoint(curve[i + 1].x, curve[i + 1].y)) / const_vel : 0);
   };
 
+  f2c::types::PathState state;
   for (size_t i = 0; i < curve.size(); ++i) {
-    path.points.emplace_back(curve[i].x, curve[i].y);
-    path.angles.emplace_back(curve[i].theta);
-    path.velocities.emplace_back(const_vel);
-    path.durations.emplace_back(compute_time(i));
-    path.directions.emplace_back(static_cast<types::PathDirection>(curve[i].d));
-    path.type.emplace_back(types::PathSectionType::TURN);
+    state.point = F2CPoint(curve[i].x, curve[i].y);
+    state.angle = curve[i].theta;
+    state.velocity = const_vel;
+    state.duration = compute_time(i);
+    state.dir = static_cast<types::PathDirection>(curve[i].d);
+    state.type = types::PathSectionType::TURN;
+    path.states.emplace_back(state);
   }
   path.task_time = std::accumulate(
-      path.durations.begin(), path.durations.end(), 0.0);
+      path.states.begin(), path.states.end(), 0.0,
+      [] (double d, const f2c::types::PathState& s) {return s.duration + d;});
   return path;
 }
 
