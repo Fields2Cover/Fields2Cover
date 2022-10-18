@@ -81,7 +81,7 @@ jobs:
         if: contains(matrix.config.name, 'Ubuntu')
         run: |
           sudo apt-get -y update && sudo apt-get install -y --no-install-recommends software-properties-common
-          sudo add-apt-repository -y ppa:ubuntugis/ppa
+          sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
           sudo apt-get -y update -qq
           sudo apt-get install -y cmake make
           sudo apt-get install -y python3 curl zip unzip -qq
