@@ -24,7 +24,7 @@ jobs:
         #  generators: "Unix Makefiles"
         #  }
         - {
-            name: "Ubuntu_Latest_GCC",
+            name: "Ubuntu-22_04-Latest_GCC",
             os: ubuntu-22.04,
             artifact: "ubuntu_gcc.7z",
             build_type: "Release",
@@ -34,7 +34,7 @@ jobs:
             generators: "Unix Makefiles"
           }
         - {
-            name: "Ubuntu_Latest_GCC",
+            name: "Ubuntu-20_04-Latest_GCC",
             os: ubuntu-20.04,
             artifact: "ubuntu_gcc.7z",
             build_type: "Release",
@@ -44,7 +44,7 @@ jobs:
             generators: "Unix Makefiles"
           }    
         - {
-            name: "Ubuntu_Latest_GCC",
+            name: "Ubuntu-18_04-Latest_GCC",
             os: ubuntu-18.04,
             artifact: "ubuntu_gcc.7z",
             build_type: "Release",
@@ -54,7 +54,7 @@ jobs:
             generators: "Unix Makefiles"
           }     
         - {
-            name: "Ubuntu_GCC_9",
+            name: "Ubuntu-Latest-GCC_9",
             os: ubuntu-latest,
             artifact: "ubuntu_gcc9.7z",
             build_type: "Release",
