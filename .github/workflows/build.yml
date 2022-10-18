@@ -24,8 +24,8 @@ jobs:
         #  generators: "Unix Makefiles"
         #  }
         - {
-            name: "Ubuntu 22.04",
-            os: ubuntu-22.04,
+            name: "Ubuntu_Latest_GCC",
+            os: ubuntu-latest,
             artifact: "ubuntu_gcc.7z",
             build_type: "Release",
             cc: "gcc",
@@ -34,25 +34,15 @@ jobs:
             generators: "Unix Makefiles"
           }
         - {
-            name: "Ubuntu 20.04",
-            os: ubuntu-20.04,
-            artifact: "ubuntu_gcc.7z",
+            name: "Ubuntu_GCC_9",
+            os: ubuntu-latest,
+            artifact: "ubuntu_gcc9.7z",
             build_type: "Release",
             cc: "gcc",
             cxx: "g++",
             archiver: "7z a",
             generators: "Unix Makefiles"
-          }    
-        - {
-            name: "Ubuntu 18.04",
-            os: ubuntu-18.04,
-            artifact: "ubuntu_gcc.7z",
-            build_type: "Release",
-            cc: "gcc",
-            cxx: "g++",
-            archiver: "7z a",
-            generators: "Unix Makefiles"
-          }     
+          }
           #- {
           #  name: "macOS Latest Clang",
           #  os: macos-latest,
@@ -78,15 +68,24 @@ jobs:
 
         # cmd "${{ matrix.config.environment_script }}"
       - name: Install dependencies on ubuntu
-        if: contains(matrix.config.name, 'Ubuntu')
+        if: startsWith(matrix.config.name, 'Ubuntu_Latest_GCC')
         run: |
-          sudo apt-get -y update && sudo apt-get install -y --no-install-recommends software-properties-common
-          sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
+          sudo add-apt-repository -y ppa:ubuntugis/ppa
           sudo apt-get -y update -qq
-          sudo apt-get install -y cmake make
+          sudo apt-get install cmake make
           sudo apt-get install -y python3 curl zip unzip -qq
           sudo apt-get install -y --no-install-recommends ca-certificates  doxygen git libeigen3-dev libgdal-dev libpython3-dev python3-pip python3-matplotlib lcov  libgtest-dev libtbb-dev swig python3-pytest -qq
-      
+      - name: Install dependencies on ubuntu9
+        if: startsWith(matrix.config.name, 'Ubuntu_GCC_9')
+        run: |
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+          sudo apt-get update -qq
+          sudo apt-get install make cmake gcc-9 g++-9
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 90 --slave /usr/bin/g++ g++ /usr/bin/g++-9 --slave /usr/bin/gcov gcov /usr/bin/gcov-9
+          sudo add-apt-repository -y ppa:ubuntugis/ppa
+          sudo apt-get install -y gcc-multilib python3 curl zip unzip -qq
+          sudo apt-get install -y --no-install-recommends ca-certificates  doxygen git libeigen3-dev libgdal-dev libpython3-dev python3-pip python3-matplotlib lcov  libgtest-dev libtbb-dev swig python3-pytest -qq
+
       - name: Install dependencies on macos
         if: startsWith(matrix.config.os, 'macos')
         run: |
@@ -124,4 +123,5 @@ jobs:
       - name: Test Python
         working-directory: ${{github.workspace}}
         run: pytest-3 tests/python/
+
 
