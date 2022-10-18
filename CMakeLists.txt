@@ -12,7 +12,7 @@ set(PACKAGE_MAINTAINER "Gonzalo Mier")
 
 
 option(BUILD_CPP "Build Cpp package" ON)
-option(ALLOW_PARALLELIZATION "Allow parallel algorithms" OFF)
+option(ALLOW_PARALLELIZATION "Allow parallel algorithms" ON)
 option(BUILD_TUTORIALS "Build tutorials" ON)
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_PYTHON "Build Python SWIG module" OFF)
