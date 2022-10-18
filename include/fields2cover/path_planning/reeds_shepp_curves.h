@@ -16,18 +16,9 @@ namespace f2c::pp {
 /// Reeds-Shepp's curves planner
 class ReedsSheppCurves : public TurningBase {
  public:
-  explicit ReedsSheppCurves(const F2CRobot& params);
-  /// @cond DOXYGEN_SHOULD_SKIP_THIS
-  ~ReedsSheppCurves() = default;
-  ReedsSheppCurves(ReedsSheppCurves &&) = default;
-  ReedsSheppCurves() = default;
-  ReedsSheppCurves(const ReedsSheppCurves&) = default;
-  ReedsSheppCurves &operator=(const ReedsSheppCurves&) = default;
-  ReedsSheppCurves &operator=(ReedsSheppCurves&&) = default;
-  /// @endcond
-
-  F2CPath createSimpleTurn(double dist_start_pos, double start_angle,
-      double end_angle) override;
+  F2CPath createSimpleTurn(const F2CRobot& robot,
+      double dist_start_pos, double start_angle,
+      double end_angle, double max_headland_width = 1e5) override;
 
  public:
   double discretization {0.01};

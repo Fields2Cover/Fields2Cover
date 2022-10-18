@@ -17,7 +17,8 @@ namespace f2c::pp {
 class PathPlanning {
  public:
   /// Connect one swath to the next one in order using a Turning algorithm
-  F2CPath searchBestPath(const F2CSwaths& swaths, TurningBase& turn);
+  F2CPath searchBestPath(const F2CRobot& robot, const F2CSwaths& swaths,
+      TurningBase& turn);
 
  public:
   double turn_point_dist {0.0};

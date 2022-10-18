@@ -16,16 +16,24 @@
 #include "fields2cover/utils/parser.h"
 #include "fields2cover/utils/visualizer.h"
 
-#include "fields2cover/objectives/rp_objective.h"
-#include "fields2cover/objectives/direct_dist_path_obj.h"
-#include "fields2cover/objectives/complete_turn_path_obj.h"
+
+#include "fields2cover/objectives/base_objective.h"
+
+#include "fields2cover/objectives/hg_objective.h"
+#include "fields2cover/objectives/rem_area.h"
 
 #include "fields2cover/objectives/sg_objective.h"
-#include "fields2cover/objectives/optimization_class.h"
 #include "fields2cover/objectives/n_swath.h"
 #include "fields2cover/objectives/field_coverage.h"
 #include "fields2cover/objectives/overlaps.h"
 #include "fields2cover/objectives/swath_length.h"
+
+#include "fields2cover/objectives/rp_objective.h"
+#include "fields2cover/objectives/direct_dist_path_obj.h"
+#include "fields2cover/objectives/complete_turn_path_obj.h"
+
+#include "fields2cover/objectives/pp_objective.h"
+#include "fields2cover/objectives/path_length.h"
 
 
 #include "fields2cover/headland_generator/headland_generator_base.h"

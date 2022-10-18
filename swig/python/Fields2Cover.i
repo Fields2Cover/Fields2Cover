@@ -105,11 +105,11 @@
     for(size_t i = 0; i < size; ++i) {
       if (i>0) { ss << ", ";}
       ss << "[Point";
-      ss << "(" << $self->points.at(i).getX();
-      ss << ", " << $self->points.at(i).getY();
-      ss << ", " << $self->points.at(i).getZ() << "), ";
-      ss << "ang = " << $self->angles.at(i) << ", ";
-      ss << "vel = " << $self->velocities.at(0) << "]";
+      ss << "(" << $self->states.at(i).point.getX();
+      ss << ", " << $self->states.at(i).point.getY();
+      ss << ", " << $self->states.at(i).point.getZ() << "), ";
+      ss << "ang = " << $self->states.at(i).angle << ", ";
+      ss << "vel = " << $self->states.at(i).velocity << "]";
     }
     ss << ")";
     return ss.str();

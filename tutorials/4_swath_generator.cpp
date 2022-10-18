@@ -16,8 +16,9 @@ int main() {
   F2CCells no_hl = const_hl.generateHeadlands(cells, 3.0 * robot.robot_width);
 
   std::cout << "####### Tutorial 4.1 Brute force swath generator ######" << std::endl;
-  f2c::sg::BruteForce<f2c::obj::NSwath> bf_sw_gen_nswath;
-  F2CSwaths swaths_bf_nswath = bf_sw_gen_nswath.generateBestSwaths(robot.op_width, no_hl.getGeometry(0));
+  f2c::obj::NSwath n_swath_obj;
+  f2c::sg::BruteForce bf_sw_gen;
+  F2CSwaths swaths_bf_nswath = bf_sw_gen.generateBestSwaths(n_swath_obj, robot.op_width, no_hl.getGeometry(0));
 
 
   f2c::Visualizer::figure(4);
@@ -26,8 +27,9 @@ int main() {
   f2c::Visualizer::plot(swaths_bf_nswath);
   f2c::Visualizer::save("Tutorial_4_1_Brute_force_NSwath");
 
-  f2c::sg::BruteForce<f2c::obj::SwathLength> bf_sw_gen_swathlength;
-  F2CSwaths swaths_bf_swathlength = bf_sw_gen_swathlength.generateBestSwaths(robot.op_width, no_hl.getGeometry(0));
+
+  f2c::obj::SwathLength swathlength_obj;
+  F2CSwaths swaths_bf_swathlength = bf_sw_gen.generateBestSwaths(swathlength_obj, robot.op_width, no_hl.getGeometry(0));
 
   
   f2c::Visualizer::figure(5);
@@ -37,14 +39,12 @@ int main() {
   f2c::Visualizer::save("Tutorial_4_1_Brute_force_SwathLength");
 
 
-
-  F2CSwaths swaths_bf_angle = bf_sw_gen_swathlength.generateSwaths(M_PI, robot.op_width, no_hl.getGeometry(0));
+  F2CSwaths swaths_bf_angle = bf_sw_gen.generateSwaths(M_PI, robot.op_width, no_hl.getGeometry(0));
   f2c::Visualizer::figure(6);
   f2c::Visualizer::plot(cells);
   f2c::Visualizer::plot(no_hl);
   f2c::Visualizer::plot(swaths_bf_angle);
   f2c::Visualizer::save("Tutorial_4_1_Brute_force_Angle");
-
 
   return 0;
 }

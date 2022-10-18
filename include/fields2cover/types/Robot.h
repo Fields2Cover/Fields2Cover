@@ -17,8 +17,8 @@ namespace f2c::types {
 
 struct Robot {
  public:
-  double op_width;
-  double robot_width;  // Distance between wheels
+  double op_width {0.0};
+  double robot_width {0.0};  // Distance between wheels
   std::optional<Point> start_point;
   std::optional<Point> end_point;
   double cruise_speed {1.0};
@@ -42,8 +42,7 @@ struct Robot {
           "Operational width have to be equal or greater than Robot width.");
     }
     if (robot_width_p <= 0.0) {
-      throw std::out_of_range(
-          "Robot width has to be greater than 0.");
+      throw std::out_of_range("Robot width has to be greater than 0.");
     }
   }
   Robot() = default;

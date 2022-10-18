@@ -45,7 +45,7 @@ For these examples, we will continue from the previous tutorial:
   f2c::hg::ConstHL const_hl;
   F2CCells cells = rand.generateRandField(5, 1e4).field;
   F2CCells no_hl = const_hl.generateHeadlands(cells, 3.0 * robot.robot_width);
-  f2c::sg::BruteForce<f2c::obj::NSwath> bf;
+  f2c::sg::BruteForce bf;
   F2CSwaths swaths = bf.generateSwaths(M_PI, robot.op_width, no_hl.getGeometry(0));
 
 Once planned the swaths, it would be awesome to find the best order to cover the field.
@@ -68,8 +68,8 @@ Once it has been called 4 times, the loop starts over.
 
 .. code-block:: cpp
 
-   f2c::rp::BoustrophedonOrder boustrophedon_sorter(swaths);
-   swaths = boustrophedon_sorter.genSortedSwaths();
+   f2c::rp::BoustrophedonOrder boustrophedon_sorter;
+   boustrophedon_swaths = boustrophedon_sorter.genSortedSwaths(swaths);
 
 
 +------------------+------------------+
@@ -87,8 +87,8 @@ As with boustrophedon pattern, snake pattern also has 4 variants:
 
 .. code-block:: cpp
 
-  f2c::rp::SnakeOrder snake_sorter(swaths);
-  swaths = snake_sorter.genSortedSwaths();
+  f2c::rp::SnakeOrder snake_sorter;
+  snake_swaths = snake_sorter.genSortedSwaths(swaths);
 
 +----------+----------+
 | |snake1| | |snake2| |
@@ -118,8 +118,8 @@ Same as previous patterns, spiral pattern also has 4 variants:
 
 .. code-block:: cpp
 
-  f2c::rp::SpiralOrder spiral_sorter(swaths, 6);
-  swaths = spiral_sorter.genSortedSwaths();
+  f2c::rp::SpiralOrder spiral_sorter(6);
+  spiral_swaths = spiral_sorter.genSortedSwaths(swaths);
 
 +-----------+-----------+
 | |spiral1| | |spiral2| |
@@ -136,14 +136,14 @@ custom order of the swaths for the path planning process.
 
 .. code-block:: cpp
 
-  f2c::rp::CustomOrder custom_order(swaths, {0, 1, 2, 3, 4});
-  swaths = custom_order.genSortedSwaths();
+  f2c::rp::CustomOrder custom_order({0, 1, 2, 3, 4});
+  custom_swaths = custom_order.genSortedSwaths(swaths);
 
 .. code-block:: cpp
 
-    f2c::rp::CustomOrder custom_order(swaths);
+    f2c::rp::CustomOrder custom_order;
     custom_order = custom_order.setCustomOrder({0, 1 , 2, 3, 4})
-    swaths = custom_order.genSortedSwaths();
+    custom_swaths2 = custom_order.genSortedSwaths(swaths);
 
 
 .. note::

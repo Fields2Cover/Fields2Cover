@@ -10,9 +10,9 @@ TEST(fields2cover_route_spiral, genSortedSwaths_even) {
     swaths.emplace_back(F2CLineString({F2CPoint(0, i), F2CPoint(1, i)}), i, i);
   }
 
-  f2c::rp::SpiralOrder swath_sorter(swaths, size);
+  f2c::rp::SpiralOrder swath_sorter(size);
 
-  swaths = swath_sorter.genSortedSwaths();
+  swaths = swath_sorter.genSortedSwaths(swaths);
 
   EXPECT_EQ(swaths[0].getWidth(), 1);
   EXPECT_EQ(swaths[1].getWidth(), 6);
@@ -34,9 +34,9 @@ TEST(fields2cover_route_spiral, genSortedSwaths_odd) {
     swaths.emplace_back(F2CLineString({F2CPoint(0, i), F2CPoint(1, i)}), i, i);
   }
 
-  f2c::rp::SpiralOrder swath_sorter(swaths, size);
+  f2c::rp::SpiralOrder swath_sorter(size);
 
-  swaths = swath_sorter.genSortedSwaths();
+  swaths = swath_sorter.genSortedSwaths(swaths);
 
   EXPECT_EQ(swaths[0].getWidth(), 1);
   EXPECT_EQ(swaths[1].getWidth(), 5);
@@ -58,10 +58,10 @@ TEST(fields2cover_route_spiral, genSortedSwaths_even_size) {
     swaths.emplace_back(F2CLineString({F2CPoint(0, i), F2CPoint(1, i)}), i, i);
   }
 
-  f2c::rp::SpiralOrder swath_sorter(swaths);
+  f2c::rp::SpiralOrder swath_sorter;
   swath_sorter.setSpiralSize(size);
 
-  swaths = swath_sorter.genSortedSwaths();
+  swaths = swath_sorter.genSortedSwaths(swaths);
 
   EXPECT_EQ(swaths[0].getWidth(), 1);
   EXPECT_EQ(swaths[1].getWidth(), 6);
@@ -83,10 +83,10 @@ TEST(fields2cover_route_spiral, genSortedSwaths_odd_size) {
     swaths.emplace_back(F2CLineString({F2CPoint(0, i), F2CPoint(1, i)}), i, i);
   }
 
-  f2c::rp::SpiralOrder swath_sorter(swaths);
+  f2c::rp::SpiralOrder swath_sorter;
   swath_sorter.setSpiralSize(size);
 
-  swaths = swath_sorter.genSortedSwaths();
+  swaths = swath_sorter.genSortedSwaths(swaths);
 
   EXPECT_EQ(swaths[0].getWidth(), 1);
   EXPECT_EQ(swaths[1].getWidth(), 5);
@@ -107,9 +107,9 @@ TEST(fields2cover_route_spiral, genSortedSwaths_default_size) {
     swaths.emplace_back(F2CLineString({F2CPoint(0, i), F2CPoint(1, i)}), i, i);
   }
 
-  f2c::rp::SpiralOrder swath_sorter(swaths);
+  f2c::rp::SpiralOrder swath_sorter;
 
-  swaths = swath_sorter.genSortedSwaths();
+  swaths = swath_sorter.genSortedSwaths(swaths);
 
   EXPECT_EQ(swaths[0].getWidth(), 1);
   EXPECT_EQ(swaths[1].getWidth(), 2);
@@ -131,9 +131,8 @@ TEST(fields2cover_route_spiral, genSortedSwaths_default_cstr) {
   }
 
   f2c::rp::SpiralOrder swath_sorter;
-  swath_sorter.setSwaths(swaths);
 
-  swaths = swath_sorter.genSortedSwaths();
+  swaths = swath_sorter.genSortedSwaths(swaths);
 
   EXPECT_EQ(swaths[0].getWidth(), 1);
   EXPECT_EQ(swaths[1].getWidth(), 2);

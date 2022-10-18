@@ -82,6 +82,24 @@ TEST(fields2cover_types_swaths, reverseDirOddSwaths) {
 }
 
 
+TEST(fields2cover_types_swaths, push_back) {
+  const int n = 10;
+  F2CSwaths swaths1;
+  std::vector<F2CSwath> v_swath;
+  for (int i = 1; i <= n; ++i) {
+    F2CSwath swath {F2CLineString({F2CPoint(i, i), F2CPoint(i, i + 1)}), 1.0*i, i};
+    swaths1.push_back(swath);
+    v_swath.push_back(swath);
+  }
+
+  F2CSwaths swaths2{v_swath};
+
+  for (int i = 1; i < n; ++i) {
+    EXPECT_EQ(swaths1.at(i).getId(), i+1);
+    EXPECT_EQ(swaths2.at(i).getId(), i+1);
+  }
+}
+
 
 
 

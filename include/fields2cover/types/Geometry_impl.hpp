@@ -133,19 +133,9 @@ bool Geometry<T, R>::Disjoint(const Geometry<T2, R2>& geom) const {
 }
 
 template <class T, OGRwkbGeometryType R>
-bool Geometry<T, R>::Disjoint(const OGRGeometry* geom) const {
-  return data->Disjoint(geom);
-}
-
-template <class T, OGRwkbGeometryType R>
 template <class T2, OGRwkbGeometryType R2>
 bool Geometry<T, R>::Crosses(const Geometry<T2, R2>& geom) const {
   return data->Crosses(geom.get());
-}
-
-template <class T, OGRwkbGeometryType R>
-bool Geometry<T, R>::Crosses(const OGRGeometry* geom) const {
-  return data->Crosses(geom);
 }
 
 template <class T, OGRwkbGeometryType R>
@@ -155,30 +145,15 @@ bool Geometry<T, R>::Touches(const Geometry<T2, R2>& geom) const {
 }
 
 template <class T, OGRwkbGeometryType R>
-bool Geometry<T, R>::Touches(const OGRGeometry* geom) const {
-  return data->Touches(geom);
-}
-
-template <class T, OGRwkbGeometryType R>
 template <class T2, OGRwkbGeometryType R2>
 bool Geometry<T, R>::Within(const Geometry<T2, R2>& geom) const {
   return data->Within(geom.get());
 }
 
 template <class T, OGRwkbGeometryType R>
-bool Geometry<T, R>::Within(const OGRGeometry* geom) const {
-  return data->Within(geom);
-}
-
-template <class T, OGRwkbGeometryType R>
 template <class T2, OGRwkbGeometryType R2>
 bool Geometry<T, R>::Intersects(const Geometry<T2, R2>& geom) const {
   return data->Intersects(geom.get());
-}
-
-template <class T, OGRwkbGeometryType R>
-bool Geometry<T, R>::Intersects(const OGRGeometry* geom) const {
-  return data->Intersects(geom);
 }
 
 template <class T, OGRwkbGeometryType R>
@@ -196,13 +171,13 @@ double Geometry<T, R>::getAngContinuity(double prev_val, double val) {
   auto val_id = round(prev_val / two_pi);
   auto getNearVal =
     [two_pi] (int i, double value) {return i * two_pi + mod_2pi(value);};
-  for (int i = -3; i <= 3; ++i) {
+  for (int i = -2; i <= 0; ++i) {
     if (fabs(getNearVal(val_id + i + 1, val) - prev_val) >
       fabs(getNearVal(val_id + i, val) - prev_val)) {
       return getNearVal(val_id + i, val);
     }
   }
-  return getNearVal(val_id + 4, val);
+  return getNearVal(val_id + 1, val);
 }
 
 template <class T, OGRwkbGeometryType R>

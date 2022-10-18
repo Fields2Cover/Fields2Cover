@@ -10,81 +10,66 @@
 
 namespace f2c::types {
 
+PathState PathState::clone() const {
+  PathState new_state {*this};
+  new_state.point = this->point.clone();
+  return new_state;
+}
+
 Path& Path::operator+=(const Path& path) {
-  for (auto&& p : path.points) {
-    points.emplace_back(p.clone());
+  for (auto&& state : path.states) {
+    states.emplace_back(state.clone());
   }
-  angles.insert(std::end(angles),
-      std::begin(path.angles), std::end(path.angles));
-  velocities.insert(std::end(velocities),
-      std::begin(path.velocities), std::end(path.velocities));
-  directions.insert(std::end(directions),
-      std::begin(path.directions), std::end(path.directions));
-  durations.insert(std::end(durations),
-      std::begin(path.durations), std::end(path.durations));
-  type.insert(std::end(type),
-      std::begin(path.type), std::end(path.type));
   task_time += path.task_time;
   return *this;
 }
 
 Path Path::clone() const {
   Path new_path;
-  for (const auto& p : points) {
-    new_path.points.emplace_back(p.getX(), p.getY());
-  }
-
-  new_path.angles = angles;
-  new_path.velocities = velocities;
-  new_path.durations = durations;
-  new_path.directions = directions;
-  new_path.type = type;
-  new_path.task_time = task_time;
-  new_path.measure_error = measure_error;
+  new_path += *this;
   return new_path;
 }
 
 size_t Path::size() const {
-  return points.size();
+  return states.size();
 }
 
 void Path::moveTo(const Point& p) {
-  for (auto&& point : this->points) {
-    point = point + p;
+  for (auto&& s : this->states) {
+    s.point = s.point + p;
   }
 }
 
 double Path::length() const {
-  if (points.size() < 2) { return 0.0;}
+  if (size() < 2) { return 0.0;}
   double total_length {0.0};
-  for (size_t i = 0; i < points.size() - 1; ++i) {
-    total_length += points[i].Distance(points[i+1]);
+  for (size_t i = 0; i < size() - 1; ++i) {
+    total_length += states[i].point.Distance(states[i+1].point);
   }
   return total_length;
 }
 
 void Path::appendSwath(const Swath& swath, double cruise_speed) {
   for (size_t i = 0; i < swath.getNumPoints(); ++i) {
-    points.emplace_back(swath.getPoint(i).clone());
-    type.emplace_back(PathSectionType::SWATH);
-    directions.emplace_back(PathDirection::FORWARD);
-    double ang {0.0};
-    velocities.emplace_back(cruise_speed);
+    PathState s;
+    s.point = swath.getPoint(i).clone();
     if (i == swath.getNumPoints() - 1) {
-      durations.emplace_back(0.0);
-      ang = Point(swath.getPoint(i).getX() - swath.getPoint(i - 1).getX(),
+      s.duration = 0.0;
+      s.angle = Point(swath.getPoint(i).getX() - swath.getPoint(i - 1).getX(),
           swath.getPoint(i).getY() - swath.getPoint(i-1).getY())
             .getAngleFromPoint();
     } else {
-      double duration = swath.getPoint(i + 1).Distance(
+      s.duration = swath.getPoint(i + 1).Distance(
           swath.getPoint(i)) / cruise_speed;
-      durations.emplace_back(duration);
-      task_time += duration;
-      ang = Point(swath.getPoint(i + 1).getX() - swath.getPoint(i).getX(),
+      task_time += s.duration;
+      s.angle = Point(swath.getPoint(i + 1).getX() - swath.getPoint(i).getX(),
           swath.getPoint(i + 1).getY() - swath.getPoint(i).getY())
             .getAngleFromPoint();
     }
-    angles.emplace_back(ang);
+    s.velocity = cruise_speed;
+    s.dir = PathDirection::FORWARD;
+    s.type = PathSectionType::SWATH;
+    states.emplace_back(s);
   }
 }
 
@@ -115,14 +100,15 @@ std::string Path::serializePath() const {
   std::locale::global(std::locale::classic());
   std::string res = "";
 
-  for (size_t i = 0; i < points.size(); ++i) {
-    res += to_string(points[i].getX()) + " ";
-    res += to_string(points[i].getY()) + " ";
-    res += to_string(angles[i]) + " ";
-    res += to_string(velocities[i]) + " ";
-    res += to_string(durations[i]) + " ";
-    res += to_string(static_cast<int>(directions[i])) + " ";
-    res += to_string(static_cast<int>(type[i])) + "\n";
+  for (size_t i = 0; i < size(); ++i) {
+    res += to_string(states[i].point.getX()) + " ";
+    res += to_string(states[i].point.getY()) + " ";
+    res += to_string(states[i].point.getZ()) + " ";
+    res += to_string(states[i].angle) + " ";
+    res += to_string(states[i].velocity) + " ";
+    res += to_string(states[i].duration) + " ";
+    res += to_string(static_cast<int>(states[i].dir)) + " ";
+    res += to_string(static_cast<int>(states[i].type)) + "\n";
   }
   return res;
 }
@@ -135,110 +121,105 @@ void Path::saveToFile(const std::string& file) const {
 
 void Path::loadFile(const std::string& file) {
   std::ifstream in(file);
-  double x, y, ang, vel, dur, dir, d_type;
-  while (in >> x >> y >> ang >> vel >> dur >> dir >> d_type) {
-    points.emplace_back(Point(x, y));
-    angles.emplace_back(ang);
-    velocities.emplace_back(vel);
-    durations.emplace_back(dur);
-    directions.emplace_back(static_cast<f2c::types::PathDirection>(dir));
-    type.emplace_back(static_cast<f2c::types::PathSectionType>(d_type));
+  double x, y, z, ang, vel, dur, dir, d_type;
+  while (in >> x >> y >> z >> ang >> vel >> dur >> dir >> d_type) {
+    PathState s;
+    s.point = Point(x, y, z);
+    s.angle = ang;
+    s.velocity = vel;
+    s.duration = dur;
+    s.dir = static_cast<f2c::types::PathDirection>(dir);
+    s.type = static_cast<f2c::types::PathSectionType>(d_type);
+    states.emplace_back(s);
   }
   in.close();
-}
-
-bool Path::isValid() const {
-  return (points.size() == angles.size() &&
-    points.size() == velocities.size() &&
-    points.size() == durations.size() &&
-    points.size() == directions.size() &&
-    points.size() == type.size() &&
-    fabs(std::accumulate(durations.begin(), durations.end(), -task_time))
-      < 1e-3);
+  task_time = std::accumulate(states.begin(), states.end(), 0.0,
+      [] (double b, const PathState& a) {return a.duration + b;});
 }
 
 Path& Path::populate(int number_points) {
-  if (points.size() < 3) { return *this;}
+  if (this->size() < 3) { return *this;}
 
   std::vector<double> x, y, ang_prov, vel, dur;
-  for (int i = 0; i < this->points.size(); ++i) {
-    if (this->durations[i] != 0.0 ||  i == this->points.size() - 1) {
-      x.emplace_back(this->points[i].getX());
-      y.emplace_back(this->points[i].getY());
-      ang_prov.emplace_back(this->angles[i]);
-      vel.emplace_back(this->velocities[i]);
-      dur.emplace_back(this->durations[i]);
+  std::vector<PathDirection> old_dir;
+  std::vector<PathSectionType> old_type;
+  for (int i = 0; i < this->size(); ++i) {
+    if (this->states[i].duration != 0.0 ||  i == this->size() - 1) {
+      x.emplace_back(this->states[i].point.getX());
+      y.emplace_back(this->states[i].point.getY());
+      ang_prov.emplace_back(this->states[i].angle);
+      vel.emplace_back(this->states[i].velocity);
+      dur.emplace_back(this->states[i].duration);
+      old_dir.emplace_back(this->states[i].dir);
+      old_type.emplace_back(this->states[i].type);
     }
   }
-
   auto ang = f2c::types::Point::getAngContinuity(ang_prov);
-
   std::vector<double> t(dur.size());
   std::partial_sum(dur.begin(), dur.end() - 1, t.begin() + 1);
-
 
   tk::spline s_x(t, x);
   tk::spline s_y(t, y);
   tk::spline s_ang(t, ang);
   tk::spline s_vel(t, vel);
 
-  points.clear();
-  angles.clear();
-  velocities.clear();
-  durations.clear();
-  std::vector<PathDirection> new_dir;
-  std::vector<PathSectionType> new_type;
+  states.clear();
 
   double step = t.back() / static_cast<double>(number_points - 1);
+  PathState state;
   for (double d = 0.0; d < t.back(); d += step) {
-    this->points.emplace_back(s_x(d), s_y(d));
-    this->angles.emplace_back(f2c::types::Point::mod_2pi(s_ang(d)));
-    this->velocities.emplace_back(s_vel(d));
-    this->durations.emplace_back(step);
+    state.point = Point(s_x(d), s_y(d));
+    state.angle = Point::mod_2pi(s_ang(d));
+    state.velocity = s_vel(d);
+    state.duration = step;
     int it = std::lower_bound(t.begin(), t.end(), d) - t.begin();
-    new_dir.emplace_back(directions[it]);
-    new_type.emplace_back(type[it]);
+    state.dir = old_dir[it];
+    state.type = old_type[it];
+    this->states.emplace_back(state);
   }
-  this->points.emplace_back(s_x(t.back()), s_y(t.back()));
-  this->angles.emplace_back(f2c::types::Point::mod_2pi(s_ang(t.back())));
-  this->velocities.emplace_back(abs(s_vel(t.back())));
-  this->durations.emplace_back(0.0);
-  new_dir.emplace_back((s_vel(t.back()) > 0) ?
-    f2c::types::PathDirection::FORWARD :
-    f2c::types::PathDirection::BACKWARD);
-  new_type.emplace_back(type.back());
 
-  this->directions = new_dir;
-  this->type = new_type;
+  state.point = Point(s_x(t.back()), s_y(t.back()));
+  state.angle = Point::mod_2pi(s_ang(t.back()));
+  state.velocity = abs(s_vel(t.back()));
+  state.duration = 0.0;
+  state.dir = old_dir.back();
+  state.type = old_type.back();
+  this->states.emplace_back(state);
 
+  task_time = std::accumulate(states.begin(), states.end(), 0.0,
+      [] (double b, const PathState& a) {return a.duration + b;});
   return *this;
 }
 
 Path& Path::reduce(double min_dist_equal) {
-  size_t N = points.size();
+  size_t N = this->size();
   Path new_path;
   for (size_t i = 0; i < N;) {
-    double new_dur {this->durations[i]};
+    double new_dur {this->states[i].duration};
     int j = i + 1;
     while (j < N &&
-        this->type[i] == this->type[j] &&
-        this->directions[i] == this->directions[j] &&
-        this->points[i].Distance(this->points[j]) < min_dist_equal) {
-      new_dur += this->durations[j];
+        this->states[i].type == this->states[j].type &&
+        this->states[i].dir == this->states[j].dir &&
+        this->states[i].point.Distance(
+          this->states[j].point) < min_dist_equal) {
+      new_dur += this->states[j].duration;
       ++j;
     }
-    new_path.points.emplace_back(this->points[i]);
-    new_path.angles.emplace_back(this->angles[i]);
-    new_path.velocities.emplace_back(this->velocities[i]);
-    new_path.durations.emplace_back(new_dur);
-    new_path.directions.emplace_back(this->directions[i]);
-    new_path.type.emplace_back(this->type[i]);
+    PathState state;
+    state.point = this->states[i].point;
+    state.angle = this->states[i].angle;
+    state.velocity = this->states[i].velocity;
+    state.duration = new_dur;
+    state.dir = this->states[i].dir;
+    state.type = this->states[i].type;
+    new_path.states.emplace_back(state);
     i = j;
   }
   // Reducing number of points may change the task_time of the path.
   // Issue to be aware
-  new_path.task_time = std::accumulate(new_path.durations.begin(),
-      new_path.durations.end(), 0.0);
+  new_path.task_time = std::accumulate(
+      new_path.states.begin(), new_path.states.end(), 0.0,
+      [] (double b, const PathState& a) {return a.duration + b;});
   new_path.measure_error = this->measure_error;
   *this = new_path;
   return *this;

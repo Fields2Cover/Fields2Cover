@@ -36,34 +36,37 @@ void Cell::operator*=(double b) {
   }
 }
 
-void Cell::getGeometry(int i, LinearRing& ring) {
+void Cell::getGeometry(size_t i, LinearRing& ring) {
   ring = LinearRing(((i == 0) ?
     data->getExteriorRing() :
     data->getInteriorRing(i-1)), EmptyDestructor());
 }
 
-void Cell::getGeometry(int i, LinearRing& ring) const {
+void Cell::getGeometry(size_t i, LinearRing& ring) const {
   ring = LinearRing(((i == 0) ?
     data->getExteriorRing() :
     data->getInteriorRing(i-1)), EmptyDestructor());
 }
 
-LinearRing Cell::getGeometry(int i) {
+LinearRing Cell::getGeometry(size_t i) {
   return (i == 0) ? getExteriorRing() : getInteriorRing(i-1);
 }
 
-LinearRing Cell::getGeometry(int i) const {
+LinearRing Cell::getGeometry(size_t i) const {
   return (i == 0) ? getExteriorRing() : getInteriorRing(i-1);
 }
 
-void Cell::setGeometry(int i, const LinearRing& line) {
+void Cell::setGeometry(size_t i, const LinearRing& line) {
   auto n = this->size();
   if (i < n) {
-    auto* ref = this->getGeometry(i).get();
-    *ref = *line.get();
+    Cell cell;
+    for (size_t j = 0; j < n; ++j) {
+      cell.addGeometry((i == j) ? line : this->getGeometry(j));
+    }
+    *this = cell;
     return;
-  } else if (i > n) {
-    for (int j = i; j < n; ++j) {
+  } else if (i != n) {
+    for (size_t j = n; j < i; ++j) {
       this->addGeometry(LinearRing());
     }
   }
@@ -108,7 +111,7 @@ LinearRing Cell::getExteriorRing() const {
   return LinearRing(data->getExteriorRing());
 }
 
-LinearRing Cell::getInteriorRing(int i) const {
+LinearRing Cell::getInteriorRing(size_t i) const {
   return LinearRing(data->getInteriorRing(i));
 }
 
@@ -160,16 +163,11 @@ MultiLineString Cell::getLinesInside(const MultiLineString& lines) const {
 }
 
 bool Cell::isPointInBorder(const Point& p) const {
-  for (auto&& ring : *this) {
-    if (p.Within(MultiLineString::getLineSegments(LineString(ring)))) {
-      return true;
-    }
-  }
-  return false;
+  return p.Touches(*this);
 }
 
 bool Cell::isPointIn(const Point& p) const {
-  return p.Touches(*this);
+  return p.Within(*this);
 }
 
 LineString Cell::createLineUntilBorder(
@@ -190,18 +188,6 @@ LineString Cell::createLineUntilBorder(
   return (best_point == p) ? LineString() : LineString({p, best_point});
 }
 
-Cell Cell::Intersection(const Cell& c) const {
-  auto inter = data->Intersection(c.get());
-  if (wkbFlatten(inter->getGeometryType()) ==
-        OGRwkbGeometryType::wkbPolygon) {
-    Cell cell(inter->toMultiPolygon());
-    OGRGeometryFactory::destroyGeometry(inter);
-    return cell;
-  } else {
-    OGRGeometryFactory::destroyGeometry(inter);
-    return Cell();
-  }
-}
 
 }  // namespace f2c::types
 

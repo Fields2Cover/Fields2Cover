@@ -5,12 +5,40 @@ One of the main problems in the Coverage Path Planning problem is to define the 
 The objective function defines how good a path is.
 By default, the objective functions are defined as minimization problems.
 
-Fields2Cover defines two kind of objective functions: Global objective functions and path objective functions.
+Fields2Cover defines different objective functions for each module: HG (Headland Generator), SG (Swath Generator), RP (Route Planner) and PP (Path Planner).
 
-Global objective functions
+
+
+
+HG objective functions
 --------------------------
 
-Global objective functions are objective functions where the order of the swaths are not important. This kind of objective functions are used before the route planning. Thanks to global functions, early problems as swath generation can be solved without computing the complete path in each step. Global objective functions provided are:
+Remaining area
+^^^^^^^^^^^^^^
+
+Compute the percentage of main field over the total field. The cost is a value between [0, 1], and it is defined as a maximization problem.
+
+
+.. code-block:: cpp
+
+    F2CCells total_field(F2CCell(F2CLinearRing(
+      {F2CPoint(-2,-2), F2CPoint(6,-2), F2CPoint(6,6), F2CPoint(-2,6), F2CPoint(-2,-2)})));
+    F2CCells field(F2CCell(F2CLinearRing(
+      {F2CPoint(0,0), F2CPoint(4,0), F2CPoint(4,4), F2CPoint(0,4), F2CPoint(0,0)})));
+
+
+    f2c::obj::RemArea rem_area; 
+    std::cout << "The remaining area is "
+      << rem_area.computeCost(total_field, field) << std::endl;
+    std::cout << "The remaining area with sign is "
+      << rem_area.computeCostWithMinimizingSign(total_field, field) <<std::endl;
+
+|  *The remaining area is 0.25*
+|  *The remaining area with sign is: -0.25*
+
+
+SG objective functions
+--------------------------
 
 Field coverage
 ^^^^^^^^^^^^^^
@@ -26,9 +54,6 @@ Compute the percentage of the field covered by the swaths. The cost is a value b
    F2CSwath swath1(F2CLineString({F2CPoint(0.0, 1.0), F2CPoint(4.0, 1.0)}), width);
    F2CSwath swath2(F2CLineString({F2CPoint(0.0, 3.0), F2CPoint(4.0, 3.0)}), width);
    F2CSwath swath3(F2CLineString({F2CPoint(0.0, 2.0), F2CPoint(4.0, 2.0)}), width);
-
-   F2CCells field(F2CCell(F2CLinearRing(
-     {F2CPoint(0,0), F2CPoint(4,0), F2CPoint(4,4), F2CPoint(0,4), F2CPoint(0,0)})));
 
    f2c::obj::FieldCoverage field_cov;
 
@@ -100,12 +125,9 @@ Compute the sum of the path length of each swath.
 
 *The swath length with swath1 is 4 and with all of the swaths 12*
 
-Path objective functions
+
+RP objective functions
 ------------------------
-
-Path objective functions are those in which the order of the swaths matter.
-Those objective functions depends directly on the final path that is going to be generated.
-
 
 Distance with turns
 ^^^^^^^^^^^^^^^^^^^
@@ -147,6 +169,24 @@ This is faster than computing the turns and doesn't require to provide a class t
 
 
 
+PP objective functions
+------------------------
+
+Path length
+^^^^^^^^^^^
+
+Compute the length of the path
 
 
+.. code-block:: cpp
+
+  F2CPath path;
+  path.appendSwath(swaths_path.at(0), 1);
+  path.appendSwath(swaths_path.at(1), 1);
+
+  f2c::obj::PathLength path_length;
+  std::cout << "The path length is: " <<
+    path_length.computeCost(path) << std::endl;
+
+*The path length is: 3*
 

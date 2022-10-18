@@ -7,13 +7,12 @@
 #include <gtest/gtest.h>
 #include <fstream>
 #include "fields2cover/headland_generator/constant_headland.h"
-#include "fields2cover/objectives/n_swath.h"
 #include "fields2cover/utils/random.h"
 #include "fields2cover/types.h"
 
 TEST(fields2cover_hl_const_gen, empty_area) {
   f2c::Random rand;
-  f2c::hg::ConstHL<f2c::obj::NSwath> hl_gen;
+  f2c::hg::ConstHL hl_gen;
 
   auto field = rand.generateRandField(5, 1e3);
   EXPECT_GT(field.getArea(), 0);
@@ -23,7 +22,7 @@ TEST(fields2cover_hl_const_gen, empty_area) {
 
 TEST(fields2cover_hl_const_gen, border_area) {
   f2c::Random rand;
-  f2c::hg::ConstHL<f2c::obj::NSwath> hl_gen;
+  f2c::hg::ConstHL hl_gen;
 
   auto field = rand.generateRandField(5, 1e5);
   auto no_hl = hl_gen.generateHeadlands(field.field, 1.0);

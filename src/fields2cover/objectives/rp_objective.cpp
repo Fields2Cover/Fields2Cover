@@ -26,7 +26,7 @@ double RPObjective::computeCost(
 
 double RPObjective::computeCost(
     const F2CPoint& p1, double ang1, const F2CPoint& p2, double ang2) {
-  return 0.0;
+  return computeCost(p1, p2);
 }
 
 double RPObjective::computeCost(const F2CSwath& s, const F2CPoint& p) {
@@ -34,8 +34,8 @@ double RPObjective::computeCost(const F2CSwath& s, const F2CPoint& p) {
 }
 
 double RPObjective::computeCost(const F2CSwath& s1, const F2CSwath& s2) {
-  return computeCost(
-      s1.endPoint(), s1.getOutAngle(), s1.startPoint(), s2.getInAngle());
+  return this->computeCost(
+      s1.endPoint(), s1.getOutAngle(), s2.startPoint(), s2.getInAngle());
 }
 
 double RPObjective::computeCost(
@@ -130,10 +130,6 @@ double RPObjective::computeCost(const F2CRoute& r) {
     dist += computeCost(r.v_swaths[i], r.connections[i + 1]);
   }
   return dist;
-}
-
-double RPObjective::computeCost(const F2CPath& p) {
-  return p.length();
 }
 
 }  // namespace f2c::obj

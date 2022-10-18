@@ -9,6 +9,7 @@
 #define FIELDS2COVER_OBJECTIVES_COMPLETE_TURN_PATH_OBJ_H_
 
 #include "fields2cover/types.h"
+#include "fields2cover/objectives/pp_objective.h"
 #include "fields2cover/objectives/rp_objective.h"
 #include "fields2cover/objectives/direct_dist_path_obj.h"
 #include "fields2cover/path_planning/turning_base.h"
@@ -21,14 +22,17 @@ namespace f2c::obj {
 ///
 /// @warning Do not use this objective function with slow planners as
 /// too many turns may need to be computed for a simple path.
-template <class T, class R = DirectDistPathObj>
+template <class T, class R = PPObjective>
 class CompleteTurnPathObj : public RPObjective {
   static_assert(std::is_base_of<pp::TurningBase, T>::value,
       "T must derive from f2c::pp::TurningBase");
+  static_assert(std::is_base_of<PPObjective, R>::value,
+      "R must derive from f2c::obj::PPObjective");
 
  public:
   using RPObjective::RPObjective;
   explicit CompleteTurnPathObj(const F2CRobot& params);
+  explicit CompleteTurnPathObj(const F2CRobot& params, const T& turn_planner);
 
  public:
   using RPObjective::computeCost;
@@ -39,18 +43,38 @@ class CompleteTurnPathObj : public RPObjective {
       const F2CPoint& p1, double ang1,
       const F2CPoint& p2, double ang2) override;
 
+  void setRobot(const F2CRobot& params);
+  void setTurnPlanner(const T& turner);
+
  public:
   /// Planner that derives from f2c::pp::TurningBase
   T turn_planner;
+  F2CRobot robot;
 
  private:
-  R objective_;
+  R pp_objective;
 };
 
 
 template <class T, class R>
 CompleteTurnPathObj<T, R>::CompleteTurnPathObj(const F2CRobot& robot) {
-  turn_planner.setRobotParams(robot);
+  this->setRobot(robot);
+}
+
+template <class T, class R>
+CompleteTurnPathObj<T, R>::CompleteTurnPathObj(
+    const F2CRobot& robot, const T& turner) : turn_planner(turner) {
+  this->setRobot(robot);
+}
+
+template <class T, class R>
+void CompleteTurnPathObj<T, R>::setRobot(const F2CRobot& params) {
+  this->robot = params;
+}
+
+template <class T, class R>
+void CompleteTurnPathObj<T, R>::setTurnPlanner(const T& turner) {
+  this->turn_planner = turner;
 }
 
 
@@ -58,7 +82,8 @@ template <class T, class R>
 double CompleteTurnPathObj<T, R>::computeCost(
     const F2CPoint& p1, double ang1,
     const F2CPoint& p2, double ang2) {
-  return objective_.computeCost(turn_planner.createTurn(p1, ang1, p2, ang2));
+  return pp_objective.computeCost(
+      this->turn_planner.createTurn(this->robot, p1, ang1, p2, ang2));
 }
 
 

@@ -11,7 +11,7 @@
  %include <optional.i>
  %include <exception.i>
 
-#define __version__ "1.1.1"
+#define __version__ "1.2.0"
 
 %inline %{
   #include "fields2cover.h"
@@ -167,6 +167,7 @@ typedef long unsigned int size_t;
 %template(VectorSwath) std::vector<f2c::types::Swath>;
 %template(SwathsByCells) std::vector<f2c::types::Swaths>;
 %template(Strips) std::vector<f2c::types::Strip>;
+%template(PathStates) std::vector<f2c::types::PathState>;
 %template(Fields) std::vector<f2c::types::Field>;
 %template(VectorPathDirection) std::vector<f2c::types::PathDirection>;
 %template(VectorPathSectionType) std::vector<f2c::types::PathSectionType>;
@@ -186,44 +187,29 @@ typedef long unsigned int size_t;
 %include "fields2cover/utils/transformation.h"
 
 
+%define DEFINE_HG_COSTS(class_name, alg)
+  %extend f2c::obj::class_name {
+    %template(alg) alg<F2CCell, F2CCell>;
+    %template(alg) alg<F2CCells, F2CCell>;
+    %template(alg) alg<F2CCell, F2CCells>;
+    %template(alg) alg<F2CCells, F2CCells>;
+  }
+%enddef
 
-%define DEFINE_GLOBAL_COSTS(class_name, alg)
+%define DEFINE_SG_COSTS(class_name, alg)
   %extend f2c::obj::class_name {
     %template(alg) alg<F2CSwath>;
     %template(alg) alg<F2CSwaths>;
     %template(alg) alg<F2CSwathsByCells>;
-    %template(alg) alg<F2CCell>;
-    %template(alg) alg<F2CCells>;
-    %template(alg) alg<F2CRoute>;
-    %template(alg) alg<F2CPath>;
     %template(alg) alg<F2CCell, F2CSwath>;
     %template(alg) alg<F2CCell, F2CSwaths>;
     %template(alg) alg<F2CCell, F2CSwathsByCells>;
     %template(alg) alg<F2CCells, F2CSwath>;
     %template(alg) alg<F2CCells, F2CSwaths>;
     %template(alg) alg<F2CCells, F2CSwathsByCells>;
-    %template(alg) alg<F2CRoute, F2CPath>;
-    %template(alg) alg<F2CCell, F2CSwath, F2CRoute>;
-    %template(alg) alg<F2CCell, F2CSwath, F2CPath>;
-    %template(alg) alg<F2CCell, F2CSwath, F2CRoute, F2CPath>;
-    %template(alg) alg<F2CCell, F2CSwaths, F2CRoute>;
-    %template(alg) alg<F2CCell, F2CSwaths, F2CPath>;
-    %template(alg) alg<F2CCell, F2CSwaths, F2CRoute, F2CPath>;
-    %template(alg) alg<F2CCell, F2CSwathsByCells, F2CRoute>;
-    %template(alg) alg<F2CCell, F2CSwathsByCells, F2CPath>;
-    %template(alg) alg<F2CCell, F2CSwathsByCells, F2CRoute, F2CPath>;
-    %template(alg) alg<F2CCells, F2CSwath, F2CRoute>;
-    %template(alg) alg<F2CCells, F2CSwath, F2CPath>;
-    %template(alg) alg<F2CCells, F2CSwath, F2CRoute, F2CPath>;
-    %template(alg) alg<F2CCells, F2CSwaths, F2CRoute>;
-    %template(alg) alg<F2CCells, F2CSwaths, F2CPath>;
-    %template(alg) alg<F2CCells, F2CSwaths, F2CRoute, F2CPath>;
-    %template(alg) alg<F2CCells, F2CSwathsByCells, F2CRoute>;
-    %template(alg) alg<F2CCells, F2CSwathsByCells, F2CPath>;
-    %template(alg) alg<F2CCells, F2CSwathsByCells, F2CRoute, F2CPath>;
   }
 %enddef
-%define DEFINE_PATH_COSTS(class_name, alg)
+%define DEFINE_RP_COSTS(class_name, alg)
   %extend f2c::obj::class_name {
     %template(alg) alg<F2CPoint, F2CPoint>;
     %template(alg) alg<F2CPoint, double, F2CPoint>;
@@ -243,18 +229,33 @@ typedef long unsigned int size_t;
     %template(alg) alg<F2CSwath>;
     %template(alg) alg<F2CSwaths>;
     %template(alg) alg<F2CRoute>;
+  }
+%enddef
+%define DEFINE_PP_COSTS(class_name, alg)
+  %extend f2c::obj::class_name {
     %template(alg) alg<F2CPath>;
   }
 %enddef
 
-%rename(OBJ_GlobalObjective) f2c::obj::GlobalObjective;
+
+%include "fields2cover/objectives/base_objective.h"
+
+%rename(OBJ_HGObjective) f2c::obj::HGObjective;
+%rename(OBJ_SGObjective) f2c::obj::SGObjective;
+%template(OBJ_Base_HG_OBJ) f2c::obj::BaseObjective<f2c::obj::HGObjective>;
+%template(OBJ_Base_SG_OBJ) f2c::obj::BaseObjective<f2c::obj::SGObjective>;
+%template(OBJ_Base_RP_OBJ) f2c::obj::BaseObjective<f2c::obj::RPObjective>;
+%template(OBJ_Base_PP_OBJ) f2c::obj::BaseObjective<f2c::obj::PPObjective>;
+DEFINE_HG_COSTS(BaseObjective<f2c::obj::HGObjective>, computeCostWithMinimizingSign)
+DEFINE_SG_COSTS(BaseObjective<f2c::obj::SGObjective>, computeCostWithMinimizingSign)
+DEFINE_RP_COSTS(BaseObjective<f2c::obj::RPObjective>, computeCostWithMinimizingSign)
+DEFINE_PP_COSTS(BaseObjective<f2c::obj::PPObjective>, computeCostWithMinimizingSign)
+
+%include "fields2cover/objectives/hg_objective.h"
+%rename(OBJ_RemArea) f2c::obj::RemArea;
+%include "fields2cover/objectives/rem_area.h"
+
 %include "fields2cover/objectives/sg_objective.h"
-DEFINE_GLOBAL_COSTS(SGObjective, computeCostWithMinimizingSign)
-
-%include "fields2cover/objectives/optimization_class.h"
-DEFINE_GLOBAL_COSTS(OptimizationClass, computeCost)
-DEFINE_GLOBAL_COSTS(OptimizationClass, computeCostWithMinimizingSign)
-
 %rename(OBJ_NSwath) f2c::obj::NSwath;
 %include "fields2cover/objectives/n_swath.h"
 %rename(OBJ_FieldCoverage) f2c::obj::FieldCoverage;
@@ -264,18 +265,15 @@ DEFINE_GLOBAL_COSTS(OptimizationClass, computeCostWithMinimizingSign)
 %rename(OBJ_SwathLength) f2c::obj::SwathLength;
 %include "fields2cover/objectives/swath_length.h"
 
-%rename(OBJ_RPObjective) f2c::obj::RPObjective;
-%include "fields2cover/objectives/rp_objective.h"
-DEFINE_PATH_COSTS(RPObjective, computeCostWithMinimizingSign)
 
+%include "fields2cover/objectives/rp_objective.h"
 %rename(OBJ_DirectDistPathObj) f2c::obj::DirectDistPathObj;
 %include "fields2cover/objectives/direct_dist_path_obj.h"
 %include "fields2cover/objectives/complete_turn_path_obj.h"
 
-%template(OBJ_Optimization_NSwath) f2c::obj::OptimizationClass<f2c::obj::NSwath>;
-%template(OBJ_Optimization_FieldCoverage) f2c::obj::OptimizationClass<f2c::obj::FieldCoverage>;
-%template(OBJ_Optimization_Overlaps) f2c::obj::OptimizationClass<f2c::obj::Overlaps>;
-%template(OBJ_Optimization_SwathLength) f2c::obj::OptimizationClass<f2c::obj::SwathLength>;
+%include "fields2cover/objectives/pp_objective.h"
+%rename(OBJ_PathLength) f2c::obj::PathLength;
+%include "fields2cover/objectives/path_length.h"
 
 %template(OBJ_CompleteTurnPathObj_Dubins) f2c::obj::CompleteTurnPathObj<f2c::pp::DubinsCurves>;
 %template(OBJ_CompleteTurnPathObj_DubinsCC) f2c::obj::CompleteTurnPathObj<f2c::pp::DubinsCurvesCC>;
@@ -283,10 +281,13 @@ DEFINE_PATH_COSTS(RPObjective, computeCostWithMinimizingSign)
 %template(OBJ_CompleteTurnPathObj_ReedsSheppHC) f2c::obj::CompleteTurnPathObj<f2c::pp::ReedsSheppCurvesHC>;
 
 %include "fields2cover/headland_generator/headland_generator_base.h"
+%rename(HG_Const_gen) f2c::hg::ConstHL;
 %include "fields2cover/headland_generator/constant_headland.h"
 
 
 %include "fields2cover/swath_generator/swath_generator_base.h"
+%template(SG_Swath_gen_bf_template) f2c::sg::SwathGeneratorBase<f2c::sg::BruteForce>;
+%rename(SG_BruteForce) f2c::sg::BruteForce;
 %include "fields2cover/swath_generator/brute_force.h"
 
 
@@ -307,7 +308,6 @@ DEFINE_PATH_COSTS(RPObjective, computeCostWithMinimizingSign)
 %include "fields2cover/path_planning/turning_base.h"
 
 %define DEFINE_PP(file_src, alg)
-  %ignore f2c::pp::alg::alg();
   %rename(PP_ ## alg) f2c::pp::alg;
   %include file_src
 %enddef
@@ -318,42 +318,6 @@ DEFINE_PP("fields2cover/path_planning/reeds_shepp_curves.h", ReedsSheppCurves)
 DEFINE_PP("fields2cover/path_planning/reeds_shepp_curves_hc.h", ReedsSheppCurvesHC)
 %rename(PP_PathPlanning) f2c::pp::PathPlanning;
 %include "fields2cover/path_planning/path_planning.h"
-
-
-%define TEMPLATE_COST_FUNC_NAME(prefix, T, OBJ_NAME, OBJ)
-  %template(prefix ## _ ## OBJ_NAME) T<f2c::obj::OBJ>;
-%enddef
-
-%define TEMPLATE_COST_FUNC(prefix, T, OBJ)
-  TEMPLATE_COST_FUNC_NAME(prefix, T, OBJ, OBJ)
-%enddef
-
-%define TEMPLATE_GLOBAL_COST_FUNC_WRAP(prefix, T)
-  TEMPLATE_COST_FUNC(prefix, T, NSwath)
-  TEMPLATE_COST_FUNC(prefix, T, FieldCoverage)
-  TEMPLATE_COST_FUNC(prefix, T, Overlaps)
-  TEMPLATE_COST_FUNC(prefix, T, SwathLength)
-%enddef
-
-
-%define TEMPLATE_PATH_COST_FUNC_WRAP(prefix, T)
-  TEMPLATE_COST_FUNC(prefix, T, DirectDistPathObj)
-  TEMPLATE_COST_FUNC_NAME(prefix, T, DistDubins, CompleteTurnPathObj<f2c::pp::DubinsCurves>)
-  TEMPLATE_COST_FUNC_NAME(prefix, T, DistDubinsCC, CompleteTurnPathObj<f2c::pp::DubinsCurvesCC>)
-  TEMPLATE_COST_FUNC_NAME(prefix, T, DistReedsShepp, CompleteTurnPathObj<f2c::pp::ReedsSheppCurves>)
-  TEMPLATE_COST_FUNC_NAME(prefix, T, DistReedsSheppHC, CompleteTurnPathObj<f2c::pp::ReedsSheppCurvesHC>)
-%enddef
-
-TEMPLATE_GLOBAL_COST_FUNC_WRAP(OBJ_Optimization_base_class, f2c::obj::OptimizationClass)
-TEMPLATE_GLOBAL_COST_FUNC_WRAP(HG_base_class, f2c::hg::HeadlandGeneratorBase)
-TEMPLATE_GLOBAL_COST_FUNC_WRAP(SG_base_class, f2c::sg::SwathGeneratorBase)
-
-
-TEMPLATE_GLOBAL_COST_FUNC_WRAP(HG_Const_gen, f2c::hg::ConstHL)
-%template(HG_Const_gen) f2c::hg::ConstHL<>;
-
-TEMPLATE_GLOBAL_COST_FUNC_WRAP(SG_BruteForce, f2c::sg::BruteForce)
-
 
 
 %include "python/Fields2Cover.i"

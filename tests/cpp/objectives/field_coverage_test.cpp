@@ -36,9 +36,6 @@ TEST(fields2cover_obj_field_coverage, get_best_value) {
 
   swaths.emplace_back(swath2);
   EXPECT_NEAR(obj.computeCost(fields, swaths), 1.0, 1e-5);
-
-  EXPECT_NEAR(obj.computeCost(F2CRoute()), 0.0, 1e-5);
-
 }
 
 TEST(fields2cover_obj_field_coverage, computeCost_cost) {

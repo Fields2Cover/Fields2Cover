@@ -9,33 +9,26 @@
 
 namespace f2c::rp {
 
-SingleCellSwathsOrderBase::SingleCellSwathsOrderBase() = default;
-
-SingleCellSwathsOrderBase::SingleCellSwathsOrderBase(F2CSwaths& swaths) {
-  setSwaths(swaths);
-}
-
-SingleCellSwathsOrderBase::~SingleCellSwathsOrderBase() = default;
-
-F2CSwaths& SingleCellSwathsOrderBase::genSortedSwaths() {
+F2CSwaths SingleCellSwathsOrderBase::genSortedSwaths(
+    const F2CSwaths& swaths, uint32_t variant) const {
   // Always sort swaths to work with them in the same direction.
-  swaths_.sort();
-  sortSwaths();
-  swaths_.reverseDirOddSwaths();
-  ++counter_;
-  return swaths_;
-}
-
-void SingleCellSwathsOrderBase::setSwaths(F2CSwaths& swaths) {
-  swaths_ = swaths;
-}
-
-void SingleCellSwathsOrderBase::changeStartPoint() {
-  if (counter_ & 1) {
-    swaths_.reverse();
+  F2CSwaths new_swaths = swaths.clone();
+  if (new_swaths.size() > 0) {
+    new_swaths.sort();
+    this->changeStartPoint(new_swaths, variant);
+    this->sortSwaths(new_swaths);
+    new_swaths.reverseDirOddSwaths();
   }
-  if (counter_ & 2) {
-    swaths_[0].reverse();
+  return new_swaths;
+}
+
+void SingleCellSwathsOrderBase::changeStartPoint(
+    F2CSwaths& swaths, uint32_t variant) const {
+  if (variant & 1) {
+    swaths.reverse();
+  }
+  if (variant & 2) {
+    swaths[0].reverse();
   }
 }
 

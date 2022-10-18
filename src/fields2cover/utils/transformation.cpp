@@ -29,9 +29,9 @@ F2CPath Transform::transformPathWithFieldRef(const F2CPath& path,
       const F2CField& field, const std::string& coord_sys_to) {
   auto new_path = path.clone();
   auto coords = generateCoordTransf(field.coord_sys, coord_sys_to);
-  for (auto&& p : new_path.points) {
-    p = p + field.ref_point;
-    p->transform(coords.get());
+  for (auto&& s : new_path.states) {
+    s.point = s.point + field.ref_point;
+    s.point->transform(coords.get());
   }
   return new_path;
 }
@@ -74,8 +74,8 @@ F2CPath Transform::transformPath(const F2CPath& path,
       const std::string& coord_sys_from, const std::string& coord_sys_to) {
   auto new_path = path.clone();
   auto coords = generateCoordTransf(coord_sys_from, coord_sys_to);
-  for (auto&& p : new_path.points) {
-    p->transform(coords.get());
+  for (auto&& s : new_path.states) {
+    s.point->transform(coords.get());
   }
   return new_path;
 }

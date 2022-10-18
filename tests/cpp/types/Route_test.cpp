@@ -21,6 +21,8 @@ TEST(fields2cover_types_route, init) {
   route.connections.emplace_back(F2CMultiPoint());
   EXPECT_FALSE(route.getRouteAsLine().isEmpty());
   EXPECT_EQ(route.getRouteAsLine().getLength(), 3);
+  EXPECT_EQ(route.getLength(), 3);
+  EXPECT_EQ(route.clone().getLength(), 3);
 }
 
 

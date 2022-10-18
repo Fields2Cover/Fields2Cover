@@ -19,8 +19,8 @@ def test_fields2cover_route_spiral_genSortedSwathsEven():
     swaths.push_back(f2c.Swath(f2c.LineString(f2c.VectorPoint(  \
         [f2c.Point(0, i), f2c.Point(1, i)])), i, i));
 
-  swath_order = f2c.RP_Spiral(swaths, size);
-  swaths = swath_order.genSortedSwaths();
+  swath_order = f2c.RP_Spiral(size);
+  swaths = swath_order.genSortedSwaths(swaths);
 
   near(swaths[0].getWidth(), 1);
   near(swaths[1].getWidth(), 6);
@@ -41,8 +41,8 @@ def test_fields2cover_route_spiral_genSortedSwathsOdd():
     swaths.push_back(f2c.Swath(f2c.LineString(f2c.VectorPoint(  \
         [f2c.Point(0, i), f2c.Point(1, i)])), i, i));
 
-  swath_sorter = f2c.RP_Spiral(swaths, size);
-  swaths = swath_sorter.genSortedSwaths();
+  swath_sorter = f2c.RP_Spiral(size);
+  swaths = swath_sorter.genSortedSwaths(swaths);
 
   near(swaths[0].getWidth(), 1);
   near(swaths[1].getWidth(), 5);
@@ -63,10 +63,10 @@ def test_fields2cover_route_spiral_genSortedSwathsEvenSize():
     swaths.push_back(f2c.Swath(f2c.LineString(f2c.VectorPoint(  \
         [f2c.Point(0, i), f2c.Point(1, i)])), i, i));
 
-  swath_sorter = f2c.RP_Spiral(swaths);
+  swath_sorter = f2c.RP_Spiral();
   swath_sorter.setSpiralSize(size);
 
-  swaths = swath_sorter.genSortedSwaths();
+  swaths = swath_sorter.genSortedSwaths(swaths);
 
   near(swaths[0].getWidth(), 1);
   near(swaths[1].getWidth(), 6);
@@ -87,10 +87,10 @@ def test_fields2cover_route_spiral_genSortedSwathsOddSize():
     swaths.push_back(f2c.Swath(f2c.LineString(f2c.VectorPoint(  \
         [f2c.Point(0, i), f2c.Point(1, i)])), i, i));
 
-  swath_sorter = f2c.RP_Spiral(swaths);
+  swath_sorter = f2c.RP_Spiral();
   swath_sorter.setSpiralSize(size);
 
-  swaths = swath_sorter.genSortedSwaths();
+  swaths = swath_sorter.genSortedSwaths(swaths);
 
   near(swaths[0].getWidth(), 1);
   near(swaths[1].getWidth(), 5);
@@ -110,8 +110,8 @@ def test_fields2cover_route_spiral_genSortedSwathsDefaultSize():
     swaths.push_back(f2c.Swath(f2c.LineString(f2c.VectorPoint(  \
         [f2c.Point(0, i), f2c.Point(1, i)])), i, i));
 
-  swath_sorter = f2c.RP_Spiral(swaths);
-  swaths = swath_sorter.genSortedSwaths();
+  swath_sorter = f2c.RP_Spiral();
+  swaths = swath_sorter.genSortedSwaths(swaths);
 
   near(swaths[0].getWidth(), 1);
   near(swaths[1].getWidth(), 2);
@@ -132,9 +132,8 @@ def test_fields2cover_route_spiral_genSortedSwathsDefaultCstr():
         [f2c.Point(0, i), f2c.Point(1, i)])), i, i));
 
   swath_sorter = f2c.RP_Spiral();
-  swath_sorter.setSwaths(swaths);
 
-  swaths = swath_sorter.genSortedSwaths();
+  swaths = swath_sorter.genSortedSwaths(swaths);
 
   near(swaths[0].getWidth(), 1);
   near(swaths[1].getWidth(), 2);

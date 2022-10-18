@@ -14,6 +14,9 @@ TEST(fields2cover_types_swath, hasSameDir) {
   EXPECT_TRUE(swath1.hasSameDir(swath1));
   EXPECT_FALSE(swath1.hasSameDir(swath2));
   EXPECT_FALSE(swath2.hasSameDir(swath1));
+  swath1.targetSameDirAs(swath2);
+  EXPECT_TRUE(swath1.hasSameDir(swath2));
+  EXPECT_EQ(swath1.getPoint(0), F2CPoint(1, 1));
 }
 
 TEST(fields2cover_types_swath, comparison) {
@@ -69,10 +72,19 @@ TEST(fields2cover_types_swath, length) {
   F2CSwath swath1(path1);
   F2CSwath swath2(path2);
   F2CSwath swath3(path3);
+  F2CSwath swath4;
   	
   EXPECT_EQ(swath1.getLength(), 4);
   EXPECT_EQ(swath2.getLength(), 4);
   EXPECT_NEAR(std::pow(swath3.getLength(),2), 2, 1e-7);
+
+  swath4.setPath(path2);
+  EXPECT_EQ(swath4.getLength(), 4);
+}
+TEST(fields2cover_types_swath, set_id) {
+  F2CSwath swath;
+  swath.setId(400);
+  EXPECT_EQ(swath.getId(), 400);
 }
 
 TEST(fields2cover_types_swath, width) {
@@ -103,8 +115,7 @@ TEST(fields2cover_types_swath, area) {
   EXPECT_LT(swath.getWidth() * swath.getLength(), swath.getArea());
 
   F2CCells cells = F2CCells::Buffer(line, 1.0);
-  EXPECT_NEAR(swath.computeAreaCovered(cells).getArea(), cells.getArea(), 1e-5);
-
+  EXPECT_NEAR(swath.getArea(cells), cells.getArea(), 1e-5);
 }
 
 

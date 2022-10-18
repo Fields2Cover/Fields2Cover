@@ -15,42 +15,42 @@ TEST(fields2cover_types_multipoint, init) {
   EXPECT_EQ(ps1.size(), 2);
   F2CMultiPoint ps2{F2CPoint(1,2), F2CPoint(3,2), F2CPoint(1,3)};
   EXPECT_EQ(ps2.size(), 3);
+  F2CMultiPoint ps3(std::vector<F2CPoint>({F2CPoint(1,2), F2CPoint(3,2), F2CPoint(1,3)}));
+  EXPECT_EQ(ps3.size(), 3);
 
-  F2CMultiPoint ps3;
+  F2CMultiPoint ps4;
   for (int i = 0; i < 10; ++i) {
-    ps3.addPoint( i, -i, 3 * i);
+    ps4.addPoint( i, -i, 3 * i);
   }
-  EXPECT_EQ(ps3.size(), 10);
+  EXPECT_EQ(ps4.size(), 10);
   int i = 0;
-  for (const auto& p : ps3) {
+  for (const auto& p : ps4) {
     EXPECT_EQ(p.getX(), i);
     EXPECT_EQ(p.getY(), -i);
     EXPECT_EQ(p.getZ(), 3*i);
     ++i;
   }
-  for (auto&& p : ps3) {
+  for (auto&& p : ps4) {
     p = p + F2CPoint(-1,2,-3);
   }
   i = 0;
-  for (auto&& p : ps3) {
+  for (auto&& p : ps4) {
     EXPECT_EQ(p.getX(), i -1);
     EXPECT_EQ(p.getY(), -i +2);
     EXPECT_EQ(p.getZ(), 3*i -3);
     ++i;
   }
   
-  ps3 *= 2;
-  const auto ps4 = ps3;
-  EXPECT_EQ(ps4.size(), 10);
-  for (int i = 0; i < ps4.size(); ++i) {
+  ps4 *= 2;
+  const auto ps5 = ps4;
+  EXPECT_EQ(ps5.size(), 10);
+  for (int i = 0; i < ps5.size(); ++i) {
     F2CPoint p;
-    ps4.getGeometry(i, p);
+    ps5.getGeometry(i, p);
     EXPECT_EQ(p.getX(), 2*(i -1));
     EXPECT_EQ(p.getY(), 2*(-i +2));
     EXPECT_EQ(p.getZ(), 2*(3*i -3));
-
   }
-
 }
 
 TEST(fields2cover_types_multipoint, getGeometry) {

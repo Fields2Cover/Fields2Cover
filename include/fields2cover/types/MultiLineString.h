@@ -31,15 +31,15 @@ struct MultiLineString :
 
   void operator*=(double b);
 
-  void getGeometry(int i, LineString& line);
+  void getGeometry(size_t i, LineString& line);
 
-  void getGeometry(int i, LineString& line) const;
+  void getGeometry(size_t i, LineString& line) const;
 
-  LineString getGeometry(int i);
+  LineString getGeometry(size_t i);
 
-  const LineString getGeometry(int i) const;
+  const LineString getGeometry(size_t i) const;
 
-  void setGeometry(int i, const LineString& line);
+  void setGeometry(size_t i, const LineString& line);
 
   void append(const OGRGeometry* geom);
 

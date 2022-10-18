@@ -14,8 +14,9 @@ def near(a, b):
 
 def test_fields2cover_swath_brute_gen_bestAngle():
   rand = f2c.Random(4);
-  sw_gen = f2c.SG_BruteForce_NSwath();
+  obj = f2c.OBJ_NSwath();
+  sw_gen = f2c.SG_BruteForce();
   sw_gen.step_angle = 1;
   field = rand.genConvexField(1e3);
   poly = field.field.getCell(0);
-  IsSwathGenerationCorrect(sw_gen, poly);
+  IsSwathGenerationCorrect(sw_gen, obj, poly);

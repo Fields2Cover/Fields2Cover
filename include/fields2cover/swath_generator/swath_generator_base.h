@@ -15,17 +15,17 @@
 #include <limits>
 #include <numeric>
 #include "fields2cover/types.h"
-#include "fields2cover/objectives/optimization_class.h"
+#include "fields2cover/objectives/sg_objective.h"
 
 namespace f2c::sg {
 
 template <typename T>
-class SwathGeneratorBase : public obj::OptimizationClass<T> {
+class SwathGeneratorBase {
  public:
-  virtual F2CSwaths generateBestSwaths(
+  virtual F2CSwaths generateBestSwaths(f2c::obj::SGObjective& obj,
       double op_width, const F2CCell& poly) = 0;
 
-  virtual F2CSwathsByCells generateBestSwaths(
+  virtual F2CSwathsByCells generateBestSwaths(f2c::obj::SGObjective& obj,
       double op_width, const F2CCells& polys);
 
   virtual F2CSwaths generateSwaths(double angle,
@@ -33,11 +33,6 @@ class SwathGeneratorBase : public obj::OptimizationClass<T> {
 
   virtual F2CSwathsByCells generateSwaths(double angle,
       double op_width, const F2CCells& polys);
-
-  double getBestAngle() const;
-
- public:
-  double best_angle {-1e7};  // radians
 };
 
 }  // namespace f2c::sg

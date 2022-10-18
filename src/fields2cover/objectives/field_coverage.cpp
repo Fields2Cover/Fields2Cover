@@ -9,12 +9,12 @@
 namespace f2c::obj {
 
 double FieldCoverage::computeCost(
-    const F2CCell& poly, const F2CSwaths& swaths) const {
+    const F2CCell& poly, const F2CSwaths& swaths) {
   return computeCost(F2CCells(poly), swaths);
 }
 
 double FieldCoverage::computeCost(
-    const F2CCells& poly, const F2CSwaths& swaths) const {
+    const F2CCells& poly, const F2CSwaths& swaths) {
   F2CMultiLineString lines;
   for (const auto& s : swaths) {
     lines.addGeometry(s.getPath());

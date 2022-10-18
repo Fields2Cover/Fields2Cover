@@ -17,12 +17,10 @@
 
 namespace f2c::sg {
 
-template <typename T>
-class BruteForce : public SwathGeneratorBase<T> {
+class BruteForce : public SwathGeneratorBase<BruteForce> {
  public:
-  F2CSwaths generateBestSwaths(double op_width, const F2CCell& poly) override;
-  F2CSwathsByCells generateBestSwaths(
-      double op_width, const F2CCells& poly) override;
+  F2CSwaths generateBestSwaths(f2c::obj::SGObjective& obj,
+      double op_width, const F2CCell& poly) override;
 
  public:
   double step_angle {boost::math::constants::degree<double>()};  // radians
@@ -31,7 +29,6 @@ class BruteForce : public SwathGeneratorBase<T> {
 
 }  // namespace f2c::sg
 
-#include "fields2cover/swath_generator/brute_force_impl.hpp"
 
 
 #endif  // FIELDS2COVER_SWATH_GENERATOR_BRUTE_FORCE_H_

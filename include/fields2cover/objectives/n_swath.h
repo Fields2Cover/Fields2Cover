@@ -20,8 +20,8 @@ namespace f2c::obj {
 class NSwath : public SGObjective {
  public:
   using SGObjective::computeCost;
-  double computeCost(const F2CSwath& s) const override;
-  double computeCost(const F2CSwaths& swaths) const override;
+  double computeCost(const F2CSwath& s) override;
+  double computeCost(const F2CSwaths& swaths) override;
 };
 
 }  // namespace f2c::obj

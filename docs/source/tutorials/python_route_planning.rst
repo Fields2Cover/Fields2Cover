@@ -46,7 +46,7 @@ For these examples, we will continue from the previous tutorial:
   field = rand.generateRandField(5, 1e4);
   cells = field.field;
   no_hl = const_hl.generateHeadlands(cells, 3.0 * robot.robot_width);
-  bf = f2c.SG_BruteForce_NSwath();
+  bf = f2c.SG_BruteForce();
   swaths = bf.generateSwaths(math.pi, robot.op_width, no_hl.getGeometry(0));
 
 Once planned the swaths, it would be awesome to find the best order to cover the field.
@@ -69,8 +69,8 @@ Once it has been called 4 times, the loop starts over.
 
 .. code-block:: python
 
-   boustrophedon_sorter = f2c.RP_Boustrophedon(swaths);
-   swaths = boustrophedon_sorter.genSortedSwaths();
+   boustrophedon_sorter = f2c.RP_Boustrophedon();
+   swaths = boustrophedon_sorter.genSortedSwaths(swaths);
 
 
 +------------------+------------------+
@@ -88,8 +88,8 @@ As with boustrophedon pattern, snake pattern also has 4 variants:
 
 .. code-block:: python
 
-  snake_sorter = f2c.RP_Snake(swaths);
-  swaths = snake_sorter.genSortedSwaths();
+  snake_sorter = f2c.RP_Snake();
+  swaths = snake_sorter.genSortedSwaths(swaths);
 
 +----------+----------+
 | |snake1| | |snake2| |
@@ -119,8 +119,8 @@ Same as previous patterns, spiral pattern also has 4 variants:
 
 .. code-block:: python
 
-  spiral_sorter = f2c.RP_Spiral(swaths, 6);
-  swaths = spiral_sorter.genSortedSwaths();
+  spiral_sorter = f2c.RP_Spiral(6);
+  swaths = spiral_sorter.genSortedSwaths(swaths);
 
 +-----------+-----------+
 | |spiral1| | |spiral2| |
@@ -137,14 +137,14 @@ custom order of the swaths for the path planning process.
 
 .. code-block:: python
     
-    custom_order = f2c.RP_CustomOrder(swaths, [0, 1, 2, 3, 4])
-    swaths = custom_order.genSortedSwaths()
+    custom_order = f2c.RP_CustomOrder([0, 1, 2, 3, 4])
+    swaths = custom_order.genSortedSwaths(swaths)
 
 .. code-block:: python
 
-    custom_order = f2c.RP_CustomOrder(swaths)
+    custom_order = f2c.RP_CustomOrder()
     custom_order = custom_order.setCustomOrder([0, 1 , 2, 3, 4])
-    swaths = custom_order.genSortedSwaths()
+    swaths = custom_order.genSortedSwaths(swaths)
 
 .. note::
     There are several checks whether the customer order can be used or not.

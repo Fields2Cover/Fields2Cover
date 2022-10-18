@@ -18,7 +18,7 @@ TEST(fields2cover_types_multilinestring, init) {
   }
 
   int i = 0;
-  for (const auto& l : lines) {
+  for (const F2CLineString& l : lines) {
     for (int j = 0; j < 5 - i; ++j) {
       EXPECT_EQ(l.getX(j), i);
       EXPECT_EQ(l.getY(j), j+i);
@@ -31,6 +31,25 @@ TEST(fields2cover_types_multilinestring, init) {
 
   i = 0;
   for (auto&& l : lines) {
+    for (int j = 0; j < 5-i; ++j) {
+      EXPECT_EQ(l.getX(j), 2*i);
+      EXPECT_EQ(l.getY(j), 2*(j+i));
+      EXPECT_EQ(l.getZ(j), -2*i * (j+i));
+    }
+    ++i;
+  }
+  const auto const_lines = lines;
+  i = 0;
+  for (auto&& l : const_lines) {
+    for (int j = 0; j < 5-i; ++j) {
+      EXPECT_EQ(l.getX(j), 2*i);
+      EXPECT_EQ(l.getY(j), 2*(j+i));
+      EXPECT_EQ(l.getZ(j), -2*i * (j+i));
+    }
+    ++i;
+  }
+  i = 0;
+  for (F2CLineString& l : lines) {
     for (int j = 0; j < 5-i; ++j) {
       EXPECT_EQ(l.getX(j), 2*i);
       EXPECT_EQ(l.getY(j), 2*(j+i));
@@ -72,7 +91,43 @@ TEST(fields2cover_types_multilinestring, append) {
   EXPECT_EQ(lines.size(), 2);
   lines.append(F2CCells(cell).get());
   EXPECT_EQ(lines.size(), 4);
-
-
-
 }
+
+TEST(fields2cover_types_multilinestring, setGeometry) {
+  F2CLineString line {
+    F2CPoint(0,0), F2CPoint(2,0), F2CPoint(2,2), F2CPoint(0,2)};
+  F2CLineString line2 {
+    F2CPoint(0,0), F2CPoint(4,0), F2CPoint(4,4), F2CPoint(0,4)};
+  F2CMultiLineString lines;
+  EXPECT_EQ(lines.getLength(), 0);
+  EXPECT_EQ(lines.size(), 0);
+
+  lines.setGeometry(0, line2);
+  EXPECT_EQ(lines.getLength(), 12);
+  EXPECT_EQ(lines.size(), 1);
+
+  lines.setGeometry(0, line);
+  EXPECT_EQ(lines.getLength(), 6);
+  EXPECT_EQ(lines.size(), 1);
+
+  lines.setGeometry(1, F2CLineString());
+  EXPECT_EQ(lines.getLength(), 6);
+  EXPECT_EQ(lines.size(), 2);
+
+  lines.setGeometry(10, line);
+  EXPECT_EQ(lines.getLength(), 12);
+  EXPECT_EQ(lines.size(), 11);
+
+  lines.setGeometry(0, line2);
+  EXPECT_EQ(lines.getLength(), 18);
+  EXPECT_EQ(lines.size(), 11);
+}
+
+TEST(fields2cover_types_multilinestring, getLineSegments) {
+  F2CLinearRing ring1 {F2CPoint(0,0), F2CPoint(1,0), F2CPoint(1,1), F2CPoint(0,1), F2CPoint(0,0)};
+  F2CMultiLineString lines = F2CMultiLineString::getLineSegments(ring1);
+  EXPECT_EQ(lines.size(), 4);
+  EXPECT_EQ(lines.size(), ring1.size() - 1);
+  EXPECT_NEAR(lines.getLength(), 4.0, 1e-7);
+}
+

@@ -25,6 +25,29 @@ TEST(fields2cover_types_linestring, init) {
   auto p2 = line4.getGeometry(0);
   EXPECT_EQ(p2.getX(), 20);
   EXPECT_EQ(p2.getY(), 30);
+  F2CLineString line5(std::vector<F2CPoint>({F2CPoint(1,2), F2CPoint(3,2), F2CPoint(1,3)}));
+  EXPECT_EQ(line5.size(), 3);
+  EXPECT_EQ(line5.getX(0), 1);
+  EXPECT_EQ(line5.getX(1), 3);
+}
+
+TEST(fields2cover_types_linestring, loop) {
+  F2CLineString line(std::vector<F2CPoint>({F2CPoint(1,2), F2CPoint(3,4), F2CPoint(5,6)}));
+  int i = 1;
+  for (const F2CPoint& p : line) {
+    EXPECT_EQ(p, F2CPoint(i, i+1));
+    i += 2;
+  }
+  i = 1;
+  for (F2CPoint& p : line) {
+    EXPECT_EQ(p, F2CPoint(i, i+1));
+    i += 2;
+  }
+  i = 1;
+  for (auto&& p : line) {
+    EXPECT_EQ(p, F2CPoint(i, i+1));
+    i += 2;
+  }
 }
 
 

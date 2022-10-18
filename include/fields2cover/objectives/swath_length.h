@@ -18,8 +18,7 @@ namespace f2c::obj {
 class SwathLength : public SGObjective {
  public:
   using SGObjective::computeCost;
-  double computeCost(const F2CSwath& s) const override;
-  double computeCost(const F2CSwaths& swaths) const override;
+  double computeCost(const F2CSwath& s) override;
 };
 
 }  // namespace f2c::obj

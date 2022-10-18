@@ -18,8 +18,7 @@ class DirectDistPathObj : public RPObjective {
  public:
   using RPObjective::computeCost;
 
-  double computeCost(const F2CPoint& p1, double ang1,
-      const F2CPoint& p2, double ang2) override;
+  double computeCost(const F2CPoint& p1, const F2CPoint& p2) override;
 };
 
 

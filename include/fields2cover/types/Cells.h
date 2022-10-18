@@ -29,23 +29,23 @@ struct Cells : public Geometries<Cells, OGRMultiPolygon, wkbMultiPolygon,
   void operator*=(double b);
 
   void addGeometry(const Cell& c);
-  void addRing(int i, const LinearRing& ring);
+  void addRing(size_t i, const LinearRing& ring);
 
   size_t size() const;
 
-  void getGeometry(int i, Cell& cell);
-  void getGeometry(int i, Cell& cell) const;
+  void getGeometry(size_t i, Cell& cell);
+  void getGeometry(size_t i, Cell& cell) const;
 
-  Cell getGeometry(int i);
+  Cell getGeometry(size_t i);
 
-  const Cell getGeometry(int i) const;
+  const Cell getGeometry(size_t i) const;
 
-  void setGeometry(int i, const Cell& cell);
+  void setGeometry(size_t i, const Cell& cell);
 
-  Cell getCell(int i) const;
+  Cell getCell(size_t i) const;
 
-  LinearRing getCellBorder(int i) const;
-  LinearRing getInteriorRing(int i_cell, int i_ring) const;
+  LinearRing getCellBorder(size_t i) const;
+  LinearRing getInteriorRing(size_t i_cell, size_t i_ring) const;
 
   bool isConvex() const;
 
