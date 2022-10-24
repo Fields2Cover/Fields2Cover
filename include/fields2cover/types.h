@@ -43,6 +43,7 @@ using F2CCells = f2c::types::Cells;
 using F2CStrip = f2c::types::Strip;
 using F2CField = f2c::types::Field;
 using F2CPath = f2c::types::Path;
+using F2CPathState = f2c::types::PathState;
 using F2CRoute = f2c::types::Route;
 using F2CSwath = f2c::types::Swath;
 using F2CSwaths = f2c::types::Swaths;
