@@ -8,11 +8,11 @@ LABEL NAME="fields2cover" \
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update && \
-    apt-get install -y software-properties-common && \
-    add-apt-repository -y ppa:ubuntugis/ppa && \
-      apt-get -y update && \
-      apt-get install -y --no-install-recommends \
+RUN apt-get -y update
+RUN apt-get install -y --no-install-recommends apt-utils software-properties-common 
+RUN add-apt-repository -y ppa:ubuntugis/ppa
+RUN apt-get -y update
+RUN apt-get install -y --no-install-recommends \
                     build-essential \
                     ca-certificates \
                     cmake \
@@ -27,6 +27,8 @@ RUN apt-get update && \
                     python3-matplotlib \
                     lcov \
                     libgtest-dev \
+                    libtbb-dev \
+                    swig \
                     && \
                     apt-get autoclean && \
                     apt-get autoremove && \
@@ -37,17 +39,17 @@ RUN python3 -m pip install gcovr
 
 
 COPY . /workspace/fields2cover
-RUN rm -rf /workspace/fields2cover/build 
-WORKDIR /workspace/fields2cover
-RUN mkdir badges build coverage
-RUN cmake -Bbuild -DBUILD_CPP=ON \
-                  -DBUILD_TUTORIALS=OFF \
-                  -DBUILD_TESTS=ON \
-                  -DBUILD_DOC=ON \
-                  -DUSING_MATPLOTLIB=OFF \
-                  -DCMAKE_BUILD_TYPE=Coverage .
+RUN rm -rf /workspace/fields2cover/build && mkdir /workspace/fields2cover/build
+WORKDIR /workspace/fields2cover/build
 
-#RUN cd build & make -j8
+RUN cmake -DBUILD_CPP=ON \
+          -DBUILD_PYTHON=ON \
+          -DBUILD_TUTORIALS=OFF \
+          -DBUILD_TESTS=ON \
+          -DBUILD_DOC=OFF \
+          -DCMAKE_BUILD_TYPE=Release ..
+RUN make -j8
+RUN make install
 
 
 
