@@ -24,6 +24,16 @@ jobs:
         #  generators: "Unix Makefiles"
         #  }
         - {
+            name: "Ubuntu_Latest_GCC with GDAL from Source",
+            os: ubuntu-latest,
+            artifact: "ubuntu_gcc.7z",
+            build_type: "Release",
+            cc: "gcc",
+            cxx: "g++",
+            archiver: "7z a",
+            generators: "Unix Makefiles"
+          }
+        - {
             name: "Ubuntu_Latest_GCC",
             os: ubuntu-latest,
             artifact: "ubuntu_gcc.7z",
@@ -74,6 +84,23 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install gcc-9 g++-9 gcc-multilib
           sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 90 --slave /usr/bin/g++ g++ /usr/bin/g++-9 --slave /usr/bin/gcov gcov /usr/bin/gcov-9
+      - name: Install GDAL on ubuntu from source
+        if: ${{startsWith(matrix.config.name, 'Ubuntu') && endsWith(matrix.config.name, 'Source')}}
+        run: |
+          sudo apt-get install -y build-essential
+          wget http://download.osgeo.org/gdal/3.5.2/gdal-3.5.2.tar.gz
+          tar xvfz gdal-3.5.2.tar.gz
+          cd gdal-3.5.2
+          ./configure --with-python
+          make
+          sudo make install
+          sudo ldconfig
+      - name: Install GDAL on ubuntu from build package
+        if: ${{startsWith(matrix.config.name, 'Ubuntu') && !endsWith(matrix.config.name, 'Source')}}
+        run: |
+          sudo add-apt-repository -y ppa:ubuntugis/ppa
+          sudo apt-get -y update -qq
+          sudo apt-get install -y --no-install-recommends libgdal-dev -qq
       - name: Install more dependencies on ubuntu
         if: startsWith(matrix.config.name, 'Ubuntu')
         run: |
@@ -81,7 +108,7 @@ jobs:
           sudo apt-get -y update -qq
           sudo apt-get install cmake make
           sudo apt-get install -y python3 curl zip unzip -qq
-          sudo apt-get install -y --no-install-recommends ca-certificates doxygen git libeigen3-dev libgdal-dev libpython3-dev python3-pip python3-matplotlib lcov libgtest-dev libtbb-dev swig python3-pytest -qq
+          sudo apt-get install -y --no-install-recommends ca-certificates doxygen git libeigen3-dev libpython3-dev python3-pip python3-matplotlib lcov libgtest-dev libtbb-dev swig python3-pytest -qq
       - name: Install dependencies on macos
         if: startsWith(matrix.config.os, 'macos')
         run: |
