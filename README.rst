@@ -1,9 +1,6 @@
 Fields2Cover
 ============
 
-
-
-
   **Robust and efficient coverage paths for autonomous agricultural vehicles**
   
 |build| |license| |Language-C++| |Language-Python| |stars| |forks|
@@ -142,6 +139,20 @@ Or run on the main folder:
 .. code-block:: console
 
   pytest-3 tests/python/
+
+
+ROS Compatibility
+-----------------
+
+We also provide a `ROS interface <https://github.com/Fields2Cover/fields2cover_ros>`__. On it, you can have a nice visualization of your field and the paths generated:
+
+.. image:: docs/figures/demo_image.png
+   :align: center
+   :width: 1000px 
+
+
+
+
 
 
 Stability
