@@ -23,16 +23,16 @@ jobs:
         #  archiver: "7z a",
         #  generators: "Unix Makefiles"
         #  }
-        - {
-            name: "Ubuntu_Latest_GCC with GDAL from Source",
-            os: ubuntu-latest,
-            artifact: "ubuntu_gcc.7z",
-            build_type: "Release",
-            cc: "gcc",
-            cxx: "g++",
-            archiver: "7z a",
-            generators: "Unix Makefiles"
-          }
+        #- {
+        #    name: "Ubuntu_Latest_GCC with GDAL from Source",
+        #    os: ubuntu-latest,
+        #    artifact: "ubuntu_gcc.7z",
+        #    build_type: "Release",
+        #    cc: "gcc",
+        #    cxx: "g++",
+        #    archiver: "7z a",
+        #    generators: "Unix Makefiles"
+        #  }
         - {
             name: "Ubuntu_Latest_GCC",
             os: ubuntu-latest,
