@@ -35,6 +35,22 @@ Fields2Cover library provides several algorithms to plan the coverage path on co
 
 Although the development of this project is focused on offline planning of agricultural vehicles, the library accepts pull requests from other types of coverage planners.
 
+Citing
+-------
+
+Please cite the  following paper (https://arxiv.org/abs/2210.07838) when using Fields2Cover for your research:
+
+.. code-block:: bibtex
+
+  @article{Mier_Fields2Cover_An_open-source_2022,
+  author = {Mier, Gonzalo and Valente, João and de Bruin, Sytze},
+  doi = {https://doi.org/10.48550/arXiv.2210.07838},
+  journal = {arXiv},
+  title = {{Fields2Cover: An open-source coverage path planning library for unmanned agricultural vehicles}},
+  year = {2022}
+  }
+  
+
 
 Why?
 -----
