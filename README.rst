@@ -93,7 +93,11 @@ Then, from the main folder of the project:
    cd build;
    cmake -DCMAKE_BUILD_TYPE=Release ..;
    make -j$(nproc);
-   sudo make install;
+   
+Finally, you can install it as:
+   
+.. code-block:: console   
+   sudo make install; 
 
 
 Add it to your projects
@@ -150,8 +154,14 @@ We also provide a `ROS interface <https://github.com/Fields2Cover/fields2cover_r
    :align: center
    :width: 1000px 
 
+For being able to use the package from ROS, from `catkin_ws/`:
 
+.. code-block:: console
 
+  git clone https://github.com/Fields2Cover/Fields2Cover src/fields2cover
+  git clone https://github.com/Fields2Cover/fields2cover_ros src/fields2cover_ros src/fields2cover_ros
+  rosdep install -r --ignore-src -y --from-paths .
+  catkin_make_isolated
 
 
 
