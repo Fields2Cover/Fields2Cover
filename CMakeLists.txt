@@ -102,14 +102,14 @@ foreach(p LIB BIN INCLUDE CMAKE)
   endif()
 endforeach()
 
-file(GLOB_RECURSE fields2cover_src 
+file(GLOB_RECURSE fields2cover_src
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*/*/*.cpp"
    )
 
-list(REMOVE_ITEM fields2cover_src 
+list(REMOVE_ITEM fields2cover_src
     "${CMAKE_CURRENT_SOURCE_DIR}/.*"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/.*"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*/.*"
@@ -119,7 +119,7 @@ list(REMOVE_ITEM fields2cover_src
 
 add_library(Fields2Cover SHARED ${fields2cover_src})
 
-target_compile_features(Fields2Cover PUBLIC cxx_std_17) 
+target_compile_features(Fields2Cover PUBLIC cxx_std_17)
 
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
@@ -161,11 +161,11 @@ target_include_directories(Fields2Cover PUBLIC
 )
 
 
-target_link_libraries(Fields2Cover 
+target_link_libraries(Fields2Cover
   PUBLIC
     ${GDAL_LIBRARIES}
     -lpthread
-  PRIVATE 
+  PRIVATE
     nlohmann_json::nlohmann_json
     tinyxml2::tinyxml2
     steering_functions
@@ -182,7 +182,7 @@ set_target_properties(Fields2Cover PROPERTIES
   INTERPROCEDURAL_OPTIMIZATION TRUE PUBLIC_HEADER "include/fields2cover.h")
 
 install(TARGETS Fields2Cover
-  EXPORT Fields2Cover-targets 
+  EXPORT Fields2Cover-targets
   LIBRARY DESTINATION ${INSTALL_LIB_DIR}
   ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
   RUNTIME DESTINATION ${INSTALL_BIN_DIR}
@@ -205,6 +205,9 @@ configure_file(cmake/Fields2CoverConfigVersion.cmake.in
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfig.cmake"
               "${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfigVersion.cmake"
         DESTINATION ${INSTALL_CMAKE_DIR}/cmake/fields2cover)
+
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/package.xml
+        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME})
 
 export(TARGETS Fields2Cover
   FILE Fields2CoverTargets.cmake)
@@ -237,7 +240,7 @@ include(CPack)
 
 if (BUILD_TUTORIALS)
     add_subdirectory(tutorials)
-endif() 
+endif()
 
 #####################################################
 ######################### swig ######################
@@ -245,7 +248,7 @@ endif()
 
 if (BUILD_PYTHON)
     add_subdirectory(swig)
-endif() 
+endif()
 
 #####################################################
 ######################### test ######################
@@ -269,4 +272,3 @@ endif()  # BUILD_CPP
 if(BUILD_DOC)
   add_subdirectory(docs)
 endif()
-

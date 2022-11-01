@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+
+<!-- A package.xml in the root of a cmake projects allows it to be built using catkin or colcon (the ROS build system) -->
+
+<package format="2">
+  <name>fields2cover</name>
+  <version>1.2.0</version>
+  <description>
+    Robust and efficient coverage paths for autonomous agricultural vehicles.
+    A modular and extensible Coverage Path Planning library
+  </description>
+
+  <maintainer email="gonzalo.miermunoz@wur.nl">Gonzalo Mier</maintainer>
+  <license>BSD-3</license>
+
+  <buildtool_depend>cmake</buildtool_depend>
+  <depend>eigen</depend>
+  <depend>git</depend>
+  <depend>libgdal-dev</depend>
+  <depend>swig</depend>
+  <depend>tbb</depend>
+  <exec_depend>python3-matplotlib</exec_depend>
+  <exec_depend>python3-tk</exec_depend>
+  <test_depend>gtest</test_depend>
+  <test_depend>lcov</test_depend>
+
+  <export>
+    <build_type>cmake</build_type>
+  </export>
+</package>
