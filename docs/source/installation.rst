@@ -30,6 +30,7 @@ Then, from the main folder of the project:
 
 .. code-block:: console
 
+   mkdir -p build;
    cd build;
    cmake ..;
    make -j$(nproc);
