@@ -159,7 +159,7 @@ For being able to use the package from ROS, from `catkin_ws/`:
 .. code-block:: console
 
   git clone https://github.com/Fields2Cover/Fields2Cover src/fields2cover
-  git clone https://github.com/Fields2Cover/fields2cover_ros src/fields2cover_ros src/fields2cover_ros
+  git clone https://github.com/Fields2Cover/fields2cover_ros src/fields2cover_ros
   rosdep install -r --ignore-src -y --from-paths .
   catkin_make_isolated
 
