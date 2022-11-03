@@ -2,7 +2,7 @@ FAQ
 ======
 
 
-Is Fields2Cover only focused on agriculture/UGV? 
+Is Fields2Cover only focused on agriculture/UGV?
 -------------------------------------------------
 
 This library is an outcome of a research project about offline Coverage Path Planning for Unmanned Ground Vehicles in Agriculture.

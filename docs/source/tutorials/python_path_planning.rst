@@ -1,12 +1,12 @@
 Part 6: Path planning
 =======================
 
-Lastly, time to create the final path. A good path planner will do this task. 
+Lastly, time to create the final path. A good path planner will do this task.
 
 For these examples, we will continue from the previous tutorial:
 
 .. code-block:: python
-  
+
   rand = f2c.Random(42)
   robot = f2c.Robot(2.0, 6.0)
   const_hl = f2c.HG_Const_gen()
@@ -32,7 +32,7 @@ Dubins curves
 -------------------------------
 
 Dubins curves are generated with 3 segments of turn. Segments of turn in Dubins are always going forward.
-Segment types are straight, right curve or left curve. 
+Segment types are straight, right curve or left curve.
 
 Dubins produces the shortest turn possible.
 
@@ -55,7 +55,7 @@ A vehicle could not follow a path with this issue, so this path planner implemen
 
    dubins_cc = f2c.PP_DubinsCurvesCC();
    path_dubins_cc = path_planner.searchBestPath(robot, swaths, dubins_cc);
- 
+
 .. image:: ../../figures/Tutorial_6_2_Dubins_CC.png
 
 

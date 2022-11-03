@@ -15,7 +15,7 @@ int main() {
   F2CCells field(F2CCell(F2CLinearRing(
     {F2CPoint(0,0), F2CPoint(4,0), F2CPoint(4,4), F2CPoint(0,4), F2CPoint(0,0)})));
 
-  
+
   f2c::obj::RemArea rem_area;
   std::cout << "The remaining area is "
     << rem_area.computeCost(total_field, field) << std::endl;

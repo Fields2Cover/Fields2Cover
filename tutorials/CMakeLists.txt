@@ -1,5 +1,5 @@
 include_directories(${CMAKE_BINARY_DIR})
-  
+
 add_executable(1_basic_types_tutorial 1_basic_types.cpp)
 target_link_libraries(1_basic_types_tutorial PUBLIC Fields2Cover)
 add_executable(2_objective_functions_tutorial 2_objective_functions.cpp)

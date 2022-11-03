@@ -1,6 +1,6 @@
 <GAOS_parcel id="91a790bd-d922-4b77-a016-bd93af1c71ca">
 	<Field id="boundary" lineage="Unknown" date="2017-06-21" area="17.2581">
-		<geometry> 
+		<geometry>
 			<gml:Polygon xmlns:gml="http://www.opengis.net/gml" srsName="EPSG:4258">
 				<gml:outerBoundaryIs>
 					<gml:LinearRing>

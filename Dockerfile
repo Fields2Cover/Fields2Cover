@@ -9,7 +9,7 @@ LABEL NAME="fields2cover" \
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get -y update
-RUN apt-get install -y --no-install-recommends apt-utils software-properties-common 
+RUN apt-get install -y --no-install-recommends apt-utils software-properties-common
 RUN add-apt-repository -y ppa:ubuntugis/ppa
 RUN apt-get -y update
 RUN apt-get install -y --no-install-recommends \

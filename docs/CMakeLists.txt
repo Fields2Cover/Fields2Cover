@@ -28,7 +28,7 @@ if (DOXYGEN_FOUND)
 
 
     add_custom_command(OUTPUT ${SPHINX_INDEX_FILE}
-                   COMMAND 
+                   COMMAND
                      ${SPHINX_EXECUTABLE} -b html
                      -Dbreathe_projects.Fields2Cover=${DOXYGEN_OUTPUT_DIR}
                    ${SPHINX_SOURCE} ${SPHINX_BUILD}

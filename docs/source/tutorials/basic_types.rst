@@ -71,7 +71,7 @@ Basic types are shared pointers
 -------------------------------
 
 Classes derived from GDAL types, like ``F2CPoint`` from ``OGRPoint``,
-use a compound structure of shared pointers on it. 
+use a compound structure of shared pointers on it.
 
 The pointers to GDAL types can be access as ``p1->()`` or ``p1.get()``.
 Usually, this is not needed, as a simple access has been provided:
@@ -160,7 +160,7 @@ It can be initialized as a ``F2CLineString``:
 
       F2CLinearRing ring{F2CPoint(1,1), F2CPoint(1,2), F2CPoint(2,2), F2CPoint(1,1)};
       std::cout << "Area of the ring: " << ring.getArea() << std::endl;
-      
+
    *Area of the ring: 0.5*
 
 The main difference between ``F2CLineString`` and ``F2CLinearRing`` is that ``F2CLinearRing`` is expected to be closed, so the area can be computed.
@@ -206,13 +206,13 @@ First ``F2CLinearRing`` has to be the outter one.
 A ``F2CCells`` (``f2c::types::Cells``) is a multipolygon. It contains zero, one or several ``F2CCell`` on it.
 
 .. code-block:: cpp
-   
+
    F2CCells cells;
    cells.addGeometry(cell);
    std::cout << "The area of the cells is: " << cells.getArea() << std::endl;
 
 *The area of the cells is: 3*
-     
+
 
 Lastly, ``F2CMultiPoint`` (``f2c::types::MultiPoint``) is a collection of ``F2CPoint``
 
@@ -234,25 +234,25 @@ Lastly, ``F2CMultiPoint`` (``f2c::types::MultiPoint``) is a collection of ``F2CP
 Accessing elements in collections
 ---------------------------------
 
-To access each of the elements in a collection, the function ``getGeometry(int n)`` returns the element n. 
+To access each of the elements in a collection, the function ``getGeometry(int n)`` returns the element n.
 
 .. code-block:: cpp
- 
+
    F2CPoint p_0 = points.getGeometry(0);
-   std::cout << "First point in points: " << p_0 << std::endl; 
-   
-*First point in points: Point(1, 2, 0)*   
+   std::cout << "First point in points: " << p_0 << std::endl;
+
+*First point in points: Point(1, 2, 0)*
 
 Unfortunately, if we change the child element, it is not changed on the collection.
 If you want to keep it, you have to set the geometry back with ``setGeometry()``
 
 .. code-block:: cpp
- 
+
    p_0 *= 1e5;
-   std::cout << "Modified p_0: " << p_0 << std::endl; 
-   std::cout << "First point in points without modification: " << points.getGeometry(0) << std::endl; 
+   std::cout << "Modified p_0: " << p_0 << std::endl;
+   std::cout << "First point in points without modification: " << points.getGeometry(0) << std::endl;
    points.setGeometry(0, p_0);
-   std::cout << "Modified first point in points: " << points.getGeometry(0) << std::endl; 
+   std::cout << "Modified first point in points: " << points.getGeometry(0) << std::endl;
 
 | *Modified p_0: Point(100000, 200000, 0)*
 | *First point in points without modification: Point(1, 2, 0)*
@@ -281,14 +281,14 @@ Other important parameters of ``F2CRobot`` are:
 
 - *linear_curv_change*: is the maximum change of curvature in a turn. It's used to prevent instant changes of curvature.
 
-- *max_vel*: if not set, the velocity when turning is *cruise_speed*. 
+- *max_vel*: if not set, the velocity when turning is *cruise_speed*.
 
 
 F2CSwath, F2CSwaths and F2CSwathsByCells
 ----------------------------------------
 
 A swath, or AB line, is the path that uses an agricultural vehicle to cross the field. On Precision Agriculture, swaths are fixed.
-Swaths are coded in the Fields2Cover library as ``F2CSwath``. 
+Swaths are coded in the Fields2Cover library as ``F2CSwath``.
 
 A ``F2CSwath`` is defined by a ``F2CLineString``, which defines the path of the swath, and the width of the swath.
 
@@ -306,7 +306,7 @@ If there are none, the ``F2CRoute`` will start with the first ``F2CSwaths``, the
 ``F2CMultiPoint`` are employed to go from the end of one ``F2CSwaths`` to the start of the next ``F2CSwaths``.
 The ``F2CMultiPoint`` could be empty.
 
-A ``F2CRoute`` is not a path because it doesn't have the turns or the velocities the vehicle has to have. 
+A ``F2CRoute`` is not a path because it doesn't have the turns or the velocities the vehicle has to have.
 On the other hand, ``F2CPath`` defines the point, angle, velocity and duration of each step.
 With a ``F2CPath``, a vehicle knows exactly where, when and how should it be.
 

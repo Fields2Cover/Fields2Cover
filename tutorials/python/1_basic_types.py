@@ -38,7 +38,7 @@ p5 = f2c.Point()
 p5.importFromWkt("POINT (0 4 4)")
 print("Point 5: ", p5)
 
-  
+
 print("\n\n####### Tutorial 1.2 Basic types are shared pointers ######")
 # Difference between cloning and copying a point
 old_p = f2c.Point(1, 2)
@@ -115,7 +115,7 @@ print("First point in points without modification: ", points.getGeometry(0));
 points.setGeometry(0, p_0);
 print("Modified first point in points: ", points.getGeometry(0));
 
-  
+
 print("\n\n####### Tutorial 1.9 Visualizing Fields2Cover data ######")
 
 f2c.Visualizer.figure(100);

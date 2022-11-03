@@ -28,13 +28,13 @@ Part 5: Route planning
 
 
 A route planner searches the best order to cover previously generated swaths.
-Usually, metaheuristics are used in the search. 
+Usually, metaheuristics are used in the search.
 
 .. note::
-  In this version of Fields2Cover, no metaheuristic is provided, only predefined patterns. 
+  In this version of Fields2Cover, no metaheuristic is provided, only predefined patterns.
   Route patterns do not return ``Route``, but ``Swaths`` instead.
   In the next version, route planners will support metaheuristics, ``Cells`` as inputs, and ``Route`` as output.
-  
+
 
 For these examples, we will continue from the previous tutorial:
 
@@ -132,11 +132,11 @@ Same as previous patterns, spiral pattern also has 4 variants:
 Custom order
 -------------------------------
 
-To support more general approach for coverage path planning it's possible to define 
+To support more general approach for coverage path planning it's possible to define
 custom order of the swaths for the path planning process.
 
 .. code-block:: python
-    
+
     custom_order = f2c.RP_CustomOrder([0, 1, 2, 3, 4])
     swaths = custom_order.genSortedSwaths(swaths)
 

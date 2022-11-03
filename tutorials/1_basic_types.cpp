@@ -37,7 +37,7 @@ int main() {
   p5.importFromWkt("POINT (0 4 4)");
   std::cout << "Point 5: " << p5 << std::endl;
 
-  
+
 
   std::cout << std::endl << std::endl;
   std::cout << "####### Tutorial 1.2 Basic types are shared pointers ######"
@@ -60,7 +60,7 @@ int main() {
   std::cout << "Old point is: " << old_p <<
     " and copied point is: " << copy_p << std::endl;
 
-  
+
   std::cout << std::endl << std::endl;
   std::cout << "####### Tutorial 1.3 Initialize a F2CLineString ######"
     << std::endl;
@@ -132,7 +132,7 @@ int main() {
   points.setGeometry(0, p_0);
   std::cout << "Modified first point in points: " << points.getGeometry(0) << std::endl;
 
-  
+
   std::cout << std::endl << std::endl;
   std::cout << "####### Tutorial 1.9 Visualizing Fields2Cover data ######"
     << std::endl;

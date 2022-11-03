@@ -1,7 +1,7 @@
 Part 3: Headland generator
 ===========================
 
-Agricultural vehicles need space to turn between swaths. This area is called a headland. 
+Agricultural vehicles need space to turn between swaths. This area is called a headland.
 In Fields2Cover, the headland generator will take a ``F2CCells`` and the width of the headland as input, and it will return another ```F2CCells``` of the same field without the headlands.
 
 Lets create a random field with ``5`` sides and ``1e4`` meters squared of area, and a robot with ``2`` meters of width.

@@ -16,7 +16,7 @@ Points are the most basic type. There are many ways to initialize a ``Point`` (`
 1. With x and y axis on the constructor
 
    .. code-block:: python
-      
+
       p1 = f2c.Point(1.2, 3.4)
       print("Point 1: ", p1)
 
@@ -74,7 +74,7 @@ Basic types are shared pointers
 -------------------------------
 
 Classes derived from GDAL types, like ``Point`` from ``OGRPoint``,
-use a compound structure of shared pointers on it. 
+use a compound structure of shared pointers on it.
 
 One of the effects of using shared pointers in the classes is the difference between copying and cloning.
 
@@ -151,7 +151,7 @@ It can be initialized as a ``LineString``:
       ring = f2c.LinearRing();
       [ring.addPoint(p) for p in [f2c.Point(1,1), f2c.Point(1,2), f2c.Point(2,2), f2c.Point(1,1)]];
       print("Area of the ring: ", ring.getArea())
-      
+
    *Area of the ring: 0.5*
 
 The main difference between ``LineString`` and ``LinearRing`` is that ``LinearRing`` is expected to be closed, so the area can be computed.
@@ -163,7 +163,7 @@ Initializing other collections
 A ``MultiLineString`` (``f2c.MultiLineString``) are several ``LineString``. It can be initialize as:
 
 .. code-block:: python
-    
+
     lines = f2c.MultiLineString();
     lines.addGeometry(line1);
     lines.addGeometry(line2);
@@ -197,13 +197,13 @@ First ``LinearRing`` has to be the outter one.
 A ``Cells`` (``f2c.Cells``) is a multipolygon. It contains zero, one or several ``Cell`` on it.
 
 .. code-block:: python
-   
+
    cells = f2c.Cells();
    cells.addGeometry(cell);
    print("The area of the cells is: ", cells.getArea(), "\n\n")
 
 *The area of the cells is: 3*
-     
+
 
 Lastly, ``MultiPoint`` (``f2c.MultiPoint``) is a collection of ``Point``
 
@@ -226,20 +226,20 @@ Lastly, ``MultiPoint`` (``f2c.MultiPoint``) is a collection of ``Point``
 Accessing elements in collections
 ---------------------------------
 
-To access each of the elements in a collection, the function ``getGeometry(n)`` returns the element n. 
+To access each of the elements in a collection, the function ``getGeometry(n)`` returns the element n.
 
 .. code-block:: python
- 
+
    p_0 = points.getGeometry(0);
    print("First point in points: ", p_0, "\n")
-   
-*First point in points: Point(1, 2, 0)*   
+
+*First point in points: Point(1, 2, 0)*
 
 Unfortunately, if we change the child element, it is not changed on the collection.
 If you want to keep it, you have to set the geometry back with ``setGeometry()``
 
 .. code-block:: python
- 
+
    p_0 *= 1e5;
    print("Modified p_0: ", p_0);
    print("First point in points without modification: ", points.getGeometry(0));
@@ -273,14 +273,14 @@ Other important parameters of ``Robot`` are:
 
 - *linear_curv_change*: is the maximum change of curvature in a turn. It's used to prevent instant changes of curvature.
 
-- *max_vel*: if not set, the velocity when turning is *cruise_speed*. 
+- *max_vel*: if not set, the velocity when turning is *cruise_speed*.
 
 
 Swath, Swaths and SwathsByCells
 ----------------------------------------
 
 A swath, or AB line, is the path that uses an agricultural vehicle to cross the field. On Precision Agriculture, swaths are fixed.
-Swaths are coded in the Fields2Cover library as ``Swath``. 
+Swaths are coded in the Fields2Cover library as ``Swath``.
 
 A ``Swath`` is defined by a ``LineString``, which defines the path of the swath, and the width of the swath.
 
@@ -298,7 +298,7 @@ If there are none, the ``Route`` will start with the first ``Swaths``, then the 
 ``MultiPoint`` are employed to go from the end of one ``Swaths`` to the start of the next ``Swaths``.
 The ``MultiPoint`` could be empty.
 
-A ``Route`` is not a path because it doesn't have the turns or the velocities the vehicle has to have. 
+A ``Route`` is not a path because it doesn't have the turns or the velocities the vehicle has to have.
 On the other hand, ``Path`` defines the point, angle, velocity and duration of each step.
 With a ``Path``, a vehicle knows exactly where, when and how should it be.
 

@@ -175,7 +175,7 @@ Path length
 ^^^^^^^^^^^
 
 .. code-block:: python
-  
+
     path = f2c.Path()
     path.appendSwath(swaths_path.at(0), 1);
     path.appendSwath(swaths_path.at(1), 1);

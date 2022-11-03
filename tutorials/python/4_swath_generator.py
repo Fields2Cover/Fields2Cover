@@ -30,7 +30,7 @@ swath_length = f2c.OBJ_SwathLength();
 
 swaths_bf_swathlength = bf_sw_gen.generateBestSwaths(swath_length, robot.op_width, no_hl.getGeometry(0));
 
-  
+
 f2c.Visualizer.figure(5);
 f2c.Visualizer.plot(cells);
 f2c.Visualizer.plot(no_hl);

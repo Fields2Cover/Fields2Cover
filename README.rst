@@ -2,7 +2,7 @@ Fields2Cover
 ============
 
   **Robust and efficient coverage paths for autonomous agricultural vehicles**
-  
+
 |build| |license| |Language-C++| |Language-Python| |stars| |forks|
 
 
@@ -15,7 +15,7 @@ Fields2Cover
 
 
 The coverage path planning problem (CPP) aims to create a path to cover an area with one or several vehicles.
-CPP has many application as cleaning robots, surveillance, de-mining or agriculture. 
+CPP has many application as cleaning robots, surveillance, de-mining or agriculture.
 Each of the application has its own requirements.
 For example, in cleaning robots environment is usually unknown and the objective is improve the probability of cover the area.
 On the other hand, CPP in agriculture knows the area to cover, but the coverage has to be complete.
@@ -27,7 +27,7 @@ Fields2Cover library provides several algorithms to plan the coverage path on co
 
 .. image:: docs/figures/diagram-F2C.jpg
    :align: center
-   :width: 500px 
+   :width: 500px
 
 
 Although the development of this project is focused on offline planning of agricultural vehicles, the library accepts pull requests from other types of coverage planners.
@@ -46,7 +46,7 @@ Please cite the  following paper (https://arxiv.org/abs/2210.07838) when using F
   title = {{Fields2Cover: An open-source coverage path planning library for unmanned agricultural vehicles}},
   year = {2022}
   }
-  
+
 
 
 Why?
@@ -85,7 +85,7 @@ Some packages are needed before compiling the package:
 Compilation
 ^^^^^^^^^^^^
 
-First, clone this repository. 
+First, clone this repository.
 Then, from the main folder of the project:
 
 .. code-block:: console
@@ -93,11 +93,11 @@ Then, from the main folder of the project:
    cd build;
    cmake -DCMAKE_BUILD_TYPE=Release ..;
    make -j$(nproc);
-   
+
 Finally, you can install it as:
-   
-.. code-block:: console   
-   sudo make install; 
+
+.. code-block:: console
+   sudo make install;
 
 
 Add it to your projects
@@ -106,7 +106,7 @@ Add it to your projects
 To add Fields2Cover into your CMakeLists.txt, it is as easy as:
 
 .. code-block:: console
-   
+
    find_package(Fields2Cover REQUIRED)
    target_link_libraries(<<<your_package>>> Fields2Cover)
 
@@ -114,12 +114,12 @@ To add Fields2Cover into your CMakeLists.txt, it is as easy as:
 Compilation with python interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-As without the interface, clone this repository. 
+As without the interface, clone this repository.
 
 Install the packages required as:
 
 .. code-block:: console
-   
+
    sudo apt install swig python3-pytest
 
 
@@ -137,7 +137,7 @@ To test if the compilation and installation of the python interface is correct, 
 .. code-block:: python
 
   import fields2cover
-  
+
 Or run on the main folder:
 
 .. code-block:: console
@@ -152,7 +152,7 @@ We also provide a `ROS interface <https://github.com/Fields2Cover/fields2cover_r
 
 .. image:: docs/figures/demo_image.png
    :align: center
-   :width: 1000px 
+   :width: 1000px
 
 For being able to use the package from ROS, from `catkin_ws/`:
 
@@ -202,7 +202,7 @@ TODO
 Credits and more info
 ----------
 
-This library is only possible thanks to `GDAL <https://gdal.org/index.html>`_ who provides the basic types of this library. 
+This library is only possible thanks to `GDAL <https://gdal.org/index.html>`_ who provides the basic types of this library.
 Other great libraries that made Fields2Cover possible are `hbanzhaf/steering_functions <https://github.com/hbanzhaf/steering_functions>`_, `nlohmann/json <https://github.com/nlohmann/json/>`_, `leethomason/tinyxml2 <https://github.com/leethomason/tinyxml2>`_, `ttk592/spline <https://github.com/ttk592/spline>`_ and `lava/matplotlib-cpp <https://github.com/lava/matplotlib-cpp>`_
 
 
@@ -218,7 +218,7 @@ This code repository is part of the project Fields2Cover which is (partly) finan
 .. |Language-C++| image:: https://img.shields.io/badge/language-C++-blue.svg
    :target: https://isocpp.org/
 .. |Language-Python| image:: https://img.shields.io/badge/language-Python-blue.svg
-   :target: https://www.python.org/ 
+   :target: https://www.python.org/
 
 
 

@@ -27,7 +27,7 @@ Compute the percentage of main field over the total field. The cost is a value b
       {F2CPoint(0,0), F2CPoint(4,0), F2CPoint(4,4), F2CPoint(0,4), F2CPoint(0,0)})));
 
 
-    f2c::obj::RemArea rem_area; 
+    f2c::obj::RemArea rem_area;
     std::cout << "The remaining area is "
       << rem_area.computeCost(total_field, field) << std::endl;
     std::cout << "The remaining area with sign is "

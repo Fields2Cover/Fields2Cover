@@ -16,7 +16,7 @@ The Coverage Path Planning problem (CPP) aims to create a path to cover an area 
 
 .. image:: ./figures/diagram-F2C.jpg
    :align: center
-   :width: 500px 
+   :width: 500px
 
 
 
