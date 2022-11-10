@@ -5,6 +5,8 @@ LABEL NAME="fields2cover" \
       DESC="Fields2Cover is a complete coverage path planning package for autonomous robots" \
       MAINTAINER="Gonzalo Mier"
 
+ENV DEBIAN_FRONTEND noninteractive
+
 RUN apt-get -y update
 RUN apt-get install -y --no-install-recommends apt-utils software-properties-common
 RUN add-apt-repository -y ppa:ubuntugis/ppa
@@ -25,7 +27,7 @@ RUN apt-get install -y --no-install-recommends \
                     lcov \
                     libgtest-dev \
                     libtbb-dev \
-                    swig \
+                    swig
 
 RUN python3 -m pip install gcovr
 
