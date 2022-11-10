@@ -29,18 +29,4 @@ RUN apt-get install -y --no-install-recommends \
 
 RUN python3 -m pip install gcovr
 
-RUN mkdir build
-WORKDIR /workspace/Fields2Cover/build
-
-RUN cmake -DBUILD_CPP=ON \
-          -DALLOW_PARALLELIZATION=ON \
-          -DBUILD_TUTORIALS=ON \
-          -DBUILD_TESTS=ON \
-          -DBUILD_PYTHON=ON \
-          -DBUILD_DOC=OFF \
-          -DCMAKE_BUILD_TYPE=Release ..
-
-RUN make -j8 && make install
-
-
 
