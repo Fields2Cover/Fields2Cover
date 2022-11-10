@@ -3,7 +3,11 @@ Fields2Cover
 
   **Robust and efficient coverage paths for autonomous agricultural vehicles**
 
-|build| |license| |Language-C++| |Language-Python| |stars| |forks|
+
+
+|Open in GitHub Codespaces|
+
+|build| |license| |Language-C++| |Language-Python| |stars| |forks| 
 
 
 .. image:: docs/figures/logo_fields2cover.jpeg
@@ -178,6 +182,8 @@ If you find any issue/bug/proposal, open an issue and we will try to solve/discu
 
 Pull requests are more than welcome. For major changes, please open an issue first to discuss what you would like to change. Please make sure to update tests as appropriate.
 
+Contributions can be easily made using |Open in GitHub Codespaces|
+
 
 License
 --------
@@ -219,7 +225,8 @@ This code repository is part of the project Fields2Cover which is (partly) finan
    :target: https://isocpp.org/
 .. |Language-Python| image:: https://img.shields.io/badge/language-Python-blue.svg
    :target: https://www.python.org/
-
+.. |Open in GitHub Codespaces| image:: https://github.com/codespaces/badge.svg
+   :target: https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=501080115
 
 
 
