@@ -1,6 +1,6 @@
 Link to blog posts about Fields2Cover:
 
--
+- https://dev.to/gonzalomier/how-to-install-fields2cover-on-linux-for-coverage-path-planning-on-agriculture-3dc0 (06/12/2022)
 
 
 

@@ -7,7 +7,7 @@ Fields2Cover
 
 |Open in GitHub Codespaces|
 
-|build| |license| |Language-C++| |Language-Python| |stars| |forks| 
+|DOI| |build| |license| |Language-C++| |Language-Python| |stars| |forks| 
 
 
 .. image:: docs/figures/logo_fields2cover.jpeg
@@ -227,7 +227,5 @@ This code repository is part of the project Fields2Cover which is (partly) finan
    :target: https://www.python.org/
 .. |Open in GitHub Codespaces| image:: https://github.com/codespaces/badge.svg
    :target: https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=501080115
-
-
-
-
+.. |DOI| image:: https://zenodo.org/badge/DOI/10.48550/arXiv.2210.07838.svg
+   :target: https://doi.org/10.48550/arXiv.2210.07838
