@@ -12,97 +12,9 @@ namespace plt = matplotlibcpp;
 
 namespace f2c {
 
-std::vector<F2CPoint> Visualizer::data2vector(const F2CPoint& t) {
-  return std::vector<F2CPoint>{t.clone()};
-}
-
-void Visualizer::plot(const std::vector<F2CPoint>& points,
-    const std::string& opts) {
-  auto comp = getComponents(points);
-  plt::plot(comp[0], comp[1], opts);
-}
-
-void Visualizer::plot(const F2CPath& path) {
-  std::vector<F2CPoint> points;
-  for (auto&& s : path.states) {
-    points.emplace_back(s.point);
-  }
-  plot(points, "k");
-}
-
-void Visualizer::plot(const F2CCell& cell, const std::string& opts) {
-  for (auto&& rings : cell) {
-    plot(rings, opts);
-  }
-}
-
-void Visualizer::plot(const F2CCells& cells) {
-  for (auto&& cell : cells) {
-    plot(cell, "tab:olive");
-  }
-}
-
-
-void Visualizer::plot(const F2CSwath& swath, const std::string& opt) {
-  auto comps = getComponents(data2vector(swath.getPath()));
-  plt::plot(comps[0], comps[1], opt);
-  plot(F2CPoint(comps[0][0], comps[1][0]), ".g");
-  plot(F2CPoint(comps[0].back(), comps[1].back()), ".k");
-}
-
-void Visualizer::plot(const F2CSwathsByCells& swaths) {
-  for (int i = 0; i < swaths.size(); ++i) {
-    plot(swaths[i]);
-  }
-}
-
-void Visualizer::plot(const F2CSwaths& swaths) {
-  auto colors = color_linspace(
-      std::vector({0x00, 0xff, 0x0}),
-      std::vector({0x15, 0x0f, 0x0b}),
-      swaths.size());
-  for (int i = 0; i < swaths.size(); ++i) {
-    plot(swaths[i], colors[i]);
-  }
-}
-
-void Visualizer::plot(const F2CMultiLineString& lines) {
-  for (auto&& line : lines) {
-    plot(line);
-  }
-}
-
-void Visualizer::plot(const F2CRobots& robots) {
-  for (auto&& r : robots) {
-    plot(r);
-  }
-}
-
-void Visualizer::plot(const F2CRobot& robot) {
-  plot(*robot.start_point, "bD");
-  plot(*robot.end_point, "r*");
-}
-
-void Visualizer::plot(const F2CField& field) {
-  plot(field.field, "tab:orange");
-}
-
-void Visualizer::plot(const F2CFields& fields) {
-  for (auto&& f : fields) {
-    plot(f);
-  }
-}
-
 void Visualizer::plot(const std::vector<double>& t,
     const std::vector<double>& d, const std::string& opts) {
   plt::plot(t, d, opts);
-}
-
-void Visualizer::plot(const std::vector<double>& d,
-    const std::string& opts) {
-  std::vector<double> t(d.size());
-  std::iota(std::begin(t), std::end(t), 0.0);
-  plot(t, d, opts);
 }
 
 void Visualizer::figure(int id) {
@@ -150,9 +62,6 @@ std::vector<std::vector<double>> Visualizer::getComponents(
       [](const F2CPoint& c) -> double { return c.getY();});
   return {x, y};
 }
-
-
-
 
 std::vector<double> Visualizer::linspace(double min, double max, size_t N) {
   double h = (max - min) / (N - 1.0);
