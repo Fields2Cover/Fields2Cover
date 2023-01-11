@@ -147,6 +147,8 @@ void Visualizer::plot(const T& t, const std::string& opts) {
   } else if constexpr (std::is_same<T, F2CRobot>::value) {
     plot(*t.start_point, "bD");
     plot(*t.end_point, "r*");
+  } else if constexpr (std::is_same<T, double>::value) {
+    // Don't do anything
   } else {
     plot(data2vector(t), opts);
   }
