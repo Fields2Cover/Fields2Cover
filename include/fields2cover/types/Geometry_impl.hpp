@@ -36,7 +36,8 @@ Geometry<T, R>::Geometry(const T* g) : data(downCast<T*>(g->clone()),
   [](T* f) {OGRGeometryFactory::destroyGeometry(f);}) {}
 
 template <class T, OGRwkbGeometryType R>
-Geometry<T, R>::Geometry(OGRGeometry* g, EmptyDestructor) : data(downCast<T*>(g), [](T* f) {}) {}
+Geometry<T, R>::Geometry(OGRGeometry* g, EmptyDestructor) :
+  data(downCast<T*>(g), [](T* f) {}) {}
 
 template <class T, OGRwkbGeometryType R>
 Geometry<T, R>::Geometry(const OGRGeometry* g) : data(downCast<T*>(g->clone()),
@@ -214,7 +215,9 @@ template <class T, OGRwkbGeometryType R>
 std::string Geometry<T, R>::exportToWkt() const {
   char *pszWKT = nullptr;
   data->exportToWkt(&pszWKT);
-  return pszWKT;
+  std::string result{pszWKT};
+  CPLFree(pszWKT);
+  return result;
 }
 
 template <class T, OGRwkbGeometryType R>
