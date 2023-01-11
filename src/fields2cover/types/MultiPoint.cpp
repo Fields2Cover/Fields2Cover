@@ -32,23 +32,23 @@ size_t MultiPoint::size() const {
 }
 
 void MultiPoint::getGeometry(int i, Point& point) {
-  point = Point(data->getGeometryRef(i), EmptyDestructor());
+  point = Point(downCast<OGRPoint*>(data->getGeometryRef(i)), EmptyDestructor());
 }
 
 void MultiPoint::getGeometry(int i, Point& point) const {
-  point = Point(data->getGeometryRef(i), EmptyDestructor());
+  point = Point(downCast<OGRPoint*>(data->getGeometryRef(i)), EmptyDestructor());
 }
 
 Point MultiPoint::getGeometry(int i) {
-  return Point(data->getGeometryRef(i));
+  return Point(downCast<OGRPoint*>(data->getGeometryRef(i)));
 }
 
 const Point MultiPoint::getGeometry(int i) const {
-  return Point(data->getGeometryRef(i));
+  return Point(downCast<OGRPoint*>(data->getGeometryRef(i)));
 }
 
 void MultiPoint::setGeometry(int i, const Point& p) {
-    OGRPoint* point = data->getGeometryRef(i);
+    OGRPoint* point = downCast<OGRPoint*>(data->getGeometryRef(i));
     point->setX(p.getX());
     point->setY(p.getY());
     point->setZ(p.getZ());

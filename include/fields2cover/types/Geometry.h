@@ -28,6 +28,8 @@ struct Geometry {
   explicit Geometry(std::shared_ptr<T> g);
   explicit Geometry(T* g, EmptyDestructor);
   explicit Geometry(const T* g);
+  explicit Geometry(OGRGeometry* g, EmptyDestructor);
+  explicit Geometry(const OGRGeometry* g);
   ~Geometry();
   explicit Geometry(const Geometry& g);
   Geometry(Geometry&& g);
@@ -113,6 +115,12 @@ struct Geometry {
 
  protected:
   std::shared_ptr<T> data;
+
+ protected:
+  // Code adapted from:
+  // https://github.com/OSGeo/gdal/blob/b0aa6065a39b252cb8306e9c2e2535d6dda0fb55/port/cpl_conv.h#L397
+  template <typename To, typename From>
+  inline To downCast(From *f) const;
 };
 
 }  // namespace f2c::types

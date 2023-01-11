@@ -10,26 +10,26 @@ namespace f2c::types {
 
 Cells::Cells() {
   data = std::shared_ptr<OGRMultiPolygon>(
-    static_cast<OGRMultiPolygon*>(
+    downCast<OGRMultiPolygon*>(
       OGRGeometryFactory::createGeometry(wkbMultiPolygon)),
     [](OGRMultiPolygon* f) {OGRGeometryFactory::destroyGeometry(f);});
 }
 
 Cells::Cells(const OGRGeometry* geom) {
   if (wkbFlatten(geom->getGeometryType()) == OGRwkbGeometryType::wkbPolygon) {
-    this->data = std::shared_ptr<OGRMultiPolygon>(static_cast<OGRMultiPolygon*>(
+    this->data = std::shared_ptr<OGRMultiPolygon>(downCast<OGRMultiPolygon*>(
         OGRGeometryFactory::createGeometry(wkbMultiPolygon)),
         [](OGRMultiPolygon* f) {OGRGeometryFactory::destroyGeometry(f);});
     this->data->addGeometry(geom->toPolygon());
   } else if (wkbFlatten(geom->getGeometryType()) ==
     OGRwkbGeometryType::wkbMultiPolygon) {
     this->data = std::shared_ptr<OGRMultiPolygon>(
-        geom->clone()->toMultiPolygon(),
+        downCast<OGRMultiPolygon*>(geom->clone()),
         [](OGRMultiPolygon* f) {OGRGeometryFactory::destroyGeometry(f);});
   } else if (wkbFlatten(geom->getGeometryType()) ==
     OGRwkbGeometryType::wkbGeometryCollection) {
       data = std::shared_ptr<OGRMultiPolygon>(
-        static_cast<OGRMultiPolygon*>(
+        downCast<OGRMultiPolygon*>(
           OGRGeometryFactory::createGeometry(wkbMultiPolygon)),
             [](OGRMultiPolygon* f) {OGRGeometryFactory::destroyGeometry(f);});
   } else {
@@ -90,7 +90,7 @@ void Cells::addGeometry(const Cell& c) {
 }
 
 void Cells::addRing(size_t i, const LinearRing& ring) {
-  this->data->getGeometryRef(i)->addRing(ring.get());
+  downCast<OGRPolygon*>(this->data->getGeometryRef(i))->addRing(ring.get());
 }
 
 size_t Cells::size() const {
@@ -103,12 +103,12 @@ Cell Cells::getCell(size_t i) const {
 
 LinearRing Cells::getCellBorder(size_t i) const {
   return LinearRing(
-      data->getGeometryRef(i)->getExteriorRing());
+      downCast<OGRPolygon*>(data->getGeometryRef(i))->getExteriorRing());
 }
 
 LinearRing Cells::getInteriorRing(size_t i_cell, size_t i_ring) const {
   return LinearRing(
-      data->getGeometryRef(i_cell)->getInteriorRing(i_ring));
+      downCast<OGRPolygon*>(data->getGeometryRef(i_cell))->getInteriorRing(i_ring));
 }
 
 bool Cells::isConvex() const {
@@ -170,7 +170,7 @@ LineString Cells::getStraightLongCurve(
   return LineString({
     point.getPointFromAngle(angle, this->getMinSafeLength()),
     point.getPointFromAngle(
-    boost::math::constants::pi<double>() + angle, this->getMinSafeLength())});
+      boost::math::constants::pi<double>() + angle, this->getMinSafeLength())});
 }
 
 MultiLineString Cells::getLinesInside(const LineString& line) const {
