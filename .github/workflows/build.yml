@@ -117,10 +117,20 @@ jobs:
         with:
           python-version: '3.9'
 
+      - name: Ubuntu system dependencies (libboost-dev)
+        run: |
+          apt update
+          apt install -y libboost-dev
+
+      - name: Ubuntu system dependencies
+        uses: awalsh128/cache-apt-pkgs-action@v1.2.1
+        with:
+          packages: doxygen g++ git libeigen3-dev libpython3-dev python3-matplotlib python3-pytest lcov libboost-dev libtbb-dev swig
+
       - name: Install Gtest
         run: |
-          apt-get update
-          apt-get install -y --no-install-recommends doxygen g++ git libeigen3-dev libpython3-dev python3-matplotlib python3-pytest lcov libboost-dev libtbb-dev swig
+          #apt-get update
+          #apt-get install -y --no-install-recommends doxygen g++ git libeigen3-dev libpython3-dev python3-matplotlib python3-pytest lcov libboost-dev libtbb-dev swig
           cd /usr/src/gtest
           cmake CMakeLists.txt
           make
