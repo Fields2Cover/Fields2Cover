@@ -1,4 +1,4 @@
-FROM osgeo/gdal:ubuntu-full-3.5.2
+FROM osgeo/gdal:ubuntu-full-3.0.2
 
 LABEL NAME="fields2cover" \
       VERSION="1.2.0" \
@@ -45,13 +45,12 @@ RUN apt-get install -y --no-install-recommends \
                     lcov \
                     libboost-dev \
                     libgtest-dev \
-                    libtbb-dev \
-                    swig \
-                    && \
-                    apt-get autoclean && \
-                    apt-get autoremove && \
-                    apt-get clean && \
-                    rm -rf /var/lib/apt/lists/*
+                    libtbb-dev
+#                    && \
+#                    apt-get autoclean && \
+#                    apt-get autoremove && \
+#                    apt-get clean && \
+#                    rm -rf /var/lib/apt/lists/*
 
 RUN python3 -m pip install gcovr
 
@@ -59,21 +58,31 @@ RUN apt-get install -y libgtest-dev \
     && cd /usr/src/gtest \
     && cmake CMakeLists.txt \
     && make \
-    && cp lib/*.a /usr/lib/
+    && (cp *.a /usr/lib/ 2>\dev\null || :) \
+    && (cp lib/*.a /usr/lib/ 2>\dev\null || :)
+
+RUN apt-get install -y --no-install-recommends autoconf automake autotools-dev libpcre2-dev bison \
+    && git clone https://github.com/swig/swig.git \
+    && cd swig \
+    && ./autogen.sh \
+    && ./configure \
+    && make -j8 \
+    && make install
+
 
 
 COPY . /workspace/fields2cover
 RUN rm -rf /workspace/fields2cover/build && mkdir /workspace/fields2cover/build
 WORKDIR /workspace/fields2cover/build
 
-RUN cmake -DBUILD_CPP=ON \
-          -DBUILD_PYTHON=ON \
-          -DBUILD_TUTORIALS=OFF \
-          -DBUILD_TESTS=ON \
-          -DBUILD_DOC=OFF \
-          -DCMAKE_BUILD_TYPE=Release ..
-RUN make -j8
-RUN make install
+#RUN cmake -DBUILD_CPP=ON \
+#          -DBUILD_PYTHON=ON \
+#          -DBUILD_TUTORIALS=OFF \
+#          -DBUILD_TESTS=ON \
+#          -DBUILD_DOC=OFF \
+#          -DCMAKE_BUILD_TYPE=Release ..
+#RUN make -j8
+#RUN make install
 
 
 
