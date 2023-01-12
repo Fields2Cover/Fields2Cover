@@ -130,11 +130,11 @@ jobs:
 
 
       - name: Install swig (4.0) with apt
-        if: !${{startsWith(matrix.config.name, 'Ubuntu_GDAL_3_0')}}
+        if: ${{!startsWith(matrix.config.name, 'Ubuntu_GDAL_3_0')}}
         run: apt-get install -y --no-install-recommends swig
 
       - name: Install swig (4.0) from source
-        if: startsWith(matrix.config.name, 'Ubuntu_GDAL_3_0')
+        if: ${{startsWith(matrix.config.name, 'Ubuntu_GDAL_3_0')}}
         run: |
           apt-get install -y --no-install-recommends autoconf automake autotools-dev libpcre2-dev yacc bison
           git clone https://github.com/swig/swig.git
