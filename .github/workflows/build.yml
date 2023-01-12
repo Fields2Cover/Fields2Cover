@@ -117,7 +117,7 @@ jobs:
       - name: Install Gtest
         shell: bash
         run: |
-          apt install libgtest-dev
+          apt install -y libgtest-dev
           cd /usr/src/gtest; cmake CMakeLists.txt ;make; cp *.a /usr/lib
 
       - uses: awalsh128/cache-apt-pkgs-action@latest
