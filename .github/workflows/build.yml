@@ -108,6 +108,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: lukka/get-cmake@latest
       - name: Print env
         run: |
           echo github.event.action: ${{ github.event.action }}
@@ -121,12 +122,6 @@ jobs:
           apt-get install -y --no-install-recommends apt-utils software-properties-common
           apt-get -y update
           apt-get install wget
-          wget https://github.com/Kitware/CMake/releases/download/v3.17.2/cmake-3.17.2-Linux-x86_64.sh -q -O /tmp/cmake-install.sh
-          chmod u+x /tmp/cmake-install.sh
-          mkdir /usr/bin/cmake
-          /tmp/cmake-install.sh --skip-license --prefix=/usr/bin/cmake
-          rm /tmp/cmake-install.sh
-          export PATH="/usr/bin/cmake/bin:${PATH}"
 
           apt-get install -y --no-install-recommends \
             build-essential \
@@ -147,16 +142,6 @@ jobs:
             swig
           python3 -m pip install gcovr
 
-      - name: Install Gtest dependency
-        working-directory: /usr/src/gtest
-        shell: bash
-        run: |
-          apt-get install -y libgtest-dev
-          cd /usr/src/gtest
-          cmake CMakeLists.txt
-          make
-          cp lib/*.a /usr/lib/
-
       - name: Configure GDAL
         shell: bash
         run: |
@@ -168,6 +153,7 @@ jobs:
 
 
       - name: Configure
+        working-directory: ${{github.workspace}}
         shell: bash
         run: |
           mkdir build
