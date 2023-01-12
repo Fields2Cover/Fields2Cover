@@ -145,6 +145,7 @@ jobs:
 
       - name: Install Gtest dependency
         working-directory: /usr/src/gtest
+        run: |
           apt-get install -y libgtest-dev
           cd /usr/src/gtest
           cmake CMakeLists.txt
