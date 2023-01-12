@@ -16,7 +16,7 @@ jobs:
         config:
         - {
             name: "Ubuntu_GDAL_3_0_2",
-            os: osgeo/gdal:ubuntu-full-3.0.2,
+            os: "osgeo/gdal:ubuntu-full-3.0.2",
             artifact: "ubuntu_gdal_3_0_2.7z",
             build_type: "Release",
             cc: "gcc",
@@ -26,7 +26,7 @@ jobs:
           }
         - {
             name: "Ubuntu_GDAL_3_0_4",
-            os: osgeo/gdal:ubuntu-full-3.0.4,
+            os: "osgeo/gdal:ubuntu-full-3.0.4",
             artifact: "ubuntu_gdal_3_0_4.7z",
             build_type: "Release",
             cc: "gcc",
@@ -36,7 +36,7 @@ jobs:
           }
         - {
             name: "Ubuntu_GDAL_3_1_3",
-            os: osgeo/gdal:ubuntu-full-3.1.3,
+            os: "osgeo/gdal:ubuntu-full-3.1.3",
             artifact: "ubuntu_gdal_3_1_3.7z",
             build_type: "Release",
             cc: "gcc",
@@ -46,7 +46,7 @@ jobs:
           }
         - {
             name: "Ubuntu_GDAL_3_2_3",
-            os: osgeo/gdal:ubuntu-full-3.2.3,
+            os: "osgeo/gdal:ubuntu-full-3.2.3",
             artifact: "ubuntu_gdal_3_2_3.7z",
             build_type: "Release",
             cc: "gcc",
@@ -56,7 +56,7 @@ jobs:
           }
         - {
             name: "Ubuntu_GDAL_3_3_3",
-            os: osgeo/gdal:ubuntu-full-3.3.3,
+            os: "osgeo/gdal:ubuntu-full-3.3.3",
             artifact: "ubuntu_gdal_3_3_3.7z",
             build_type: "Release",
             cc: "gcc",
@@ -66,7 +66,7 @@ jobs:
           }
         - {
             name: "Ubuntu_GDAL_3_4_3",
-            os: osgeo/gdal:ubuntu-full-3.4.3,
+            os: "osgeo/gdal:ubuntu-full-3.4.3",
             artifact: "ubuntu_gdal_3_4_3.7z",
             build_type: "Release",
             cc: "gcc",
@@ -76,7 +76,7 @@ jobs:
           }
         - {
             name: "Ubuntu_GDAL_3_5_3",
-            os: osgeo/gdal:ubuntu-full-3.5.3,
+            os: "osgeo/gdal:ubuntu-full-3.5.3",
             artifact: "ubuntu_gdal_3_5_3.7z",
             build_type: "Release",
             cc: "gcc",
@@ -86,7 +86,7 @@ jobs:
           }
         - {
             name: "Ubuntu_GDAL_3_6_2",
-            os: osgeo/gdal:ubuntu-full-3.6.2,
+            os: "osgeo/gdal:ubuntu-full-3.6.2",
             artifact: "ubuntu_gdal_3_6_2.7z",
             build_type: "Release",
             cc: "gcc",
@@ -96,7 +96,7 @@ jobs:
           }
         - {
             name: "Ubuntu_GDAL_latest",
-            os: osgeo/gdal:ubuntu-full-latest,
+            os: "osgeo/gdal:ubuntu-full-latest",
             artifact: "ubuntu_gdal_latest.7z",
             build_type: "Release",
             cc: "gcc",
