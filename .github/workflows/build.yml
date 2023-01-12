@@ -141,6 +141,7 @@ jobs:
             libtbb-dev \
             swig
           python3 -m pip install gcovr
+          cd /usr/src/gtest; cmake CMakeLists.txt ;make; cp lib/*.a /usr/lib
 
       - name: Configure GDAL
         shell: bash
