@@ -119,6 +119,7 @@ jobs:
 
       - name: Install Gtest
         run: |
+          apt-get update
           apt-get install -y --no-install-recommends doxygen g++ git libeigen3-dev libpython3-dev python3-matplotlib python3-pytest lcov libboost-dev libtbb-dev swig
           cd /usr/src/gtest
           cmake CMakeLists.txt
