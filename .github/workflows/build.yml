@@ -120,7 +120,8 @@ jobs:
       - name: Ubuntu system dependencies
         run: |
           apt update
-          apt-get install -y --no-install-recommends doxygen g++ git libeigen3-dev libpython3-dev python3-matplotlib python3-pytest lcov libboost-dev libtbb-dev swig libgtest-dev
+          apt-get install -y --no-install-recommends build-essential build-essential doxygen g++ git libeigen3-dev libpython3-dev python3-matplotlib python3-pytest lcov libboost-dev libtbb-dev swig libgtest-dev
+          python3 -m pip install gcovr
           cd /usr/src/gtest
           cmake CMakeLists.txt
           make
@@ -128,10 +129,6 @@ jobs:
           ln -s /usr/lib/libgtest.a /usr/local/lib/libgtest.a
           ln -s /usr/lib/libgtest_main.a /usr/local/lib/libgtest_main.a
 
-      - name: Install GCovr
-        shell: bash
-        run: |
-          python3 -m pip install gcovr
 
 
       - name: Configure GDAL
