@@ -114,6 +114,8 @@ jobs:
           echo github.event_name: ${{ github.event_name }}
       - name: Install dependencies on Ubuntu
         shell: bash
+        env:
+          DEBIAN_FRONTEND: nonintercative
         run: |
           apt-get -y update
           apt-get install -y --no-install-recommends apt-utils software-properties-common
