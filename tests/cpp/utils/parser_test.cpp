@@ -41,10 +41,10 @@ TEST(fields2cover_utils_parser, import_json) {
   auto field = fields[0]; 
   field.setEPSGCoordSystem(4326);
 
-  f2c::Transform::transform(field, "UTM:32N");
+  f2c::Transform::transform(field, "UTM:32N datum:etrs89");
 
   EXPECT_EQ(field.id, "test parcel");
-  EXPECT_EQ(field.coord_sys, "UTM:32N");
+  EXPECT_EQ(field.coord_sys, "UTM:32N datum:etrs89");
 
   f2c::Visualizer::figure(200);
   f2c::Visualizer::plot(field);

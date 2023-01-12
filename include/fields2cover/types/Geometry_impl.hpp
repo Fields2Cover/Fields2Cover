@@ -8,19 +8,21 @@
 #ifndef FIELDS2COVER_TYPES_GEOMETRY_IMPL_HPP_
 #define FIELDS2COVER_TYPES_GEOMETRY_IMPL_HPP_
 
+#include <gdal/cpl_conv.h>
 #include <memory>
 #include <vector>
 #include <string>
+
 
 namespace f2c::types {
 
 template <class T, OGRwkbGeometryType R>
 Geometry<T, R>::Geometry() : data(
-  static_cast<T*>(OGRGeometryFactory::createGeometry(R)),
+  downCast<T*>(OGRGeometryFactory::createGeometry(R)),
   [](T* f) {OGRGeometryFactory::destroyGeometry(f);}) {}
 
 template <class T, OGRwkbGeometryType R>
-Geometry<T, R>::Geometry(const T& g) : data(static_cast<T*>(g.clone()),
+Geometry<T, R>::Geometry(const T& g) : data(downCast<T*>(g.clone()),
   [](T* f) {OGRGeometryFactory::destroyGeometry(f);}) {}
 
 template <class T, OGRwkbGeometryType R>
@@ -30,7 +32,15 @@ template <class T, OGRwkbGeometryType R>
 Geometry<T, R>::Geometry(T* g, EmptyDestructor) : data(g, [](T* f) {}) {}
 
 template <class T, OGRwkbGeometryType R>
-Geometry<T, R>::Geometry(const T* g) : data(static_cast<T*>(g->clone()),
+Geometry<T, R>::Geometry(const T* g) : data(downCast<T*>(g->clone()),
+  [](T* f) {OGRGeometryFactory::destroyGeometry(f);}) {}
+
+template <class T, OGRwkbGeometryType R>
+Geometry<T, R>::Geometry(OGRGeometry* g, EmptyDestructor) :
+  data(downCast<T*>(g), [](T* f) {}) {}
+
+template <class T, OGRwkbGeometryType R>
+Geometry<T, R>::Geometry(const OGRGeometry* g) : data(downCast<T*>(g->clone()),
   [](T* f) {OGRGeometryFactory::destroyGeometry(f);}) {}
 
 template <class T, OGRwkbGeometryType R>
@@ -203,7 +213,11 @@ bool Geometry<T, R>::isEmpty() const {
 
 template <class T, OGRwkbGeometryType R>
 std::string Geometry<T, R>::exportToWkt() const {
-  return data->exportToWkt();
+  char *pszWKT = nullptr;
+  data->exportToWkt(&pszWKT);
+  std::string result{pszWKT};
+  CPLFree(pszWKT);
+  return result;
 }
 
 template <class T, OGRwkbGeometryType R>
@@ -227,6 +241,17 @@ void Geometry<T, R>::importFromWkt(const std::string& text) {
   data->importFromWkt(&char_text);
 }
 
+// Code extracted from:
+// https://github.com/OSGeo/gdal/blob/b0aa6065a39b252cb8306e9c2e2535d6dda0fb55/port/cpl_conv.h#L397
+template <class T, OGRwkbGeometryType R>
+template <typename To, typename From>
+inline To Geometry<T, R>::downCast(From *f) const {
+  static_assert(
+    (std::is_base_of<From, typename std::remove_pointer<To>::type>::value),
+    "target type not derived from source type");
+  CPLAssert(f == nullptr || dynamic_cast<To>(f) != nullptr);
+  return static_cast<To>(f);
+}
 
 }  // namespace f2c::types
 

@@ -48,7 +48,7 @@ const Point MultiPoint::getGeometry(int i) const {
 }
 
 void MultiPoint::setGeometry(int i, const Point& p) {
-    OGRPoint* point = data->getGeometryRef(i);
+    OGRPoint* point = downCast<OGRPoint*>(data->getGeometryRef(i));
     point->setX(p.getX());
     point->setY(p.getY());
     point->setZ(p.getZ());

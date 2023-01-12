@@ -5,6 +5,7 @@
 //=============================================================================
 
 #include "fields2cover/utils/transformation.h"
+#include <boost/algorithm/string/predicate.hpp>
 
 namespace f2c {
 
@@ -99,9 +100,14 @@ std::unique_ptr<OGRSpatialReference, void(*)(OGRSpatialReference*)>
   } else if (F2CField::isCoordSystemEPSG(coord_sys)) {
     spt_ref->importFromEPSG(F2CField::getEPSGCoordSystem(coord_sys));
   } else if (F2CField::isCoordSystemUTM(coord_sys)) {
-    spt_ref->importFromProj4(("+proj=utm +zone=" +
-      F2CField::getUTMCoordSystem(coord_sys) +
-      "+datum=etrs89 +units=m").c_str());
+    std::string proj = (
+      std::string("+proj=utm +zone=") + F2CField::getUTMZone(coord_sys) + " " +
+      F2CField::getUTMHemisphere(coord_sys) +
+      (boost::iequals(F2CField::getUTMDatum(coord_sys), "ETRS89") ?
+        " +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +type=crs" :
+        " +datum=" + F2CField::getUTMDatum(coord_sys))
+      + " +units=m +no_defs ");
+    spt_ref->importFromProj4(proj.c_str());
   } else  {
     throw std::invalid_argument("Coordinate system not recognized");
   }

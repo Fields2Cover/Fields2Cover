@@ -10,13 +10,14 @@ namespace f2c::types {
 
 Cell::Cell() {
   data = std::shared_ptr<OGRPolygon>(
-    static_cast<OGRPolygon*>(OGRGeometryFactory::createGeometry(wkbPolygon)),
+    downCast<OGRPolygon*>(OGRGeometryFactory::createGeometry(wkbPolygon)),
     [](OGRPolygon* f) {OGRGeometryFactory::destroyGeometry(f);});
 }
 
 Cell::Cell(const OGRGeometry* geom) {
   if (wkbFlatten(geom->getGeometryType()) == OGRwkbGeometryType::wkbPolygon) {
-    this->data = std::shared_ptr<OGRPolygon>(geom->clone()->toPolygon(),
+    this->data =
+      std::shared_ptr<OGRPolygon>(downCast<OGRPolygon*>(geom->clone()),
         [](OGRPolygon* f) {OGRGeometryFactory::destroyGeometry(f);});
   } else {
     throw std::invalid_argument(

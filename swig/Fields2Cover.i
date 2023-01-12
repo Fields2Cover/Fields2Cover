@@ -180,6 +180,18 @@ typedef long unsigned int size_t;
 %template(plot) f2c::Visualizer::plot<f2c::types::MultiPoint>;
 %template(plot) f2c::Visualizer::plot<f2c::types::LineString>;
 %template(plot) f2c::Visualizer::plot<f2c::types::LinearRing>;
+%template(plot) f2c::Visualizer::plot<f2c::types::Cell>;
+%template(plot) f2c::Visualizer::plot<f2c::types::Cells>;
+%template(plot) f2c::Visualizer::plot<f2c::types::MultiLineString>;
+%template(plot) f2c::Visualizer::plot<f2c::types::Field>;
+%template(plot) f2c::Visualizer::plot<std::vector<F2CField>>;
+%template(plot) f2c::Visualizer::plot<f2c::types::Robot>;
+%template(plot) f2c::Visualizer::plot<std::vector<F2CRobot>>;
+%template(plot) f2c::Visualizer::plot<double>;
+%template(plot) f2c::Visualizer::plot<f2c::types::Swath>;
+%template(plot) f2c::Visualizer::plot<f2c::types::Swaths>;
+%template(plot) f2c::Visualizer::plot<std::vector<f2c::types::Swaths>>;
+%template(plot) f2c::Visualizer::plot<f2c::types::Path>;
 
 %ignore f2c::Transform::generateCoordTransf;
 %ignore f2c::Transform::createSptRef;
