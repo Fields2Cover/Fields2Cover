@@ -138,8 +138,9 @@ jobs:
         run: |
           apt-get install -y --no-install-recommends autoconf automake autotools-dev libpcre2-dev bison
           mkdir folder_to_compile_swig
-          git clone https://github.com/swig/swig.git
           cd folder_to_compile_swig
+          git clone https://github.com/swig/swig.git
+          cd swig
           ./autogen.sh
           ./configure
           make -j2
