@@ -11,6 +11,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN mkdir -p /usr/include/new_gdal && \
     cp -r /usr/include/gdal* /usr/include/new_gdal/ && \
     cp /usr/include/ogr* /usr/include/new_gdal/ && \
+    cp /usr/include/cpl* /usr/include/new_gdal/ && \
     mv /usr/include/new_gdal/ /usr/include/gdal/
 
 RUN apt-get -y update
@@ -57,7 +58,7 @@ RUN apt-get install -y libgtest-dev \
     && cd /usr/src/gtest \
     && cmake CMakeLists.txt \
     && make \
-    && cp *.a /usr/lib
+    && cp lib/*.a /usr/lib/
 
 
 COPY . /workspace/fields2cover
