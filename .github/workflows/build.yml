@@ -162,7 +162,7 @@ jobs:
 
       - name: Install Strip
         working-directory: ${{github.workspace}}/build
-        run: sudo make install
+        run: make install
 
       - name: Test C++
         working-directory: ${{github.workspace}}/build
