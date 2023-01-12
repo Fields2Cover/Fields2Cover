@@ -8,7 +8,8 @@ on:
 jobs:
   build:
     name: ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }}
+    runs-on: ubuntu-latest
+    container: ${{ matrix.config.os }}
     strategy:
       fail-fast: false
       matrix:
