@@ -117,14 +117,9 @@ jobs:
         with:
           python-version: '3.9'
 
-      - uses: awalsh128/cache-apt-pkgs-action@latest
-        with:
-          packages: g++ python3-matplotlib python3-pytest swig
-          version: 1.0
-
       - name: Install Gtest
         run: |
-          apt-get install -y libgtest-dev doxygen git libboost-dev libeigen3-dev libpython3-dev libtbb-dev
+          apt-get install -y --no-install-recommends doxygen g++ git libeigen3-dev libpython3-dev python3-matplotlib python3-pytest lcov libboost-dev libtbb-dev swig
           cd /usr/src/gtest
           cmake CMakeLists.txt
           make
