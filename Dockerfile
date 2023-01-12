@@ -41,6 +41,7 @@ RUN apt-get install -y --no-install-recommends \
                     python3 \
                     python3-pip \
                     python3-matplotlib \
+                    python3-pytest \
                     lcov \
                     libboost-dev \
                     libgtest-dev \
