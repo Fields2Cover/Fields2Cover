@@ -115,10 +115,8 @@ jobs:
           echo github.event_name: ${{ github.event_name }}
 
       - name: Install Gtest
-        shell: bash
         run: |
-          apt install -y libgtest-dev
-          cd /usr/src/gtest; cmake CMakeLists.txt ;make; cp *.a /usr/lib
+          sudo apt-get install -y libgtest-dev && cd /usr/src/gtest && sudo cmake CMakeLists.txt && sudo make && sudo cp lib/*.a /usr/lib && sudo ln -s /usr/lib/libgtest.a /usr/local/lib/libgtest.a && sudo ln -s /usr/lib/libgtest_main.a /usr/local/lib/libgtest_main.a
 
       - uses: awalsh128/cache-apt-pkgs-action@latest
         with:
