@@ -14,17 +14,16 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - {
-            name: "Ubuntu_GDAL_3_0_2",
-            os: "osgeo/gdal:ubuntu-full-3.0.2",
-            artifact: "ubuntu_gdal_3_0_2.7z",
-            build_type: "Release",
-            cc: "gcc",
-            cxx: "g++",
-            archiver: "7z a",
-            generators: "Unix Makefiles"
-          }
-#
+#        - {
+#            name: "Ubuntu_GDAL_3_0_2",
+#            os: "osgeo/gdal:ubuntu-full-3.0.2",
+#            artifact: "ubuntu_gdal_3_0_2.7z",
+#            build_type: "Release",
+#            cc: "gcc",
+#            cxx: "g++",
+#            archiver: "7z a",
+#            generators: "Unix Makefiles"
+#          }
 #        - {
 #            name: "Ubuntu_GDAL_3_0_4",
 #            os: "osgeo/gdal:ubuntu-full-3.0.4",
@@ -75,16 +74,16 @@ jobs:
 #            archiver: "7z a",
 #            generators: "Unix Makefiles"
 #          }
-#        - {
-#            name: "Ubuntu_GDAL_3_5_3",
-#            os: "osgeo/gdal:ubuntu-full-3.5.3",
-#            artifact: "ubuntu_gdal_3_5_3.7z",
-#            build_type: "Release",
-#            cc: "gcc",
-#            cxx: "g++",
-#            archiver: "7z a",
-#            generators: "Unix Makefiles"
-#          }
+         - {
+             name: "Ubuntu_GDAL_3_5_3",
+             os: "osgeo/gdal:ubuntu-full-3.5.3",
+             artifact: "ubuntu_gdal_3_5_3.7z",
+             build_type: "Release",
+             cc: "gcc",
+             cxx: "g++",
+             archiver: "7z a",
+             generators: "Unix Makefiles"
+           }
 #        - {
 #            name: "Ubuntu_GDAL_3_6_2",
 #            os: "osgeo/gdal:ubuntu-full-3.6.2",
