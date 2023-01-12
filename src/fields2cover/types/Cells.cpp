@@ -107,8 +107,8 @@ LinearRing Cells::getCellBorder(size_t i) const {
 }
 
 LinearRing Cells::getInteriorRing(size_t i_cell, size_t i_ring) const {
-  return LinearRing(
-      downCast<OGRPolygon*>(data->getGeometryRef(i_cell))->getInteriorRing(i_ring));
+  return LinearRing(downCast<OGRPolygon*>(data->getGeometryRef(i_cell))
+      ->getInteriorRing(i_ring));
 }
 
 bool Cells::isConvex() const {

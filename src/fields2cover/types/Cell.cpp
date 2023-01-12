@@ -16,7 +16,8 @@ Cell::Cell() {
 
 Cell::Cell(const OGRGeometry* geom) {
   if (wkbFlatten(geom->getGeometryType()) == OGRwkbGeometryType::wkbPolygon) {
-    this->data = std::shared_ptr<OGRPolygon>(downCast<OGRPolygon*>(geom->clone()),
+    this->data =
+      std::shared_ptr<OGRPolygon>(downCast<OGRPolygon*>(geom->clone()),
         [](OGRPolygon* f) {OGRGeometryFactory::destroyGeometry(f);});
   } else {
     throw std::invalid_argument(

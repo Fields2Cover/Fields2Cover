@@ -5,6 +5,7 @@
 //=============================================================================
 
 #include "fields2cover/types/Field.h"
+#include <regex>
 
 namespace f2c::types {
 
@@ -40,12 +41,32 @@ bool Field::isCoordSystemUTM() const {
   return isCoordSystemUTM(coord_sys);
 }
 
-std::string Field::getUTMCoordSystem(const std::string& coord_sys) {
-  return isCoordSystemUTM(coord_sys) ? coord_sys.substr(4) : "";
+std::string Field::getUTMCoordSystem(
+    const std::string& coord_sys, const std::string& if_not_found) {
+  std::smatch match;
+  if (std::regex_search(coord_sys, match,
+        std::regex("UTM[^0-9A-Za-z]*(\\d++\\w)[^\\w]*"))) {
+    return match.str(1);
+  }
+  return if_not_found;
+}
+
+std::string Field::getUTMDatum(
+    const std::string& coord_sys, const std::string& if_not_found) {
+  std::smatch match;
+  if (std::regex_search(coord_sys, match,
+        std::regex("datum[^0-9A-Za-z]*([0-9A-Za-z]+)"))) {
+    return match.str(1);
+  }
+  return if_not_found;
 }
 
 std::string Field::getUTMCoordSystem() const {
   return getUTMCoordSystem(coord_sys);
+}
+
+std::string Field::getUTMDatum() const {
+  return getUTMDatum(this->coord_sys);
 }
 
 bool Field::isCoordSystemEPSG(const std::string& coord_sys) {
@@ -66,15 +87,47 @@ int Field::getEPSGCoordSystem() const {
 }
 
 void Field::setEPSGCoordSystem(int epsg) {
-  coord_sys = "EPSG:" + std::to_string(epsg);
+  this->coord_sys = "EPSG:" + std::to_string(epsg);
 }
 
 void Field::setUTMCoordSystem(const std::string& utm) {
-  coord_sys = "UTM:" + utm;
+  this->coord_sys =
+    "UTM:" + getUTMCoordSystem(utm, utm) +
+    " datum:" + getUTMDatum(utm);
+}
+
+void Field::setUTMCoordSystem(
+    const std::string& utm, const std::string& datum) {
+  this->coord_sys =
+    "UTM:" + getUTMCoordSystem(utm, utm) +
+    " datum:" + getUTMDatum(datum, datum);
 }
 
 Cells Field::getCellsAbsPosition() const {
   return this->field + this->ref_point;
+}
+
+std::string Field::getUTMZone(const std::string& coord_sys) {
+  return getUTMCoordSystem(coord_sys).substr(0, 2);
+}
+
+std::string Field::getUTMZone() const {
+  return getUTMZone(coord_sys);
+}
+
+std::string Field::getUTMHemisphere(const std::string& coord_sys) {
+  std::string hemisphere {getUTMCoordSystem(coord_sys).substr(2, 1)};
+  if (hemisphere == "n" || hemisphere == "N") {
+    return "+north";
+  } else if (hemisphere == "s" || hemisphere == "S") {
+    return "+south";
+  } else {
+    return "";
+  }
+}
+
+std::string Field::getUTMHemisphere() const {
+  return getUTMHemisphere(coord_sys);
 }
 
 }  // namespace f2c::types

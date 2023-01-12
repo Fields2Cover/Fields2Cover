@@ -41,6 +41,7 @@ TEST(fields2cover_utils_transformer, convert_to_F2C_and_return) {
         poly.getGeometry(0).getGeometry(i).getZ(), 1e-3);
   }
 
+  EXPECT_NO_THROW(f2c::Transform::transform(field, "UTM:32N datum:WGS84"));
   EXPECT_THROW( f2c::Transform::transform(field, "NONE"), std::invalid_argument);
   field.coord_sys = "";
   EXPECT_THROW( f2c::Transform::transform(field, "EPSG:28992"), std::invalid_argument);
