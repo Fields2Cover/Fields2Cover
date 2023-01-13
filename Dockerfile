@@ -54,7 +54,8 @@ RUN apt-get install -y --no-install-recommends \
 #                    rm -rf /var/lib/apt/lists/*
 
 RUN python3 -m pip install gcovr
-RUN echo "backend: Agg" > ~/.config/matplotlib/matplotlibrc
+RUN python3 -c "import matplotlib" && \
+    echo "backend: Agg" > ~/.config/matplotlib/matplotlibrc
 
 RUN apt-get install -y libgtest-dev \
     && cd /usr/src/gtest \
