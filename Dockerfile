@@ -53,7 +53,7 @@ RUN apt-get install -y --no-install-recommends \
 #                    apt-get clean && \
 #                    rm -rf /var/lib/apt/lists/*
 
-RUN python3 -m pip install gcovr
+RUN python3 -m pip install gcovr setuptools
 RUN python3 -c "import matplotlib" && \
     echo "backend: Agg" > ~/.config/matplotlib/matplotlibrc
 
@@ -85,8 +85,7 @@ RUN cmake -DBUILD_CPP=ON \
           -DBUILD_DOC=OFF \
           -DCMAKE_BUILD_TYPE=Release ..
 RUN make -j8
-RUN export LC_CTYPE=en_US.UTF-8 && \
-    export LANG=en_US.UTF-8 && \
+RUN export LANG=en_US.UTF-8 && \
     export LC_ALL=C.UTF-8 && \
     make install
 
