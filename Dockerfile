@@ -1,4 +1,4 @@
-FROM osgeo/gdal:ubuntu-full-3.0.2
+FROM osgeo/gdal:ubuntu-full-3.6.2
 
 LABEL NAME="fields2cover" \
       VERSION="1.2.0" \
@@ -14,9 +14,9 @@ RUN mkdir -p /usr/include/new_gdal && \
     cp /usr/include/cpl* /usr/include/new_gdal/ && \
     mv /usr/include/new_gdal/ /usr/include/gdal/
 
-RUN apt-get -y update
-RUN apt-get install -y --no-install-recommends apt-utils software-properties-common ca-certificates
-RUN apt-get -y update
+RUN apt-get update -qq && \
+    apt-get install -y --no-install-recommends ca-certificates && \
+    apt-get update -qq
 
 RUN if gdalinfo --version | grep -o " 3\.[0-2]\."; then \
       apt-get install wget && \
@@ -27,19 +27,22 @@ RUN if gdalinfo --version | grep -o " 3\.[0-2]\."; then \
       && /tmp/cmake-install.sh --skip-license --prefix=/usr/bin/cmake \
       && rm /tmp/cmake-install.sh; \
     else \
-      apt-get -y --no-install-recommends install cmake; \ 
+      apt install -y --no-install-recommends cmake ; \ 
     fi
 
 ENV PATH="/usr/bin/cmake/bin:${PATH}"
 
 
-RUN apt-get install -y --no-install-recommends ranger vim
 RUN apt-get install -y --no-install-recommends \
                     build-essential \
                     ca-certificates \
                     doxygen \
                     g++ \
                     git \
+                    lcov \
+                    libboost-dev \
+                    libgtest-dev \
+                    libtbb-dev \
                     libeigen3-dev \
                     libpython3-dev \
                     python3 \
@@ -47,10 +50,8 @@ RUN apt-get install -y --no-install-recommends \
                     python3-matplotlib \
                     python3-pytest \
                     python3-tk \
-                    lcov \
-                    libboost-dev \
-                    libgtest-dev \
-                    libtbb-dev
+                    ranger \
+                    vim
 #                    && \
 #                    apt-get autoclean && \
 #                    apt-get autoremove && \
