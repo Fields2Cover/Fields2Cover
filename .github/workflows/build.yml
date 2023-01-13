@@ -27,18 +27,14 @@ jobs:
           echo github.event_name: ${{ github.event_name }}
 
       - uses: lukka/get-cmake@latest
-      - name: Set up GCC
-        uses: egor-tensin/setup-gcc@v1.3
-        with:
-          version: ${{ matrix.config.gcc }}
-      - uses: lukka/get-cmake@latest
-
+        
       - name: Ubuntu system dependencies
         run: |
           export DEBIAN_FRONTEND=noninteractive
           apt-get update -qq
           apt-get install -y --no-install-recommends ca-certificates
-          apt-get install -y --no-install-recommends ca-certificates build-essential doxygen g++ git lcov libboost-dev libeigen3-dev libgtest-dev libpython3-dev libtbb-dev python3 python3-matplotlib python3-pip python3-pytest python3-tk
+          add-apt-repository -y --update ppa:ubuntu-toolchain-r/test
+          apt-get install -y --no-install-recommends ca-certificates build-essential doxygen g++-${{ matrix.config.gcc }} gcc-${{ matrix.config.gcc }} git lcov libboost-dev libeigen3-dev libgtest-dev libpython3-dev libtbb-dev python3 python3-matplotlib python3-pip python3-pytest python3-tk
           python3 -m pip install gcovr setuptools
 
           # Solve issue with matplotlib
@@ -86,8 +82,8 @@ jobs:
             -B build \
             -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
             -G "${{ matrix.config.generators }}" \
-            -D CMAKE_C_COMPILER=gcc \
-            -D CMAKE_CXX_COMPILER=g++ \
+            -D CMAKE_C_COMPILER=gcc-${{ matrix.config.gcc }} \
+            -D CMAKE_CXX_COMPILER=g++-${{ matrix.config.gcc }} \
             -DCMAKE_INSTALL_PREFIX:PATH=instdir  \
             -DBUILD_PYTHON=ON   \
             -DALLOW_PARALLELIZATION=ON  \
