@@ -117,11 +117,11 @@ jobs:
       - name: Ubuntu system dependencies
         run: |
           export DEBIAN_FRONTEND=noninteractive
-          #sudo add-apt-repository ppa:apt-fast/stable
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends ca-certificates
+          # add-apt-repository ppa:apt-fast/stable
+          apt-get update -qq
+          apt-get install -y --no-install-recommends ca-certificates
           #apt-get -y install apt-fast
-          sudo apt-get install -y --no-install-recommends ca-certificates build-essential doxygen g++ git lcov libboost-dev libeigen3-dev libgtest-dev libpython3-dev libtbb-dev python3 python3-matplotlib python3-pip python3-pytest python3-tk
+          apt-get install -y --no-install-recommends ca-certificates build-essential doxygen g++ git lcov libboost-dev libeigen3-dev libgtest-dev libpython3-dev libtbb-dev python3 python3-matplotlib python3-pip python3-pytest python3-tk
           python3 -m pip install gcovr setuptools
           python3 -c "import matplotlib"
           echo "backend: Agg" > ~/.config/matplotlib/matplotlibrc
@@ -136,12 +136,12 @@ jobs:
 
       - name: Install swig (4.0) with apt
         if: ${{!startsWith(matrix.config.name, 'Ubuntu_GDAL_3_0')}}
-        run: sudo apt-get install -y --no-install-recommends swig
+        run: apt-get install -y --no-install-recommends swig
 
       - name: Install swig (4.0) from source
         if: ${{startsWith(matrix.config.name, 'Ubuntu_GDAL_3_0')}}
         run: |
-          sudo apt-get install -y --no-install-recommends autoconf automake autotools-dev bison libpcre2-dev
+          apt-get install -y --no-install-recommends autoconf automake autotools-dev bison libpcre2-dev
           mkdir folder_to_compile_swig
           cd folder_to_compile_swig
           git clone https://github.com/swig/swig.git
