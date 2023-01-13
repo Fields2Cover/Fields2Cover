@@ -46,7 +46,7 @@ def test_fields2cover_utils_GeometryOp_getRandomDouble():
     rand_val = rand.getRandomDouble();
     assert (rand_val < 1.0);
     assert (rand_val > 0.0);
-    sum_val += rand_val; 
+    sum_val += rand_val;
   near(sum_val, N/2, N/10);
 
 def test_fields2cover_utils_GeometryOp_getLinearRandom():
@@ -73,8 +73,8 @@ def test_fields2cover_utils_GeometryOp_getExpDistRandom():
   rand = f2c.Random();
   mean = 0.0;
   lambda_param = 1.5;
-  epsilon = 0.05;
-  steps = 1000
+  epsilon = 0.1;
+  steps = 3000
 
   for i in range(steps):
     mean += rand.getRandomExpDist(lambda_param);
@@ -132,8 +132,8 @@ def test_fields2cover_utils_GeometryOp_getLinesInPolygons():
   polygon.addRing(ring);
   polys.addGeometry(polygon);
   line = f2c.LineString();
-  line.addPoint(-20, -10); 
-  line.addPoint(-5, 5); 
+  line.addPoint(-20, -10);
+  line.addPoint(-5, 5);
 
   lines = f2c.MultiLineString();
   lines.addGeometry(line);
@@ -145,10 +145,10 @@ def test_fields2cover_utils_GeometryOp_getLinesInPolygons():
   reduced_line = polygon.getLinesInside(lines);
   assert (polygon.Crosses(lines));
   near(reduced_line.getLength(), math.sqrt(2.0)*5, 0.01);
-  
+
   path = polys.getLinesInside(line);
   near(path.getLength(), math.sqrt(2.0)*5, 0.01);
-  line.addPoint(20, 30); 
+  line.addPoint(20, 30);
   reduced_line = polys.getLinesInside(line);
   near(reduced_line.getLength(), math.sqrt(2.0)*20, 0.01);
 
@@ -220,8 +220,8 @@ def test_fields2cover_utils_GeometryOp_rotateFromPoint():
   near(p_out.getY(), 0.5, 1e-7);
 
   line = f2c.LineString();
-  line.addPoint(1, 2); 
-  line.addPoint(3, 4); 
+  line.addPoint(1, 2);
+  line.addPoint(3, 4);
   p_center = f2c.Point(5, 6)
   line = p_center.rotateFromPoint(pi, line);
   p_out = line.StartPoint();

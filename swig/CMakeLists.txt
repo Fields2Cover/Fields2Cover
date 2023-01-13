@@ -1,5 +1,5 @@
-find_package(SWIG REQUIRED)
- 
+find_package(SWIG 4.0 REQUIRED)
+
 # Apple: Don't modify install_name when touching RPATH.
 if(POLICY CMP0068)
   cmake_policy(SET CMP0068 NEW)
