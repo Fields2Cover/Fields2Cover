@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Test C++ and Python
+    name: Tests
     runs-on: ${{ matrix.config.os }}
     container: "osgeo/gdal:ubuntu-full-${{ matrix.gdal }}"
     strategy:
@@ -28,7 +28,7 @@ jobs:
 
       - uses: lukka/get-cmake@latest
       - name: Set up GCC
-        uses: egor-tensin/setup-gcc@v1
+        uses: egor-tensin/setup-gcc@v1.3
         with:
           version: ${{ matrix.config.gcc }}
       - uses: lukka/get-cmake@latest
