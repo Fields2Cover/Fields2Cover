@@ -117,7 +117,7 @@ jobs:
       - name: Ubuntu system dependencies
         run: |
           export DEBIAN_FRONTEND=noninteractive
-          apt update
+          apt-get -y update
           apt-get install -y --no-install-recommends build-essential build-essential doxygen g++ git libeigen3-dev lcov libboost-dev libtbb-dev libgtest-dev
           cd /usr/src/gtest
           cmake CMakeLists.txt
@@ -135,6 +135,7 @@ jobs:
       - name: Install swig (4.0) from source
         if: ${{startsWith(matrix.config.name, 'Ubuntu_GDAL_3_0')}}
         run: |
+          apt-get -y update
           apt-get install -y --no-install-recommends autoconf automake autotools-dev libpcre2-dev bison
           mkdir folder_to_compile_swig
           cd folder_to_compile_swig
