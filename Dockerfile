@@ -15,16 +15,20 @@ RUN mkdir -p /usr/include/new_gdal && \
     mv /usr/include/new_gdal/ /usr/include/gdal/
 
 RUN apt-get -y update
-RUN apt-get install -y --no-install-recommends apt-utils software-properties-common
+RUN apt-get install -y --no-install-recommends apt-utils software-properties-common ca-certificates
 RUN apt-get -y update
 
-RUN apt-get install wget && \
+RUN if gdalinfo --version | grep -o " 3\.[0-2]\."; then \
+      apt-get install wget && \
       wget https://github.com/Kitware/CMake/releases/download/v3.17.2/cmake-3.17.2-Linux-x86_64.sh \
       -q -O /tmp/cmake-install.sh \
       && chmod u+x /tmp/cmake-install.sh \
       && mkdir /usr/bin/cmake \
       && /tmp/cmake-install.sh --skip-license --prefix=/usr/bin/cmake \
-      && rm /tmp/cmake-install.sh
+      && rm /tmp/cmake-install.sh; \
+    else \
+      apt-get -y --no-install-recommends install cmake; \ 
+    fi
 
 ENV PATH="/usr/bin/cmake/bin:${PATH}"
 
@@ -64,15 +68,17 @@ RUN apt-get install -y libgtest-dev \
     && (cp *.a /usr/lib/ 2>\dev\null || :) \
     && (cp lib/*.a /usr/lib/ 2>\dev\null || :)
 
-RUN apt-get install -y --no-install-recommends autoconf automake autotools-dev libpcre2-dev bison \
-    && git clone https://github.com/swig/swig.git \
-    && cd swig \
-    && ./autogen.sh \
-    && ./configure \
-    && make -j8 \
-    && make install
-
-
+RUN if gdalinfo --version | grep -o " 3\.[0-2]\."; then \
+      apt-get install -y --no-install-recommends autoconf automake autotools-dev libpcre2-dev bison \
+      && git clone https://github.com/swig/swig.git \
+      && cd swig \
+      && ./autogen.sh \
+      && ./configure \
+      && make -j8 \
+      && make install; \
+    else \
+      apt-get install -y --no-install-recommends swig; \
+    fi
 
 COPY . /workspace/fields2cover
 RUN rm -rf /workspace/fields2cover/build && mkdir /workspace/fields2cover/build
