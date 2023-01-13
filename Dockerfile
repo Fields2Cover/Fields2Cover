@@ -42,6 +42,7 @@ RUN apt-get install -y --no-install-recommends \
                     python3-pip \
                     python3-matplotlib \
                     python3-pytest \
+                    python3-tk \
                     lcov \
                     libboost-dev \
                     libgtest-dev \
@@ -53,6 +54,7 @@ RUN apt-get install -y --no-install-recommends \
 #                    rm -rf /var/lib/apt/lists/*
 
 RUN python3 -m pip install gcovr
+RUN echo "backend: Agg" > ~/.config/matplotlib/matplotlibrc
 
 RUN apt-get install -y libgtest-dev \
     && cd /usr/src/gtest \
@@ -75,14 +77,17 @@ COPY . /workspace/fields2cover
 RUN rm -rf /workspace/fields2cover/build && mkdir /workspace/fields2cover/build
 WORKDIR /workspace/fields2cover/build
 
-#RUN cmake -DBUILD_CPP=ON \
-#          -DBUILD_PYTHON=ON \
-#          -DBUILD_TUTORIALS=OFF \
-#          -DBUILD_TESTS=ON \
-#          -DBUILD_DOC=OFF \
-#          -DCMAKE_BUILD_TYPE=Release ..
-#RUN make -j8
-#RUN make install
+RUN cmake -DBUILD_CPP=ON \
+          -DBUILD_PYTHON=ON \
+          -DBUILD_TUTORIALS=OFF \
+          -DBUILD_TESTS=ON \
+          -DBUILD_DOC=OFF \
+          -DCMAKE_BUILD_TYPE=Release ..
+RUN make -j8
+RUN export LC_CTYPE=en_US.UTF-8 && \
+    export LANG=en_US.UTF-8 && \
+    export LC_ALL=C.UTF-8 && \
+    make install
 
 
 
