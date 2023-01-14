@@ -50,7 +50,7 @@ jobs:
           ln -s /usr/lib/libgtest_main.a /usr/local/lib/libgtest_main.a
 
           # Install swig
-          apt-get install -y --no-install-recommends autoconf automake autotools-dev bison libpcre3 libpcre3-dev libpcre2-posix2 libpcre2-dev
+          apt-get install -y --no-install-recommends autoconf automake autotools-dev bison libpcre3 libpcre3-dev libpcre2-dev
           cd /
           mkdir folder_to_compile_swig
           cd folder_to_compile_swig
