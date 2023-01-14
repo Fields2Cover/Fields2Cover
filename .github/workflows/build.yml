@@ -33,8 +33,7 @@ jobs:
           export DEBIAN_FRONTEND=noninteractive
           apt-get update -qq
           apt-get install -y --no-install-recommends ca-certificates
-          add-apt-repository -y --update ppa:ubuntu-toolchain-r/test
-          apt-get install -y --no-install-recommends ca-certificates build-essential doxygen g++-${{ matrix.config.gcc }} gcc-${{ matrix.config.gcc }} git lcov libboost-dev libeigen3-dev libgtest-dev libpython3-dev libtbb-dev python3 python3-matplotlib python3-pip python3-pytest python3-tk
+          apt-get install -y --no-install-recommends build-essential doxygen g++-${{ matrix.config.gcc }} gcc-${{ matrix.config.gcc }} git lcov libboost-dev libeigen3-dev libgtest-dev libpython3-dev libtbb-dev python3 python3-matplotlib python3-pip python3-pytest python3-tk
           python3 -m pip install gcovr setuptools
 
           # Solve issue with matplotlib
