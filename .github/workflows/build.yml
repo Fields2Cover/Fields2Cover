@@ -53,7 +53,7 @@ jobs:
           apt-get install -y --no-install-recommends autoconf automake autotools-dev bison libpcre2-dev
           mkdir folder_to_compile_swig
           cd folder_to_compile_swig
-          git clone -depth 1 --branch ${{ matrix.swig }} https://github.com/swig/swig.git
+          git clone --depth 1 --branch ${{ matrix.swig }} https://github.com/swig/swig.git
           cd swig
           ./autogen.sh
           ./configure
