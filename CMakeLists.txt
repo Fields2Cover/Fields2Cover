@@ -17,6 +17,7 @@ option(BUILD_TUTORIALS "Build tutorials" ON)
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_PYTHON "Build Python SWIG module" OFF)
 option(BUILD_DOC "Build Documentation" OFF)
+option(BUILD_SHARED_LIBS "Build shared library(.so)" ON)
 
 
 
@@ -117,7 +118,11 @@ list(REMOVE_ITEM fields2cover_src
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*/*/.*.cpp"
     )
 
-add_library(Fields2Cover SHARED ${fields2cover_src})
+if (BUILD_SHARED_LIBS)
+  add_library(Fields2Cover SHARED ${fields2cover_src})
+else ()
+  add_library(Fields2Cover STATIC ${fields2cover_src})
+endif()
 
 target_compile_features(Fields2Cover PUBLIC cxx_std_17)
 
@@ -181,7 +186,7 @@ endif()
 set_target_properties(Fields2Cover PROPERTIES
   INTERPROCEDURAL_OPTIMIZATION TRUE PUBLIC_HEADER "include/fields2cover.h")
 
-install(TARGETS Fields2Cover
+install(TARGETS Fields2Cover tinyxml2 steering_functions nlohmann_json
   EXPORT Fields2Cover-targets
   LIBRARY DESTINATION ${INSTALL_LIB_DIR}
   ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
@@ -193,7 +198,12 @@ include(CMakePackageConfigHelpers)
 write_basic_package_version_file(Fields2CoverConfigVersion.cmake
     VERSION ${PACKAGE_VERSION} COMPATIBILITY AnyNewerVersion)
 
-install(EXPORT Fields2Cover-targets FILE Fields2CoverTargets.cmake
+if(BUILD_SHARED_LIBS)
+  set(type shared)
+else()
+  set(type static)
+endif()
+install(EXPORT Fields2Cover-targets FILE Fields2Cover-${type}-Targets.cmake
         DESTINATION ${INSTALL_CMAKE_DIR}/cmake/fields2cover)
 
 set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
@@ -209,8 +219,8 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfig.cmake"
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/package.xml
         DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME})
 
-export(TARGETS Fields2Cover
-  FILE Fields2CoverTargets.cmake)
+export(TARGETS Fields2Cover tinyxml2 steering_functions nlohmann_json
+  FILE Fields2Cover-${type}-Targets.cmake)
 
 # Copy public headers during `make install`
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
