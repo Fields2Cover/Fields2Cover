@@ -36,7 +36,7 @@ def test_fields2cover_types_path_appendSwath():
 def test_fields2cover_types_path_opPlusEqual():
   swath1 = f2c.Swath(f2c.LineString(f2c.VectorPoint([f2c.Point(0.0, 1.0), f2c.Point(1.0, 1.0), f2c.Point(1.0, 4.0)])));
   swath2 = f2c.Swath(f2c.LineString(f2c.VectorPoint([f2c.Point(1.0, 4.0), f2c.Point(1.0, 0.0), f2c.Point(0.0, 0.0)])));
-  	
+
   path1 = f2c.Path();
   path2 = f2c.Path();
   path1.appendSwath(swath1, 2.0);
@@ -86,7 +86,7 @@ def test_fields2cover_types_path_populateAndReduce():
       [f2c.Point(0.0, 0.0), f2c.Point(0.0, 1.0), f2c.Point(2.0, 1.0)])));
   swath2 = f2c.Swath(f2c.LineString(f2c.VectorPoint(
       [f2c.Point(3.0, 1.0), f2c.Point(3.0, 4.0), f2c.Point(1.0, 4.0)])));
-  	
+
   path1.appendSwath(swath1, 2.0);
   path2.appendSwath(swath2, 1.0);
   path1 += path2;
@@ -139,7 +139,7 @@ def test_fields2cover_types_path_length():
   line2.addPoint( 0.0, 0.0);
   swath1 = f2c.Swath(line1);
   swath2 = f2c.Swath(line2);
-  	
+
   path1 = f2c.Path();
   path2 = f2c.Path();
   path1.appendSwath(swath1, 2.0);
@@ -152,8 +152,17 @@ def test_fields2cover_types_path_length():
 
 def test_fields2cover_types_path_saveLoad():
   path = f2c.Path();
+
   state = f2c.PathState();
-  path_read = f2c.Path();
+  state.point = f2c.Point(3.124, -4.5, 3);
+  state.angle = -0.5;
+  state.velocity = -2.5;
+  state.duration = 2;
+  state.dir = f2c.PathDirection_FORWARD;
+  state.type = f2c.PathSectionType_SWATH;
+  path.states.push_back(state);
+
+  state = f2c.PathState();
   state.point = f2c.Point(-2.3, 5);
   state.angle = 0.1;
   state.velocity = 4.5;
@@ -162,9 +171,60 @@ def test_fields2cover_types_path_saveLoad():
   state.type = f2c.PathSectionType_SWATH;
   path.states.push_back(state);
 
-  assert (path.serializePath() == "-2.3 5 0 0.1 4.5 6 -1 1\n");
+  assert (path.serializePath() == "3.124 -4.5 3 -0.5 -2.5 2 1 1\n-2.3 5 0 0.1 4.5 6 -1 1\n");
   path.saveToFile("/tmp/test_path");
+  path_read = f2c.Path();
   path_read.loadFile("/tmp/test_path");
   assert (path.serializePath() == path_read.serializePath());
+
+def test_fields2cover_types_path_list_points():
+  line1 = f2c.LineString(f2c.VectorPoint(
+      [f2c.Point(0.0, 1.0), f2c.Point(1.0, 1.0), f2c.Point(1.0, 4.0)]));
+  swath1 = f2c.Swath(line1);
+  path = f2c.Path();
+  path.appendSwath(swath1, 2.0);
+
+  n = path.states.size()
+  points = [path.states[i].point for i in range(n)]
+
+  near(n, 3)
+  near(path.states[0].point.getX(), 0.0);
+  near(path.states[0].point.getY(), 1.0);
+  near(path.states[0].velocity, 2.0);
+  near(path.states[0].duration, 0.5);
+  near(path.states[0].type, f2c.PathSectionType_SWATH);
+  near(path.states[1].point.getX(), 1.0);
+  near(path.states[1].point.getY(), 1.0);
+  near(path.states[1].velocity, 2.0);
+  near(path.states[1].duration, 1.5);
+  near(path.states[1].type, f2c.PathSectionType_SWATH);
+  near(path.states[2].point.getX(), 1.0);
+  near(path.states[2].point.getY(), 4.0);
+  near(path.states[2].velocity, 2.0);
+  near(path.states[2].duration, 0.0);
+  near(path.states[2].type, f2c.PathSectionType_SWATH);
+
+
+
+
+
+  states = list(path.states)
+  points = [item.point for item in states]
+
+  near(path.states[0].point.getX(), 0.0);
+  near(path.states[0].point.getY(), 1.0);
+  near(path.states[0].velocity, 2.0);
+  near(path.states[0].duration, 0.5);
+  near(path.states[0].type, f2c.PathSectionType_SWATH);
+  near(path.states[1].point.getX(), 1.0);
+  near(path.states[1].point.getY(), 1.0);
+  near(path.states[1].velocity, 2.0);
+  near(path.states[1].duration, 1.5);
+  near(path.states[1].type, f2c.PathSectionType_SWATH);
+  near(path.states[2].point.getX(), 1.0);
+  near(path.states[2].point.getY(), 4.0);
+  near(path.states[2].velocity, 2.0);
+  near(path.states[2].duration, 0.0);
+  near(path.states[2].type, f2c.PathSectionType_SWATH);
 
 
