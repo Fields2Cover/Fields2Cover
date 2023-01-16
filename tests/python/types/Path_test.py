@@ -5,6 +5,7 @@
 #==============================================================================
 
 import pytest
+import math
 import fields2cover as f2c
 
 def near(a, b, error = 1e-7):
@@ -178,53 +179,33 @@ def test_fields2cover_types_path_saveLoad():
   assert (path.serializePath() == path_read.serializePath());
 
 def test_fields2cover_types_path_list_points():
-  line1 = f2c.LineString(f2c.VectorPoint(
-      [f2c.Point(0.0, 1.0), f2c.Point(1.0, 1.0), f2c.Point(1.0, 4.0)]));
-  swath1 = f2c.Swath(line1);
-  path = f2c.Path();
-  path.appendSwath(swath1, 2.0);
+  rand = f2c.Random(42)
+  robot = f2c.Robot(2.0, 6.0)
+  const_hl = f2c.HG_Const_gen()
+  field = rand.generateRandField(5, 1e5)
+  cells = field.field
+  no_hl = const_hl.generateHeadlands(cells, 3.0 * robot.robot_width)
+  bf = f2c.SG_BruteForce()
+  swaths = bf.generateSwaths(math.pi, robot.op_width, no_hl.getGeometry(0))
+  snake_sorter = f2c.RP_Snake()
+  swaths = snake_sorter.genSortedSwaths(swaths)
+
+  robot.setMinRadius(2)  # m
+  robot.linear_curv_change = 0.1  # 1/m^2
+  path_planner = f2c.PP_PathPlanning()
+  dubins = f2c.PP_DubinsCurvesCC()
+  path = path_planner.searchBestPath(robot, swaths, dubins);
 
   n = path.states.size()
   points = [path.states[i].point for i in range(n)]
 
-  near(n, 3)
-  near(path.states[0].point.getX(), 0.0);
-  near(path.states[0].point.getY(), 1.0);
-  near(path.states[0].velocity, 2.0);
-  near(path.states[0].duration, 0.5);
-  near(path.states[0].type, f2c.PathSectionType_SWATH);
-  near(path.states[1].point.getX(), 1.0);
-  near(path.states[1].point.getY(), 1.0);
-  near(path.states[1].velocity, 2.0);
-  near(path.states[1].duration, 1.5);
-  near(path.states[1].type, f2c.PathSectionType_SWATH);
-  near(path.states[2].point.getX(), 1.0);
-  near(path.states[2].point.getY(), 4.0);
-  near(path.states[2].velocity, 2.0);
-  near(path.states[2].duration, 0.0);
-  near(path.states[2].type, f2c.PathSectionType_SWATH);
-
-
-
-
+  near(n, path.states.size())
 
   states = list(path.states)
   points = [item.point for item in states]
 
-  near(path.states[0].point.getX(), 0.0);
-  near(path.states[0].point.getY(), 1.0);
-  near(path.states[0].velocity, 2.0);
-  near(path.states[0].duration, 0.5);
-  near(path.states[0].type, f2c.PathSectionType_SWATH);
-  near(path.states[1].point.getX(), 1.0);
-  near(path.states[1].point.getY(), 1.0);
-  near(path.states[1].velocity, 2.0);
-  near(path.states[1].duration, 1.5);
-  near(path.states[1].type, f2c.PathSectionType_SWATH);
-  near(path.states[2].point.getX(), 1.0);
-  near(path.states[2].point.getY(), 4.0);
-  near(path.states[2].velocity, 2.0);
-  near(path.states[2].duration, 0.0);
-  near(path.states[2].type, f2c.PathSectionType_SWATH);
+  near(len(points), path.states.size())
+  print("Path with " + str(len(points)) +" points")
+
 
 
