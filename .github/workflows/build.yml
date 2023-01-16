@@ -57,6 +57,8 @@ jobs:
             gdal: "3.6.2"
             swig: "v4.1.1"
             shared: "OFF"
+            generators: "Unix Makefiles"
+            build_type: "Release"
 
 
     steps:
