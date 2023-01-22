@@ -48,6 +48,15 @@ TEST(fields2cover_types_linestring, loop) {
     EXPECT_EQ(p, F2CPoint(i, i+1));
     i += 2;
   }
+  i = 1;
+  for (auto&& p : line) {
+    p *= -1;
+    EXPECT_EQ(p, F2CPoint(-i, -i-1));
+    i += 2;
+  }
+
+  EXPECT_EQ(line.getX(0), -1);
+  EXPECT_EQ(line.getY(0), -2);
 }
 
 

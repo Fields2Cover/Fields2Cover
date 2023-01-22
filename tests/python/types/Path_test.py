@@ -5,6 +5,7 @@
 #==============================================================================
 
 import pytest
+import math
 import fields2cover as f2c
 
 def near(a, b, error = 1e-7):
@@ -36,7 +37,7 @@ def test_fields2cover_types_path_appendSwath():
 def test_fields2cover_types_path_opPlusEqual():
   swath1 = f2c.Swath(f2c.LineString(f2c.VectorPoint([f2c.Point(0.0, 1.0), f2c.Point(1.0, 1.0), f2c.Point(1.0, 4.0)])));
   swath2 = f2c.Swath(f2c.LineString(f2c.VectorPoint([f2c.Point(1.0, 4.0), f2c.Point(1.0, 0.0), f2c.Point(0.0, 0.0)])));
-  	
+
   path1 = f2c.Path();
   path2 = f2c.Path();
   path1.appendSwath(swath1, 2.0);
@@ -86,7 +87,7 @@ def test_fields2cover_types_path_populateAndReduce():
       [f2c.Point(0.0, 0.0), f2c.Point(0.0, 1.0), f2c.Point(2.0, 1.0)])));
   swath2 = f2c.Swath(f2c.LineString(f2c.VectorPoint(
       [f2c.Point(3.0, 1.0), f2c.Point(3.0, 4.0), f2c.Point(1.0, 4.0)])));
-  	
+
   path1.appendSwath(swath1, 2.0);
   path2.appendSwath(swath2, 1.0);
   path1 += path2;
@@ -139,7 +140,7 @@ def test_fields2cover_types_path_length():
   line2.addPoint( 0.0, 0.0);
   swath1 = f2c.Swath(line1);
   swath2 = f2c.Swath(line2);
-  	
+
   path1 = f2c.Path();
   path2 = f2c.Path();
   path1.appendSwath(swath1, 2.0);
@@ -152,8 +153,17 @@ def test_fields2cover_types_path_length():
 
 def test_fields2cover_types_path_saveLoad():
   path = f2c.Path();
+
   state = f2c.PathState();
-  path_read = f2c.Path();
+  state.point = f2c.Point(3.124, -4.5, 3);
+  state.angle = -0.5;
+  state.velocity = -2.5;
+  state.duration = 2;
+  state.dir = f2c.PathDirection_FORWARD;
+  state.type = f2c.PathSectionType_SWATH;
+  path.states.push_back(state);
+
+  state = f2c.PathState();
   state.point = f2c.Point(-2.3, 5);
   state.angle = 0.1;
   state.velocity = 4.5;
@@ -162,9 +172,40 @@ def test_fields2cover_types_path_saveLoad():
   state.type = f2c.PathSectionType_SWATH;
   path.states.push_back(state);
 
-  assert (path.serializePath() == "-2.3 5 0 0.1 4.5 6 -1 1\n");
+  assert (path.serializePath() == "3.124 -4.5 3 -0.5 -2.5 2 1 1\n-2.3 5 0 0.1 4.5 6 -1 1\n");
   path.saveToFile("/tmp/test_path");
+  path_read = f2c.Path();
   path_read.loadFile("/tmp/test_path");
   assert (path.serializePath() == path_read.serializePath());
+
+def test_fields2cover_types_path_list_points():
+  rand = f2c.Random(42)
+  robot = f2c.Robot(2.0, 6.0)
+  const_hl = f2c.HG_Const_gen()
+  field = rand.generateRandField(5, 1e5)
+  cells = field.field
+  no_hl = const_hl.generateHeadlands(cells, 3.0 * robot.robot_width)
+  bf = f2c.SG_BruteForce()
+  swaths = bf.generateSwaths(math.pi, robot.op_width, no_hl.getGeometry(0))
+  snake_sorter = f2c.RP_Snake()
+  swaths = snake_sorter.genSortedSwaths(swaths)
+
+  robot.setMinRadius(2)  # m
+  robot.linear_curv_change = 0.1  # 1/m^2
+  path_planner = f2c.PP_PathPlanning()
+  dubins = f2c.PP_DubinsCurvesCC()
+  path = path_planner.searchBestPath(robot, swaths, dubins);
+
+  n = path.states.size()
+  points = [path.states[i].point for i in range(n)]
+
+  near(n, path.states.size())
+
+  states = list(path.states)
+  points = [item.point for item in states]
+
+  near(len(points), path.states.size())
+  print("Path with " + str(len(points)) +" points")
+
 
 
