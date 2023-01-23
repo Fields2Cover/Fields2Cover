@@ -39,7 +39,7 @@ jobs:
           export DEBIAN_FRONTEND=noninteractive
           apt-get update -qq
           apt-get install -y --no-install-recommends ca-certificates
-          apt-get install -y --no-install-recommends build-essential doxygen graphviz g++-${{ matrix.gcc }} gcc-${{ matrix.gcc }} git lcov libboost-dev libeigen3-dev libgtest-dev libpython3-dev libtbb-dev python3 python3-matplotlib python3-pip python3-pytest python3-tk swig
+          apt-get install -y --no-install-recommends build-essential doxygen graphviz g++-${{ matrix.gcc }} gcc-${{ matrix.gcc }} git lcov libboost-dev libeigen3-dev libgtest-dev libpython3-dev libtbb-dev python3 python3-matplotlib python3-pip python3-pytest python3-tk swig openssh-client
           python3 -m pip install gcovr setuptools
           python3 -m pip install -r ./docs/requirements.txt
 
@@ -67,7 +67,7 @@ jobs:
 
       - name: Download, clean and copy new fields2cover.github.io
         run: |
-          git clone https://github.com/Fields2Cover/fields2cover.github.io /fields2cover.github.io
+          git clone git@github.com:Fields2Cover/fields2cover.github.io.git /fields2cover.github.io
           cd /fields2cover.github.io
           rm -rf _* a* s* i* g* o* .doctrees .buildinfo
 
@@ -107,7 +107,6 @@ jobs:
           git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
           git config --global user.email "Gonzalo.Mier@users.noreply.github.com"
           git commit -a -m "${{ env.CI_COMMIT_MESSAGE }}"
-          git remote set-url origin git@github.com:Fields2Cover/fields2cover.github.io.git
           git push
 
 
