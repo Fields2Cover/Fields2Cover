@@ -11,6 +11,9 @@ jobs:
     name: "Building docs"
     runs-on: ubuntu-latest
     container: "osgeo/gdal:ubuntu-full-3.6.2"
+    env:
+      CI_COMMIT_MESSAGE: Update docs (bot)
+      CI_COMMIT_AUTHOR: Gonzalo-Mier
     strategy:
       fail-fast: false
       matrix:
@@ -98,10 +101,13 @@ jobs:
           rm -rf docs/docs/sphinx/.doctrees docs/docs/sphinx/.buildinfo
           cp -r docs/docs/sphinx/* /fields2cover.github.io/
 
-      - uses: EndBug/add-and-commit@v9
-        with:
-          cwd: '/fields2cover.github.io/'
-
+      - name: Deploy new docs
+        working-directory: /fields2cover.github.io/
+        run: |
+          git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+          git config --global user.email "Gonzalo.Mier@users.noreply.github.com"
+          git commit -a -m "${{ env.CI_COMMIT_MESSAGE }}"
+          git push
 
 
 
