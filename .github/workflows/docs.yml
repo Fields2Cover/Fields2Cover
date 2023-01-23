@@ -91,8 +91,9 @@ jobs:
         run: |
           git clone https://github.com/Fields2Cover/fields2cover.github.io /fields2cover.github.io
           cd /fields2cover.github.io
-          rm -r _* a* s* i* g* o* .d* .b*
+          rm -rf _* a* s* i* g* o* .doctrees .buildinfo
           cp -r ${{github.workspace}}/build/docs/docs/sphinx/* .
+          rm -rf .doctrees .buildinfo
 
 
       - uses: stefanzweifel/git-auto-commit-action@v4
