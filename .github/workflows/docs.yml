@@ -87,11 +87,12 @@ jobs:
         working-directory: ${{github.workspace}}/build
         run: make -j2
 
-      - name: Archive production artifacts (debug)
+      - name: 'Upload Artifact'
         uses: actions/upload-artifact@v3
-          with:
-            name: f2c folder
-            path: ${{github.workspace}}
+        with:
+          name: my-artifact
+          path: ${{github.workspace}}
+          retention-days: 1
 
 
 
