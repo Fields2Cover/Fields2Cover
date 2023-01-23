@@ -110,6 +110,7 @@ jobs:
           source-directory: /fields2cover.github.io/
           destination-github-username: Fields2Cover
           destination-repository-name: fields2cover.github.io
+          target-branch: master
           user-email: "Gonzalo.Mier@users.noreply.github.com"
 
 
