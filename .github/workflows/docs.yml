@@ -87,6 +87,14 @@ jobs:
         working-directory: ${{github.workspace}}/build
         run: make -j2
 
+      - name: Archive production artifacts (debug)
+        uses: actions/upload-artifact@v3
+          with:
+            name: f2c folder
+            path: ${{github.workspace}}
+
+
+
       - name: Download, clean and copy new fields2cover.github.io
         run: |
           git clone https://github.com/Fields2Cover/fields2cover.github.io /fields2cover.github.io
