@@ -62,6 +62,11 @@ jobs:
           cp /usr/include/cpl* /usr/include/new_gdal/
           mv /usr/include/new_gdal/ /usr/include/gdal/
 
+      - name: Download, clean and copy new fields2cover.github.io
+        run: |
+          git clone https://github.com/Fields2Cover/fields2cover.github.io /fields2cover.github.io
+          cd /fields2cover.github.io
+          rm -rf _* a* s* i* g* o* .doctrees .buildinfo
 
       - name: Configure
         working-directory: ${{github.workspace}}
@@ -87,23 +92,11 @@ jobs:
         working-directory: ${{github.workspace}}/build
         run: make -j2
 
-      - name: 'Upload Artifact'
-        uses: actions/upload-artifact@v3
-        with:
-          name: my-artifact
-          path: ${{github.workspace}}
-          retention-days: 1
-
-
-
-      - name: Download, clean and copy new fields2cover.github.io
+      - name: Copy docs
+        working-directory: ${{github.workspace}}/build
         run: |
-          git clone https://github.com/Fields2Cover/fields2cover.github.io /fields2cover.github.io
-          cd /fields2cover.github.io
-          rm -rf _* a* s* i* g* o* .doctrees .buildinfo
-          cp -r ${{github.workspace}}/build/docs/docs/sphinx/* .
-          rm -rf .doctrees .buildinfo
-
+          rm -rf docs/docs/sphinx/.doctrees docs/docs/sphinx/.buildinfo
+          cp -r docs/docs/sphinx/* /fields2cover.github.io/
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
