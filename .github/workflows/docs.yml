@@ -67,7 +67,7 @@ jobs:
 
       - name: Download, clean and copy new fields2cover.github.io
         run: |
-          git clone https://github.com/Fields2Cover/fields2cover.github.io /fields2cover.github.io
+          git clone git@github.com:Fields2Cover/fields2cover.github.io.git /fields2cover.github.io
           cd /fields2cover.github.io
           rm -rf _* a* s* i* g* o* .doctrees .buildinfo
 
