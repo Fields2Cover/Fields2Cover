@@ -11,9 +11,6 @@ jobs:
     name: "Building docs"
     runs-on: ubuntu-latest
     container: "osgeo/gdal:ubuntu-full-3.6.2"
-    env:
-      CI_COMMIT_MESSAGE: Update docs (bot)
-      CI_COMMIT_AUTHOR: Gonzalo-Mier
     strategy:
       fail-fast: false
       matrix:
@@ -65,12 +62,6 @@ jobs:
           cp /usr/include/cpl* /usr/include/new_gdal/
           mv /usr/include/new_gdal/ /usr/include/gdal/
 
-      - name: Download, clean and copy new fields2cover.github.io
-        run: |
-          git clone https://github.com/Fields2Cover/fields2cover.github.io /fields2cover.github.io
-          cd /fields2cover.github.io
-          rm -rf _* a* s* i* g* o* .doctrees .buildinfo
-
       - name: Configure
         working-directory: ${{github.workspace}}
         shell: bash
@@ -93,13 +84,9 @@ jobs:
 
       - name: Build
         working-directory: ${{github.workspace}}/build
-        run: make -j2
-
-      - name: Copy docs
-        working-directory: ${{github.workspace}}/build
         run: |
+          make -j2
           rm -rf docs/docs/sphinx/.doctrees docs/docs/sphinx/.buildinfo
-          cp -r docs/docs/sphinx/* /fields2cover.github.io/
 
 
       - name: Deploy new docs
@@ -107,7 +94,7 @@ jobs:
         env:
           API_TOKEN_GITHUB: ${{ secrets.GH_TOKEN }}
         with:
-          source-directory: /fields2cover.github.io/
+          source-directory: build/docs/docs/sphinx/
           destination-github-username: Fields2Cover
           destination-repository-name: fields2cover.github.io
           target-branch: master
