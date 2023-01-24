@@ -88,17 +88,23 @@ jobs:
           make -j2
           rm -rf docs/docs/sphinx/.doctrees docs/docs/sphinx/.buildinfo
 
-
-      - name: Deploy new docs
-        uses: cpina/github-action-push-to-another-repository@main
-        env:
-          API_TOKEN_GITHUB: ${{ secrets.GH_TOKEN }}
+      - name: Archive docs
+        uses: actions/upload-artifact@v3
         with:
-          source-directory: build/docs/docs/sphinx/
-          destination-github-username: Fields2Cover
-          destination-repository-name: fields2cover.github.io
-          target-branch: master
-          user-email: "Gonzalo.Mier@users.noreply.github.com"
+          name: Docs
+          path: ${{github.workspace}}/build/docs/docs/
+
+
+#      - name: Deploy new docs
+#        uses: cpina/github-action-push-to-another-repository@main
+#        env:
+#          API_TOKEN_GITHUB: ${{ secrets.GH_TOKEN }}
+#        with:
+#          source-directory: build/docs/docs/sphinx/
+#          destination-github-username: Fields2Cover
+#          destination-repository-name: fields2cover.github.io
+#          target-branch: master
+#          user-email: "Gonzalo.Mier@users.noreply.github.com"
 
 
 
