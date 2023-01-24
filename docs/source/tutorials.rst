@@ -19,7 +19,9 @@ If you want to run the examples, go to your `build` folder and run:
 .. code-block:: bash
 
     sudo chmod a+rwx tutorials/*
-    ./tutorials/<name of the tutorial
+    ./tutorials/<name-of-the-tutorial>
+    
+Computed images will appear in the same folder as you are now.
 
 
 C++ tutorials
