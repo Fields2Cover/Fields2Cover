@@ -74,8 +74,8 @@ Requirements on Linux
 
 Some packages are needed before compiling the package:
 
-.. note::
-  if your OS is Ubuntu 18.04 or 20.04, you would need to do ``sudo add-apt-repository ppa:ubuntugis/ppa``
+  ``📝`` If your OS is Ubuntu 18.04 or 20.04, you would need to do ``sudo add-apt-repository ppa:ubuntugis/ppa``
+
 
 .. code-block:: console
 
