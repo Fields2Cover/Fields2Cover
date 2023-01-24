@@ -13,6 +13,15 @@ Here, you will learn how to concatenate them to solve the CPP.
 
 All the code examples shown in the tutorials are located on the ``tutorials`` folder.
 
+Moreover, tutorials are compiled automatically with the project.
+If you want to run the examples, go to your `build` folder and run:
+
+.. code-block:: bash
+
+    sudo chmod a+rwx tutorials/*
+    ./tutorials/<name of the tutorial
+
+
 C++ tutorials
 ^^^^^^^^^^^^^
 

@@ -7,7 +7,7 @@ Fields2Cover
 
 |Open in GitHub Codespaces|
 
-|DOI| |build| |license| |Language-C++| |Language-Python| |stars| |forks| 
+|DOI| |build| |license| |Language-C++| |Language-Python| |stars| |forks|
 
 
 .. image:: docs/figures/logo_fields2cover.jpeg
@@ -65,7 +65,7 @@ Fields2Cover provides a flexible structure and several algorithms to compare wit
 Installation
 ------------
 
-The Fields2Cover package has only been tested on Ubuntu 20.04.
+The Fields2Cover package has only been tested on Ubuntu 18.04, 20.04 and 22.04.
 If you are able to run it in other operative systems, open an issue/PR and it will be added to this guide
 
 
@@ -74,13 +74,16 @@ Requirements on Linux
 
 Some packages are needed before compiling the package:
 
+  ``📝`` If your OS is Ubuntu 18.04 or 20.04, you would need to do ``sudo add-apt-repository ppa:ubuntugis/ppa``
+
+
 .. code-block:: console
 
-   sudo apt-get -y update
-   sudo apt-get install -y --no-install-recommends software-properties-common
-   sudo add-apt-repository -y ppa:ubuntugis/ppa
-   sudo apt-get -y update
-   sudo apt-get install -y --no-install-recommends build-essential ca-certificates cmake \
+   sudo apt-get update
+   sudo apt-get install --no-install-recommends software-properties-common
+   sudo add-apt-repository ppa:ubuntugis/ppa
+   sudo apt-get update
+   sudo apt-get install --no-install-recommends build-essential ca-certificates cmake \
         doxygen g++ git libeigen3-dev libgdal-dev libpython3-dev python3 python3-pip \
         python3-matplotlib python3-tk lcov libgtest-dev libtbb-dev swig
    python3 -m pip install gcovr
@@ -164,7 +167,7 @@ For being able to use the package from ROS, from `catkin_ws/`:
 
   git clone https://github.com/Fields2Cover/Fields2Cover src/fields2cover
   git clone https://github.com/Fields2Cover/fields2cover_ros src/fields2cover_ros
-  rosdep install -r --ignore-src -y --from-paths .
+  rosdep install -r --ignore-src --from-paths .
   catkin_make_isolated
 
 

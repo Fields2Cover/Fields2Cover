@@ -1,0 +1,112 @@
+name: Update docs
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: "Building docs"
+    runs-on: ubuntu-latest
+    container: "osgeo/gdal:ubuntu-full-3.6.2"
+    strategy:
+      fail-fast: false
+      matrix:
+        gcc: [12]
+        gdal: ["3.6.2"]
+        swig: ["v4.1.1"]
+        shared: ["ON"]
+        generators: ["Unix Makefiles"]
+        build_type: ["Release"]
+
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Print env
+        run: |
+          echo github.event.action: ${{ github.event.action }}
+          echo github.event_name: ${{ github.event_name }}
+
+      - uses: lukka/get-cmake@latest
+
+      - name: Ubuntu system dependencies
+        run: |
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get update -qq
+          apt-get install -y --no-install-recommends ca-certificates
+          apt-get install -y --no-install-recommends build-essential doxygen graphviz g++-${{ matrix.gcc }} gcc-${{ matrix.gcc }} git lcov libboost-dev libeigen3-dev libgtest-dev libpython3-dev libtbb-dev python3 python3-matplotlib python3-pip python3-pytest python3-tk swig
+          python3 -m pip install gcovr setuptools
+          python3 -m pip install -r ./docs/requirements.txt
+
+          # Solve issue with matplotlib
+          python3 -c "import matplotlib"
+          echo "backend: Agg" > ~/.config/matplotlib/matplotlibrc
+
+          # Install Gtest
+          cd /usr/src/gtest
+          cmake CMakeLists.txt
+          make
+          cp *.a /usr/lib/ 2>\dev\null || :
+          cp lib/*.a /usr/lib/ 2>\dev\null || :
+          ln -s /usr/lib/libgtest.a /usr/local/lib/libgtest.a
+          ln -s /usr/lib/libgtest_main.a /usr/local/lib/libgtest_main.a
+
+      - name: Configure GDAL
+        shell: bash
+        run: |
+          mkdir -p /usr/include/new_gdal
+          cp -r /usr/include/gdal* /usr/include/new_gdal/
+          cp /usr/include/ogr* /usr/include/new_gdal/
+          cp /usr/include/cpl* /usr/include/new_gdal/
+          mv /usr/include/new_gdal/ /usr/include/gdal/
+
+      - name: Configure
+        working-directory: ${{github.workspace}}
+        shell: bash
+        run: |
+          mkdir build
+          mkdir instdir
+          cmake \
+            -S . \
+            -B build \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+            -G "${{matrix.generators}}" \
+            -D CMAKE_C_COMPILER=gcc-${{ matrix.gcc }} \
+            -D CMAKE_CXX_COMPILER=g++-${{ matrix.gcc }} \
+            -DCMAKE_INSTALL_PREFIX:PATH=instdir  \
+            -DBUILD_PYTHON=OFF   \
+            -DALLOW_PARALLELIZATION=OFF  \
+            -DBUILD_TUTORIALS=OFF \
+            -DBUILD_TESTS=OFF   \
+            -DBUILD_DOC=ON
+
+      - name: Build
+        working-directory: ${{github.workspace}}/build
+        run: |
+          make -j2
+          rm -rf docs/docs/sphinx/.doctrees docs/docs/sphinx/.buildinfo
+          touch docs/docs/sphinx/.nojekyll
+
+      - name: Archive docs
+        uses: actions/upload-artifact@v3
+        with:
+          name: Docs
+          path: ${{github.workspace}}/build/docs/docs/sphinx
+
+
+      - name: Deploy new docs
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.GH_TOKEN }}
+        with:
+          source-directory: build/docs/docs/sphinx/
+          destination-github-username: Fields2Cover
+          destination-repository-name: fields2cover.github.io
+          target-branch: master
+          user-email: "Gonzalo.Mier@users.noreply.github.com"
+
+
+
+
+
