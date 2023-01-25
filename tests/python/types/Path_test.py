@@ -7,6 +7,7 @@
 import pytest
 import math
 import fields2cover as f2c
+from path_helper import PathHelper
 
 def near(a, b, error = 1e-7):
   assert abs(a - b) < error
@@ -179,33 +180,11 @@ def test_fields2cover_types_path_saveLoad():
   assert (path.serializePath() == path_read.serializePath());
 
 def test_fields2cover_types_path_list_points():
-  rand = f2c.Random(42)
-  robot = f2c.Robot(2.0, 6.0)
-  const_hl = f2c.HG_Const_gen()
-  field = rand.generateRandField(5, 1e5)
-  cells = field.field
-  no_hl = const_hl.generateHeadlands(cells, 3.0 * robot.robot_width)
-  bf = f2c.SG_BruteForce()
-  swaths = bf.generateSwaths(math.pi, robot.op_width, no_hl.getGeometry(0))
-  snake_sorter = f2c.RP_Snake()
-  swaths = snake_sorter.genSortedSwaths(swaths)
-
-  robot.setMinRadius(2)  # m
-  robot.linear_curv_change = 0.1  # 1/m^2
-  path_planner = f2c.PP_PathPlanning()
-  dubins = f2c.PP_DubinsCurvesCC()
-  path = path_planner.searchBestPath(robot, swaths, dubins);
-
-  n = path.states.size()
-  points = [path.states[i].point for i in range(n)]
-
-  near(n, path.states.size())
-
-  states = list(path.states)
-  points = [item.point for item in states]
-
-  near(len(points), path.states.size())
-  print("Path with " + str(len(points)) +" points")
-
-
+  helper = PathHelper()
+  helper.init_points()
+  n = helper.path.states.size()
+  near(n, helper.path.states.size())
+  points = [helper.path.states[i].point for i in range(n)]
+  near(len(points), len(helper.points))
+  print(f"Path with {len(points)} points")
 
