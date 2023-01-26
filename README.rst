@@ -155,7 +155,7 @@ Or run on the main folder:
 ROS Compatibility
 -----------------
 
-We also provide a `ROS interface <https://github.com/Fields2Cover/fields2cover_ros>`__. On it, you can have a nice visualization of your field and the paths generated:
+We also provide a `ROS interface <https://github.com/Fields2Cover/fields2cover_ros>`__ with ROS1 and ROS2. On it, you can have a nice visualization of your field and the paths generated:
 
 .. image:: docs/figures/demo_image.png
    :align: center
@@ -168,7 +168,10 @@ For being able to use the package from ROS, from `catkin_ws/`:
   git clone https://github.com/Fields2Cover/Fields2Cover src/fields2cover
   git clone https://github.com/Fields2Cover/fields2cover_ros src/fields2cover_ros
   rosdep install -r --ignore-src --from-paths .
+  # Compile it with ROS1
   catkin_make_isolated
+  # Compile it with ROS2
+  colcon build
 
 
 
