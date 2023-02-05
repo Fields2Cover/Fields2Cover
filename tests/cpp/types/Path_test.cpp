@@ -37,7 +37,7 @@ TEST(fields2cover_types_path, appendSwath) {
 TEST(fields2cover_types_path, op_plus_equal) {
   F2CSwath swath1(F2CLineString({F2CPoint(0.0, 1.0), F2CPoint(1.0, 1.0), F2CPoint(1.0, 4.0)}));
   F2CSwath swath2(F2CLineString({F2CPoint(1.0, 4.0), F2CPoint(1.0, 0.0), F2CPoint(0.0, 0.0)}));
-  	
+
   F2CPath path1, path2;
   path1.appendSwath(swath1, 2.0);
   path2.appendSwath(swath2, 1.0);
@@ -90,7 +90,7 @@ TEST(fields2cover_types_path, populate_and_reduce) {
 
   F2CSwath swath1(F2CLineString({F2CPoint(0.0, 0.0), F2CPoint(0.0, 1.0), F2CPoint(2.0, 1.0)}));
   F2CSwath swath2(F2CLineString({F2CPoint(3.0, 1.0), F2CPoint(3.0, 4.0), F2CPoint(1.0, 4.0)}));
-  	
+
   path1.appendSwath(swath1, 2.0);
   path2.appendSwath(swath2, 1.0);
   path1 += path2;
@@ -135,7 +135,7 @@ TEST(fields2cover_types_path, populate_and_reduce) {
   EXPECT_LT(path1.length(), 2.0 * 9.0);
   EXPECT_LT(path1.size(), 100);
 
-  // Time may change with reduce command. 
+  // Time may change with reduce command.
   // Unexpected behaviour
   // EXPECT_NEAR(path1.task_time, 6.5, 1e-6);
   for (auto s : path1.states) {
@@ -156,7 +156,7 @@ TEST(fields2cover_types_path, length) {
   line2.addPoint( 0.0, 0.0);
   F2CSwath swath1(line1);
   F2CSwath swath2(line2);
-  	
+
   F2CPath path1, path2;
   path1.appendSwath(swath1, 2.0);
   EXPECT_EQ(path1.length(), 4.0);
@@ -182,6 +182,17 @@ TEST(fields2cover_types_path, serialize) {
 
   EXPECT_EQ(path.serializePath(),
         "2.3 -5 0 0.1 3 6 1 2\n");
+
+  state.point = F2CPoint(0.1234567890123, -9.87654);
+  state.angle = 0.2;
+  state.velocity = 3.2;
+  state.duration = 6.2;
+  state.dir = f2c::types::PathDirection::BACKWARD;
+  state.type = f2c::types::PathSectionType::TURN;
+  path.states.push_back(state);
+
+  EXPECT_EQ(path.serializePath(10),
+        "2.3 -5 0 0.1 3 6 1 2\n0.123456789 -9.87654 0 0.2 3.2 6.2 -1 2\n");
 
   path.saveToFile("/tmp/test_path");
   path_read.loadFile("/tmp/test_path");

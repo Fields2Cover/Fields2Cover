@@ -88,34 +88,35 @@ class DecimalSeparator : public std::numpunct<CharT>{
   CharT m_Separator;
 };
 
-std::string to_string(double d) {
+std::string to_string(double d, const int precision = 6) {
   std::stringstream ss;
+  ss.precision(precision);
   ss.imbue(std::locale(std::locale(), new DecimalSeparator<char>('.')));
   ss << d;
   return ss.str();
 }
 
 
-std::string Path::serializePath() const {
+std::string Path::serializePath(size_t digit_precision) const {
   std::locale::global(std::locale::classic());
   std::string res = "";
 
   for (size_t i = 0; i < size(); ++i) {
-    res += to_string(states[i].point.getX()) + " ";
-    res += to_string(states[i].point.getY()) + " ";
-    res += to_string(states[i].point.getZ()) + " ";
-    res += to_string(states[i].angle) + " ";
-    res += to_string(states[i].velocity) + " ";
-    res += to_string(states[i].duration) + " ";
+    res += to_string(states[i].point.getX(), digit_precision) + " ";
+    res += to_string(states[i].point.getY(), digit_precision) + " ";
+    res += to_string(states[i].point.getZ(), digit_precision) + " ";
+    res += to_string(states[i].angle, digit_precision) + " ";
+    res += to_string(states[i].velocity, digit_precision) + " ";
+    res += to_string(states[i].duration, digit_precision) + " ";
     res += to_string(static_cast<int>(states[i].dir)) + " ";
     res += to_string(static_cast<int>(states[i].type)) + "\n";
   }
   return res;
 }
 
-void Path::saveToFile(const std::string& file) const {
+void Path::saveToFile(const std::string& file, size_t precision) const {
   std::ofstream out(file);
-  out << serializePath();
+  out << serializePath(precision);
   out.close();
 }
 
