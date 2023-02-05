@@ -6,7 +6,8 @@ on:
       - main
 
 jobs:
-  build:
+  publish:
+    if: github.repository_owner == 'Fields2Cover'
     name: "Building docs"
     runs-on: ubuntu-latest
     container: "osgeo/gdal:ubuntu-full-3.6.2"
