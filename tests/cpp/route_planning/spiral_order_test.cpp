@@ -145,3 +145,35 @@ TEST(fields2cover_route_spiral, genSortedSwaths_default_cstr) {
   EXPECT_EQ(swaths[8].getWidth(), 9);
   EXPECT_EQ(swaths[9].getWidth(), 10);
 }
+
+
+TEST(fields2cover_route_spiral, genSortedSwaths_bigger_than_8_bulk) {
+  const int size = 10;
+  F2CSwaths swaths;
+  for (int i = 1; i <= size; ++i) {
+    swaths.emplace_back(F2CLineString({F2CPoint(0, i), F2CPoint(1, i)}), i, i);
+  }
+  f2c::rp::SpiralOrder swath_sorter;
+  swath_sorter.setSpiralSize(size);
+  swaths = swath_sorter.genSortedSwaths(swaths);
+
+  EXPECT_EQ(swaths[0].getWidth(), 1);
+  EXPECT_EQ(swaths[1].getWidth(), 10);
+  EXPECT_EQ(swaths[2].getWidth(), 2);
+  EXPECT_EQ(swaths[3].getWidth(), 9);
+  EXPECT_EQ(swaths[4].getWidth(), 3);
+  EXPECT_EQ(swaths[5].getWidth(), 8);
+  EXPECT_EQ(swaths[6].getWidth(), 4);
+  EXPECT_EQ(swaths[7].getWidth(), 7);
+  EXPECT_EQ(swaths[8].getWidth(), 5);
+  EXPECT_EQ(swaths[9].getWidth(), 6);
+}
+
+
+
+
+
+
+
+
+

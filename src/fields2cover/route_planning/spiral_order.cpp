@@ -26,7 +26,7 @@ void SpiralOrder::sortSwaths(F2CSwaths& swaths) const {
 }
 
 void SpiralOrder::spiral(F2CSwaths& swaths, size_t offset, size_t size) const {
-  for (size_t j = offset % 2 ? 0 : 1; j <= (size + 1) / 2; j += 2) {
+  for (size_t j = (offset + 1) % 2; j < size; j += 2) {
     std::rotate(swaths.begin() + offset + j,
                 swaths.begin() + offset + size - 1,
                 swaths.begin() + offset + size);
