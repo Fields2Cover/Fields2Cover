@@ -43,17 +43,17 @@ Please cite the  following paper (https://ieeexplore.ieee.org/document/10050562)
 
 .. code-block:: bibtex
 
-  @article{Mier_Fields2Cover_An_open-source_2022,
-  author = {Mier, Gonzalo and Valente, João and de Bruin, Sytze},
-  doi={10.1109/LRA.2023.3248439},
-  journal={IEEE Robotics and Automation Letters}, 
-  title={Fields2Cover: An open-source coverage path planning library for unmanned agricultural vehicles},
-  volume={},
-  number={},
-  pages={1-8},
-  year = {2023}
+  @article{Mier_Fields2Cover_An_open-source_2023,
+    author={Mier, Gonzalo and Valente, João and de Bruin, Sytze},
+    journal={IEEE Robotics and Automation Letters},
+    title={Fields2Cover: An Open-Source Coverage Path Planning Library for Unmanned Agricultural Vehicles},
+    year={2023},
+    volume={8},
+    number={4},
+    pages={2166-2172},
+    doi={10.1109/LRA.2023.3248439}
   }
-  
+
 
 
 Why?

@@ -25,6 +25,26 @@ Although the development of this project is focused on offline planning of agric
 the library accepts pull requests from other types of coverage planners.
 
 
+Citing
+======
+
+Please cite `the following paper <https://ieeexplore.ieee.org/document/10050562>`__ when using Fields2Cover for your research:
+
+.. code-block:: bibtex
+
+  @article{Mier_Fields2Cover_An_open-source_2023,
+    author={Mier, Gonzalo and Valente, João and de Bruin, Sytze},
+    journal={IEEE Robotics and Automation Letters},
+    title={Fields2Cover: An Open-Source Coverage Path Planning Library for Unmanned Agricultural Vehicles},
+    year={2023},
+    volume={8},
+    number={4},
+    pages={2166-2172},
+    doi={10.1109/LRA.2023.3248439}
+  }
+
+
+
 More information
 ================
 
