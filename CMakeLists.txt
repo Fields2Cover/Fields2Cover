@@ -11,7 +11,6 @@ set(PACKAGE_AUTHOR "Wageningen University")
 set(PACKAGE_MAINTAINER "Gonzalo Mier")
 
 
-option(BUILD_CPP "Build Cpp package" ON)
 option(ALLOW_PARALLELIZATION "Allow parallel algorithms" ON)
 option(BUILD_TUTORIALS "Build tutorials" ON)
 option(BUILD_TESTS "Build tests" ON)
@@ -42,7 +41,6 @@ project(Fields2Cover
   VERSION "${FIELDS2COVER_VERSION_STRING}"
   DESCRIPTION "${PACKAGE_DESCRIPTION}")
 
-if(BUILD_CPP)
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
   # set(CMAKE_BUILD_TYPE Testing)
@@ -272,7 +270,6 @@ if (BUILD_TESTS)
       --verbose --test-dir tests/)
   add_subdirectory(tests)
 endif()
-endif()  # BUILD_CPP
 
 #####################################################
 ######################### docs ######################
