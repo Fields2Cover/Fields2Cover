@@ -2,11 +2,17 @@
 set(FIELDS2COVER_MAJOR_VERSION "1")
 set(FIELDS2COVER_MINOR_VERSION "2")
 set(FIELDS2COVER_PATCH_VERSION "0")
-set(FIELDS2COVER_VERSION_STRING "${FIELDS2COVER_MAJOR_VERSION}.${FIELDS2COVER_MINOR_VERSION}.${FIELDS2COVER_PATCH_VERSION}")
-set(FIELDS2COVER_VERSION ${FIELDS2COVER_MAJOR_VERSION}.${FIELDS2COVER_MINOR_VERSION}.${FIELDS2COVER_PATCH_VERSION})
+set(FIELDS2COVER_VERSION_STRING
+  "${FIELDS2COVER_MAJOR_VERSION}.${FIELDS2COVER_MINOR_VERSION}.${FIELDS2COVER_PATCH_VERSION}"
+)
+set(FIELDS2COVER_VERSION
+  ${FIELDS2COVER_MAJOR_VERSION}.${FIELDS2COVER_MINOR_VERSION}.${FIELDS2COVER_PATCH_VERSION}
+)
 
 set(PACKAGE_NAME "Fields2Cover")
-set(PACKAGE_DESCRIPTION "Fields2Cover is a complete coverage path planning package for autonomous robots")
+set(PACKAGE_DESCRIPTION
+  "Fields2Cover is a complete coverage path planning package for autonomous robots"
+)
 set(PACKAGE_AUTHOR "Wageningen University")
 set(PACKAGE_MAINTAINER "Gonzalo Mier")
 
@@ -22,34 +28,35 @@ option(BUILD_SHARED_LIBS "Build shared library(.so)" ON)
 
 if (BUILD_PYTHON)
   cmake_minimum_required(VERSION 3.12.4)
-else()
+else(BUILD_PYTHON)
   cmake_minimum_required(VERSION 3.11)
-endif()
+endif(BUILD_PYTHON)
 
 if(${CMAKE_VERSION} VERSION_LESS 3.22)
-    cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
-else()
-    cmake_policy(VERSION 3.22)
-endif()
+  cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
+else(${CMAKE_VERSION} VERSION_LESS 3.22)
+  cmake_policy(VERSION 3.22)
+endif(${CMAKE_VERSION} VERSION_LESS 3.22)
 
 if(POLICY CMP0135)
   cmake_policy(SET CMP0135 NEW)
-endif()
+endif(POLICY CMP0135)
 
 project(Fields2Cover
   LANGUAGES CXX
   VERSION "${FIELDS2COVER_VERSION_STRING}"
-  DESCRIPTION "${PACKAGE_DESCRIPTION}")
+  DESCRIPTION "${PACKAGE_DESCRIPTION}"
+)
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
   # set(CMAKE_BUILD_TYPE Testing)
   # set(CMAKE_BUILD_TYPE Coverage)
-endif()
+endif(NOT CMAKE_BUILD_TYPE)
 
 if (WIN32)
   set(CMAKE_SHARED_LIBRARY_PREFIX "")
-endif ()
+endif(WIN32)
 
 set(INSTALL_CMAKE_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/Fields2Cover)
 
@@ -59,29 +66,39 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules ${CMAKE_MODULE_PATH})
 
 include(FetchContent)
 if(${CMAKE_VERSION} VERSION_LESS 3.14)
-    macro(FetchContent_MakeAvailable NAME)
-        FetchContent_GetProperties(${NAME})
-        if(NOT ${NAME}_POPULATED)
-            FetchContent_Populate(${NAME})
-            add_subdirectory(${${NAME}_SOURCE_DIR} ${${NAME}_BINARY_DIR})
-        endif()
-    endmacro()
-endif()
+  macro(FetchContent_MakeAvailable NAME)
+    FetchContent_GetProperties(${NAME})
+    if(NOT ${NAME}_POPULATED)
+      FetchContent_Populate(${NAME})
+      add_subdirectory(${${NAME}_SOURCE_DIR} ${${NAME}_BINARY_DIR})
+    endif(NOT ${NAME}_POPULATED)
+  endmacro(FetchContent_MakeAvailable)
+endif(${CMAKE_VERSION} VERSION_LESS 3.14)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 FetchContent_Declare(json FETCHCONTENT_UPDATES_DISCONNECTED
-  URL https://github.com/nlohmann/json/releases/download/v3.10.5/json.tar.xz)
+  URL https://github.com/nlohmann/json/releases/download/v3.10.5/json.tar.xz
+)
 FetchContent_Declare(tinyxml2 FETCHCONTENT_UPDATES_DISCONNECTED
-  URL https://github.com/leethomason/tinyxml2/archive/refs/tags/9.0.0.tar.gz)
+  URL https://github.com/leethomason/tinyxml2/archive/refs/tags/9.0.0.tar.gz
+)
 FetchContent_Declare(steering_functions FETCHCONTENT_UPDATES_DISCONNECTED
-  GIT_REPOSITORY https://github.com/Fields2Cover/steering_functions.git)
+  GIT_REPOSITORY https://github.com/Fields2Cover/steering_functions.git
+)
 FetchContent_Declare(spline FETCHCONTENT_UPDATES_DISCONNECTED
-  GIT_REPOSITORY https://github.com/Fields2Cover/spline.git)
+  GIT_REPOSITORY https://github.com/Fields2Cover/spline.git
+)
 FetchContent_Declare(matplotlib_cpp FETCHCONTENT_UPDATES_DISCONNECTED
-  GIT_REPOSITORY https://github.com/Fields2Cover/matplotlib-cpp.git)
+  GIT_REPOSITORY https://github.com/Fields2Cover/matplotlib-cpp.git
+)
 
-FetchContent_MakeAvailable(json tinyxml2 steering_functions spline)
-FetchContent_MakeAvailable(matplotlib_cpp)
+FetchContent_MakeAvailable(
+  json
+  tinyxml2
+  steering_functions
+  spline
+  matplotlib_cpp
+)
 
 find_package(GDAL 3.0 REQUIRED)
 
@@ -91,69 +108,76 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
 set(INSTALL_BIN_DIR bin CACHE PATH "Installation directory for executables")
 set(INSTALL_INCLUDE_DIR include CACHE PATH
-  "Installation directory for header files")
+  "Installation directory for header files"
+)
 
 
 foreach(p LIB BIN INCLUDE CMAKE)
   set(var INSTALL_${p}_DIR)
   if(NOT IS_ABSOLUTE "${${var}}")
     set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
-  endif()
+  endif(NOT IS_ABSOLUTE "${${var}}")
 endforeach()
 
 file(GLOB_RECURSE fields2cover_src
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*/*/*.cpp"
-   )
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.cpp"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*/*.cpp"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*/*/*.cpp"
+)
 
 list(REMOVE_ITEM fields2cover_src
-    "${CMAKE_CURRENT_SOURCE_DIR}/.*"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/.*"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*/.*"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*/.*"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*/*/.*.cpp"
-    )
+  "${CMAKE_CURRENT_SOURCE_DIR}/.*"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/.*"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/*/.*"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*/.*"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*/*/.*.cpp"
+)
 
-if (BUILD_SHARED_LIBS)
+if(BUILD_SHARED_LIBS)
   add_library(Fields2Cover SHARED ${fields2cover_src})
-else ()
+else(BUILD_SHARED_LIBS)
   add_library(Fields2Cover STATIC ${fields2cover_src})
-endif()
+endif(BUILD_SHARED_LIBS)
 
 target_compile_features(Fields2Cover PUBLIC cxx_std_17)
 
 
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
-  target_compile_options(Fields2Cover PRIVATE -pedantic -Wall -Wfatal-errors
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+  target_compile_options(Fields2Cover PRIVATE
+    -pedantic -Wall -Wfatal-errors
     -Werror -Wno-dev -Wextra -Wno-unused-parameter -Wno-sign-compare
-    -Wno-attributes -Wl,--no-undefined -Wshadow)
-elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
+    -Wno-attributes -Wl,--no-undefined -Wshadow
+  )
+elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
   target_compile_options(Fields2Cover PRIVATE /W4)
-elseif (${CMAKE_CXX_COMPILER_ID} MATCHES "^(Apple)?Clang$")
+elseif(${CMAKE_CXX_COMPILER_ID} MATCHES "^(Apple)?Clang$")
 
-endif()
+endif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
 
 
 
 if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
   include(cmake/Modules/CodeCoverage.cmake)
   APPEND_COVERAGE_COMPILER_FLAGS()
-  target_compile_options(Fields2Cover PRIVATE -g --coverage -fprofile-arcs -ftest-coverage -fno-inline)
+  target_compile_options(Fields2Cover PRIVATE
+    -g --coverage -fprofile-arcs -ftest-coverage -fno-inline
+  )
+  set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -lgcov")
+
   if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(Fields2Cover PRIVATE /O0)
-  else()
+  else(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(Fields2Cover PRIVATE -O0)
-  endif()
-  set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -lgcov")
-else ()
+  endif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+
+else(CMAKE_BUILD_TYPE STREQUAL "Coverage")
   if (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
     target_compile_options(Fields2Cover PRIVATE /O2)
-  else()
+  else(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
     target_compile_options(Fields2Cover PRIVATE -O2)
-  endif()
-endif()
+  endif(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
+endif(CMAKE_BUILD_TYPE STREQUAL "Coverage")
 
 
 
@@ -176,15 +200,21 @@ target_link_libraries(Fields2Cover
     matplotlib_cpp
 )
 
-if (ALLOW_PARALLELIZATION)
-target_link_libraries(Fields2Cover PRIVATE tbb)
-endif()
+if(ALLOW_PARALLELIZATION)
+  target_link_libraries(Fields2Cover PRIVATE tbb)
+endif(ALLOW_PARALLELIZATION)
 
+set_target_properties(Fields2Cover
+  PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE
+  PUBLIC_HEADER "include/fields2cover.h"
+)
 
-set_target_properties(Fields2Cover PROPERTIES
-  INTERPROCEDURAL_OPTIMIZATION TRUE PUBLIC_HEADER "include/fields2cover.h")
-
-install(TARGETS Fields2Cover tinyxml2 steering_functions nlohmann_json
+install(
+  TARGETS
+    Fields2Cover
+    tinyxml2
+    steering_functions
+    nlohmann_json
   EXPORT Fields2Cover-targets
   LIBRARY DESTINATION ${INSTALL_LIB_DIR}
   ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
@@ -194,34 +224,57 @@ install(TARGETS Fields2Cover tinyxml2 steering_functions nlohmann_json
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(Fields2CoverConfigVersion.cmake
-    VERSION ${PACKAGE_VERSION} COMPATIBILITY AnyNewerVersion)
+  VERSION ${PACKAGE_VERSION}
+  COMPATIBILITY AnyNewerVersion
+)
 
 if(BUILD_SHARED_LIBS)
   set(type shared)
-else()
+else(BUILD_SHARED_LIBS)
   set(type static)
-endif()
-install(EXPORT Fields2Cover-targets FILE Fields2Cover-${type}-Targets.cmake
-        DESTINATION ${INSTALL_CMAKE_DIR}/cmake/fields2cover)
+endif(BUILD_SHARED_LIBS)
+
+install(
+  EXPORT Fields2Cover-targets
+  FILE Fields2Cover-${type}-Targets.cmake
+  DESTINATION ${INSTALL_CMAKE_DIR}/cmake/fields2cover
+)
 
 set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
 configure_file(cmake/Fields2CoverConfig.cmake.in
   "Fields2CoverConfig.cmake" @ONLY)
 configure_file(cmake/Fields2CoverConfigVersion.cmake.in
-  "${PROJECT_BINARY_DIR}/Fields2CoverConfigVersion.cmake" @ONLY)
+  "${PROJECT_BINARY_DIR}/Fields2CoverConfigVersion.cmake" @ONLY
+)
 
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfig.cmake"
-              "${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfigVersion.cmake"
-        DESTINATION ${INSTALL_CMAKE_DIR}/cmake/fields2cover)
+install(
+  FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfigVersion.cmake"
+  DESTINATION
+    ${INSTALL_CMAKE_DIR}/cmake/fields2cover
+)
 
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/package.xml
-        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME})
+install(
+  FILES ${CMAKE_CURRENT_SOURCE_DIR}/package.xml
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}
+)
 
-export(TARGETS Fields2Cover tinyxml2 steering_functions nlohmann_json
-  FILE Fields2Cover-${type}-Targets.cmake)
+export(
+  TARGETS
+    Fields2Cover
+    tinyxml2
+    steering_functions
+    nlohmann_json
+  FILE
+    Fields2Cover-${type}-Targets.cmake
+)
 
 # Copy public headers during `make install`
-install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(
+  DIRECTORY include/
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
 
 set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
 export(PACKAGE Fields2Cover)
@@ -247,29 +300,30 @@ include(CPack)
 #####################################################
 
 if (BUILD_TUTORIALS)
-    add_subdirectory(tutorials)
-endif()
+  add_subdirectory(tutorials)
+endif(BUILD_TUTORIALS)
 
 #####################################################
 ######################### swig ######################
 #####################################################
 
 if (BUILD_PYTHON)
-    add_subdirectory(swig)
-endif()
+  add_subdirectory(swig)
+endif(BUILD_PYTHON)
 
 #####################################################
 ######################### test ######################
 #####################################################
 
-if (BUILD_TESTS)
+if(BUILD_TESTS)
   find_package(GTest REQUIRED)
   include(CTest)
   enable_testing()
-  add_custom_target(check COMMAND GTEST_COLOR=1 ${CMAKE_CTEST_COMMAND}
-      --verbose --test-dir tests/)
+  add_custom_target(check COMMAND
+    GTEST_COLOR=1 ${CMAKE_CTEST_COMMAND} --verbose --test-dir tests/
+  )
   add_subdirectory(tests)
-endif()
+endif(BUILD_TESTS)
 
 #####################################################
 ######################### docs ######################
@@ -278,4 +332,4 @@ endif()
 
 if(BUILD_DOC)
   add_subdirectory(docs)
-endif()
+endif(BUILD_DOC)

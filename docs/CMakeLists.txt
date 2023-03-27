@@ -17,7 +17,8 @@ if (DOXYGEN_FOUND)
     COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Generating API documentation with Doxygen"
-    VERBATIM)
+    VERBATIM
+  )
 
 
   find_package(Sphinx)
@@ -27,25 +28,33 @@ if (DOXYGEN_FOUND)
     set(SPHINX_INDEX_FILE ${SPHINX_BUILD}/index.html)
 
 
-    add_custom_command(OUTPUT ${SPHINX_INDEX_FILE}
-                   COMMAND
-                     ${SPHINX_EXECUTABLE} -b html
-                     -Dbreathe_projects.Fields2Cover=${DOXYGEN_OUTPUT_DIR}
-                   ${SPHINX_SOURCE} ${SPHINX_BUILD}
-                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-                   DEPENDS
-                   # Other docs files you want to track should go here (or in some variable)
-                   ${SPHINX_SOURCE}/index.rst
-                   ${DOXYGEN_INDEX_FILE}
-                   MAIN_DEPENDENCY ${SPHINX_SOURCE}/conf.py
-                   COMMENT "Generating documentation with Sphinx")
+    add_custom_command(
+      OUTPUT
+        ${SPHINX_INDEX_FILE}
+      COMMAND
+        ${SPHINX_EXECUTABLE} -b html
+          -Dbreathe_projects.Fields2Cover=${DOXYGEN_OUTPUT_DIR}
+          ${SPHINX_SOURCE} ${SPHINX_BUILD}
+      WORKING_DIRECTORY
+        ${CMAKE_CURRENT_BINARY_DIR}
+      DEPENDS
+        # Other docs files you want to track should go here (or in some variable)
+        ${SPHINX_SOURCE}/index.rst
+        ${DOXYGEN_INDEX_FILE}
+      MAIN_DEPENDENCY
+        ${SPHINX_SOURCE}/conf.py
+      COMMENT
+        "Generating documentation with Sphinx"
+    )
 
     # Nice named target so we can run the job easily
     add_custom_target(Sphinx ALL DEPENDS ${SPHINX_INDEX_FILE})
 
     include(GNUInstallDirs)
-    install(DIRECTORY ${SPHINX_BUILD}
-      DESTINATION ${CMAKE_INSTALL_DOCDIR})
+    install(
+      DIRECTORY ${SPHINX_BUILD}
+      DESTINATION ${CMAKE_INSTALL_DOCDIR}
+    )
   else (SPHINX_FOUND)
     message("Sphinx not installed")
   endif (SPHINX_FOUND)

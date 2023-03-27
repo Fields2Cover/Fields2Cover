@@ -36,5 +36,5 @@ include(${SWIG_USE_FILE})
 
 # Add subdirectories for each language if desired
 if(BUILD_PYTHON)
-    add_subdirectory(python)
+  add_subdirectory(python)
 endif()
