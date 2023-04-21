@@ -36,11 +36,16 @@
 #include "fields2cover/objectives/path_length.h"
 
 
+#include "fields2cover/decomposition/decomposition_base.h"
+#include "fields2cover/decomposition/trapezoidal_decomp.h"
+#include "fields2cover/decomposition/boustrophedon_decomp.h"
+
 #include "fields2cover/headland_generator/headland_generator_base.h"
 #include "fields2cover/headland_generator/constant_headland.h"
 
 #include "fields2cover/swath_generator/swath_generator_base.h"
 #include "fields2cover/swath_generator/brute_force.h"
+
 
 #include "fields2cover/route_planning/single_cell_swaths_order_base.h"
 #include "fields2cover/route_planning/boustrophedon_order.h"
