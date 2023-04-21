@@ -11,7 +11,7 @@
  %include <optional.i>
  %include <exception.i>
 
-#define __version__ "1.2.0"
+#define __version__ "1.3.0"
 
 %inline %{
   #include "fields2cover.h"
