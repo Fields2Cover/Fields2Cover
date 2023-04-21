@@ -153,8 +153,10 @@ TEST(fields2cover_route_spiral, genSortedSwaths_bigger_than_8_bulk) {
   for (int i = 1; i <= size; ++i) {
     swaths.emplace_back(F2CLineString({F2CPoint(0, i), F2CPoint(1, i)}), i, i);
   }
+
   f2c::rp::SpiralOrder swath_sorter;
   swath_sorter.setSpiralSize(size);
+
   swaths = swath_sorter.genSortedSwaths(swaths);
 
   EXPECT_EQ(swaths[0].getWidth(), 1);
