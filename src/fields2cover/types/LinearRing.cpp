@@ -56,20 +56,34 @@ size_t LinearRing::size() const {
 }
 
 void LinearRing::getGeometry(int i, Point& point) {
+  if (i < 0 || i >= this->size()) {
+    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+  }
   data->getPoint(i, point.get());
 }
 
 void LinearRing::getGeometry(int i, Point& point) const {
+  if (i < 0 || i >= this->size()) {
+    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+  }
   data->getPoint(i, point.get());
 }
 
 Point LinearRing::getGeometry(int i) {
+  if (i < 0 || i >= this->size()) {
+    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+  }
+
   OGRPoint point;
   data->getPoint(i, &point);
   return Point(point);
 }
 
 const Point LinearRing::getGeometry(int i) const {
+  if (i < 0 || i >= this->size()) {
+    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+  }
+
   OGRPoint point;
   data->getPoint(i, &point);
   return Point(point);

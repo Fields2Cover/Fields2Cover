@@ -38,22 +38,36 @@ void Cell::operator*=(double b) {
 }
 
 void Cell::getGeometry(size_t i, LinearRing& ring) {
+  if (i >= this->size()) {
+    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+  }
+
   ring = LinearRing(((i == 0) ?
     data->getExteriorRing() :
     data->getInteriorRing(i-1)), EmptyDestructor());
 }
 
 void Cell::getGeometry(size_t i, LinearRing& ring) const {
+  if (i >= this->size()) {
+    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+  }
+
   ring = LinearRing(((i == 0) ?
     data->getExteriorRing() :
     data->getInteriorRing(i-1)), EmptyDestructor());
 }
 
 LinearRing Cell::getGeometry(size_t i) {
+  if (i >= this->size()) {
+    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+  }
   return (i == 0) ? getExteriorRing() : getInteriorRing(i-1);
 }
 
 LinearRing Cell::getGeometry(size_t i) const {
+  if (i >= this->size()) {
+    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+  }
   return (i == 0) ? getExteriorRing() : getInteriorRing(i-1);
 }
 

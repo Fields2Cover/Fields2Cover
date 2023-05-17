@@ -53,18 +53,30 @@ void Cells::operator*=(double b) {
 }
 
 void Cells::getGeometry(size_t i, Cell& cell) {
+  if (i >= this->size()) {
+    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+  }
   cell = Cell(data->getGeometryRef(i), EmptyDestructor());
 }
 
 void Cells::getGeometry(size_t i, Cell& cell) const {
+  if (i >= this->size()) {
+    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+  }
   cell = Cell(data->getGeometryRef(i), EmptyDestructor());
 }
 
 Cell Cells::getGeometry(size_t i) {
+  if (i >= this->size()) {
+    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+  }
   return Cell(data->getGeometryRef(i));
 }
 
 const Cell Cells::getGeometry(size_t i) const {
+  if (i >= this->size()) {
+    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+  }
   return Cell(data->getGeometryRef(i));
 }
 
