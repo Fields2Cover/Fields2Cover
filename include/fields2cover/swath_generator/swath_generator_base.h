@@ -22,6 +22,9 @@ namespace f2c::sg {
 template <typename T>
 class SwathGeneratorBase {
  public:
+   bool allow_overlap {false};
+
+ public:
   virtual F2CSwaths generateBestSwaths(f2c::obj::SGObjective& obj,
       double op_width, const F2CCell& poly) = 0;
 
@@ -33,6 +36,8 @@ class SwathGeneratorBase {
 
   virtual F2CSwathsByCells generateSwaths(double angle,
       double op_width, const F2CCells& polys);
+
+  void setAllowOverlap(bool value) {allow_overlap = value;}
 };
 
 }  // namespace f2c::sg
