@@ -48,6 +48,12 @@ F2CSwaths SwathGeneratorBase<T>::generateSwaths(double angle,
         seed_curve + F2CPoint(op_width, 0.0) * (i + 0.5));
     swaths.append(path, poly, op_width);
   }
+
+  if (allow_overlap && field_width - ((n_swaths - 1) * op_width) < op_width / 2) {
+    auto path = F2CPoint(0.0, 0.0).rotateFromPoint(-angle,
+                                                    seed_curve + F2CPoint(field_width - op_width / 2, 0.0));
+    swaths.append(path, poly, op_width);
+  }
   return swaths;
 }
 
