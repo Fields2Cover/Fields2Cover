@@ -154,4 +154,8 @@ jobs:
         working-directory: ${{github.workspace}}
         run: pytest-3 tests/python/
 
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env: CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
 
