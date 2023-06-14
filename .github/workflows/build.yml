@@ -164,7 +164,7 @@ jobs:
         if: ${{ matrix.build_type == 'Coverage'}}
         uses: threeal/gcovr-action@latest
         with:
-          excludes: |
+          exclude: |
             build/*
             cmake/*
             docs/*
