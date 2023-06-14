@@ -64,7 +64,7 @@ jobs:
             swig: "v4.1.1"
             shared: "ON"
             generators: "Unix Makefiles"
-            build_type: "Debug"  
+            build_type: "Coverage"  
 
 
     steps:
@@ -161,7 +161,7 @@ jobs:
         run: pytest-3 tests/python/
 
       - name: Upload coverage reports to Codecov
-        if: ${{ matrix.build_type == 'Debug'}}
+        if: ${{ matrix.build_type == 'Coverage'}}
         uses: codecov/codecov-action@v3
         env: 
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
