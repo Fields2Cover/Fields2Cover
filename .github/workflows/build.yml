@@ -163,7 +163,7 @@ jobs:
       - name: Test C++ Code Cov
         working-directory: ${{github.workspace}}/build
         if: ${{ matrix.build_type == 'Coverage'}}
-        run: gcovr -p -r ${{github.workspace}}  --exclude-function-lines --exclude-unreachable-branches --exclude-throw-branches --html-title "Fields2Cover Coverage Report" -f ../src -f ../include -x ./code_cov.xml > __out__.txt'
+        run: gcovr -p -r ..  --exclude-function-lines --exclude-unreachable-branches --exclude-throw-branches --html-title "Fields2Cover Coverage Report" -f ../src -f ../include -x ./code_cov.xml > __out__.txt'
 
       - name: Upload coverage reports to Codecov
         if: ${{ matrix.build_type == 'Coverage'}}
