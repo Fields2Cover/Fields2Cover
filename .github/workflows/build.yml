@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: "GDAL ${{ matrix.gdal }}, g++ ${{matrix.gcc}}, swig ${{matrix.swig}}, shared ${{matrix.shared}}, ${{build_type}}"
+    name: "GDAL ${{ matrix.gdal }}, g++ ${{matrix.gcc}}, swig ${{matrix.swig}}, shared ${{matrix.shared}}, ${{matrix.build_type}}"
     runs-on: ubuntu-latest
     container: "osgeo/gdal:ubuntu-full-${{ matrix.gdal }}"
     strategy:
