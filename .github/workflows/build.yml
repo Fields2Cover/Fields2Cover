@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: "GDAL ${{ matrix.gdal }}, g++ ${{matrix.gcc}}, swig ${{matrix.swig}}, shared ${{matrix.shared}}"
+    name: "GDAL ${{ matrix.gdal }}, g++ ${{matrix.gcc}}, swig ${{matrix.swig}}, shared ${{matrix.shared}}, ${{build_type}}"
     runs-on: ubuntu-latest
     container: "osgeo/gdal:ubuntu-full-${{ matrix.gdal }}"
     strategy:
@@ -159,6 +159,15 @@ jobs:
       - name: Test Python
         working-directory: ${{github.workspace}}
         run: pytest-3 tests/python/
+
+      - name: Archive production artifacts
+        if: ${{ matrix.build_type == 'Coverage'}}
+        uses: actions/upload-artifact@v3
+        with:
+          name: everything
+          path: |
+            ${{github.workspace}}
+
 
       - name: Test C++ Code Cov
         if: ${{ matrix.build_type == 'Coverage'}}
