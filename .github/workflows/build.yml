@@ -163,6 +163,14 @@ jobs:
       - name: Test C++ Code Cov
         if: ${{ matrix.build_type == 'Coverage'}}
         uses: threeal/gcovr-action@latest
+        with:
+          excludes: |
+            build/*
+            cmake/*
+            docs/*
+            tutorials/*
+            tests/*
+            swig/*
 
       - name: Upload coverage reports to Codecov
         if: ${{ matrix.build_type == 'Coverage'}}
