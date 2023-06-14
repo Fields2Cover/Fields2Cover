@@ -163,7 +163,7 @@ jobs:
       - name: Test C++ Code Cov
         working-directory: ${{github.workspace}}/build
         if: ${{ matrix.build_type == 'Coverage'}}
-        run: make coverage_unittests_xml
+        run: make coverage_unittests
 
       - name: Upload coverage reports to Codecov
         if: ${{ matrix.build_type == 'Coverage'}}

@@ -42,15 +42,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Coverage")
     --exclude-throw-branches
     --exclude-function-lines
     --exclude-unreachable-branches
-  )
-  setup_target_for_coverage_gcovr_xml(
-    NAME
-      coverage_unittests_xml
-    EXECUTABLE
-      ${CMAKE_BINARY_DIR}/tests/unittests
-    EXCLUDE
-      ${PROJECT_SOURCE_DIR}/tests
-      ${PROJECT_SOURCE_DIR}/build
+    -x coverage_xml.xml
   )
   setup_target_for_coverage_gcovr_html(
     NAME
