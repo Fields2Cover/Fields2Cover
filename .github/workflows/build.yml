@@ -166,7 +166,6 @@ jobs:
         run: make coverage_unittests_xml
 
       - name: Upload coverage reports to Codecov
-        working-directory: ${{github.workspace}}/build
         if: ${{ matrix.build_type == 'Coverage'}}
         uses: codecov/codecov-action@v3
         env:
