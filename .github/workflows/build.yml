@@ -59,6 +59,12 @@ jobs:
             shared: "OFF"
             generators: "Unix Makefiles"
             build_type: "Release"
+          - gcc: 12
+            gdal: "3.6.2"
+            swig: "v4.1.1"
+            shared: "ON"
+            generators: "Unix Makefiles"
+            build_type: "Debug"  
 
 
     steps:
@@ -155,7 +161,9 @@ jobs:
         run: pytest-3 tests/python/
 
       - name: Upload coverage reports to Codecov
+        if: ${{ matrix.build_type == 'Debug'}}
         uses: codecov/codecov-action@v3
-        env: CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        env: 
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 
