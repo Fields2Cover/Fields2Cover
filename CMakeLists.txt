@@ -171,7 +171,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
     target_compile_options(Fields2Cover PRIVATE -O0)
   endif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 
-else(CMAKE_BUILD_TYPE STREQUAL "Coverage")
+else (NOT CMAKE_BUILD_TYPE STREQUAL "Coverage")
   if (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
     target_compile_options(Fields2Cover PRIVATE /O2)
   else(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
