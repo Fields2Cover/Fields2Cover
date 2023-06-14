@@ -15,11 +15,17 @@ MultiLineString::MultiLineString() {
 }
 
 MultiLineString::MultiLineString(const OGRGeometry* geom) {
-  append(geom);
+  this->append(geom);
 }
 
 MultiLineString::MultiLineString(const LineString& line) {
-  data->addGeometry(line.get());
+  this->data->addGeometry(line.get());
+}
+
+MultiLineString::MultiLineString(const std::initializer_list<LineString>& ls) {
+  for (auto&& line : ls) {
+    this->data->addGeometry(line.get());
+  }
 }
 
 size_t MultiLineString::size() const {

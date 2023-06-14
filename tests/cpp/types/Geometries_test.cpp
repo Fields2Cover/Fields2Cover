@@ -7,6 +7,22 @@
 #include <gtest/gtest.h>
 #include "fields2cover/types.h"
 
+TEST(fields2cover_types_geometries, constructor) {
+  const int N = 10;
+  F2CLineString line;
+  for (int i =0; i < N; ++i) {
+    line.addPoint(i,i);
+  }
+
+  F2CLineString line2 (line.get());
+
+  for (int i =0; i < N; ++i) {
+    EXPECT_EQ(line2.getX(i), i);
+    EXPECT_EQ(line2.getY(i), i);
+  }
+  EXPECT_EQ(line2.size(), N);
+}
+
 TEST(fields2cover_types_geometries, access_iterators) {
   const int N = 10;
   F2CLineString line;

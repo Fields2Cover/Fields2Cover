@@ -156,8 +156,44 @@ TEST(fields2cover_types_point, print) {
 TEST(fields2cover_types_point, rotateFromPoint) {
   F2CPoint p0(0, 0), p1(0, 1), p2(2, 0);
   F2CMultiPoint ps {p1, p2};
-  std::vector<F2CMultiPoint> pss {ps};
+  F2CLineString ls {p1, p2};
+  F2CLineString ls2 {p1};
+  F2CMultiLineString mls {ls, ls2};
   std::vector<F2CPoint> vp {p1, p2};
+  std::vector<F2CMultiPoint> pss {ps};
+  std::vector<F2CLineString> vls {ls, ls2};
+  std::vector<F2CMultiLineString> vmls {mls};
+  auto r_ls = p0.rotateFromPoint(0.5*boost::math::constants::half_pi<double>(), ls);
+  EXPECT_NEAR(r_ls.getGeometry(0).getX(), -1./sqrt(2), 1e-7);
+  EXPECT_NEAR(r_ls.getGeometry(0).getY(), 1./sqrt(2), 1e-7);
+  EXPECT_NEAR(r_ls.getGeometry(1).getX(), sqrt(2), 1e-7);
+  EXPECT_NEAR(r_ls.getGeometry(1).getY(), sqrt(2), 1e-7);
+
+  auto r_mls = p0.rotateFromPoint(0.5*boost::math::constants::half_pi<double>(), mls);
+  EXPECT_EQ(r_mls.size(), 2);
+  auto r_ls3 = r_mls.getGeometry(0);
+  EXPECT_NEAR(r_ls3.getGeometry(0).getX(), -1./sqrt(2), 1e-7);
+  EXPECT_NEAR(r_ls3.getGeometry(0).getY(), 1./sqrt(2), 1e-7);
+  EXPECT_NEAR(r_ls3.getGeometry(1).getX(), sqrt(2), 1e-7);
+  EXPECT_NEAR(r_ls3.getGeometry(1).getY(), sqrt(2), 1e-7);
+
+  auto r_vmls = p0.rotateFromPoint(0.5*boost::math::constants::half_pi<double>(), vmls);
+  EXPECT_EQ(r_vmls.size(), 1);
+  EXPECT_EQ(r_vmls[0].size(), 2);
+  auto r_ls4 = r_vmls[0].getGeometry(0);
+  EXPECT_NEAR(r_ls4.getGeometry(0).getX(), -1./sqrt(2), 1e-7);
+  EXPECT_NEAR(r_ls4.getGeometry(0).getY(), 1./sqrt(2), 1e-7);
+  EXPECT_NEAR(r_ls4.getGeometry(1).getX(), sqrt(2), 1e-7);
+  EXPECT_NEAR(r_ls4.getGeometry(1).getY(), sqrt(2), 1e-7);
+
+  auto r_vls = p0.rotateFromPoint(0.5*boost::math::constants::half_pi<double>(), vls);
+  EXPECT_EQ(r_vls.size(), 2);
+  auto r_ls5 = r_vls[0];
+  EXPECT_NEAR(r_ls5.getGeometry(0).getX(), -1./sqrt(2), 1e-7);
+  EXPECT_NEAR(r_ls5.getGeometry(0).getY(), 1./sqrt(2), 1e-7);
+  EXPECT_NEAR(r_ls5.getGeometry(1).getX(), sqrt(2), 1e-7);
+  EXPECT_NEAR(r_ls5.getGeometry(1).getY(), sqrt(2), 1e-7);
+
   auto r_p1 = p0.rotateFromPoint(boost::math::constants::half_pi<double>(), p1);
   EXPECT_NEAR(r_p1.getX(), -1, 1e-7);
   EXPECT_NEAR(r_p1.getY(), 0, 1e-7);
@@ -190,13 +226,27 @@ TEST(fields2cover_types_point, rotateFromPoint) {
   F2CPoint r_start2 = r_cell.getGeometry(0).getGeometry(1);
   EXPECT_NEAR(start.getX(), -r_start2.getX(), 1e-7);
   EXPECT_NEAR(start.getY(), -r_start2.getY(), 1e-7);
-  
+
+  std::vector<F2CLinearRing> v_ring {cells.getGeometry(0).getGeometry(0)};
+  auto r_v_ring = p0.rotateFromPoint(boost::math::constants::pi<double>(),
+      v_ring);
+  F2CPoint r_v_start6 = r_v_ring[0].getGeometry(1);
+  EXPECT_NEAR(start.getX(), -r_v_start6.getX(), 1e-7);
+  EXPECT_NEAR(start.getY(), -r_v_start6.getY(), 1e-7);
+
   std::vector<F2CCell> v_cell {cells.getGeometry(0)};
   auto r_v_cell = p0.rotateFromPoint(boost::math::constants::pi<double>(),
       v_cell);
   F2CPoint r_v_start2 = r_v_cell[0].getGeometry(0).getGeometry(1);
   EXPECT_NEAR(start.getX(), -r_v_start2.getX(), 1e-7);
   EXPECT_NEAR(start.getY(), -r_v_start2.getY(), 1e-7);
+
+  std::vector<F2CCells> v_cells {cells};
+  auto r_v_cells = p0.rotateFromPoint(boost::math::constants::pi<double>(),
+      v_cells);
+  F2CPoint r_v_start3 = r_v_cells[0].getGeometry(0).getGeometry(0).getGeometry(1);
+  EXPECT_NEAR(start.getX(), -r_v_start3.getX(), 1e-7);
+  EXPECT_NEAR(start.getY(), -r_v_start3.getY(), 1e-7);
 }
 
 

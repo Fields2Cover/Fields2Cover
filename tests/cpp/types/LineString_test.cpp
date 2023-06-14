@@ -29,6 +29,18 @@ TEST(fields2cover_types_linestring, init) {
   EXPECT_EQ(line5.size(), 3);
   EXPECT_EQ(line5.getX(0), 1);
   EXPECT_EQ(line5.getX(1), 3);
+
+  F2CLineString line6(static_cast<OGRGeometry*>(line5.get()), f2c::types::EmptyDestructor());
+  EXPECT_EQ(line6.size(), 3);
+  EXPECT_EQ(line6.getX(0), 1);
+  EXPECT_EQ(line6.getX(1), 3);
+
+  OGRLineString ogr_line = *(line5.get());
+  F2CLineString line7(ogr_line);
+  EXPECT_EQ(line7.size(), 3);
+  EXPECT_EQ(line7.getX(0), 1);
+  EXPECT_EQ(line7.getX(1), 3);
+
 }
 
 TEST(fields2cover_types_linestring, loop) {

@@ -38,7 +38,7 @@ TEST(fields2cover_utils_parser, import_json) {
   // Need more complex tests
   F2CFields fields;
   f2c::Parser::importJson(std::string(DATA_PATH) + "test.json", fields);
-  auto field = fields[0]; 
+  auto field = fields[0];
   field.setEPSGCoordSystem(4326);
 
   f2c::Transform::transform(field, "UTM:32N datum:etrs89");
@@ -60,6 +60,36 @@ TEST(fields2cover_utils_parser, import_json_two_cells) {
   EXPECT_EQ(fields[1].id, "field2");
   EXPECT_GT(fields[0].getArea(), 0);
   EXPECT_GT(fields[1].getArea(), 0);
+}
+
+TEST(fields2cover_utils_parser, import_cell_json) {
+  F2CCell cell;
+  cell = f2c::Parser::importCellJson(std::string(DATA_PATH) + "test.json");
+  EXPECT_EQ(cell.size(), 1);
+  EXPECT_EQ(cell.getGeometry(0).size(), 20);
+  EXPECT_GT(cell.getArea(), 0);
+}
+
+TEST(fields2cover_utils_parser, import_strips_json) {
+  F2CStrips strips = f2c::Parser::importStripsJson(std::string(DATA_PATH) + "strips.geojson");
+  EXPECT_EQ(strips.size(), 3);
+  EXPECT_EQ(strips[0].name, "Winter barley");
+  EXPECT_EQ(strips[1].name, "Potato (late)");
+  EXPECT_GT(strips[0].cell.getArea(), 0);
+  EXPECT_GT(strips[1].cell.getArea(), 0);
+  EXPECT_NE(strips[0].cell.getArea(), strips[1].cell.getArea());
+}
+
+TEST(fields2cover_utils_parser, import_swaths_json) {
+  F2CSwaths swaths = f2c::Parser::importSwathsJson(std::string(DATA_PATH) + "swaths.geojson");
+  EXPECT_EQ(swaths.size(), 3);
+  EXPECT_EQ(swaths[0].getWidth(), 0.3);
+  EXPECT_EQ(swaths[1].getWidth(), 0.3);
+  EXPECT_EQ(swaths[0].getId(), 44);
+  EXPECT_EQ(swaths[1].getId(), 25);
+  EXPECT_GT(swaths[0].getLength(), 0);
+  EXPECT_GT(swaths[1].getLength(), 0);
+  EXPECT_NE(swaths[0].getLength(), swaths[1].getLength());
 }
 
 TEST(fields2cover_utils_parser, import_json_ring) {
