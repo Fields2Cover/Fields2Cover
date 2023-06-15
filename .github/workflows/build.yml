@@ -169,7 +169,7 @@ jobs:
       - name: Test C++ Code Cov
         working-directory: ${{github.workspace}}
         if: ${{ matrix.build_type == 'Debug'}}
-        run: gcovr --gcov-executable gcov-12 -p -r . --exclude-function-lines --exclude-unreachable-branches --exclude-throw-branches -f ./src -f ./include -x code_cov.xml
+        run: gcovr --gcov-executable gcov-12 -p -r . --exclude-function-lines --exclude-unreachable-branches --exclude-throw-branches -f ./src -f ./include -x code_cov.xml > code_cov.txt
 
 
       - name: Upload coverage reports to Codecov
