@@ -176,6 +176,7 @@ jobs:
         if: ${{ matrix.build_type == 'Debug'}}
         run: |
           curl -Os https://uploader.codecov.io/latest/linux/codecov
+          chmod a+rwx codecov
           ./codecov -f cov.json -t ${{ secrets.CODECOV_TOKEN }}
 
 
