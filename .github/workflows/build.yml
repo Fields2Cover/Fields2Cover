@@ -169,15 +169,17 @@ jobs:
       - name: Test C++ Code Cov
         working-directory: ${{github.workspace}}
         if: ${{ matrix.build_type == 'Debug'}}
-        run: gcovr --gcov-executable gcov-12 -p -r . --exclude-function-lines --exclude-unreachable-branches --exclude-throw-branches -f src -f include --json code_cov.json
+        run: gcovr --gcov-executable gcov-12 -p -r . --exclude-function-lines --exclude-unreachable-branches --exclude-throw-branches -f src -f include --coveralls-pretty  --coveralls coverage.json
 
 
-      - name: Upload coverage reports to Codecov
+      - name: Upload coverage reports to Coveralls
         if: ${{ matrix.build_type == 'Debug'}}
-        run: |
-          curl -Os https://uploader.codecov.io/latest/linux/codecov
-          chmod a+rwx codecov
-          ./codecov -f code_cov.json -t ${{ secrets.CODECOV_TOKEN }}
+        uses: coverallsapp/github-action@v2
+         with:
+           github-token: ${{ secrets.GITHUB_TOKEN }}
+           file: coverage.json
+
+
 
 
       - name: 'Upload Artifact'
