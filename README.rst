@@ -237,7 +237,7 @@ This code repository is part of the project Fields2Cover which is (partly) finan
 .. |DOI| image:: https://zenodo.org/badge/DOI/10.1109/LRA.2023.3248439.svg
    :target: https://doi.org/10.1109/LRA.2023.3248439
 
-.. |CODECOV| image:: https://coveralls.io/repos/github/Fields2Cover/Fields2Cover/badge.svg?branch=improve-code-coverage
-   :target: https://coveralls.io/github/Fields2Cover/Fields2Cover?branch=improve-code-coverage
+.. |CODECOV| image:: https://coveralls.io/repos/github/Fields2Cover/Fields2Cover/badge.svg?branch=main
+   :target: https://coveralls.io/github/Fields2Cover/Fields2Cover?branch=main
 
 
