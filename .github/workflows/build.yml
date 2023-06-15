@@ -169,14 +169,14 @@ jobs:
       - name: Test C++ Code Cov
         working-directory: ${{github.workspace}}
         if: ${{ matrix.build_type == 'Debug'}}
-        run: gcovr --gcov-executable gcov-12 -p -r . --exclude-function-lines --exclude-unreachable-branches --exclude-throw-branches -f src -f include --txt code_cov.txt
+        run: gcovr --gcov-executable gcov-12 -p -r . --exclude-function-lines --exclude-unreachable-branches --exclude-throw-branches -f src -f include --json code_cov.json
 
 
       - name: Upload coverage reports to Codecov
         if: ${{ matrix.build_type == 'Debug'}}
-        uses: codecov/codecov-action@v3
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: |
+          curl -Os https://uploader.codecov.io/latest/linux/codecov
+          ./codecov -f cov.json -t ${{ secrets.CODECOV_TOKEN }}
 
 
       - name: 'Upload Artifact'
