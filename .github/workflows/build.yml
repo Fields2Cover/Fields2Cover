@@ -18,7 +18,7 @@ jobs:
         swig: ["v4.1.1"] #["v4.0.0", "v4.0.1", "v4.0.2", "v4.1.0", "v4.1.1"]
         shared: ["ON"]
         generators: ["Unix Makefiles"]
-        build_type: ["Debug"]
+        build_type: ["Release"]
         exclude:
           - gcc: 7
             gdal: "3.6.2"
@@ -52,19 +52,19 @@ jobs:
             gdal: "3.4.3"
           - gcc: 12
             gdal: "3.5.3"
-            #include:
-            #- gcc: 12
-            #gdal: "3.6.2"
-            #swig: "v4.1.1"
-            #shared: "OFF"
-            #generators: "Unix Makefiles"
-            #build_type: "Release"
-            #- gcc: 12
-            #gdal: "3.6.2"
-            #swig: "v4.1.1"
-            #shared: "ON"
-            #generators: "Unix Makefiles"
-            #build_type: "Debug"
+        include:
+          - gcc: 12
+            gdal: "3.6.2"
+            swig: "v4.1.1"
+            shared: "OFF"
+            generators: "Unix Makefiles"
+            build_type: "Release"
+          - gcc: 12
+            gdal: "3.6.2"
+            swig: "v4.1.1"
+            shared: "ON"
+            generators: "Unix Makefiles"
+            build_type: "Debug"
 
 
     steps:
@@ -74,13 +74,7 @@ jobs:
           echo github.event.action: ${{ github.event.action }}
           echo github.event_name: ${{ github.event_name }}
 
-          #- uses: lukka/get-cmake@latest
-      - name: Install Cmake
-        run: |
-          export DEBIAN_FRONTEND=noninteractive
-          apt-get update -qq
-          apt-get install -y --no-install-recommends ca-certificates
-          apt-get install -y --no-install-recommends cmake
+      - uses: lukka/get-cmake@latest
 
       - name: Ubuntu system dependencies
         run: |
@@ -169,7 +163,7 @@ jobs:
       - name: Test C++ Code Cov
         working-directory: ${{github.workspace}}
         if: ${{ matrix.build_type == 'Debug'}}
-        run: gcovr --gcov-executable gcov-12 -p -r . --exclude-function-lines --exclude-unreachable-branches --exclude-throw-branches -f src -f include -k  --cobertura coverage.xml
+        run: gcovr --gcov-executable gcov-12 -p -r . --exclude-function-lines --exclude-unreachable-branches --exclude-throw-branches -f src -f include  --cobertura coverage.xml
 
 
       - name: Upload coverage reports to Coveralls
@@ -177,16 +171,10 @@ jobs:
         uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          file: coverage.xml
+          file: coverage.json
           debug: true
 
 
-      - name: 'Upload Artifact'
-        uses: actions/upload-artifact@v3
-        with:
-          name: my-artifact
-          path: .
-          retention-days: 1
 
 
 
