@@ -7,7 +7,7 @@ Fields2Cover
 
 |Open in GitHub Codespaces|
 
-|DOI| |build| |license| |Language-C++| |Language-Python| |stars| |forks|
+|DOI| |build| |CODECOV| |license| |Language-C++| |Language-Python| |stars| |forks|
 
 
 .. image:: docs/figures/logo_fields2cover.jpeg
