@@ -172,7 +172,6 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           file: coverage.json
-          debug: true
 
 
 
