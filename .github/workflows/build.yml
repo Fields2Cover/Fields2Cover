@@ -18,7 +18,7 @@ jobs:
         swig: ["v4.1.1"] #["v4.0.0", "v4.0.1", "v4.0.2", "v4.1.0", "v4.1.1"]
         shared: ["ON"]
         generators: ["Unix Makefiles"]
-        build_type: ["Release"]
+        build_type: ["Debug"]
         exclude:
           - gcc: 7
             gdal: "3.6.2"
@@ -52,19 +52,19 @@ jobs:
             gdal: "3.4.3"
           - gcc: 12
             gdal: "3.5.3"
-        include:
-          - gcc: 12
-            gdal: "3.6.2"
-            swig: "v4.1.1"
-            shared: "OFF"
-            generators: "Unix Makefiles"
-            build_type: "Release"
-          - gcc: 12
-            gdal: "3.6.2"
-            swig: "v4.1.1"
-            shared: "ON"
-            generators: "Unix Makefiles"
-            build_type: "Debug"
+            #include:
+            #- gcc: 12
+            #gdal: "3.6.2"
+            #swig: "v4.1.1"
+            #shared: "OFF"
+            #generators: "Unix Makefiles"
+            #build_type: "Release"
+            #- gcc: 12
+            #gdal: "3.6.2"
+            #swig: "v4.1.1"
+            #shared: "ON"
+            #generators: "Unix Makefiles"
+            #build_type: "Debug"
 
 
     steps:
@@ -74,7 +74,13 @@ jobs:
           echo github.event.action: ${{ github.event.action }}
           echo github.event_name: ${{ github.event_name }}
 
-      - uses: lukka/get-cmake@latest
+          #- uses: lukka/get-cmake@latest
+      - name: Install Cmake
+        run: |
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get update -qq
+          apt-get install -y --no-install-recommends ca-certificates
+          apt-get install -y --no-install-recommends cmake
 
       - name: Ubuntu system dependencies
         run: |
@@ -125,20 +131,20 @@ jobs:
         run: |
           mkdir build
           mkdir instdir
+          cd build
           cmake \
-            -S . \
-            -B build \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
             -G "${{matrix.generators}}" \
             -D CMAKE_C_COMPILER=gcc-${{ matrix.gcc }} \
             -D CMAKE_CXX_COMPILER=g++-${{ matrix.gcc }} \
-            -DCMAKE_INSTALL_PREFIX:PATH=instdir  \
+            -DCMAKE_INSTALL_PREFIX:PATH=../instdir  \
             -DBUILD_PYTHON=ON   \
             -DALLOW_PARALLELIZATION=ON  \
             -DBUILD_TUTORIALS=OFF \
             -DBUILD_TESTS=ON   \
             -DBUILD_DOC=OFF \
-            -DBUILD_SHARED_LIBS={{ matrix.shared }}
+            -DBUILD_SHARED_LIBS={{ matrix.shared }} \
+            ..
 
       - name: Build
         working-directory: ${{github.workspace}}/build
@@ -163,15 +169,8 @@ jobs:
       - name: Test C++ Code Cov
         working-directory: ${{github.workspace}}
         if: ${{ matrix.build_type == 'Debug'}}
-        run: make coverage_unittests
+        run: gcovr --gcov-executable gcov-12 -p -r . --exclude-function-lines --exclude-unreachable-branches --exclude-throw-branches -f ./src -f ./include -x code_cov.xml
 
-      - name: Archive production artifacts
-        if: ${{ matrix.build_type == 'Debug'}}
-        uses: actions/upload-artifact@v3
-        with:
-          name: everything
-          path: |
-            ${{github.workspace}}
 
       - name: Upload coverage reports to Codecov
         if: ${{ matrix.build_type == 'Debug'}}
