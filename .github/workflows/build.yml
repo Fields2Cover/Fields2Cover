@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: "GDAL ${{ matrix.gdal }}, g++ ${{matrix.gcc}}, swig ${{matrix.swig}}, shared ${{matrix.shared}}"
+    name: "GDAL ${{ matrix.gdal }}, g++ ${{matrix.gcc}}, swig ${{matrix.swig}}, shared ${{matrix.shared}}, ${{matrix.build_type}}"
     runs-on: ubuntu-latest
     container: "osgeo/gdal:ubuntu-full-${{ matrix.gdal }}"
     strategy:
@@ -59,6 +59,12 @@ jobs:
             shared: "OFF"
             generators: "Unix Makefiles"
             build_type: "Release"
+          - gcc: 12
+            gdal: "3.6.2"
+            swig: "v4.1.1"
+            shared: "ON"
+            generators: "Unix Makefiles"
+            build_type: "Debug"
 
 
     steps:
@@ -119,20 +125,20 @@ jobs:
         run: |
           mkdir build
           mkdir instdir
+          cd build
           cmake \
-            -S . \
-            -B build \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
             -G "${{matrix.generators}}" \
             -D CMAKE_C_COMPILER=gcc-${{ matrix.gcc }} \
             -D CMAKE_CXX_COMPILER=g++-${{ matrix.gcc }} \
-            -DCMAKE_INSTALL_PREFIX:PATH=instdir  \
+            -DCMAKE_INSTALL_PREFIX:PATH=../instdir  \
             -DBUILD_PYTHON=ON   \
             -DALLOW_PARALLELIZATION=ON  \
             -DBUILD_TUTORIALS=OFF \
             -DBUILD_TESTS=ON   \
             -DBUILD_DOC=OFF \
-            -DBUILD_SHARED_LIBS={{ matrix.shared }}
+            -DBUILD_SHARED_LIBS={{ matrix.shared }} \
+            ..
 
       - name: Build
         working-directory: ${{github.workspace}}/build
@@ -153,5 +159,23 @@ jobs:
       - name: Test Python
         working-directory: ${{github.workspace}}
         run: pytest-3 tests/python/
+
+      - name: Test C++ Code Cov
+        working-directory: ${{github.workspace}}
+        if: ${{ matrix.build_type == 'Debug'}}
+        run: gcovr --gcov-executable gcov-12 -p -r . --exclude-function-lines --exclude-unreachable-branches --exclude-throw-branches -f src -f include  --cobertura coverage.xml
+
+
+      - name: Upload coverage reports to Coveralls
+        if: ${{ matrix.build_type == 'Debug'}}
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          file: coverage.xml
+
+
+
+
+
 
 

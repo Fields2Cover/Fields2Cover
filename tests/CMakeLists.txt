@@ -37,11 +37,12 @@ add_test(
 add_dependencies(check unittests)
 
 
-if(CMAKE_BUILD_TYPE STREQUAL "Coverage")
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   set(GCOVR_ADDITIONAL_ARGS
     --exclude-throw-branches
     --exclude-function-lines
     --exclude-unreachable-branches
+    -x coverage_xml.xml
   )
   setup_target_for_coverage_gcovr_html(
     NAME
@@ -52,4 +53,4 @@ if(CMAKE_BUILD_TYPE STREQUAL "Coverage")
       ${PROJECT_SOURCE_DIR}/tests
       ${PROJECT_SOURCE_DIR}/build
   )
-endif(CMAKE_BUILD_TYPE STREQUAL "Coverage")
+endif(CMAKE_BUILD_TYPE STREQUAL "Debug")

@@ -1,0 +1,9 @@
+{
+	"type": "FeatureCollection",
+	"name": "paths",
+	"features": [
+		{ "type": "Feature", "properties": { "path_id": 44, "width": 0.3 }, "geometry": { "type": "LineString", "coordinates": [ [ 5.523155, 52.53863 ], [ 5.526948097851472, 52.538709 ] ] } },
+		{ "type": "Feature", "properties": { "path_id": 25, "width": 0.3 }, "geometry": { "type": "LineString", "coordinates": [ [ 5.523150, 52.53871 ], [ 5.526943408451317, 52.538794 ] ] } },
+		{ "type": "Feature", "properties": { "path_id": 52, "width": 0.3 }, "geometry": { "type": "LineString", "coordinates": [ [ 5.523157, 52.53860 ], [ 5.526949660980892, 52.538680 ] ] } }
+	]
+}

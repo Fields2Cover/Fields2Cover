@@ -24,6 +24,7 @@ struct MultiLineString :
   MultiLineString();
   explicit MultiLineString(const OGRGeometry* geom);
   explicit MultiLineString(const LineString& line);
+  explicit MultiLineString(const std::initializer_list<LineString>& ls);
 
   size_t size() const;
 

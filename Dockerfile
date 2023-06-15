@@ -85,12 +85,11 @@ COPY . /workspace/fields2cover
 RUN rm -rf /workspace/fields2cover/build && mkdir /workspace/fields2cover/build
 WORKDIR /workspace/fields2cover/build
 
-RUN cmake -DBUILD_CPP=ON \
-          -DBUILD_PYTHON=ON \
+RUN cmake -DBUILD_PYTHON=ON \
           -DBUILD_TUTORIALS=OFF \
           -DBUILD_TESTS=ON \
           -DBUILD_DOC=OFF \
-          -DCMAKE_BUILD_TYPE=Release ..
+          -DCMAKE_BUILD_TYPE=Debug ..
 RUN make -j8
 RUN export LANG=en_US.UTF-8 && \
     export LC_ALL=C.UTF-8 && \
