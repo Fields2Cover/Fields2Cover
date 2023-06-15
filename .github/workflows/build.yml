@@ -64,7 +64,7 @@ jobs:
             swig: "v4.1.1"
             shared: "ON"
             generators: "Unix Makefiles"
-            build_type: "Coverage"
+            build_type: "Debug"
 
 
     steps:
@@ -160,6 +160,11 @@ jobs:
         working-directory: ${{github.workspace}}
         run: pytest-3 tests/python/
 
+      - name: Test C++ Code Cov
+        working-directory: ${{github.workspace}}
+        if: ${{ matrix.build_type == 'Coverage'}}
+        run: make coverage_unittests
+
       - name: Archive production artifacts
         if: ${{ matrix.build_type == 'Coverage'}}
         uses: actions/upload-artifact@v3
@@ -167,19 +172,6 @@ jobs:
           name: everything
           path: |
             ${{github.workspace}}
-
-
-      - name: Test C++ Code Cov
-        if: ${{ matrix.build_type == 'Coverage'}}
-        uses: threeal/gcovr-action@latest
-        with:
-          exclude: |
-            build/*
-            cmake/*
-            docs/*
-            tutorials/*
-            tests/*
-            swig/*
 
       - name: Upload coverage reports to Codecov
         if: ${{ matrix.build_type == 'Coverage'}}

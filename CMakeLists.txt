@@ -51,7 +51,7 @@ project(Fields2Cover
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
   # set(CMAKE_BUILD_TYPE Testing)
-  # set(CMAKE_BUILD_TYPE Coverage)
+  # set(CMAKE_BUILD_TYPE Debug)
 endif(NOT CMAKE_BUILD_TYPE)
 
 if (WIN32)
@@ -157,7 +157,7 @@ endif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
 
 
 
-if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   include(cmake/Modules/CodeCoverage.cmake)
   APPEND_COVERAGE_COMPILER_FLAGS()
   target_compile_options(Fields2Cover PRIVATE
@@ -171,13 +171,13 @@ if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
     target_compile_options(Fields2Cover PRIVATE -O0)
   endif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 
-else (NOT CMAKE_BUILD_TYPE STREQUAL "Coverage")
+else (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
   if (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
     target_compile_options(Fields2Cover PRIVATE /O2)
   else(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
     target_compile_options(Fields2Cover PRIVATE -O2)
   endif(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
-endif(CMAKE_BUILD_TYPE STREQUAL "Coverage")
+endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 
 
