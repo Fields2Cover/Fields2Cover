@@ -172,22 +172,24 @@ jobs:
         run: gcovr --gcov-executable gcov-12 -p -r . --exclude-function-lines --exclude-unreachable-branches --exclude-throw-branches -f src -f include --coveralls-pretty  --coveralls coverage.json
 
 
-      - name: Upload coverage reports to Coveralls
-        if: ${{ matrix.build_type == 'Debug'}}
-        uses: coverallsapp/github-action@v2
-        with:
-         github-token: ${{ secrets.GITHUB_TOKEN }}
-         file: coverage.json
-
-
-
-
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v3
         with:
           name: my-artifact
           path: .
-          retention-days: 5
+          retention-days: 1
+
+      - name: Upload coverage reports to Coveralls
+        if: ${{ matrix.build_type == 'Debug'}}
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          file: coverage.json
+          format: cobertura
+
+
+
+
 
 
 
