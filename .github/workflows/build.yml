@@ -162,11 +162,11 @@ jobs:
 
       - name: Test C++ Code Cov
         working-directory: ${{github.workspace}}
-        if: ${{ matrix.build_type == 'Coverage'}}
+        if: ${{ matrix.build_type == 'Debug'}}
         run: make coverage_unittests
 
       - name: Archive production artifacts
-        if: ${{ matrix.build_type == 'Coverage'}}
+        if: ${{ matrix.build_type == 'Debug'}}
         uses: actions/upload-artifact@v3
         with:
           name: everything
@@ -174,7 +174,7 @@ jobs:
             ${{github.workspace}}
 
       - name: Upload coverage reports to Codecov
-        if: ${{ matrix.build_type == 'Coverage'}}
+        if: ${{ matrix.build_type == 'Debug'}}
         uses: codecov/codecov-action@v3
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
