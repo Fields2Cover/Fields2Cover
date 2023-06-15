@@ -186,6 +186,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           file: coverage.json
           format: cobertura
+          debug: true
 
 
 
