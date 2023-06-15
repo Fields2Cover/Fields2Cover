@@ -175,9 +175,9 @@ jobs:
       - name: Upload coverage reports to Coveralls
         if: ${{ matrix.build_type == 'Debug'}}
         uses: coverallsapp/github-action@v2
-         with:
-           github-token: ${{ secrets.GITHUB_TOKEN }}
-           file: coverage.json
+        with:
+         github-token: ${{ secrets.GITHUB_TOKEN }}
+         file: coverage.json
 
 
 
