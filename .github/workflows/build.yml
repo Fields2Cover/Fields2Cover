@@ -59,12 +59,6 @@ jobs:
             shared: "OFF"
             generators: "Unix Makefiles"
             build_type: "Release"
-          - gcc: 12
-            gdal: "3.6.2"
-            swig: "v4.1.1"
-            shared: "ON"
-            generators: "Unix Makefiles"
-            build_type: "Debug"
 
 
     steps:
@@ -159,19 +153,6 @@ jobs:
       - name: Test Python
         working-directory: ${{github.workspace}}
         run: pytest-3 tests/python/
-
-      - name: Test C++ Code Cov
-        working-directory: ${{github.workspace}}
-        if: ${{ matrix.build_type == 'Debug'}}
-        run: gcovr --gcov-executable gcov-12 -p -r . --exclude-function-lines --exclude-unreachable-branches --exclude-throw-branches -f src -f include  --cobertura coverage.xml
-
-
-      - name: Upload coverage reports to Coveralls
-        if: ${{ matrix.build_type == 'Debug'}}
-        uses: coverallsapp/github-action@v2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          file: coverage.xml
 
 
 

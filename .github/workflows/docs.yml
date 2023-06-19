@@ -19,7 +19,7 @@ jobs:
         swig: ["v4.1.1"]
         shared: ["ON"]
         generators: ["Unix Makefiles"]
-        build_type: ["Release"]
+        build_type: ["Debug"]
 
 
     steps:
@@ -77,9 +77,9 @@ jobs:
             -D CMAKE_CXX_COMPILER=g++-${{ matrix.gcc }} \
             -DCMAKE_INSTALL_PREFIX:PATH=instdir  \
             -DBUILD_PYTHON=OFF   \
-            -DALLOW_PARALLELIZATION=OFF  \
+            -DALLOW_PARALLELIZATION=ON  \
             -DBUILD_TUTORIALS=OFF \
-            -DBUILD_TESTS=OFF   \
+            -DBUILD_TESTS=ON   \
             -DBUILD_DOC=ON
 
       - name: Build
@@ -106,6 +106,23 @@ jobs:
           destination-repository-name: fields2cover.github.io
           target-branch: master
           user-email: "Gonzalo.Mier@users.noreply.github.com"
+          
+      - name: Test C++
+        working-directory: ${{github.workspace}}/build
+        run: make check     
+        
+      - name: Create code coverage report
+        working-directory: ${{github.workspace}}
+        if: ${{ matrix.build_type == 'Debug'}}
+        run: gcovr --gcov-executable gcov-12 -p -r . --exclude-function-lines --exclude-unreachable-branches --exclude-throw-branches -f src -f include  --cobertura coverage.xml
+
+
+      - name: Upload coverage reports to Coveralls
+        if: ${{ matrix.build_type == 'Debug'}}
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          file: coverage.xml
 
 
 
