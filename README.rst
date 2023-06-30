@@ -99,6 +99,7 @@ First, clone this repository.
 Then, from the main folder of the project:
 
 .. code-block:: console
+
    mkdir -p build;
    cd build;
    cmake -DCMAKE_BUILD_TYPE=Release ..;
@@ -107,6 +108,7 @@ Then, from the main folder of the project:
 Finally, you can install it as:
 
 .. code-block:: console
+
    sudo make install;
 
 
