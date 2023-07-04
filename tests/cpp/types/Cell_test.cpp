@@ -173,3 +173,16 @@ TEST(fields2cover_types_cell, Buffer) {
   EXPECT_NEAR(line_buffer.getArea(), 2 * 2 * 4 + 4 * 4 * M_PI, 1e-1);
 }
 
+TEST(fields2cover_types_sstr, NumberStringConcat) {
+  auto result = f2c::types::sstr("word", 10, "another word", 20, 30);
+  EXPECT_EQ(result, "word10another word2030");
+
+  std::stringstream ss;
+  ss << std::hex << 10 << f2c::types::sstr(10, 0xA, "10", "a");
+  result = ss.str();
+  EXPECT_EQ(result, "a101010a");
+
+  result = f2c::types::sstr(std::hex, 10, 10, std::dec, 10, 10);
+  EXPECT_EQ(result, "aa1010");
+}
+
