@@ -23,7 +23,8 @@ namespace f2c::types {
 template < typename... Args >
 inline std::string sstr(Args &&... args) {
   std::ostringstream sstr;
-  (sstr << std::dec << ... << args);
+  sstr << std::dec;
+  (sstr <<  ...  << args);
   return sstr.str();
 }
 
