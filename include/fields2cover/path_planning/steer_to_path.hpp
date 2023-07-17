@@ -43,6 +43,24 @@ inline types::Path steerStatesToPath(
   return path;
 }
 
+// Function loop_detected contributed by Phact (https://phact.nl/) company
+inline bool loop_detected(const std::vector<steer::Control>& controls) {
+  double drTotal = 0;
+  for (auto&& c : controls) {
+    if (c.kappa != 0) {
+      double dr = 0.5 * c.delta_s * c.kappa / M_PI;
+      if (fabs(dr) > 0.9) {
+        return true;
+      }
+      drTotal += dr;
+    }
+  }
+  return (fabs(drTotal) > 0.9);
+}
+// Function loop_detected contributed by Phact (https://phact.nl/) company
+
+
+
 }  // namespace f2c::pp
 
 #endif  // FIELDS2COVER_PATH_PLANNING_STEER_TO_PATH_HPP_
