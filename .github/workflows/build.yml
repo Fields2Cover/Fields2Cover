@@ -74,6 +74,7 @@ jobs:
 
       - name: Add repository without GPG check
         run: |
+          rm -f /etc/apt/sources.list.d/apache-arrow.list
           echo "deb [trusted=yes] https://apache.jfrog.io/artifactory/arrow/ubuntu jammy main" | tee /etc/apt/sources.list.d/apache-arrow.list
 
       - name: Ubuntu system dependencies
