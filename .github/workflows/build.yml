@@ -78,9 +78,8 @@ jobs:
 
       - name: Ubuntu system dependencies 01
         run: |
-          wget https://dist.apache.org/repos/dist/dev/arrow/KEYS
-          apt-key add < KEYS
-          apt-get update -y
+          cd .
+          #apt-get update -y
 
       - name: Ubuntu system dependencies 02
         run: |
