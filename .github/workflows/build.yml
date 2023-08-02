@@ -71,10 +71,15 @@ jobs:
 
       - uses: lukka/get-cmake@latest
 
+      - name: Ubuntu missing key
+        if: ${{ (matrix.swig == "3.5.3") || (matrix.gdal == "3.6.2")}}
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get update -qq
+          apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 9CBA4EF977CA20B8
+
       - name: Ubuntu system dependencies
         run: |
           export DEBIAN_FRONTEND=noninteractive
-          apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 9CBA4EF977CA20B8
           apt-get update -qq
           apt-get install -y --no-install-recommends ca-certificates
           apt-get install -y --no-install-recommends build-essential doxygen g++-${{ matrix.gcc }} gcc-${{ matrix.gcc }} git lcov libboost-dev libeigen3-dev libgtest-dev libpython3-dev libtbb-dev python3 python3-matplotlib python3-pip python3-pytest python3-tk
