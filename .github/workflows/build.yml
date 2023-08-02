@@ -72,9 +72,9 @@ jobs:
 
       - uses: lukka/get-cmake@latest
 
-      - name: Add missing GPG key
+      - name: Add repository without GPG check
         run: |
-          wget -O - https://apache.jfrog.io/artifactory/api/gpg/key/public | gpg --dearmor | tee /etc/apt/trusted.gpg.d/apache-arrow.gpg > /dev/null
+          echo "deb [trusted=yes] https://apache.jfrog.io/artifactory/arrow/ubuntu jammy main" | tee /etc/apt/sources.list.d/apache-arrow.list
 
       - name: Ubuntu system dependencies
         run: |
