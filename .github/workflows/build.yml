@@ -72,7 +72,7 @@ jobs:
       - uses: lukka/get-cmake@latest
 
       - name: Ubuntu missing key
-        if: ${{matrix.swig}} == "3.5.3" || ${{matrix.gdal}} == "3.6.2"
+        if: ${{${{matrix.swig}} == "3.5.3" || ${{matrix.gdal}} == "3.6.2"}}
         run: |
           export DEBIAN_FRONTEND=noninteractive
           apt-get update -qq
