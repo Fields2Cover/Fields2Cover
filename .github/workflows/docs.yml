@@ -1,6 +1,7 @@
 name: Update docs
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -106,11 +107,11 @@ jobs:
           destination-repository-name: fields2cover.github.io
           target-branch: master
           user-email: "Gonzalo.Mier@users.noreply.github.com"
-          
+
       - name: Test C++
         working-directory: ${{github.workspace}}/build
-        run: make check     
-        
+        run: make check
+
       - name: Create code coverage report
         working-directory: ${{github.workspace}}
         if: ${{ matrix.build_type == 'Debug'}}

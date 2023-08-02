@@ -4,6 +4,7 @@ on:
   push:
   pull_request:
   release:
+  workflow_dispatch:
 
 jobs:
   build:
@@ -73,9 +74,9 @@ jobs:
       - name: Ubuntu system dependencies
         run: |
           export DEBIAN_FRONTEND=noninteractive
-          apt-get update -qq
-          apt-get install -y --no-install-recommends ca-certificates
-          apt-get install -y --no-install-recommends build-essential doxygen g++-${{ matrix.gcc }} gcc-${{ matrix.gcc }} git lcov libboost-dev libeigen3-dev libgtest-dev libpython3-dev libtbb-dev python3 python3-matplotlib python3-pip python3-pytest python3-tk
+          apt-get update --allow-insecure-repositories -y
+          apt-get install -y --allow-unauthenticated --no-install-recommends ca-certificates
+          apt-get install -y --allow-unauthenticated --no-install-recommends build-essential doxygen g++-${{ matrix.gcc }} gcc-${{ matrix.gcc }} git lcov libboost-dev libeigen3-dev libgtest-dev libpython3-dev libtbb-dev python3 python3-matplotlib python3-pip python3-pytest python3-tk
           python3 -m pip install gcovr setuptools
 
           # Solve issue with matplotlib
@@ -92,7 +93,7 @@ jobs:
           ln -s /usr/lib/libgtest_main.a /usr/local/lib/libgtest_main.a
 
           # Install swig
-          apt-get install -y --no-install-recommends autoconf automake autotools-dev bison libpcre3 libpcre3-dev libpcre2-dev
+          apt-get install -y --allow-unauthenticated --no-install-recommends autoconf automake autotools-dev bison libpcre3 libpcre3-dev libpcre2-dev
           cd /
           mkdir folder_to_compile_swig
           cd folder_to_compile_swig
