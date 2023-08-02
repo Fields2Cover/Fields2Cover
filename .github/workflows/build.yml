@@ -74,7 +74,7 @@ jobs:
 
       - name: Add missing GPG key
         run: |
-          wget -O - https://apache.jfrog.io/artifactory/api/gpg/key/public | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/apache-arrow.gpg > /dev/null
+          wget -O - https://apache.jfrog.io/artifactory/api/gpg/key/public | gpg --dearmor | tee /etc/apt/trusted.gpg.d/apache-arrow.gpg > /dev/null
 
       - name: Ubuntu system dependencies
         run: |
