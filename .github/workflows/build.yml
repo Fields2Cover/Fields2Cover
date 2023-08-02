@@ -73,6 +73,7 @@ jobs:
 
       - name: Ubuntu missing key
         if: ${{ (matrix.swig == "3.5.3") || (matrix.gdal == "3.6.2")}}
+        run: |
           export DEBIAN_FRONTEND=noninteractive
           apt-get update -qq
           apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 9CBA4EF977CA20B8
