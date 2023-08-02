@@ -72,17 +72,14 @@ jobs:
 
       - uses: lukka/get-cmake@latest
 
+      - name: Add missing GPG key
+        run: |
+          wget -O - https://apache.jfrog.io/artifactory/api/gpg/key/public | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/apache-arrow.gpg > /dev/null
+
       - name: Ubuntu system dependencies
         run: |
           export DEBIAN_FRONTEND=noninteractive
-
-      - name: Ubuntu system dependencies 01
-        run: |
-          wget -O /etc/apt/trusted.gpg.d/apache-arrow.gpg https://apache.jfrog.io/artifactory/api/gpg/key/public
           apt-get update -y
-
-      - name: Ubuntu system dependencies 02
-        run: |
           apt-get install -y --no-install-recommends ca-certificates
           apt-get install -y --no-install-recommends build-essential doxygen g++-${{ matrix.gcc }} gcc-${{ matrix.gcc }} git lcov libboost-dev libeigen3-dev libgtest-dev libpython3-dev libtbb-dev python3 python3-matplotlib python3-pip python3-pytest python3-tk
           python3 -m pip install gcovr setuptools
