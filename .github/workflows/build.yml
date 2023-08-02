@@ -78,7 +78,7 @@ jobs:
 
       - name: Ubuntu system dependencies 01
         run: |
-          apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 9CBA4EF977CA20B8
+          wget -O /etc/apt/trusted.gpg.d/apache-arrow.gpg https://apache.jfrog.io/artifactory/api/gpg/key/public
           apt-get update -y
 
       - name: Ubuntu system dependencies 02
