@@ -77,14 +77,11 @@ jobs:
 
       - name: Ubuntu system dependencies 01
         run: |
-          apt-get update -qq
+          apt-get update -y
 
       - name: Ubuntu system dependencies 02
         run: |
           apt-get install -y --no-install-recommends ca-certificates
-
-      - name: Ubuntu system dependencies check 1
-        run: |
           apt-get install -y --no-install-recommends build-essential doxygen g++-${{ matrix.gcc }} gcc-${{ matrix.gcc }} git lcov libboost-dev libeigen3-dev libgtest-dev libpython3-dev libtbb-dev python3 python3-matplotlib python3-pip python3-pytest python3-tk
           python3 -m pip install gcovr setuptools
 
