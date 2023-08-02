@@ -78,8 +78,7 @@ jobs:
 
       - name: Ubuntu system dependencies 01
         run: |
-          cd .
-          #apt-get update -y
+          apt-get update -y
 
       - name: Ubuntu system dependencies 02
         run: |
