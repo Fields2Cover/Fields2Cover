@@ -78,6 +78,9 @@ jobs:
 
       - name: Ubuntu system dependencies 01
         run: |
+          gpg –keyserver keyserver.ubuntu.com –recv 9CBA4EF977CA20B8
+          gpg –export –armor 9CBA4EF977CA20B8
+          apt-key add -
           apt-get update -y
 
       - name: Ubuntu system dependencies 02
