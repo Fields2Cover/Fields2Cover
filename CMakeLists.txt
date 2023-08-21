@@ -15,6 +15,7 @@ set(PACKAGE_DESCRIPTION
 )
 set(PACKAGE_AUTHOR "Wageningen University")
 set(PACKAGE_MAINTAINER "Gonzalo Mier")
+set(PACKAGE_URL "http://fields2cover.github.io")
 
 
 option(ALLOW_PARALLELIZATION "Allow parallel algorithms" ON)
@@ -192,6 +193,7 @@ target_link_libraries(Fields2Cover
   PUBLIC
     ${GDAL_LIBRARIES}
     -lpthread
+    -lgeos_c
   PRIVATE
     nlohmann_json::nlohmann_json
     tinyxml2::tinyxml2
