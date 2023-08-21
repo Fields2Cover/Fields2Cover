@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                           BSD-3 License
 //=============================================================================
@@ -21,12 +21,13 @@ struct Swaths {
   Swaths();
   explicit Swaths(int i);
   Swaths(const std::initializer_list<Swath>& s);
-  explicit Swaths(std::vector<Swath>& s);
+  explicit Swaths(const std::vector<Swath>& s);
   ~Swaths();
 
   void emplace_back(const Swath& s);
 
-  void emplace_back(const LineString& l, double w, int id = 0);
+  void emplace_back(const LineString& l, double w, int id = 0,
+      SwathType type = SwathType::MAINLAND);
 
   void push_back(const Swath& s);
 
@@ -40,6 +41,7 @@ struct Swaths {
   const Swath& back() const;
 
   Swath& at(size_t i);
+  const Swath& at(size_t i) const;
 
   size_t size() const;
 
@@ -47,15 +49,18 @@ struct Swaths {
 
   const Swath& operator[] (int i) const;
 
-  void append(const LineString& line, double width = 0);
-  void append(const MultiLineString& line, double width = 0);
-  void append(const LineString& line, const Cell& poly, double width = 0);
+  void append(const LineString& line, double width = 0,
+      SwathType type = SwathType::MAINLAND);
+  void append(const MultiLineString& line, double width = 0,
+      SwathType type = SwathType::MAINLAND);
+  void append(const LineString& line, const Cell& poly, double width = 0,
+      SwathType type = SwathType::MAINLAND);
   void append(const MultiLineString& lines, const Cell& poly,
-      double width = 0);
+      double width = 0, SwathType type = SwathType::MAINLAND);
   void append(const LineString& line, const Cells& polys,
-      double width = 0);
+      double width = 0, SwathType type = SwathType::MAINLAND);
   void append(const MultiLineString& lines, const Cells& poly,
-      double width = 0);
+      double width = 0, SwathType type = SwathType::MAINLAND);
   void sort();
   void reverseDirOddSwaths();
 

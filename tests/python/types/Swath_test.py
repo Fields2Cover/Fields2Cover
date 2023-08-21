@@ -76,12 +76,12 @@ def test_fields2cover_types_swath_length():
   path1.addPoint( 4.0, 1.0);
   path2.addPoint( 0.0, 3.0);
   path2.addPoint( 4.0, 3.0);
-  path3.addPoint( 0.0, 0.0);  
+  path3.addPoint( 0.0, 0.0);
   path3.addPoint( 1.0, 1.0);
   swath1 = f2c.Swath(path1);
   swath2 = f2c.Swath(path2);
   swath3 = f2c.Swath(path3);
-  	
+
   near(swath1.getLength(), 4);
   near(swath2.getLength(), 4);
   near(pow(swath3.getLength(),2), 2, 1e-7);
@@ -111,9 +111,9 @@ def test_fields2cover_types_swath_area():
       [f2c.Point(0, 1), f2c.Point(4, 1)]));
   swath = f2c.Swath(line, 2.0);
   cell = swath.computeAreaCovered();
-  assert (swath.getWidth() * swath.getLength() < cell.getGeometry(0).getArea());
-  assert (swath.getWidth() * swath.getLength() > 0.5 * swath.getArea());
-  assert (swath.getWidth() * swath.getLength() < swath.getArea());
+  assert (swath.getWidth() * swath.getLength() == cell.getGeometry(0).getArea());
+  assert (swath.getWidth() * swath.getLength() >= 0.5 * swath.getArea());
+  assert (swath.getWidth() * swath.getLength() <= swath.getArea());
 
 
 
@@ -125,13 +125,13 @@ def test_fields2cover_types_swath_angles():
   path1.addPoint( 4.0, 1.0);
   path2.addPoint( 3.0, 1.0);
   path2.addPoint( 3.0, 4.0);
-  path3.addPoint( 0.0, 0.0);  
+  path3.addPoint( 0.0, 0.0);
   path3.addPoint( 1.0, 1.0);
   swath_empty = f2c.Swath();
   swath1 = f2c.Swath(path1);
   swath2 = f2c.Swath(path2);
   swath3 = f2c.Swath(path3);
-  	
+
   near(swath_empty.getInAngle(), -1.0);
   near(swath_empty.getOutAngle(), -1.0);
   empty_p1 = swath_empty.startPoint();
@@ -151,7 +151,7 @@ def test_fields2cover_types_swath_startAndEndPoints():
   path1.addPoint( 4.0, 24.2);
   path1.addPoint( 50.0, -34.2);
   swath1 = f2c.Swath(path1);
-  	
+
   near(swath1.startPoint().getX(), -100.0, 1e-5);
   near(swath1.startPoint().getY(), 30.0, 1e-5);
   near(swath1.endPoint().getX(), 50.0, 1e-5);

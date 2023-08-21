@@ -18,7 +18,7 @@ Swaths::Swaths(const std::initializer_list<Swath>& v_s) {
   }
 }
 
-Swaths::Swaths(std::vector<Swath>& v_s) {
+Swaths::Swaths(const std::vector<Swath>& v_s) {
   for (auto&& s : v_s) {
     emplace_back(s);
   }
@@ -30,8 +30,8 @@ void Swaths::emplace_back(const Swath& s) {
   data.emplace_back(s);
 }
 
-void Swaths::emplace_back(const LineString& l, double w, int id) {
-  data.emplace_back(l, w, id);
+void Swaths::emplace_back(const LineString& l, double w, int id, SwathType type) {
+  data.emplace_back(l, w, id, type);
 }
 
 void Swaths::push_back(const Swath& s) {
@@ -70,6 +70,10 @@ Swath& Swaths::at(size_t i) {
   return data.at(i);
 }
 
+const Swath& Swaths::at(size_t i) const {
+  return data.at(i);
+}
+
 size_t Swaths::size() const {
   return data.size();
 }
@@ -82,33 +86,34 @@ const Swath& Swaths::operator[] (int i) const {
   return data[i];
 }
 
-void Swaths::append(const LineString& line, double width) {
-  this->emplace_back(line, width, this->size());
+void Swaths::append(const LineString& line, double width, SwathType type) {
+  this->emplace_back(line, width, this->size(), type);
 }
 
-void Swaths::append(const MultiLineString& lines, double width) {
+void Swaths::append(const MultiLineString& lines, double width, SwathType type) {
   for (auto&& line : lines) {
-    append(line.clone(), width);
+    append(line.clone(), width, type);
   }
 }
 
-void Swaths::append(const LineString& line, const Cell& poly, double width) {
-  append(poly.getLinesInside(line), width);
+void Swaths::append(const LineString& line, const Cell& poly, double width,
+    SwathType type) {
+  append(poly.getLinesInside(line), width, type);
 }
 
 void Swaths::append(const LineString& line, const Cells& polys,
-    double width) {
-  append(polys.getLinesInside(line), width);
+    double width, SwathType type) {
+  append(polys.getLinesInside(line), width, type);
 }
 
 void Swaths::append(const MultiLineString& lines, const Cell& poly,
-    double width) {
-  append(poly.getLinesInside(lines), width);
+    double width, SwathType type) {
+  append(poly.getLinesInside(lines), width, type);
 }
 
 void Swaths::append(const MultiLineString& lines, const Cells& polys,
-    double width) {
-  append(polys.getLinesInside(lines), width);
+    double width, SwathType type) {
+  append(polys.getLinesInside(lines), width, type);
 }
 
 void Swaths::sort() {

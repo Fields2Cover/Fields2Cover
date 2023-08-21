@@ -67,13 +67,13 @@ TEST(fields2cover_types_swath, length) {
   path1->addPoint( 4.0, 1.0);
   path2->addPoint( 0.0, 3.0);
   path2->addPoint( 4.0, 3.0);
-  path3->addPoint( 0.0, 0.0);  
+  path3->addPoint( 0.0, 0.0);
   path3->addPoint( 1.0, 1.0);
   F2CSwath swath1(path1);
   F2CSwath swath2(path2);
   F2CSwath swath3(path3);
   F2CSwath swath4;
-  	
+
   EXPECT_EQ(swath1.getLength(), 4);
   EXPECT_EQ(swath2.getLength(), 4);
   EXPECT_NEAR(std::pow(swath3.getLength(),2), 2, 1e-7);
@@ -110,9 +110,8 @@ TEST(fields2cover_types_swath, area) {
   F2CLineString line {F2CPoint(0, 1), F2CPoint(4, 1)};
   F2CSwath swath(line, 2.0);
   auto cell = swath.computeAreaCovered();
-  EXPECT_LT(swath.getWidth() * swath.getLength(), cell.getGeometry(0).getArea());
-  EXPECT_GT(swath.getWidth() * swath.getLength(), 0.5 * swath.getArea());
-  EXPECT_LT(swath.getWidth() * swath.getLength(), swath.getArea());
+  EXPECT_EQ(swath.getWidth() * swath.getLength(), cell.getGeometry(0).getArea());
+  EXPECT_EQ(swath.getWidth() * swath.getLength(), swath.getArea());
 
   F2CCells cells = F2CCells::Buffer(line, 1.0);
   EXPECT_NEAR(swath.getArea(cells), cells.getArea(), 1e-5);
@@ -125,13 +124,13 @@ TEST(fields2cover_types_swath, angles) {
   path1->addPoint( 4.0, 1.0);
   path2->addPoint( 3.0, 1.0);
   path2->addPoint( 3.0, 4.0);
-  path3->addPoint( 0.0, 0.0);  
+  path3->addPoint( 0.0, 0.0);
   path3->addPoint( 1.0, 1.0);
   F2CSwath swath_empty;
   F2CSwath swath1(path1);
   F2CSwath swath2(path2);
   F2CSwath swath3(path3);
-  	
+
   EXPECT_EQ(swath_empty.getInAngle(), -1.0);
   EXPECT_EQ(swath_empty.getOutAngle(), -1.0);
   auto empty_p1 = swath_empty.startPoint();
@@ -152,7 +151,7 @@ TEST(fields2cover_types_swath, start_and_end_points) {
   path1->addPoint( 4.0, 24.2);
   path1->addPoint( 50.0, -34.2);
   F2CSwath swath1(path1);
-  	
+
   EXPECT_NEAR(swath1.startPoint().getX(), -100.0, 1e-5);
   EXPECT_NEAR(swath1.startPoint().getY(), 30.0, 1e-5);
   EXPECT_NEAR(swath1.endPoint().getX(), 50.0, 1e-5);

@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -15,8 +15,8 @@ Swath::Swath(double width) {
   this->setWidth(width);
 }
 
-Swath::Swath(const LineString& path, double width, int id) :
-    id_(id), path_(path) {
+Swath::Swath(const LineString& path, double width, int id, SwathType type) :
+    id_(id), path_(path), type_(type) {
   this->setWidth(width);
 }
 
@@ -185,6 +185,13 @@ void Swath::setCreationDir(bool creation_dir) {
   this->creation_dir_ = creation_dir;
 }
 
+SwathType Swath::getType() const {
+  return this->type_;
+}
+
+void Swath::setType(SwathType type) {
+  this->type_ = type;
+}
 
 
 }  // namespace f2c::types

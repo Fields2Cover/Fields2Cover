@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                           BSD-3 License
 //=============================================================================
@@ -18,12 +18,15 @@
 
 namespace f2c::types {
 
+enum class SwathType {MAINLAND = 0, HEADLAND = 1};
+
 struct Swath {
  public:
   Swath();
   explicit Swath(const LineString& path);
   explicit Swath(double width);
-  Swath(const LineString& path, double width, int id = 0);
+  Swath(const LineString& path, double width,
+      int id = 0, SwathType type = SwathType::MAINLAND);
   Swath(const Swath&);
   virtual ~Swath();
   virtual Swath& operator=(Swath&&);
@@ -47,6 +50,9 @@ struct Swath {
 
   bool getCreationDir() const;
   void setCreationDir(bool creation_dir);
+
+  SwathType getType() const;
+  void setType(SwathType type);
 
  public:
   double getLength() const;
@@ -86,10 +92,11 @@ struct Swath {
   void targetOppositeDirAs(const Swath& s);
 
  private:
-  int id_;
+  int id_ {0};  // Id of the swath
   LineString path_;
   double width_ {0.0};
   bool creation_dir_ {true};
+  SwathType type_ {SwathType::MAINLAND};
 };
 
 
