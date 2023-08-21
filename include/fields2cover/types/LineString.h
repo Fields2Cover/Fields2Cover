@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                           BSD-3 License
 //=============================================================================
@@ -23,6 +23,7 @@ struct LineString : public Geometries<LineString, OGRLineString, wkbLineString,
   LineString();
   explicit LineString(const LinearRing& ring);
   explicit LineString(const std::vector<Point>& ps);
+  explicit LineString(const Point& p1, const Point& p2);
   explicit LineString(const std::initializer_list<Point>& ps);
 
   void operator*=(double b);
@@ -45,8 +46,10 @@ struct LineString : public Geometries<LineString, OGRLineString, wkbLineString,
   void addGeometry(const Point& p) {this->addPoint(p);}
 
   Point StartPoint() const;
+  double startAngle() const;
 
   Point EndPoint() const;
+  double endAngle() const;
 };
 
 

@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -157,20 +157,20 @@ TEST(fields2cover_types_cell, Buffer) {
   F2CCell cell(F2CLinearRing({
     F2CPoint(0,0), F2CPoint(1,0),F2CPoint(1,1),F2CPoint(0,1), F2CPoint(0,0)}));
   EXPECT_EQ(cell.getArea(), 1);
-  
+
   auto cell_buffer = F2CCell::Buffer(cell, 2.0);
   EXPECT_EQ(cell.getArea(), 1);
-  EXPECT_NEAR(cell_buffer.getArea(), 1 + 4 * 2 + 2 * 2 * M_PI, 1e-2);
+  EXPECT_NEAR(cell_buffer.getArea(), 5*5, 1e-2);
 
   F2CPoint p {1, 2};
   auto point_buffer = F2CCell::Buffer(p, 3.0);
-  EXPECT_NEAR(point_buffer.getArea(), 3 * 3 * M_PI, 1e-1);
+  EXPECT_NEAR(point_buffer.getArea(), 9*3.141593, 1e-1);
   EXPECT_EQ(p.getX(), 1);
   EXPECT_EQ(p.getY(), 2);
 
   F2CLineString line {F2CPoint(3,4), F2CPoint(3,6)};
   auto line_buffer = F2CCell::Buffer(line, 4.0);
-  EXPECT_NEAR(line_buffer.getArea(), 2 * 2 * 4 + 4 * 4 * M_PI, 1e-1);
+  EXPECT_NEAR(line_buffer.getArea(), 2 * 2 * 4, 1e-1);
 }
 
 TEST(fields2cover_types_sstr, NumberStringConcat) {
@@ -185,4 +185,6 @@ TEST(fields2cover_types_sstr, NumberStringConcat) {
   result = f2c::types::sstr(std::hex, 10, 10, std::dec, 10, 10);
   EXPECT_EQ(result, "aa1010");
 }
+
+
 

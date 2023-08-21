@@ -25,11 +25,14 @@ def test_fields2cover_hl_const_gen_borderArea():
 
   hl_gen = f2c.HG_Const_gen();
   no_hl = hl_gen.generateHeadlands(field.field, 1.0);
- 
+
   assert field.getArea() > 0;
   near(field.getArea(), 1e5);
   assert (no_hl.getArea() < 1e5 * 0.99);
   assert (no_hl.getArea() > 1e5 * 0.9);
   assert (no_hl.getArea() / field.getArea() > 0.9);
   assert (no_hl.getArea() / field.getArea() < 1.0);
+
+  extra_hl = hl_gen.generateHeadlands(field.field, -10.0);
+  assert (field.getArea() < extra_hl.getArea());
 

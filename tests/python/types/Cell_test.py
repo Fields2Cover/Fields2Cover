@@ -75,7 +75,7 @@ def test_fields2cover_types_cell_isPointInBorder():
   assert cell.isPointInBorder(f2c.Point(1,2))
   assert not cell.isPointInBorder(f2c.Point(1,1))
   assert not cell.isPointInBorder(f2c.Point(10,10))
-  
+
 def test_fields2cover_types_cell_Buffer():
   cell = f2c.Cell(f2c.LinearRing(f2c.VectorPoint(
     [f2c.Point(), f2c.Point(1,0), f2c.Point(1,1), f2c.Point(0,1), f2c.Point()])))
@@ -83,7 +83,7 @@ def test_fields2cover_types_cell_Buffer():
 
   cell_buffer = f2c.Cell.Buffer(cell, 2.0);
   near(cell.getArea(), 1)
-  near(cell_buffer.getArea(), 1 + 4 * 2 + 2 * 2 * math.pi, 0.1)
+  near(cell_buffer.getArea(), 25, 0.1)
 
   p = f2c.Point(1, 2);
   point_buffer = f2c.Cell.Buffer(p, 3.0)
@@ -93,6 +93,6 @@ def test_fields2cover_types_cell_Buffer():
 
   line = f2c.LineString(f2c.VectorPoint([f2c.Point(3,4), f2c.Point(3,6)]))
   line_buffer = f2c.Cell.Buffer(line, 4.0)
-  near(line_buffer.getArea(), 2 * 2 * 4 + 4 * 4 * math.pi, 0.3);
+  near(line_buffer.getArea(), 2 * (4 * 2), 1e-5);
 
 

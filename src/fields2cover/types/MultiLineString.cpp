@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -116,6 +116,12 @@ void MultiLineString::setGeometry(size_t i, const LineString& line) {
 
 void MultiLineString::addGeometry(const LineString& line) {
   this->data->addGeometry(line.get());
+}
+
+void MultiLineString::addGeometry(const MultiLineString& lines) {
+  for (auto&& line : lines) {
+    addGeometry(line);
+  }
 }
 
 MultiLineString MultiLineString::getLineSegments(const LineString& line) {

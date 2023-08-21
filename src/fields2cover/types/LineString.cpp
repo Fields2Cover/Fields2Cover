@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -25,6 +25,11 @@ LineString::LineString(const std::vector<Point>& ps) {
   for (auto&& p : ps) {
     this->addPoint(p);
   }
+}
+
+LineString::LineString(const Point& p1, const Point& p2) {
+  this->addPoint(p1);
+  this->addPoint(p2);
 }
 
 LineString::LineString(const std::initializer_list<Point>& ps) {
@@ -107,6 +112,15 @@ Point LineString::EndPoint() const {
   data->EndPoint(&p);
   return Point(p);
 }
+
+double LineString::startAngle() const {
+  return (getGeometry(1) - StartPoint()).getAngleFromPoint();
+}
+double LineString::endAngle() const {
+  return (EndPoint() - getGeometry(size() - 2)).getAngleFromPoint();
+}
+
+
 
 
 }  // namespace f2c::types

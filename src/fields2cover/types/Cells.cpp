@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -128,6 +128,13 @@ bool Cells::isConvex() const {
     getCell(0).isConvex();
 }
 
+Cell Cells::ConvexHull() const {
+  auto convex_hull = data->ConvexHull();
+  Cell cell(convex_hull);
+  OGRGeometryFactory::destroyGeometry(convex_hull);
+  return cell;
+}
+
 Cells Cells::Intersection(const Cells& c) const {
   auto inter = data->Intersection(c.get());
   if (wkbFlatten(inter->getGeometryType()) ==
@@ -150,9 +157,26 @@ Cells Cells::Difference(const Cells& c) const {
   return cells;
 }
 
+Cells Cells::Union(const Cells& c) const {
+  auto c_union = data->Union(c.get());
+  Cells cells(c_union);
+  OGRGeometryFactory::destroyGeometry(c_union);
+  return cells;
+}
+
+Cells Cells::UnionCascaded() const {
+  auto c_union = data->UnionCascaded();
+  Cells cells(c_union);
+  OGRGeometryFactory::destroyGeometry(c_union);
+  return cells;
+}
+
 Cells Cells::splitByLine(const LineString& line) const {
-  // This trick could be faster using Polygonize
-  return this->Difference(Buffer(line, 1e-8));
+  Cells cells = this->Difference(Buffer(line, 1e-8));
+  for (auto&& c : cells) {
+    c = Cell::Buffer(c, 1e-8/2.0);
+  }
+  return cells;
 }
 
 Cells Cells::splitByLine(const MultiLineString& lines) const {
@@ -182,7 +206,7 @@ LineString Cells::getStraightLongCurve(
   return LineString({
     point.getPointFromAngle(angle, this->getMinSafeLength()),
     point.getPointFromAngle(
-      boost::math::constants::pi<double>() + angle, this->getMinSafeLength())});
+    boost::math::constants::pi<double>() + angle, this->getMinSafeLength())});
 }
 
 MultiLineString Cells::getLinesInside(const LineString& line) const {
@@ -217,6 +241,13 @@ Cell Cells::getCellWherePoint(const Point& p) const {
 LineString Cells::createLineUntilBorder(
     const f2c::types::Point& p, double ang) const {
   return this->getCellWherePoint(p).createLineUntilBorder(p, ang);
+}
+
+Cells Cells::Buffer(double width) const {
+  auto buffer = this->OGRBuffer(width);
+  Cells cells {buffer};
+  OGRGeometryFactory::destroyGeometry(buffer);
+  return cells;
 }
 
 

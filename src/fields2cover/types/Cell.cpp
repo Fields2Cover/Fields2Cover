@@ -1,10 +1,11 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
 
 #include "fields2cover/types/Cell.h"
+#include "fields2cover/types/Cells.h"
 
 namespace f2c::types {
 
@@ -94,14 +95,21 @@ size_t Cell::size() const {
 
 
 Cell Cell::Buffer(const Cell& geom, double width) {
-  auto buffer = geom->Buffer(width);
+  auto buffer = geom.OGRBuffer(width);
   Cell cell {buffer->toPolygon()};
   OGRGeometryFactory::destroyGeometry(buffer);
   return cell;
 }
 
 Cell Cell::Buffer(const LineString& geom, double width) {
-  auto buffer = MultiLineString::getLineSegments(geom)->Buffer(width);
+  auto buffer = geom.OGRBuffer(width);
+  Cell cell {buffer->toPolygon()};
+  OGRGeometryFactory::destroyGeometry(buffer);
+  return cell;
+}
+
+Cell Cell::Buffer(const LinearRing& geom, double width) {
+  auto buffer = geom.OGRBuffer(width);
   Cell cell {buffer->toPolygon()};
   OGRGeometryFactory::destroyGeometry(buffer);
   return cell;
@@ -154,6 +162,12 @@ bool Cell::isConvex() const {
   return true;
 }
 
+Cell Cell::ConvexHull() const {
+  auto convex_hull = data->ConvexHull();
+  Cell cell(convex_hull);
+  OGRGeometryFactory::destroyGeometry(convex_hull);
+  return cell;
+}
 
 LineString Cell::getSemiLongCurve(const Point& point, double angle) const {
   return LineString({point,

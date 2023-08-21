@@ -9,6 +9,7 @@
 #define FIELDS2COVER_TYPES_GEOMETRY_IMPL_HPP_
 
 #include <gdal/cpl_conv.h>
+#include <geos_c.h>
 #include <memory>
 #include <vector>
 #include <string>
@@ -241,6 +242,7 @@ void Geometry<T, R>::importFromWkt(const std::string& text) {
   data->importFromWkt(&char_text);
 }
 
+// ###############################
 // Code extracted from:
 // https://github.com/OSGeo/gdal/blob/b0aa6065a39b252cb8306e9c2e2535d6dda0fb55/port/cpl_conv.h#L397
 template <class T, OGRwkbGeometryType R>
@@ -252,6 +254,80 @@ inline To Geometry<T, R>::downCast(From *f) const {
   CPLAssert(f == nullptr || dynamic_cast<To>(f) != nullptr);
   return static_cast<To>(f);
 }
+// ###############################
+
+// ###############################
+// Code extracted from:
+// https://github.com/OSGeo/gdal/blob/717dcc0eed252e2f78c142b1f7866e49c5511224/ogr/ogrgeometry.cpp#L4309
+template <class T, OGRwkbGeometryType R>
+OGRGeometry* Geometry<T, R>::OGRBuffer(double dfDist, int side) const {
+  OGRGeometry *poOGRProduct = nullptr;
+
+  GEOSContextHandle_t hGEOSCtxt = OGRGeometry::createGEOSContext();
+  GEOSGeom hGeosGeom = this->data->exportToGEOS(hGEOSCtxt);
+  if (hGeosGeom != nullptr) {
+    GEOSBufferParams* hBufParams = GEOSBufferParams_create_r(hGEOSCtxt);
+    GEOSBufferParams_setEndCapStyle_r(hGEOSCtxt, hBufParams,
+        GEOSBufCapStyles::GEOSBUF_CAP_FLAT);
+    GEOSBufferParams_setJoinStyle_r(hGEOSCtxt, hBufParams,
+        GEOSBufJoinStyles::GEOSBUF_JOIN_MITRE);
+    GEOSBufferParams_setSingleSided_r(hGEOSCtxt, hBufParams, side != 0);
+
+    GEOSGeom hGeosProduct = GEOSBufferWithParams_r(hGEOSCtxt, hGeosGeom,
+        hBufParams, side >= 0 ? dfDist : -dfDist);
+    GEOSGeom_destroy_r(hGEOSCtxt, hGeosGeom);
+    GEOSBufferParams_destroy_r(hGEOSCtxt, hBufParams);
+
+    poOGRProduct = BuildGeometryFromGEOS(hGEOSCtxt, hGeosProduct,
+        this->data.get(), nullptr);
+  }
+  OGRGeometry::freeGEOSContext(hGEOSCtxt);
+  return poOGRProduct;
+}
+////////////////////////
+
+// ###############################
+// Code extracted from:
+// https://github.com/OSGeo/gdal/blob/717dcc0eed252e2f78c142b1f7866e49c5511224/ogr/ogrgeometry.cpp#L4309
+template <class T, OGRwkbGeometryType R>
+OGRGeometry* Geometry<T, R>::OGRGeometryRebuildCurves(
+    const OGRGeometry *poGeom, const OGRGeometry *poOtherGeom,
+    OGRGeometry *poOGRProduct) const {
+  if (poOGRProduct != nullptr &&
+      wkbFlatten(poOGRProduct->getGeometryType()) != wkbPoint &&
+      (poGeom->hasCurveGeometry(true) ||
+      (poOtherGeom && poOtherGeom->hasCurveGeometry(true)))) {
+    OGRGeometry *poCurveGeom = poOGRProduct->getCurveGeometry();
+    delete poOGRProduct;
+    return poCurveGeom;
+  }
+  return poOGRProduct;
+}
+template <class T, OGRwkbGeometryType R>
+OGRGeometry* Geometry<T, R>::BuildGeometryFromGEOS(
+    GEOSContextHandle_t hGEOSCtxt, GEOSGeom hGeosProduct, const OGRGeometry *poSelf,
+    const OGRGeometry *poOtherGeom) const {
+  OGRGeometry *poOGRProduct = nullptr;
+  if (hGeosProduct != nullptr) {
+    poOGRProduct = OGRGeometryFactory::createFromGEOS(hGEOSCtxt, hGeosProduct);
+    if (poOGRProduct != nullptr &&
+        poSelf->getSpatialReference() != nullptr &&
+        (poOtherGeom == nullptr ||
+          (poOtherGeom->getSpatialReference() != nullptr &&
+        poOtherGeom->getSpatialReference()->IsSame(
+          poSelf->getSpatialReference())))){
+      poOGRProduct->assignSpatialReference(poSelf->getSpatialReference());
+    }
+    poOGRProduct = OGRGeometryRebuildCurves(poSelf, poOtherGeom, poOGRProduct);
+    GEOSGeom_destroy_r(hGEOSCtxt, hGeosProduct);
+  }
+  return poOGRProduct;
+}
+// ###############################
+
+
+
+
 
 }  // namespace f2c::types
 

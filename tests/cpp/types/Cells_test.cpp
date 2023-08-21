@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -60,6 +60,11 @@ TEST(fields2cover_types_cells, Buffer) {
   EXPECT_GT(cells.getArea(), 4);
   cells = F2CCells::Buffer(line, -1);
   EXPECT_EQ(cells.getArea(), 0);
+
+  cells = F2CCells::Buffer(line, 2);
+  EXPECT_EQ(cells.getArea(), 32);
+  F2CCells cells2 = F2CCells::Buffer(cells, -0.1);
+  EXPECT_NEAR(cells2.getArea(), 28.8, 1e-5);
 
   cells = F2CCells::Buffer(F2CLineString(), 20);
   EXPECT_EQ(cells.getArea(), 0);

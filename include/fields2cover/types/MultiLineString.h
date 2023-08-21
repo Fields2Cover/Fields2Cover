@@ -45,6 +45,7 @@ struct MultiLineString :
   void append(const OGRGeometry* geom);
 
   void addGeometry(const LineString& line);
+  void addGeometry(const MultiLineString& lines);
 
   static MultiLineString getLineSegments(const LineString& line);
   static MultiLineString getLineSegments(const LinearRing& line);

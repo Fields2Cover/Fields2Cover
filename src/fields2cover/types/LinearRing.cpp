@@ -1,10 +1,11 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
 
 #include "fields2cover/types/LinearRing.h"
+#include "fields2cover/types/LineString.h"
 
 namespace f2c::types {
 
@@ -114,6 +115,11 @@ Point LinearRing::EndPoint() const {
   data->EndPoint(&p);
   return Point(p);
 }
+
+bool LinearRing::isClockwise() const {
+  return data->isClockwise();
+}
+
 
 
 }  // namespace f2c::types

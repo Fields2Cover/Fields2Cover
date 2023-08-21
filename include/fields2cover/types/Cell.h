@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                           BSD-3 License
 //=============================================================================
@@ -57,7 +57,11 @@ struct Cell : public Geometries<Cell, OGRPolygon, wkbPolygon, LinearRing> {
 
   static Cell Buffer(const LineString& geom, double width);
 
+  static Cell Buffer(const LinearRing& ring, double width);
+
   static Cell Buffer(const Point& geom, double width);
+
+  Cell ConvexHull() const;
 
   void addRing(const LinearRing& ring);
   void addGeometry(const LinearRing& ring);

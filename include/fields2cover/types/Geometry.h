@@ -105,6 +105,7 @@ struct Geometry {
   /// @return difference between both angles
   static double getAngleDiffAbs(double a, double b);
 
+
   bool isEmpty() const;
 
   std::string exportToWkt() const;
@@ -121,7 +122,25 @@ struct Geometry {
   // https://github.com/OSGeo/gdal/blob/b0aa6065a39b252cb8306e9c2e2535d6dda0fb55/port/cpl_conv.h#L397
   template <typename To, typename From>
   inline To downCast(From *f) const;
+
+ public:
+  // Code adapted from:
+  // https://github.com/OSGeo/gdal/blob/717dcc0eed252e2f78c142b1f7866e49c5511224/ogr/ogrgeometry.cpp#L4309
+  OGRGeometry* OGRBuffer(double dfDist, int side = 0) const;
+
+ private:
+  // Code extracted from:
+  // https://github.com/OSGeo/gdal/blob/717dcc0eed252e2f78c142b1f7866e49c5511224/ogr/ogrgeometry.cpp#L4309
+  OGRGeometry* BuildGeometryFromGEOS(
+      GEOSContextHandle_t hGEOSCtxt, GEOSGeom hGeosProduct,
+      const OGRGeometry *poSelf, const OGRGeometry *poOtherGeom) const;
+  // Code extracted from:
+  // https://github.com/OSGeo/gdal/blob/717dcc0eed252e2f78c142b1f7866e49c5511224/ogr/ogrgeometry.cpp#L4309
+  OGRGeometry* OGRGeometryRebuildCurves(const OGRGeometry *poGeom,
+      const OGRGeometry *poOtherGeom, OGRGeometry *poOGRProduct) const;
+
 };
+
 
 }  // namespace f2c::types
 

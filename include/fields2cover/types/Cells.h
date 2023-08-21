@@ -49,9 +49,15 @@ struct Cells : public Geometries<Cells, OGRMultiPolygon, wkbMultiPolygon,
 
   bool isConvex() const;
 
+  Cell ConvexHull() const;
+
   Cells Intersection(const Cells& c) const;
 
   Cells Difference(const Cells& c) const;
+
+  Cells Union(const Cells& c) const;
+
+  Cells UnionCascaded() const;
 
   Cells splitByLine(const LineString& line) const;
 
@@ -82,14 +88,17 @@ struct Cells : public Geometries<Cells, OGRMultiPolygon, wkbMultiPolygon,
       const f2c::types::Point& p, double ang) const;
 
   template <class T, OGRwkbGeometryType R>
-  static Cells Buffer(const Geometry<T, R>& geom, double width);
+  static Cells Buffer(const Geometry<T, R>& geom, double width,
+      int side = 0);
+
+  Cells Buffer(double width) const;
 };
 
 
 
 template <class T, OGRwkbGeometryType R>
-Cells Cells::Buffer(const Geometry<T, R>& geom, double width) {
-  auto buffer = geom->Buffer(width);
+Cells Cells::Buffer(const Geometry<T, R>& geom, double width, int side) {
+  OGRGeometry* buffer = geom.OGRBuffer(width, side);
   Cells cells {buffer};
   OGRGeometryFactory::destroyGeometry(buffer);
   return cells;
