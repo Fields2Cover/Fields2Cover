@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                           BSD-3 License
 //=============================================================================
@@ -24,7 +24,7 @@ struct Route {
  public:
   std::vector<Swaths> v_swaths;
   std::vector<MultiPoint> connections;
-  RouteType type;
+  RouteType type {RouteType::R_NONE};
 
  public:
   double getLength() const;
