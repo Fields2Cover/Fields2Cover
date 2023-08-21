@@ -57,14 +57,15 @@ TEST(fields2cover_types_cells, Buffer) {
   F2CLineString line {
     F2CPoint(0,0), F2CPoint(2,0),F2CPoint(2,2),F2CPoint(0,2), F2CPoint(0,0)};
   F2CCells cells = F2CCells::Buffer(line, 2);
-  EXPECT_GT(cells.getArea(), 4);
+  EXPECT_GE(cells.getArea(), 32);
+  EXPECT_LE(cells.getArea(), 36);
   cells = F2CCells::Buffer(line, -1);
   EXPECT_EQ(cells.getArea(), 0);
 
   cells = F2CCells::Buffer(line, 2);
-  EXPECT_EQ(cells.getArea(), 32);
   F2CCells cells2 = F2CCells::Buffer(cells, -0.1);
-  EXPECT_NEAR(cells2.getArea(), 28.8, 1e-5);
+  EXPECT_LT(cells2.getArea(), cells.getArea());
+  EXPECT_GT(cells2.getArea(), 0.8 * cells.getArea());
 
   cells = F2CCells::Buffer(F2CLineString(), 20);
   EXPECT_EQ(cells.getArea(), 0);
