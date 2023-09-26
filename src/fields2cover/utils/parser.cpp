@@ -26,7 +26,6 @@ int Parser::importGml(const std::string& file, F2CFields& fields) {
 
   if (p_parcel == nullptr) {
     throw std::invalid_argument("File not found");
-    return -1;
   }
 
   std::string id {""};
