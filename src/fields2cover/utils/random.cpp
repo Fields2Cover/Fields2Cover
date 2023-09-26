@@ -39,11 +39,9 @@ f2c::types::Field Random::generateRandField(int n_sides, double area,
     double min_width, double max_width) {
   if (n_sides <= 2) {
     throw std::invalid_argument("Minimum 3 sides needed");
-    return f2c::types::Field();
   }
   if (area <= 0) {
     throw std::invalid_argument("The area should be positive");
-    return f2c::types::Field();
   }
   f2c::types::LinearRing border;
   f2c::types::Field field;
