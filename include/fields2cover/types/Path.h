@@ -59,6 +59,7 @@ struct Path {
   void appendSwath(const Swath& swath, double cruise_speed);
 
   std::string serializePath(size_t digit_precision = 6) const;
+  Path discretize_swath(double step_size, double swath_speed) const;
   void saveToFile(const std::string& file, size_t precision = 6) const;
   void loadFile(const std::string& file);
 

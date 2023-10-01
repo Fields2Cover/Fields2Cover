@@ -114,6 +114,81 @@ std::string Path::serializePath(size_t digit_precision) const {
   return res;
 }
 
+/**
+ * @brief Discretize the swath sections of the path and return a new path
+ * @param step_size Discretization step in [m]
+ * @param swath_speed Robot swath speed in [m/s]
+ * @return New path with swath now discretized 
+*/
+Path Path::discretize_swath(double step_size, double swath_speed) const {
+    // Create new path
+    Path new_path;
+
+    // Loop through all the points in the path
+    for (size_t i = 0; i < this->size(); i++)
+    {
+        // Check if the current point is a SWATH point
+        if (this->states.at(i).type == f2c::types::PathSectionType::SWATH)
+        {
+            // We know that swaths are represented by only two point so the next point will
+            // be the end of the swath
+            // Save start and end swath points to variables
+            Point start_point = this->states.at(i).point;
+            Point end_point = this->states.at(i+1).point;
+
+            // We can now discretize the swath
+            // Calculate the distance between the start and end point
+            double distance = start_point.Distance(end_point);
+            // Calculate the number of points needed to discretize the swath
+            int num_points = floor(distance / step_size);
+
+            // Create vector's for the x, y and z values from start to end point
+            std::vector<double> x_values;
+            std::vector<double> y_values;
+            std::vector<double> z_values;
+            for (int j = 0; j < num_points; j++)
+            {
+                x_values.push_back(start_point.getX() + (j * (end_point.getX() - start_point.getX()) / num_points));
+                y_values.push_back(start_point.getY() + (j * (end_point.getY() - start_point.getY()) / num_points));
+                z_values.push_back(start_point.getZ() + (j * (end_point.getZ() - start_point.getZ()) / num_points));
+            }
+            // Add last point to list
+            x_values.push_back(end_point.getX());
+            y_values.push_back(end_point.getY());
+            z_values.push_back(end_point.getZ());
+
+            // Iterate over each pair of coordinates and add them as states into our new Path object
+            for (int j = 0; j < num_points; j++)
+            {
+                // Create a new PathState object
+                PathState state;
+                // Set the point to the current x and y values
+                state.point = Point(x_values.at(j), y_values.at(j), z_values.at(j));
+                // Set the angle to the angle between the current point and the next point
+                state.angle = atan2(y_values.at(j+1) - y_values.at(j), x_values.at(j+1) - x_values.at(j));
+                // Ensure the angle is in the range [0, 2*PI]
+                if (state.angle < 0.0){
+                    state.angle = state.angle + 2 * M_PI;
+                }
+                // Set the velocity to the swath/cruise speed of the robot
+                state.velocity = swath_speed;
+                // Set the duration to the distance between the current point and the next point
+                state.duration = sqrt(pow(x_values.at(j+1) - x_values.at(j), 2) + pow(y_values.at(j+1) - y_values.at(j), 2));
+                state.dir = f2c::types::PathDirection::FORWARD;
+                state.type = f2c::types::PathSectionType::SWATH;
+                new_path.states.push_back(state);
+            }
+            i++; // Increment i with one to move past end_point of current swath
+        }
+        else // Add TURN's to new_path
+        {
+            // If the current point is not a swath point, we can just add it to the new path
+            new_path.states.push_back(this->states.at(i));
+        }
+    }
+    return new_path;
+}
+
 void Path::saveToFile(const std::string& file, size_t precision) const {
   std::ofstream out(file);
   out << serializePath(precision);
