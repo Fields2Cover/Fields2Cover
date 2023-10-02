@@ -117,10 +117,9 @@ std::string Path::serializePath(size_t digit_precision) const {
 /**
  * @brief Discretize the swath sections of the path and return a new path
  * @param step_size Discretization step in [m]
- * @param swath_speed Robot swath speed in [m/s]
  * @return New path with swath now discretized 
 */
-Path Path::discretize_swath(double step_size, double swath_speed) const {
+Path Path::discretize_swath(double step_size) const {
     // Create new path
     Path new_path;
 
@@ -136,45 +135,34 @@ Path Path::discretize_swath(double step_size, double swath_speed) const {
             Point start_point = this->states.at(i).point;
             Point end_point = this->states.at(i+1).point;
 
-            // We can now discretize the swath
             // Calculate the distance between the start and end point
             double distance = start_point.Distance(end_point);
-            // Calculate the number of points needed to discretize the swath
-            int num_points = floor(distance / step_size);
-
-            // Create vector's for the x, y and z values from start to end point
-            std::vector<double> x_values;
-            std::vector<double> y_values;
-            std::vector<double> z_values;
-            for (int j = 0; j < num_points; j++)
-            {
-                x_values.push_back(start_point.getX() + (j * (end_point.getX() - start_point.getX()) / num_points));
-                y_values.push_back(start_point.getY() + (j * (end_point.getY() - start_point.getY()) / num_points));
-                z_values.push_back(start_point.getZ() + (j * (end_point.getZ() - start_point.getZ()) / num_points));
+            // Calculate the number of steps using the input step size
+            double number_of_steps = distance / step_size;
+            // Round the number of steps to the nearest integer
+            int rounded_number_of_steps = std::round(number_of_steps);
+            // If rounded number of steps is equal to zero, then the provided step_size is greater
+            // than the distance. In this case, set number of steps to 1, thus do not discretize the path
+            if(rounded_number_of_steps == 0) {
+                  rounded_number_of_steps = 1;
             }
-            // Add last point to list
-            x_values.push_back(end_point.getX());
-            y_values.push_back(end_point.getY());
-            z_values.push_back(end_point.getZ());
 
             // Iterate over each pair of coordinates and add them as states into our new Path object
-            for (int j = 0; j < num_points; j++)
+            for (int j = 0; j <= rounded_number_of_steps; j++)
             {
                 // Create a new PathState object
                 PathState state;
-                // Set the point to the current x and y values
-                state.point = Point(x_values.at(j), y_values.at(j), z_values.at(j));
-                // Set the angle to the angle between the current point and the next point
-                state.angle = atan2(y_values.at(j+1) - y_values.at(j), x_values.at(j+1) - x_values.at(j));
-                // Ensure the angle is in the range [0, 2*PI]
-                if (state.angle < 0.0){
-                    state.angle = state.angle + 2 * M_PI;
-                }
-                // Set the velocity to the swath/cruise speed of the robot
-                state.velocity = swath_speed;
-                // Set the duration to the distance between the current point and the next point
-                state.duration = sqrt(pow(x_values.at(j+1) - x_values.at(j), 2) + pow(y_values.at(j+1) - y_values.at(j), 2));
-                state.dir = f2c::types::PathDirection::FORWARD;
+                // Update point with incremental step values
+                state.point = Point(start_point.getX() + (j * (end_point.getX() - start_point.getX()) / rounded_number_of_steps),
+                                    start_point.getY() + (j * (end_point.getY() - start_point.getY()) / rounded_number_of_steps),
+                                    start_point.getZ() + (j * (end_point.getZ() - start_point.getZ()) / rounded_number_of_steps));
+                // Set angle
+                state.angle = this->states.at(i).angle;
+                // Set velocity
+                state.velocity = this->states.at(i).velocity;
+                // Set duration
+                state.duration = static_cast<double>((distance/state.velocity)/rounded_number_of_steps);
+                state.dir = this->states.at(i).dir;
                 state.type = f2c::types::PathSectionType::SWATH;
                 new_path.states.push_back(state);
             }
