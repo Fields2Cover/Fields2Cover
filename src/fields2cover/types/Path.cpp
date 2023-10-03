@@ -124,10 +124,11 @@ Path Path::discretize_swath(double step_size) const {
     Path new_path;
 
     // Loop through all the points in the path
-    for (size_t i = 0; i < this->size(); i++)
+    for (size_t i = 0; i < this->size()-1; i++)
     {
-        // Check if the current point is a SWATH point
-        if (this->states.at(i).type == f2c::types::PathSectionType::SWATH)
+        // Check if the current point and next point is a SWATH
+        if (this->states.at(i).type == f2c::types::PathSectionType::SWATH
+            && this->states.at(i+1).type == f2c::types::PathSectionType::SWATH)
         {
             // We know that swaths are represented by only two point so the next point will
             // be the end of the swath
@@ -166,7 +167,6 @@ Path Path::discretize_swath(double step_size) const {
                 state.type = f2c::types::PathSectionType::SWATH;
                 new_path.states.push_back(state);
             }
-            i++; // Increment i with one to move past end_point of current swath
         }
         else // Add TURN's to new_path
         {
