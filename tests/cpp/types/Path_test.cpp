@@ -6,6 +6,12 @@
 
 #include <gtest/gtest.h>
 #include "fields2cover/types.h"
+#include "fields2cover/path_planning/dubins_curves.h"
+#include "fields2cover/path_planning/path_planning.h"
+#include "fields2cover/path_planning/dubins_curves_cc.h"
+#include "fields2cover/route_planning/boustrophedon_order.h"
+#include "fields2cover/swath_generator/brute_force.h"
+#include "../path_planning/path_planning_checker.hpp"
 
 TEST(fields2cover_types_path, appendSwath) {
   F2CLineString line1({F2CPoint(0.0, 1.0), F2CPoint(1.0, 1.0), F2CPoint(1.0, 4.0)});
@@ -220,4 +226,92 @@ TEST(fields2cover_types_path, moveTo) {
       static_cast<int>(f2c::types::PathSectionType::SWATH));
 }
 
+
+
+
+TEST(fields2cover_types_path, discretize_swath) {
+  // Define field and robot
+  F2CRobot robot (2.0, 5.0);
+  double field_Y = 100;
+  double field_X = 40;
+  F2CCells field(F2CCell(F2CLinearRing({F2CPoint(0,0), F2CPoint(0,field_Y),
+                                        F2CPoint(field_X,field_Y), F2CPoint(field_X,0),
+                                        F2CPoint(0,0)})));
+  // Swath generation
+  f2c::sg::BruteForce bf;
+  F2CSwaths swaths = bf.generateSwaths(M_PI, robot.op_width, field.getGeometry(0));
+  f2c::rp::BoustrophedonOrder boustrophedon_sorter;
+  auto boustrophedon_swaths = boustrophedon_sorter.genSortedSwaths(swaths, 1);
+  // Path planner
+  f2c::pp::PathPlanning path_planner;
+  robot.setMinRadius(2.5);  // m
+  // Create swath connections using Dubins curves with Continuous curvature
+  f2c::pp::DubinsCurvesCC dubins_cc;
+  F2CPath path_dubins_cc = path_planner.searchBestPath(robot, boustrophedon_swaths, dubins_cc);
+
+  /**
+   *  Test if step size is correct when step_size can be divided into swath length without leaving
+   *  a residual
+   */
+  // Discretize swath lines in path object
+  // Specify the step size and the robot velocity for the swath section
+  double discretize_step_size = 2; // Step size for discretization in [m]
+  F2CPath new_path = path_dubins_cc.discretize_swath(discretize_step_size);
+  for (size_t i = 0; i < new_path.size()-1; i++) {
+    if (new_path.states.at(i).type == f2c::types::PathSectionType::SWATH &&
+        new_path.states.at(i+1).type == f2c::types::PathSectionType::SWATH) {
+      EXPECT_NEAR(new_path.states.at(i).point.Distance(new_path.states.at(i+1).point),
+                  discretize_step_size, 1e-6);
+    }
+  }
+
+  /**
+   *  Test if discretize is correct if the step size is greater than the swath distance
+  */
+  double discretize_step_size_2 = 150; // Step size for discretization in [m]
+  F2CPath new_path_2 = path_dubins_cc.discretize_swath(discretize_step_size_2);
+  for (size_t i = 0; i < new_path_2.size()-1; i++) {
+    if (new_path_2.states.at(i).type == f2c::types::PathSectionType::SWATH &&
+        new_path_2.states.at(i+1).type == f2c::types::PathSectionType::SWATH) {
+      EXPECT_NEAR(new_path_2.states.at(i).point.Distance(new_path_2.states.at(i+1).point),
+                    field_Y, 1e-6);
+    }
+  }
+  EXPECT_TRUE(IsPathCorrect(new_path_2,
+        path_dubins_cc.states.at(0).point, path_dubins_cc.states.at(0).angle,
+        path_dubins_cc.states.back().point, path_dubins_cc.states.back().angle, false));
+
+  /**
+   * Test a simple single diagonal swath
+  */
+  F2CPath path;
+  F2CPathState state1;
+  state1.point = F2CPoint(0, 0, 0);
+  state1.angle = 0.5 * boost::math::constants::half_pi<double>();
+  state1.type = f2c::types::PathSectionType::SWATH;
+  F2CPathState state2;
+  state2.point = F2CPoint(10, 10, 10);
+  state2.type = f2c::types::PathSectionType::SWATH;
+  path.states.push_back(state1);
+  path.states.push_back(state2);
+  // Discretize swath with a step size
+  double step_size_4 = 5;
+  double approximated_step_size_4 = 4.71405;
+  F2CPath discretized_path = path.discretize_swath(step_size_4);
+  // Check if the discretized path has the expected number of states
+  EXPECT_EQ(discretized_path.size(), 4);  // Original start, one midpoint, and original end
+  // Check if the first and last point is equal to original start and end
+  EXPECT_EQ(discretized_path.states.at(0).point, state1.point);
+  EXPECT_EQ(discretized_path.states.at(3).point, state2.point);
+  // Check the midpoint's step_size
+  EXPECT_NEAR(discretized_path.states.at(0).point.Distance(discretized_path.states.at(1).point),
+      approximated_step_size_4 , 1e-4);
+  EXPECT_NEAR(discretized_path.states.at(1).point.Distance(discretized_path.states.at(2).point),
+      approximated_step_size_4 , 1e-4);
+  EXPECT_NEAR(discretized_path.states.at(2).point.Distance(discretized_path.states.at(3).point),
+      approximated_step_size_4 , 1e-4);
+
+  EXPECT_TRUE(IsPathCorrect(discretized_path, state1.point, 0.5*boost::math::constants::half_pi<double>(),
+      state2.point, 0.5 * boost::math::constants::half_pi<double>(), false));
+}
 

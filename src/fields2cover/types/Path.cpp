@@ -120,61 +120,60 @@ std::string Path::serializePath(size_t digit_precision) const {
  * @return New path with swath now discretized
 */
 Path Path::discretize_swath(double step_size) const {
-    // Create new path
-    Path new_path;
+  // Create new path
+  Path new_path;
 
-    // Loop through all the points in the path
-    for (size_t i = 0; i < this->size()-1; i++)
-    {
-        // Check if the current point and next point is a SWATH
-        if (this->states.at(i).type == f2c::types::PathSectionType::SWATH
-            && this->states.at(i+1).type == f2c::types::PathSectionType::SWATH)
-        {
-            // We know that swaths are represented by only two point so the next point will
-            // be the end of the swath
-            // Save start and end swath points to variables
-            Point start_point = this->states.at(i).point;
-            Point end_point = this->states.at(i+1).point;
+  // Loop through all the points in the path
+  for (size_t i = 0; i < this->size()-1; i++) {
+    // Check if the current point and next point is a SWATH
+    if (this->states.at(i).type == f2c::types::PathSectionType::SWATH
+        && this->states.at(i+1).type == f2c::types::PathSectionType::SWATH) {
+      // We know that swaths are represented by only two point so the next point will
+      // be the end of the swath
+      // Save start and end swath points to variables
+      Point start_point = this->states.at(i).point;
+      Point end_point = this->states.at(i+1).point;
 
-            // Calculate the distance between the start and end point
-            double distance = start_point.Distance(end_point);
-            // Calculate the number of steps using the input step size
-            double number_of_steps = distance / step_size;
-            // Round the number of steps to the nearest integer
-            int rounded_number_of_steps = std::round(number_of_steps);
-            // If rounded number of steps is equal to zero, then the provided step_size is greater
-            // than the distance. In this case, set number of steps to 1, thus do not discretize the path
-            if(rounded_number_of_steps == 0) {
-                  rounded_number_of_steps = 1;
-            }
+      // Calculate the distance between the start and end point
+      double distance = start_point.Distance(end_point);
+      // Calculate the number of steps using the input step size
+      double number_of_steps = fabs(distance / step_size);
+      // Round the number of steps to the nearest integer
+      int rounded_number_of_steps = std::round(number_of_steps);
+      // If rounded number of steps is equal to zero, then the provided step_size is greater
+      // than the distance. In this case, set number of steps to 1, thus do not discretize the path
+      if (rounded_number_of_steps == 0) {
+        rounded_number_of_steps = 1;
+      }
 
-            // Iterate over each pair of coordinates and add them as states into our new Path object
-            for (int j = 0; j <= rounded_number_of_steps; j++)
-            {
-                // Create a new PathState object
-                PathState state;
-                // Update point with incremental step values
-                state.point = Point(start_point.getX() + (j * (end_point.getX() - start_point.getX()) / rounded_number_of_steps),
-                                    start_point.getY() + (j * (end_point.getY() - start_point.getY()) / rounded_number_of_steps),
-                                    start_point.getZ() + (j * (end_point.getZ() - start_point.getZ()) / rounded_number_of_steps));
-                // Set angle
-                state.angle = this->states.at(i).angle;
-                // Set velocity
-                state.velocity = this->states.at(i).velocity;
-                // Set duration
-                state.duration = static_cast<double>((distance/state.velocity)/rounded_number_of_steps);
-                state.dir = this->states.at(i).dir;
-                state.type = f2c::types::PathSectionType::SWATH;
-                new_path.states.push_back(state);
-            }
-        }
-        else if (this->states.at(i).type == f2c::types::PathSectionType::TURN)
-        {
-            // If the current point is not a swath point, we can just add it to the new path
-            new_path.states.push_back(this->states.at(i));
-        }
+      // Iterate over each pair of coordinates and add them as states into our new Path object
+      for (int j = 0; j <= rounded_number_of_steps; j++) {
+        // Create a new PathState object
+        PathState state;
+        // Update point with incremental step values
+        state.point = Point(
+            start_point.getX() +
+              (j * (end_point.getX() - start_point.getX()) / rounded_number_of_steps),
+            start_point.getY() +
+              (j * (end_point.getY() - start_point.getY()) / rounded_number_of_steps),
+            start_point.getZ() +
+              (j * (end_point.getZ() - start_point.getZ()) / rounded_number_of_steps));
+        // Set angle
+        state.angle = this->states.at(i).angle;
+        // Set velocity
+        state.velocity = this->states.at(i).velocity;
+        // Set duration
+        state.duration = static_cast<double>((distance/state.velocity)/rounded_number_of_steps);
+        state.dir = this->states.at(i).dir;
+        state.type = f2c::types::PathSectionType::SWATH;
+        new_path.states.push_back(state);
+      }
+    } else if (this->states.at(i).type == f2c::types::PathSectionType::TURN) {
+      // If the current point is not a swath point, we can just add it to the new path
+      new_path.states.push_back(this->states.at(i));
     }
-    return new_path;
+  }
+  return new_path;
 }
 
 void Path::saveToFile(const std::string& file, size_t precision) const {
