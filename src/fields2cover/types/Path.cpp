@@ -117,7 +117,7 @@ std::string Path::serializePath(size_t digit_precision) const {
 /**
  * @brief Discretize the swath sections of the path and return a new path
  * @param step_size Discretization step in [m]
- * @return New path with swath now discretized 
+ * @return New path with swath now discretized
 */
 Path Path::discretize_swath(double step_size) const {
     // Create new path
@@ -168,7 +168,7 @@ Path Path::discretize_swath(double step_size) const {
                 new_path.states.push_back(state);
             }
         }
-        else // Add TURN's to new_path
+        else if (this->states.at(i).type == f2c::types::PathSectionType::TURN)
         {
             // If the current point is not a swath point, we can just add it to the new path
             new_path.states.push_back(this->states.at(i));
