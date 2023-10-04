@@ -29,6 +29,12 @@ class Transform {
 
   static void transform(F2CField& field, const std::string& coord_sys_to);
 
+  static void transformFromWGS84toUTM(F2CField& field);
+  static void transformToWGS84(F2CField& field);
+
+  static void transformFromETRS89toUTM(F2CField& field);
+  static void transformToETRS89(F2CField& field);
+
 
   static F2CPath transformPath(const F2CPath& p,
       const std::string& coord_sys_from, const std::string& coord_sys_to);

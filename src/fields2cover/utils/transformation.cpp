@@ -81,6 +81,38 @@ F2CPath Transform::transformPath(const F2CPath& path,
   return new_path;
 }
 
+void Transform::transformFromWGS84toUTM(F2CField& field) {
+  if (field.ref_point.getX() > 180. || field.ref_point.getX() < -180. ||
+      field.ref_point.getY() > 90. || field.ref_point.getY() < -90.) {
+    throw std::out_of_range(
+        "Error on transformFromWGS84toUTM: Value of ref point is out of limits");
+  }
+  std::string utm_zone = std::string("UTM:") +
+      std::to_string(floor((field.ref_point.getX() + 180) / 6) + 1) +
+      (field.ref_point.getY() > 0 ? "N" : "S") + " datum:WGS84";
+  field.coord_sys = "EPSG:4326";
+  transform(field, utm_zone);
+}
+
+void Transform::transformToWGS84(F2CField& field) {
+  transform(field, "EPSG:4326");
+}
+
+void Transform::transformFromETRS89toUTM(F2CField& field) {
+  if (field.ref_point.getX() > 32.88 || field.ref_point.getX() < -16.1 ||
+      field.ref_point.getY() > 84.73 || field.ref_point.getY() < 40.18 ) {
+    throw std::out_of_range(
+        "Error on transformFromETRS89toUTM: Value of ref point is out of limits");
+  }
+  std::string utm_zone =
+      std::to_string(floor((field.ref_point.getX() + 180) / 6) + 1) + "N";
+  field.coord_sys = "EPSG:4258";
+  transform(field, std::string("UTM:") + utm_zone + " datum:ETRS89");
+}
+
+void Transform::transformToETRS89(F2CField& field) {
+  transform(field, "EPSG:4258");
+}
 
 
 F2CPoint Transform::getRefPointInGPS(const F2CField& field) {
