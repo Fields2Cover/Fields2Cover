@@ -19,6 +19,7 @@ struct Field {
  public:
   std::string id {""};
   std::string coord_sys {""};
+  std::string prev_coord_sys {""};
   Point ref_point;
   Cells field;
 
@@ -32,8 +33,21 @@ struct Field {
   Field& operator=(const Field&);
 
  public:
+  void setId(const std::string& _id) {id = _id;}
+  std::string getId() const {return id;}
+  void setCRS(const std::string& crs) {coord_sys = crs;}
+  std::string getCRS() const {return coord_sys;}
+  void setPrevCRS(const std::string& prev_crs) {prev_coord_sys = prev_crs;}
+  std::string getPrevCRS() const {return prev_coord_sys;}
+  void setRefPoint(const Point& _ref_point) {ref_point = _ref_point;}
+  Point getRefPoint() const {return ref_point;}
+  void setField(const Cells& _field) {field = _field;}
+  Cells getField() const {return field;}
+
+ public:
   Field clone() const;
   double getArea() const;
+
   static bool isCoordSystemUTM(const std::string& coord_sys);
   bool isCoordSystemUTM() const;
   static std::string getUTMCoordSystem(const std::string& coord_sys,

@@ -27,14 +27,13 @@ class Transform {
   static F2CPath transformPathWithFieldRef(const F2CPath& path,
       const F2CField& field, const std::string& coord_sys_to);
 
+  static F2CPath transformToPrevCRS(
+      const F2CPath& path, const F2CField& field);
+
   static void transform(F2CField& field, const std::string& coord_sys_to);
 
-  static void transformFromWGS84toUTM(F2CField& field);
-  static void transformToWGS84(F2CField& field);
-
-  static void transformFromETRS89toUTM(F2CField& field);
-  static void transformToETRS89(F2CField& field);
-
+  static void transformToUTM(F2CField& field, bool is_etrs89_opt = true);
+  static void transformToPrevCRS(F2CField& field);
 
   static F2CPath transformPath(const F2CPath& p,
       const std::string& coord_sys_from, const std::string& coord_sys_to);
