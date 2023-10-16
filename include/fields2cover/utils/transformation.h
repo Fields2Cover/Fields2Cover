@@ -27,14 +27,23 @@ class Transform {
   static F2CPath transformPathWithFieldRef(const F2CPath& path,
       const F2CField& field, const std::string& coord_sys_to);
 
+
   static void transform(F2CField& field, const std::string& coord_sys_to);
 
+  static void transformToUTM(F2CField& field, bool is_etrs89_opt = true);
+  static void transformToPrevCRS(F2CField& field);
+
+  static F2CPath transformToPrevCRS(const F2CPath& p, const F2CField& field);
+  static F2CStrip transformToPrevCRS(const F2CStrip& s, const F2CField& field);
+  static F2CStrips transformToPrevCRS(const F2CStrips& s, const F2CField& field);
+  static F2CSwath transformToPrevCRS(const F2CSwath& s, const F2CField& field);
+  static F2CSwaths transformToPrevCRS(const F2CSwaths& s, const F2CField& field);
 
   static F2CPath transformPath(const F2CPath& p,
       const std::string& coord_sys_from, const std::string& coord_sys_to);
-  static F2CStrips transformStrips(const F2CStrips& s,
-      const std::string& coord_sys_from, const std::string& coord_sys_to);
   static F2CStrip transformStrip(const F2CStrip& s,
+      const std::string& coord_sys_from, const std::string& coord_sys_to);
+  static F2CStrips transformStrips(const F2CStrips& s,
       const std::string& coord_sys_from, const std::string& coord_sys_to);
   static F2CSwath transformSwath(const F2CSwath& s,
       const std::string& coord_sys_from, const std::string& coord_sys_to);
@@ -73,7 +82,6 @@ T Transform::transform(const T& t,
   new_t->transform(generateCoordTransf(coord_sys_from, coord_sys_to).get());
   return new_t;
 }
-
 
 }  // namespace f2c
 

@@ -18,24 +18,26 @@ std::unique_ptr<OGRCoordinateTransformation,
 }
 
 void Transform::transform(F2CField& field, const std::string& coord_sys_to) {
-  field.field = field.field + field.ref_point;
+  field.setField(field.getField() + field.getRefPoint());
   field.field->transform(
-      generateCoordTransf(field.coord_sys, coord_sys_to).get());
-  field.coord_sys = coord_sys_to;
-  field.ref_point = field.field.getCellBorder(0).StartPoint().clone();
-  field.field = field.field - field.ref_point;
+      generateCoordTransf(field.getCRS(), coord_sys_to).get());
+  field.setPrevCRS(field.getCRS());
+  field.setCRS(coord_sys_to);
+  field.setRefPoint(field.field.getCellBorder(0).StartPoint().clone());
+  field.setField(field.getField() - field.getRefPoint());
 }
 
 F2CPath Transform::transformPathWithFieldRef(const F2CPath& path,
       const F2CField& field, const std::string& coord_sys_to) {
   auto new_path = path.clone();
-  auto coords = generateCoordTransf(field.coord_sys, coord_sys_to);
+  auto coords = generateCoordTransf(field.getCRS(), coord_sys_to);
   for (auto&& s : new_path.states) {
-    s.point = s.point + field.ref_point;
+    s.point = s.point + field.getRefPoint();
     s.point->transform(coords.get());
   }
   return new_path;
 }
+
 
 F2CStrip Transform::transformStrip(const F2CStrip& strip,
       const std::string& coord_sys_from, const std::string& coord_sys_to) {
@@ -82,10 +84,90 @@ F2CPath Transform::transformPath(const F2CPath& path,
 }
 
 
+void Transform::transformToUTM(F2CField& field, bool is_etrs89_opt) {
+  std::string field_crs = field.getCRS();
+  if (!field_crs.empty() && \
+      field_crs != "EPSG:4258" && field_crs != "EPSG:4326") {
+    transform(field, "EPSG:4326");
+    if (is_etrs89_opt && \
+        (field.getRefPoint().getX() <  32.88 && \
+         field.getRefPoint().getX() > -16.1 && \
+         field.getRefPoint().getY() <  84.73 && \
+         field.getRefPoint().getY() >  40.18) ) {
+      transform(field, "EPSG:4258");
+    }
+  } else if (field_crs.empty()) {
+    if (field.getRefPoint() == F2CPoint(0, 0)) {
+      field = field.clone();  // Move field first point to (0, 0)
+    }
+    if (field.getRefPoint() == F2CPoint(0, 0)) {
+      throw std::out_of_range(
+        "Error on transformToUTM: Coordinates are in a local system");
+    }
+    if (is_etrs89_opt && \
+        (field.getRefPoint().getX() <  32.88 && \
+         field.getRefPoint().getX() > -16.1 && \
+         field.getRefPoint().getY() <  84.73 && \
+         field.getRefPoint().getY() >  40.18) ) {
+      field.setCRS("EPSG:4258");
+    } else if (field.getRefPoint().getX() <  180. && \
+               field.getRefPoint().getX() > -180. && \
+               field.getRefPoint().getY() <   90. && \
+               field.getRefPoint().getY() >  -90.) {
+      field.setCRS("EPSG:4326");
+    } else {
+      throw std::invalid_argument(
+        "Error on transformToUTM: Coordinates local system was not recognized");
+    }
+    field_crs = field.getCRS();
+  }
+
+  std::string utm_zone = std::string("UTM:") + \
+      std::to_string(static_cast<size_t>(
+            floor((field.getRefPoint().getX() + 180) / 6) + 1)) + \
+      (field.getRefPoint().getY() > 0 ? "N" : "S") + \
+      " datum:" + (field.getCRS() == "EPSG:4258" ? "ETRS89" : "WGS84");
+  transform(field, utm_zone);
+  field.setPrevCRS(field_crs);
+}
+
+
+void Transform::transformToPrevCRS(F2CField& field) {
+  if (field.getPrevCRS().empty()) {
+    throw std::invalid_argument(
+        "Error in Transform::transformToUTM. No previous CRS recorded.");
+  }
+  transform(field, field.getPrevCRS());
+}
+
+F2CPath Transform::transformToPrevCRS(
+    const F2CPath& path, const F2CField& field) {
+  return transformPathWithFieldRef(path, field, field.getPrevCRS());
+}
+
+F2CStrip Transform::transformToPrevCRS(
+    const F2CStrip& s, const F2CField& field) {
+  return transformStrip(s, field.getCRS(), field.getPrevCRS());
+}
+
+F2CStrips Transform::transformToPrevCRS(
+    const F2CStrips& s, const F2CField& field) {
+  return transformStrips(s, field.getCRS(), field.getPrevCRS());
+}
+
+F2CSwath Transform::transformToPrevCRS(
+    const F2CSwath& s, const F2CField& field) {
+  return transformSwath(s, field.getCRS(), field.getPrevCRS());
+}
+
+F2CSwaths Transform::transformToPrevCRS(
+    const F2CSwaths& s, const F2CField& field) {
+  return transformSwaths(s, field.getCRS(), field.getPrevCRS());
+}
 
 F2CPoint Transform::getRefPointInGPS(const F2CField& field) {
-  auto point = field.ref_point.clone();
-  point->transform(generateCoordTransf(field.coord_sys, "EPSG:4326").get());
+  auto point = field.getRefPoint().clone();
+  point->transform(generateCoordTransf(field.getCRS(), "EPSG:4326").get());
   return point;
 }
 

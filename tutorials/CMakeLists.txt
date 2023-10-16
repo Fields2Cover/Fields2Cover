@@ -1,5 +1,6 @@
 include_directories(${CMAKE_BINARY_DIR})
 
+
 add_executable(1_basic_types_tutorial 1_basic_types.cpp)
 target_link_libraries(1_basic_types_tutorial PUBLIC Fields2Cover)
 add_executable(2_objective_functions_tutorial 2_objective_functions.cpp)
@@ -12,3 +13,11 @@ add_executable(5_route_planning_tutorial 5_route_planning.cpp)
 target_link_libraries(5_route_planning_tutorial PUBLIC Fields2Cover)
 add_executable(6_path_planning_tutorial 6_path_planning.cpp)
 target_link_libraries(6_path_planning_tutorial PUBLIC Fields2Cover)
+
+add_executable(7_complete_flow 7_complete_flow.cpp)
+target_compile_definitions(
+  7_complete_flow
+  PRIVATE
+    DATA_PATH="${PROJECT_SOURCE_DIR}/data/"
+)
+target_link_libraries(7_complete_flow PUBLIC Fields2Cover)

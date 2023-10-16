@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -14,7 +14,11 @@ using json = nlohmann::json;
 
 namespace f2c {
 
-int Parser::importGml(const std::string& file, F2CFields& fields) {
+void Parser::importGml(const std::string& file, F2CFields& fields) {
+  fields.emplace_back(importFieldGml(file));
+}
+
+F2CField Parser::importFieldGml(const std::string& file) {
   // Tinyxml2 depends on locale when parsing files. It may expect float numbers
   // as "1,5" instead of "1.5", which is parsed as "1". The next line solves
   // the issue.
@@ -66,11 +70,10 @@ int Parser::importGml(const std::string& file, F2CFields& fields) {
   OGRGeometryFactory::createFromWkt(p_coords.c_str(), spt_ref.get(), &new_geom);
 
   F2CField field(F2CCells(new_geom), id);
-  field.coord_sys = coord_sys;
+  field.setCRS(coord_sys);
   OGRGeometryFactory::destroyGeometry(new_geom);
 
-  fields.emplace_back(field);
-  return 0;
+  return field;
 }
 
 
@@ -146,5 +149,6 @@ F2CStrips Parser::importStripsJson(const std::string& file) {
   }
   return strips;
 }
+
 
 }  // namespace f2c
