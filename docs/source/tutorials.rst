@@ -20,7 +20,7 @@ If you want to run the examples, go to your `build` folder and run:
 
     sudo chmod a+rwx tutorials/*
     ./tutorials/<name-of-the-tutorial>
-    
+
 Computed images will appear in the same folder as you are now.
 
 
@@ -36,6 +36,7 @@ C++ tutorials
     tutorials/swath_generator.rst
     tutorials/route_planning.rst
     tutorials/path_planning.rst
+    tutorials/complete_flow.rst
 
 Python tutorials
 ^^^^^^^^^^^^^^^^
@@ -48,4 +49,5 @@ Python tutorials
     tutorials/python_swath_generator.rst
     tutorials/python_route_planning.rst
     tutorials/python_path_planning.rst
+    tutorials/python_complete_flow.rst
 

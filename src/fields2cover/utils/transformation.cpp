@@ -38,10 +38,6 @@ F2CPath Transform::transformPathWithFieldRef(const F2CPath& path,
   return new_path;
 }
 
-F2CPath Transform::transformToPrevCRS(
-    const F2CPath& path, const F2CField& field) {
-  return transformPathWithFieldRef(path, field, field.getPrevCRS());
-}
 
 F2CStrip Transform::transformStrip(const F2CStrip& strip,
       const std::string& coord_sys_from, const std::string& coord_sys_to) {
@@ -144,6 +140,30 @@ void Transform::transformToPrevCRS(F2CField& field) {
   transform(field, field.getPrevCRS());
 }
 
+F2CPath Transform::transformToPrevCRS(
+    const F2CPath& path, const F2CField& field) {
+  return transformPathWithFieldRef(path, field, field.getPrevCRS());
+}
+
+F2CStrip Transform::transformToPrevCRS(
+    const F2CStrip& s, const F2CField& field) {
+  return transformStrip(s, field.getCRS(), field.getPrevCRS());
+}
+
+F2CStrips Transform::transformToPrevCRS(
+    const F2CStrips& s, const F2CField& field) {
+  return transformStrips(s, field.getCRS(), field.getPrevCRS());
+}
+
+F2CSwath Transform::transformToPrevCRS(
+    const F2CSwath& s, const F2CField& field) {
+  return transformSwath(s, field.getCRS(), field.getPrevCRS());
+}
+
+F2CSwaths Transform::transformToPrevCRS(
+    const F2CSwaths& s, const F2CField& field) {
+  return transformSwaths(s, field.getCRS(), field.getPrevCRS());
+}
 
 F2CPoint Transform::getRefPointInGPS(const F2CField& field) {
   auto point = field.getRefPoint().clone();

@@ -315,7 +315,7 @@ OGRGeometry* Geometry<T, R>::BuildGeometryFromGEOS(
         (poOtherGeom == nullptr ||
           (poOtherGeom->getSpatialReference() != nullptr &&
         poOtherGeom->getSpatialReference()->IsSame(
-          poSelf->getSpatialReference())))){
+          poSelf->getSpatialReference())))) {
       poOGRProduct->assignSpatialReference(poSelf->getSpatialReference());
     }
     poOGRProduct = OGRGeometryRebuildCurves(poSelf, poOtherGeom, poOGRProduct);

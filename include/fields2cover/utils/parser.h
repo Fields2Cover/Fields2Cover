@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                           BSD-3 License
 //=============================================================================
@@ -22,9 +22,9 @@ class Parser {
     /// Function to import file with gml extension.
     /// @param file Path to the imported file.
     /// @param fields Set of fields saved on _file.
-    /// @return return 0 if the file was parsed correctly.
-    /// Otherwise, return a negative number.
-    static int importGml(const std::string& file, F2CFields& fields);
+    static void importGml(const std::string& file, F2CFields& fields);
+
+    static F2CField importFieldGml(const std::string& file);
 
     /// Function to import file with Json extension.
     /// @param file Path to the imported file.
