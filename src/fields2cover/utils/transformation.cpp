@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -18,13 +18,18 @@ std::unique_ptr<OGRCoordinateTransformation,
 }
 
 void Transform::transform(F2CField& field, const std::string& coord_sys_to) {
-  field.setField(field.getField() + field.getRefPoint());
-  field.field->transform(
-      generateCoordTransf(field.getCRS(), coord_sys_to).get());
+  if (!field.field.isEmpty()) {
+    field.setField(field.getField() + field.getRefPoint());
+    field.field->transform(
+        generateCoordTransf(field.getCRS(), coord_sys_to).get());
+    field.setRefPoint(field.field.getCellBorder(0).StartPoint().clone());
+    field.setField(field.getField() - field.getRefPoint());
+  } else {
+    field.setRefPoint( \
+        transform(field.getRefPoint(), field.getCRS(), coord_sys_to));
+  }
   field.setPrevCRS(field.getCRS());
   field.setCRS(coord_sys_to);
-  field.setRefPoint(field.field.getCellBorder(0).StartPoint().clone());
-  field.setField(field.getField() - field.getRefPoint());
 }
 
 F2CPath Transform::transformPathWithFieldRef(const F2CPath& path,
