@@ -14,9 +14,9 @@ RUN mkdir -p /usr/include/new_gdal && \
     cp /usr/include/cpl* /usr/include/new_gdal/ && \
     mv /usr/include/new_gdal/ /usr/include/gdal/
 
-RUN apt-get update -qq && \
-    apt-get install -y --no-install-recommends ca-certificates && \
-    apt-get update -qq
+RUN apt-get update --allow-insecure-repositories -y && \
+    apt-get install -y --allow-unauthenticated --no-install-recommends ca-certificates
+
 
 RUN if gdalinfo --version | grep -o " 3\.[0-2]\."; then \
       apt-get install wget && \
@@ -27,13 +27,13 @@ RUN if gdalinfo --version | grep -o " 3\.[0-2]\."; then \
       && /tmp/cmake-install.sh --skip-license --prefix=/usr/bin/cmake \
       && rm /tmp/cmake-install.sh; \
     else \
-      apt install -y --no-install-recommends cmake ; \ 
+      apt install -y  --allow-unauthenticated --no-install-recommends cmake ; \ 
     fi
 
 ENV PATH="/usr/bin/cmake/bin:${PATH}"
 
 
-RUN apt-get install -y --no-install-recommends \
+RUN apt-get install -y --allow-unauthenticated --no-install-recommends \
                     build-essential \
                     ca-certificates \
                     doxygen \
@@ -41,6 +41,7 @@ RUN apt-get install -y --no-install-recommends \
                     git \
                     lcov \
                     libboost-dev \
+                    libgeos-dev \
                     libgtest-dev \
                     libtbb-dev \
                     libeigen3-dev \
@@ -70,7 +71,7 @@ RUN apt-get install -y libgtest-dev \
     && (cp lib/*.a /usr/lib/ 2>\dev\null || :)
 
 RUN if gdalinfo --version | grep -o " 3\.[0-2]\."; then \
-      apt-get install -y --no-install-recommends autoconf automake autotools-dev libpcre2-dev bison \
+      apt-get install -y --no-install-recommends  --allow-unauthenticated autoconf automake autotools-dev libpcre2-dev bison \
       && git clone https://github.com/swig/swig.git \
       && cd swig \
       && ./autogen.sh \
@@ -78,7 +79,7 @@ RUN if gdalinfo --version | grep -o " 3\.[0-2]\."; then \
       && make -j8 \
       && make install; \
     else \
-      apt-get install -y --no-install-recommends swig; \
+      apt-get install -y --no-install-recommends  --allow-unauthenticated swig; \
     fi
 
 COPY . /workspace/fields2cover
@@ -94,6 +95,5 @@ RUN make -j8
 RUN export LANG=en_US.UTF-8 && \
     export LC_ALL=C.UTF-8 && \
     make install
-
 
 
