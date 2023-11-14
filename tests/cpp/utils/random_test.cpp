@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -29,7 +29,7 @@ TEST(fields2cover_utils_Random, get_random_double) {
     auto rand_val = rand.getRandomDouble();
     EXPECT_LT( rand_val, 1.0);
     EXPECT_GT( rand_val, 0.0);
-    sum_val += rand_val; 
+    sum_val += rand_val;
   }
   EXPECT_NEAR(sum_val, N/2, N/10);
 
@@ -48,7 +48,7 @@ TEST(fields2cover_utils_Random, get_linear_random) {
 }
 
 TEST(fields2cover_utils_Random, get_exp_random) {
-  f2c::Random rand;
+  f2c::Random rand (42);
   auto rand_val {0.0};
   for (int i = 0; i < 100; ++i) {
     double max_rand = rand.getRandomDouble() + 1.5;
@@ -57,6 +57,36 @@ TEST(fields2cover_utils_Random, get_exp_random) {
     EXPECT_LT( rand_val, max_rand);
     EXPECT_GE( rand_val, min_rand);
   }
+}
+
+TEST(fields2cover_utils_Random, get_random_exp_dist) {
+  f2c::Random rand (42);
+  size_t count0To1 = 0;
+  size_t count1To2 = 0;
+  size_t count2To3 = 0;
+  size_t count3To4 = 0;
+  size_t count4ToInf = 0;
+  size_t n = 1e4;
+  for (size_t i = 0; i < n; ++i) {
+    auto d = rand.getRandomExpDist(1.0);
+    EXPECT_GE(d, 0.0);
+    if (d <= 1) {
+      ++count0To1;
+    } else if (d <= 2.0) {
+      ++count1To2;
+    } else if (d <= 3.0) {
+      ++count2To3;
+    } else if (d <= 4.0) {
+      ++count3To4;
+    } else {
+      ++count4ToInf;
+    }
+  }
+  EXPECT_EQ(n, count0To1 + count1To2 + count2To3 + count3To4 + count4ToInf);
+  EXPECT_GT(count0To1, count1To2);
+  EXPECT_GT(count1To2, count2To3);
+  EXPECT_GT(count2To3, count3To4);
+  EXPECT_GT(count3To4, count4ToInf);
 }
 
 
