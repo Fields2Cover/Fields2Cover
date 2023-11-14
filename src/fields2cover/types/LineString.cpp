@@ -42,48 +42,56 @@ double LineString::getX(size_t i) const {return data->getX(i);}
 double LineString::getY(size_t i) const {return data->getY(i);}
 double LineString::getZ(size_t i) const {return data->getZ(i);}
 double LineString::getLength() const {return this->data->get_Length();}
-void LineString::reversePoints() const { this->data->reversePoints();}
+void LineString::reversePoints() { this->data->reversePoints();}
 size_t LineString::size() const {
   return isEmpty() ? 0 : this->data->getNumPoints();
 }
 
 
-void LineString::getGeometry(int i, Point& point) {
- if (i < 0 || i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+void LineString::getGeometry(size_t i, Point& point) {
+  if (i >= this->size()) {
+    throw std::out_of_range(
+        "Error getGeometry: LinearString does not contain point " +
+        std::to_string(i));
   }
   data->getPoint(i, point.get());
 }
 
-void LineString::getGeometry(int i, Point& point) const {
- if (i < 0 || i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+void LineString::getGeometry(size_t i, Point& point) const {
+  if (i >= this->size()) {
+    throw std::out_of_range(
+        "Error getGeometry: LinearString does not contain point " +
+        std::to_string(i));
   }
   data->getPoint(i, point.get());
 }
 
-Point LineString::getGeometry(int i) {
- if (i < 0 || i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+Point LineString::getGeometry(size_t i) {
+  if (i >= this->size()) {
+    throw std::out_of_range(
+        "Error getGeometry: LinearString does not contain point " +
+        std::to_string(i));
   }
-  
   OGRPoint point;
   data->getPoint(i, &point);
   return Point(point);
 }
 
-const Point LineString::getGeometry(int i) const {
-  if (i < 0 || i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+const Point LineString::getGeometry(size_t i) const {
+  if (i >= this->size()) {
+    throw std::out_of_range(
+        "Error getGeometry: LinearString does not contain point " +
+        std::to_string(i));
   }
-
-  OGRPoint point;
-  data->getPoint(i, &point);
-  return Point(point);
+  return Point(data->getX(i), data->getY(i), data->getZ(i));
 }
 
-void LineString::setGeometry(int i, const Point& p) {
-  data->setPoint(i, p.get());
+void LineString::setGeometry(size_t i, const Point& p) {
+  data->setPoint(i, p.getX(), p.getY(), p.getZ());
+}
+
+void LineString::addGeometry(const Point& p) {
+  this->addPoint(p);
 }
 
 
@@ -93,34 +101,28 @@ void LineString::operator*=(double b) {
   }
 }
 
-
 void LineString::addPoint(double x, double y, double z) {
   data->addPoint(x, y, z);
 }
 void LineString::addPoint(const Point& p) {
-  data->addPoint(p.get());
+  data->addPoint(p.getX(), p.getY(), p.getZ());
 }
 
-Point LineString::StartPoint() const {
-  OGRPoint p;
-  data->StartPoint(&p);
-  return Point(p);
+const Point LineString::StartPoint() const {
+  return getGeometry(0);
 }
 
-Point LineString::EndPoint() const {
-  OGRPoint p;
-  data->EndPoint(&p);
-  return Point(p);
+const Point LineString::EndPoint() const {
+  return getGeometry(size()-1);
 }
 
 double LineString::startAngle() const {
   return (getGeometry(1) - StartPoint()).getAngleFromPoint();
 }
+
 double LineString::endAngle() const {
   return (EndPoint() - getGeometry(size() - 2)).getAngleFromPoint();
 }
-
-
 
 
 }  // namespace f2c::types

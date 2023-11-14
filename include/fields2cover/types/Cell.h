@@ -43,7 +43,7 @@ struct Cell : public Geometries<Cell, OGRPolygon, wkbPolygon, LinearRing> {
 
   LinearRing getGeometry(size_t i);
 
-  LinearRing getGeometry(size_t i) const;
+  const LinearRing getGeometry(size_t i) const;
 
   void setGeometry(size_t i, const LinearRing& ring);
 
@@ -66,8 +66,8 @@ struct Cell : public Geometries<Cell, OGRPolygon, wkbPolygon, LinearRing> {
   void addRing(const LinearRing& ring);
   void addGeometry(const LinearRing& ring);
 
-  LinearRing getExteriorRing() const;
-  LinearRing getInteriorRing(size_t i_ring) const;
+  const LinearRing getExteriorRing() const;
+  const LinearRing getInteriorRing(size_t i_ring) const;
 
   /// Check if the Cell is convex
   bool isConvex() const;
@@ -92,7 +92,7 @@ struct Cell : public Geometries<Cell, OGRPolygon, wkbPolygon, LinearRing> {
   bool isPointIn(const Point& p) const;
 
   /// Generate a line from a point to the border of this Cell
-  LineString createLineUntilBorder(const f2c::types::Point& p, double ang);
+  LineString createLineUntilBorder(const Point& p, double ang) const;
 };
 
 }  // namespace f2c::types

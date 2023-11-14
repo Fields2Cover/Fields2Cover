@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -57,6 +57,15 @@ TEST(fields2cover_types_multilinestring, init) {
     }
     ++i;
   }
+
+  EXPECT_EQ(lines.size(), 3);
+  F2CMultiLineString lines2 = lines.clone();
+  EXPECT_EQ(lines.size(), 3);
+  EXPECT_EQ(lines2.size(), 3);
+
+  lines.addGeometry(lines2);
+  EXPECT_EQ(lines.size(), 6);
+  EXPECT_EQ(lines2.size(), 3);
 }
 
 TEST(fields2cover_types_multilinestring, getGeometry) {
@@ -76,10 +85,18 @@ TEST(fields2cover_types_multilinestring, getGeometry) {
     EXPECT_EQ(const_lines.getGeometry(i).size(), 5-i);
     EXPECT_EQ(const_lines.getGeometry(i).getLength(), 5-i-1);
   }
+
+
+  F2CLineString l_error;
+  EXPECT_THROW(lines.getGeometry(30, l_error), std::out_of_range);
+  EXPECT_THROW(const_lines.getGeometry(30, l_error), std::out_of_range);
+  EXPECT_THROW(lines.getGeometry(30), std::out_of_range);
+  EXPECT_THROW(const_lines.getGeometry(30), std::out_of_range);
 }
 
 TEST(fields2cover_types_multilinestring, append) {
-  F2CLinearRing ring1 {F2CPoint(0,0), F2CPoint(1,0), F2CPoint(1,1), F2CPoint(0,1), F2CPoint(0,0)};
+  F2CLinearRing ring1 {
+    F2CPoint(0,0), F2CPoint(1,0), F2CPoint(1,1), F2CPoint(0,1), F2CPoint(0,0)};
   F2CLinearRing ring2 = ring1.clone();
   ring2 *= 2.0;
   ring1 = ring1 + F2CPoint(0.5, 0.5);

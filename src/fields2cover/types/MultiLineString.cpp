@@ -19,12 +19,12 @@ MultiLineString::MultiLineString(const OGRGeometry* geom) {
 }
 
 MultiLineString::MultiLineString(const LineString& line) {
-  this->data->addGeometry(line.get());
+  this->addGeometry(line);
 }
 
 MultiLineString::MultiLineString(const std::initializer_list<LineString>& ls) {
   for (auto&& line : ls) {
-    this->data->addGeometry(line.get());
+    this->addGeometry(line);
   }
 }
 
@@ -70,29 +70,32 @@ void MultiLineString::append(const OGRGeometry* geom) {
 
 void MultiLineString::getGeometry(size_t i, LineString& line) {
   if (i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+    throw std::out_of_range(
+        "Geometry does not contain point " + std::to_string(i));
   }
   line = LineString(this->data->getGeometryRef(i), EmptyDestructor());
 }
 
 void MultiLineString::getGeometry(size_t i, LineString& line) const {
   if (i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+    throw std::out_of_range(
+        "Geometry does not contain point " + std::to_string(i));
   }
-  line = LineString(this->data->getGeometryRef(i),
-      EmptyDestructor());
+  line = LineString(this->data->getGeometryRef(i), EmptyDestructor());
 }
 
 LineString MultiLineString::getGeometry(size_t i) {
   if (i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+    throw std::out_of_range(
+        "Geometry does not contain point " + std::to_string(i));
   }
   return LineString(this->data->getGeometryRef(i));
 }
 
 const LineString MultiLineString::getGeometry(size_t i) const {
   if (i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+    throw std::out_of_range(
+        "Geometry does not contain point " + std::to_string(i));
   }
   return LineString(this->data->getGeometryRef(i));
 }

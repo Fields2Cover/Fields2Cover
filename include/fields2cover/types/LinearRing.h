@@ -29,22 +29,22 @@ struct LinearRing : public Geometries<LinearRing, OGRLinearRing, wkbLinearRing,
   double getY(size_t i) const;
   double getZ(size_t i) const;
   double getLength() const;
-  void reversePoints() const;
+  void reversePoints();
   size_t size() const;
 
-  void getGeometry(int i, Point& point);
-  void getGeometry(int i, Point& point) const;
-  Point getGeometry(int i);
-  const Point getGeometry(int i) const;
+  void getGeometry(size_t i, Point& point);
+  void getGeometry(size_t i, Point& point) const;
+  Point getGeometry(size_t i);
+  const Point getGeometry(size_t i) const;
 
-  void setGeometry(int i, const Point& p);
+  void setGeometry(size_t i, const Point& p);
 
   void addPoint(double x, double y, double z = 0);
   void addPoint(const Point& p);
-  void addGeometry(const Point& p) {this->addPoint(p);}
+  void addGeometry(const Point& p);
 
-  Point StartPoint() const;
-  Point EndPoint() const;
+  const Point StartPoint() const;
+  const Point EndPoint() const;
   bool isClockwise() const;
 };
 

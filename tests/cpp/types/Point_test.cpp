@@ -212,7 +212,9 @@ TEST(fields2cover_types_point, rotateFromPoint) {
 
   f2c::Random rand(42);
   auto field = rand.generateRandField( 3, 1e4);
+  EXPECT_NEAR(field.field.getArea(), 1e4, 1e-7);
   F2CCells cells = field.field;
+  EXPECT_NEAR(cells.getArea(), 1e4, 1e-7);
   auto r_cells = p0.rotateFromPoint(boost::math::constants::pi<double>(), cells);
   F2CPoint start = cells.getGeometry(0).getGeometry(0).getGeometry(1);
   F2CPoint r_start = r_cells.getGeometry(0).getGeometry(0).getGeometry(1);

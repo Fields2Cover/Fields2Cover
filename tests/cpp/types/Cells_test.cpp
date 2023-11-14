@@ -14,11 +14,11 @@ TEST(fields2cover_types_cells, constructor) {
   F2CCells cells;
   EXPECT_EQ(cells.size(), 0);
   cells.addGeometry(cell);
-  const F2CCells cells_clone{cells.get()->clone()};
+  const F2CCells cells_clone {cells.get()};
 
   EXPECT_EQ(cells.getArea(), 1);
   EXPECT_EQ(cells_clone.getArea(), 1);
-  EXPECT_THROW(F2CCells(ring1.get()->clone()), std::invalid_argument);
+  EXPECT_THROW(F2CCells(ring1.get()), std::invalid_argument);
   EXPECT_EQ(cells_clone.getGeometry(0).getArea(), 1);
 
 
@@ -35,6 +35,12 @@ TEST(fields2cover_types_cells, constructor) {
   OGRGeometryCollection gc;
   F2CCells empty_cells{&gc};
   EXPECT_EQ(empty_cells.size(), 0);
+
+  F2CCell error_cell;
+  EXPECT_THROW(cells.getGeometry(100, error_cell), std::out_of_range);
+  EXPECT_THROW(cells_clone.getGeometry(100, error_cell), std::out_of_range);
+  EXPECT_THROW(cells.getGeometry(100), std::out_of_range);
+  EXPECT_THROW(cells_clone.getGeometry(100), std::out_of_range);
 }
 
 TEST(fields2cover_types_cells, Difference) {
@@ -51,6 +57,22 @@ TEST(fields2cover_types_cells, Difference) {
   EXPECT_EQ(F2CCells(cell1).getArea(), 4);
   EXPECT_EQ(F2CCells(cell2).getArea(), 4);
   EXPECT_EQ(F2CCells(cell1).Difference(F2CCells(cell2)).getArea(), 2);
+}
+
+TEST(fields2cover_types_cells, Union) {
+  F2CCell cell1, cell2;
+  F2CLinearRing ring1{F2CPoint(0,0), F2CPoint(2,0),F2CPoint(2,2),F2CPoint(0,2), F2CPoint(0,0)};
+  F2CLinearRing ring2{F2CPoint(1,0), F2CPoint(3,0),F2CPoint(3,2),F2CPoint(1,2), F2CPoint(1,0)};
+  cell1.addRing(ring1);
+  cell2.addRing(ring2);
+
+  EXPECT_EQ(ring1.size(), 5);
+  EXPECT_EQ(ring2.size(), 5);
+  EXPECT_EQ(cell1.getArea(), 4);
+  EXPECT_EQ(cell2.getArea(), 4);
+  EXPECT_EQ(F2CCells(cell1).getArea(), 4);
+  EXPECT_EQ(F2CCells(cell2).getArea(), 4);
+  EXPECT_EQ(F2CCells(cell1).Union(F2CCells(cell2)).getArea(), 6);
 }
 
 TEST(fields2cover_types_cells, Buffer) {

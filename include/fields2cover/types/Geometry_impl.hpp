@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                           MIT License
 //=============================================================================
@@ -65,10 +65,13 @@ template <class T, OGRwkbGeometryType R>
 std::shared_ptr<T> Geometry<T, R>::operator->() {return data;}
 
 template <class T, OGRwkbGeometryType R>
-std::shared_ptr<T> Geometry<T, R>::operator->() const {return data;}
+std::shared_ptr<const T> Geometry<T, R>::operator->() const {return data;}
 
 template <class T, OGRwkbGeometryType R>
-T* Geometry<T, R>::get() const {return data.get();}
+T* Geometry<T, R>::get() {return data.get();}
+
+template <class T, OGRwkbGeometryType R>
+const T* Geometry<T, R>::get() const {return data.get();}
 
 template <class T, OGRwkbGeometryType R>
 bool Geometry<T, R>::operator!=(const Geometry<T, R>& geom2) const {
@@ -169,11 +172,7 @@ bool Geometry<T, R>::Intersects(const Geometry<T2, R2>& geom) const {
 
 template <class T, OGRwkbGeometryType R>
 double Geometry<T, R>::mod_2pi(double val) {
-  if (val >= 0) {
-    return fmod(val, boost::math::constants::two_pi<double>());
-  }
-  return boost::math::constants::two_pi<double>()
-    - fmod(-val, boost::math::constants::two_pi<double>());
+  return mod(val, boost::math::constants::two_pi<double>());
 }
 
 template <class T, OGRwkbGeometryType R>
@@ -305,8 +304,8 @@ OGRGeometry* Geometry<T, R>::OGRGeometryRebuildCurves(
 }
 template <class T, OGRwkbGeometryType R>
 OGRGeometry* Geometry<T, R>::BuildGeometryFromGEOS(
-    GEOSContextHandle_t hGEOSCtxt, GEOSGeom hGeosProduct, const OGRGeometry *poSelf,
-    const OGRGeometry *poOtherGeom) const {
+    GEOSContextHandle_t hGEOSCtxt, GEOSGeom hGeosProduct,
+    const OGRGeometry *poSelf, const OGRGeometry *poOtherGeom) const {
   OGRGeometry *poOGRProduct = nullptr;
   if (hGeosProduct != nullptr) {
     poOGRProduct = OGRGeometryFactory::createFromGEOS(hGEOSCtxt, hGeosProduct);
@@ -326,7 +325,10 @@ OGRGeometry* Geometry<T, R>::BuildGeometryFromGEOS(
 // ###############################
 
 
-
+template <class T, OGRwkbGeometryType R>
+double Geometry<T, R>::mod(double a, double b) {
+  return fmod(fmod(a, b) + b, b);
+}
 
 
 }  // namespace f2c::types

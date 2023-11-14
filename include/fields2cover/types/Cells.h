@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                           BSD-3 License
 //=============================================================================
@@ -42,15 +42,17 @@ struct Cells : public Geometries<Cells, OGRMultiPolygon, wkbMultiPolygon,
 
   void setGeometry(size_t i, const Cell& cell);
 
-  Cell getCell(size_t i) const;
+  const Cell getCell(size_t i) const;
 
-  LinearRing getCellBorder(size_t i) const;
-  LinearRing getInteriorRing(size_t i_cell, size_t i_ring) const;
+  const LinearRing getCellBorder(size_t i) const;
+  const LinearRing getInteriorRing(size_t i_cell, size_t i_ring) const;
 
   bool isConvex() const;
 
   Cell ConvexHull() const;
 
+  static Cells Intersection(const Cell& cell, const Cell& c);
+  Cells Intersection(const Cell& c) const;
   Cells Intersection(const Cells& c) const;
 
   Cells Difference(const Cells& c) const;
@@ -62,11 +64,6 @@ struct Cells : public Geometries<Cells, OGRMultiPolygon, wkbMultiPolygon,
   Cells splitByLine(const LineString& line) const;
 
   Cells splitByLine(const MultiLineString& lines) const;
-
-  Cells Intersection(const Cell& c) const;
-
-  static Cells Intersection(
-      const Cell& cell, const Cell& c);
 
   LineString getSemiLongCurve(const Point& point, double angle) const;
 
@@ -82,7 +79,7 @@ struct Cells : public Geometries<Cells, OGRMultiPolygon, wkbMultiPolygon,
 
   bool isPointIn(const Point& p) const;
 
-  Cell getCellWherePoint(const Point& p) const;
+  const Cell getCellWherePoint(const Point& p) const;
 
   LineString createLineUntilBorder(
       const f2c::types::Point& p, double ang) const;

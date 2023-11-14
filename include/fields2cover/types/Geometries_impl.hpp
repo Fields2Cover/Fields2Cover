@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                           MIT License
 //=============================================================================
@@ -12,7 +12,7 @@ namespace f2c::types {
 
 template <class SAMETYPE, class T, OGRwkbGeometryType R, class CHILDRENTYPE>
 double Geometries<SAMETYPE, T, R, CHILDRENTYPE>::getArea() const {
-  return (this->data?this->data->get_Area():0.0);
+  return (this->data ? this->data->get_Area() : 0.0);
 }
 
 template <class SAMETYPE, class T, OGRwkbGeometryType R, class CHILDRENTYPE>

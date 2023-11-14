@@ -17,7 +17,7 @@ LineString Route::getRouteAsLine() const {
     return LineString();
   }
   LineString route;
-  if (!connections[0].isEmpty()) {
+  if (connections.size() > 0 && !connections[0].isEmpty()) {
     for (const auto& point : connections[0]) {
       route.addPoint(point);
     }
@@ -28,7 +28,7 @@ LineString Route::getRouteAsLine() const {
         route.addPoint(point);
       }
     }
-    if (!connections[i+1]->IsEmpty()) {
+    if ((connections.size() > i + 1) && !connections[i+1]->IsEmpty()) {
       for (const auto& point : connections[i+1]) {
         route.addPoint(point);
       }
@@ -38,7 +38,12 @@ LineString Route::getRouteAsLine() const {
 }
 
 bool Route::isValid() const {
-  return v_swaths.size() == (connections.size()-1);
+  return  (type == RouteType::R_NONE &&
+            (v_swaths.size() - 1) == connections.size()) ||
+        (((type == RouteType::R_START) || (type == RouteType::R_END)) &&
+            v_swaths.size() == connections.size()) ||
+          (type == RouteType::R_START_END &&
+            v_swaths.size() == (connections.size()-1));
 }
 
 bool Route::isEmpty() const {

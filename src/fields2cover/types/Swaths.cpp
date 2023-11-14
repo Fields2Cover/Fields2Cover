@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -30,7 +30,8 @@ void Swaths::emplace_back(const Swath& s) {
   data.emplace_back(s);
 }
 
-void Swaths::emplace_back(const LineString& l, double w, int id, SwathType type) {
+void Swaths::emplace_back(
+    const LineString& l, double w, int id, SwathType type) {
   data.emplace_back(l, w, id, type);
 }
 
@@ -90,7 +91,8 @@ void Swaths::append(const LineString& line, double width, SwathType type) {
   this->emplace_back(line, width, this->size(), type);
 }
 
-void Swaths::append(const MultiLineString& lines, double width, SwathType type) {
+void Swaths::append(
+    const MultiLineString& lines, double width, SwathType type) {
   for (auto&& line : lines) {
     append(line.clone(), width, type);
   }
