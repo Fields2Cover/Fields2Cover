@@ -13,8 +13,8 @@ def near(a, b):
 def test_fields2cover_types_route_init():
   assert (f2c.Route().getRouteAsLine().isEmpty());
   route = f2c.Route();
-  route.connections.push_back(f2c.MultiPoint(
-      f2c.VectorPoint([f2c.Point(0, 0)])));
+  route.type = 3;
+  route.connections.push_back(f2c.MultiPoint(f2c.VectorPoint([f2c.Point(0, 0)])));
   swaths1 = f2c.Swaths();
   swaths1.push_back(f2c.Swath(f2c.LineString(f2c.VectorPoint(
       [f2c.Point(0, 0), f2c.Point(1, 0)])), 4));
