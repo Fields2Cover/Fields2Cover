@@ -1,7 +1,7 @@
 FROM osgeo/gdal:ubuntu-full-3.6.2
 
 LABEL NAME="fields2cover" \
-      VERSION="1.2.0" \
+      VERSION="1.2.1" \
       DESC="Fields2Cover is a complete coverage path planning package for autonomous robots" \
       MAINTAINER="Gonzalo Mier"
 

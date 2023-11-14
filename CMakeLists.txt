@@ -1,7 +1,7 @@
 
 set(FIELDS2COVER_MAJOR_VERSION "1")
 set(FIELDS2COVER_MINOR_VERSION "2")
-set(FIELDS2COVER_PATCH_VERSION "0")
+set(FIELDS2COVER_PATCH_VERSION "1")
 set(FIELDS2COVER_VERSION_STRING
   "${FIELDS2COVER_MAJOR_VERSION}.${FIELDS2COVER_MINOR_VERSION}.${FIELDS2COVER_PATCH_VERSION}"
 )
@@ -19,8 +19,8 @@ set(PACKAGE_URL "http://fields2cover.github.io")
 
 
 option(ALLOW_PARALLELIZATION "Allow parallel algorithms" ON)
-option(BUILD_TUTORIALS "Build tutorials" ON)
-option(BUILD_TESTS "Build tests" ON)
+option(BUILD_TUTORIALS "Build tutorials" OFF)
+option(BUILD_TESTS "Build tests" OFF)
 option(BUILD_PYTHON "Build Python SWIG module" OFF)
 option(BUILD_DOC "Build Documentation" OFF)
 option(BUILD_SHARED_LIBS "Build shared library(.so)" ON)
