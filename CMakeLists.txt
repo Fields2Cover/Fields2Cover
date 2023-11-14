@@ -19,8 +19,8 @@ set(PACKAGE_URL "http://fields2cover.github.io")
 
 
 option(ALLOW_PARALLELIZATION "Allow parallel algorithms" ON)
-option(BUILD_TUTORIALS "Build tutorials" OFF)
-option(BUILD_TESTS "Build tests" OFF)
+option(BUILD_TUTORIALS "Build tutorials" ON)
+option(BUILD_TESTS "Build tests" ON)
 option(BUILD_PYTHON "Build Python SWIG module" OFF)
 option(BUILD_DOC "Build Documentation" OFF)
 option(BUILD_SHARED_LIBS "Build shared library(.so)" ON)
