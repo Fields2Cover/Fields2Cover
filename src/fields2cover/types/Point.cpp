@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -28,7 +28,13 @@ std::ostream& operator<<(std::ostream& os, const Point& p) {
 }
 
 bool Point::operator==(const Point& b) const {
-  return *data == *b.get();
+  return (fabs(this->getX() - b.getX()) < 1e-7) && \
+         (fabs(this->getY() - b.getY()) < 1e-7) && \
+         (fabs(this->getZ() - b.getZ()) < 1e-7);
+}
+
+bool Point::operator!=(const Point& b) const {
+  return !(this->operator==(b));
 }
 
 bool Point::operator<(const Point& b) const {

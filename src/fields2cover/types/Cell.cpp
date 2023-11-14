@@ -40,7 +40,8 @@ void Cell::operator*=(double b) {
 
 void Cell::getGeometry(size_t i, LinearRing& ring) {
   if (i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+    throw std::out_of_range(
+        "Geometry does not contain point " + std::to_string(i));
   }
 
   ring = LinearRing(((i == 0) ?
@@ -50,7 +51,8 @@ void Cell::getGeometry(size_t i, LinearRing& ring) {
 
 void Cell::getGeometry(size_t i, LinearRing& ring) const {
   if (i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+    throw std::out_of_range(
+        "Geometry does not contain point " + std::to_string(i));
   }
 
   ring = LinearRing(((i == 0) ?
@@ -60,14 +62,16 @@ void Cell::getGeometry(size_t i, LinearRing& ring) const {
 
 LinearRing Cell::getGeometry(size_t i) {
   if (i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+    throw std::out_of_range(
+        "Geometry does not contain point " + std::to_string(i));
   }
   return (i == 0) ? getExteriorRing() : getInteriorRing(i-1);
 }
 
-LinearRing Cell::getGeometry(size_t i) const {
+const LinearRing Cell::getGeometry(size_t i) const {
   if (i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+    throw std::out_of_range(
+        "Geometry does not contain point " + std::to_string(i));
   }
   return (i == 0) ? getExteriorRing() : getInteriorRing(i-1);
 }
@@ -123,18 +127,18 @@ Cell Cell::Buffer(const Point& geom, double width) {
 }
 
 void Cell::addRing(const LinearRing& t) {
-  this->data->addRing(t.get());
+  this->data->addRing(t.clone().get());
 }
 
 void Cell::addGeometry(const LinearRing& ring) {
   addRing(ring);
 }
 
-LinearRing Cell::getExteriorRing() const {
+const LinearRing Cell::getExteriorRing() const {
   return LinearRing(data->getExteriorRing());
 }
 
-LinearRing Cell::getInteriorRing(size_t i) const {
+const LinearRing Cell::getInteriorRing(size_t i) const {
   return LinearRing(data->getInteriorRing(i));
 }
 
@@ -200,7 +204,7 @@ bool Cell::isPointIn(const Point& p) const {
 }
 
 LineString Cell::createLineUntilBorder(
-    const f2c::types::Point& p, double ang) {
+    const f2c::types::Point& p, double ang) const {
   const MultiLineString ray(this->getSemiLongCurve(p, ang));
   const auto intersections(ray.Intersection(*this));
   Point best_point{p};

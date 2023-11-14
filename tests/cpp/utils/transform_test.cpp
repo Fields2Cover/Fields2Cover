@@ -117,6 +117,13 @@ TEST(fields2cover_utils_transformer, convert_types) {
   swaths.push_back(swath);
 
   auto moved_swaths = f2c::Transform::transformSwaths(swaths, "EPSG:4326", "EPSG:28992");
+
+  F2CStrip strip;
+  strip.cell = F2CCell::Buffer(moved_swaths[0].getPath(), 15);
+  F2CStrips strips;
+  strips.emplace_back(strip);
+
+
   auto cells = moved_swaths.at(0).computeAreaCovered();
   F2CField field(cells, "field");
   field.setEPSGCoordSystem(28992);
@@ -125,7 +132,12 @@ TEST(fields2cover_utils_transformer, convert_types) {
   EXPECT_NE(field.ref_point.getY(), 51.51238564279176);
   EXPECT_GT(field.ref_point.getX(), 1e4);
   EXPECT_GT(field.ref_point.getY(), 1e4);
+  EXPECT_NEAR(field.getArea(), 1150, 10);
+  EXPECT_NEAR(strip.cell.getArea(), 1150, 10);
 
+  auto moved_strips = f2c::Transform::transformStrips(strips, "EPSG:28992", "EPSG:4326");
+  auto moved_cells = f2c::Transform::transform(cells, "EPSG:28992", "EPSG:4326");
+  EXPECT_NEAR(moved_strips[0].cell.getArea(), moved_cells.getArea(), 1e-7);
 
   F2CPath path;
   path.appendSwath(moved_swaths.at(0), 10);

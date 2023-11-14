@@ -32,23 +32,23 @@ struct LineString : public Geometries<LineString, OGRLineString, wkbLineString,
   double getY(size_t i) const;
   double getZ(size_t i) const;
   double getLength() const;
-  void reversePoints() const;
+  void reversePoints();
   size_t size() const;
 
-  void getGeometry(int i, Point& point);
-  void getGeometry(int i, Point& point) const;
-  Point getGeometry(int i);
-  const Point getGeometry(int i) const;
-  void setGeometry(int i, const Point& p);
+  void getGeometry(size_t i, Point& point);
+  void getGeometry(size_t i, Point& point) const;
+  Point getGeometry(size_t i);
+  const Point getGeometry(size_t i) const;
+  void setGeometry(size_t i, const Point& p);
 
   void addPoint(double x, double y, double z = 0);
   void addPoint(const Point& p);
-  void addGeometry(const Point& p) {this->addPoint(p);}
+  void addGeometry(const Point& p);
 
-  Point StartPoint() const;
+  const Point StartPoint() const;
   double startAngle() const;
 
-  Point EndPoint() const;
+  const Point EndPoint() const;
   double endAngle() const;
 };
 

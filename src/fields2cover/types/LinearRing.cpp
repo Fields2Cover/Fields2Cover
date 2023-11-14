@@ -48,7 +48,7 @@ double LinearRing::getLength() const {
   return this->data->get_Length();
 }
 
-void LinearRing::reversePoints() const {
+void LinearRing::reversePoints() {
   this->data->reversePoints();
 }
 
@@ -56,64 +56,66 @@ size_t LinearRing::size() const {
   return isEmpty() ? 0 : this->data->getNumPoints();
 }
 
-void LinearRing::getGeometry(int i, Point& point) {
-  if (i < 0 || i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+void LinearRing::getGeometry(size_t i, Point& point) {
+  if (i >= this->size()) {
+    throw std::out_of_range(
+        "Error getGeometry: LinearRing does not contain point " +
+        std::to_string(i));
   }
   data->getPoint(i, point.get());
 }
 
-void LinearRing::getGeometry(int i, Point& point) const {
-  if (i < 0 || i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+void LinearRing::getGeometry(size_t i, Point& point) const {
+  if (i >= this->size()) {
+    throw std::out_of_range(
+        "Error getGeometry: LinearRing does not contain point " +
+        std::to_string(i));
   }
   data->getPoint(i, point.get());
 }
 
-Point LinearRing::getGeometry(int i) {
-  if (i < 0 || i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+Point LinearRing::getGeometry(size_t i) {
+  if (i >= this->size()) {
+    throw std::out_of_range(
+        "Error getGeometry: LinearRing does not contain point " +
+        std::to_string(i));
   }
-
   OGRPoint point;
   data->getPoint(i, &point);
   return Point(point);
 }
 
-const Point LinearRing::getGeometry(int i) const {
-  if (i < 0 || i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+const Point LinearRing::getGeometry(size_t i) const {
+  if (i >= this->size()) {
+    throw std::out_of_range(
+        "Error getGeometry: LinearRing does not contain point " +
+        std::to_string(i));
   }
-
-  OGRPoint point;
-  data->getPoint(i, &point);
-  return Point(point);
+  return Point(data->getX(i), data->getY(i), data->getZ(i));
 }
 
-void LinearRing::setGeometry(int i, const Point& p) {
-  data->setPoint(i, p.get());
+void LinearRing::setGeometry(size_t i, const Point& p) {
+  data->setPoint(i, p.getX(), p.getY(), p.getZ());
 }
 
-
+void LinearRing::addGeometry(const Point& p) {
+  this->addPoint(p);
+}
 
 void LinearRing::addPoint(double x, double y, double z) {
   data->addPoint(x, y, z);
 }
 
 void LinearRing::addPoint(const Point& p) {
-  data->addPoint(p.get());
+  data->addPoint(p.getX(), p.getY(), p.getZ());
 }
 
-Point LinearRing::StartPoint() const {
-  OGRPoint p;
-  data->StartPoint(&p);
-  return Point(p);
+const Point LinearRing::StartPoint() const {
+  return getGeometry(0);
 }
 
-Point LinearRing::EndPoint() const {
-  OGRPoint p;
-  data->EndPoint(&p);
-  return Point(p);
+const Point LinearRing::EndPoint() const {
+  return getGeometry(size()-1);
 }
 
 bool LinearRing::isClockwise() const {

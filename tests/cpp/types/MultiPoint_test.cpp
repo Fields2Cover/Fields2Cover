@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -40,17 +40,33 @@ TEST(fields2cover_types_multipoint, init) {
     EXPECT_EQ(p.getZ(), 3*i -3);
     ++i;
   }
-  
+  F2CPoint p_error;
+  EXPECT_THROW(ps4.getGeometry(30, p_error), std::out_of_range);
+  EXPECT_THROW(ps4.getGeometry(30), std::out_of_range);
+
   ps4 *= 2;
-  const auto ps5 = ps4;
+  const auto ps5 = ps4.clone();
   EXPECT_EQ(ps5.size(), 10);
   for (int i = 0; i < ps5.size(); ++i) {
-    F2CPoint p;
-    ps5.getGeometry(i, p);
+    F2CPoint p = ps5.getGeometry(i);
     EXPECT_EQ(p.getX(), 2*(i -1));
     EXPECT_EQ(p.getY(), 2*(-i +2));
     EXPECT_EQ(p.getZ(), 2*(3*i -3));
   }
+  EXPECT_THROW(ps5.getGeometry(30, p_error), std::out_of_range);
+  EXPECT_THROW(ps5.getGeometry(30), std::out_of_range);
+
+  ps4.addPoints(ps1);
+  EXPECT_EQ(ps4.size(), 12);
+  for (int i = 0; i < ps5.size(); ++i) {
+    F2CPoint p = ps4.getGeometry(i);
+    EXPECT_EQ(p.getX(), 2*(i -1));
+    EXPECT_EQ(p.getY(), 2*(-i +2));
+    EXPECT_EQ(p.getZ(), 2*(3*i -3));
+  }
+  EXPECT_EQ(ps4.getGeometry(10), F2CPoint(1,1));
+  EXPECT_EQ(ps4.getGeometry(11), F2CPoint(2,1));
+
 }
 
 TEST(fields2cover_types_multipoint, getGeometry) {

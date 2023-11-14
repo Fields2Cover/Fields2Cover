@@ -681,8 +681,8 @@ TEST(fields2cover_types_geometry, rotateFromPoint) {
   EXPECT_NEAR(p_out.getY(), 0.5, 1e-7);
 
   F2CLineString line;
-  line->addPoint(1, 2); 
-  line->addPoint(3, 4); 
+  line->addPoint(1, 2);
+  line->addPoint(3, 4);
   line = F2CPoint(5, 6).rotateFromPoint(pi, line);
   p_out = line.StartPoint();
   EXPECT_NEAR(p_out.getX(), 9, 1e-7);

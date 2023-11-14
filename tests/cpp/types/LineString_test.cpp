@@ -41,6 +41,12 @@ TEST(fields2cover_types_linestring, init) {
   EXPECT_EQ(line7.getX(0), 1);
   EXPECT_EQ(line7.getX(1), 3);
 
+  F2CPoint error_p;
+  const F2CLineString c_line = line7.clone();
+  EXPECT_THROW(line7.getGeometry(100, error_p), std::out_of_range);
+  EXPECT_THROW(c_line.getGeometry(100, error_p), std::out_of_range);
+  EXPECT_THROW(line7.getGeometry(100), std::out_of_range);
+  EXPECT_THROW(c_line.getGeometry(100), std::out_of_range);
 }
 
 TEST(fields2cover_types_linestring, loop) {

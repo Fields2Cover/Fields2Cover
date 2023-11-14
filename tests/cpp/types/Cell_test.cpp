@@ -11,7 +11,7 @@ TEST(fields2cover_types_cell, constructor) {
   F2CLinearRing line{
     F2CPoint(0,0), F2CPoint(2,0),F2CPoint(2,2),F2CPoint(0,2), F2CPoint(0,0)};
   F2CCell cell {line};
-  F2CCell cell_clone{cell.get()->clone()};
+  F2CCell cell_clone{cell.get()};
   F2CCell cell2 {cell};
   F2CCell cell3 {static_cast<OGRGeometry*>(cell.get())};
 
@@ -19,9 +19,9 @@ TEST(fields2cover_types_cell, constructor) {
   EXPECT_EQ(cell2.getArea(), 4);
   EXPECT_EQ(cell3.getArea(), 4);
   EXPECT_EQ(cell_clone.getArea(), 4);
-  EXPECT_EQ(F2CCell(cell.get()->clone()).getArea(), 4);
-  EXPECT_EQ(F2CCell(cell->clone()).getArea(), 4);
-  EXPECT_THROW(F2CCell(line.get()->clone()), std::invalid_argument);
+  EXPECT_EQ(F2CCell(cell.get()).getArea(), 4);
+  EXPECT_EQ(F2CCell(cell).getArea(), 4);
+  EXPECT_THROW(F2CCell(line.get()), std::invalid_argument);
 }
 
 TEST(fields2cover_types_cell, setGeometry) {
@@ -110,6 +110,12 @@ TEST(fields2cover_types_cell, addRing) {
   auto cell_ring8 = cell2.getGeometry(1);
   EXPECT_EQ(cell_ring8.size(), 5);
   EXPECT_EQ(cell_ring8.getLength(), 4);
+
+  F2CLinearRing error_ring;
+  EXPECT_THROW(cell1.getGeometry(100, error_ring), std::out_of_range);
+  EXPECT_THROW(cell2.getGeometry(100, error_ring), std::out_of_range);
+  EXPECT_THROW(cell1.getGeometry(100), std::out_of_range);
+  EXPECT_THROW(cell2.getGeometry(100), std::out_of_range);
 }
 
 TEST(fields2cover_types_cell, createLineUntilBorder) {

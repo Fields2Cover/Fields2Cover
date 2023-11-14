@@ -54,28 +54,32 @@ void Cells::operator*=(double b) {
 
 void Cells::getGeometry(size_t i, Cell& cell) {
   if (i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+    throw std::out_of_range(
+        "Geometry does not contain point " + std::to_string(i));
   }
   cell = Cell(data->getGeometryRef(i), EmptyDestructor());
 }
 
 void Cells::getGeometry(size_t i, Cell& cell) const {
   if (i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+    throw std::out_of_range(
+        "Geometry does not contain point " + std::to_string(i));
   }
   cell = Cell(data->getGeometryRef(i), EmptyDestructor());
 }
 
 Cell Cells::getGeometry(size_t i) {
   if (i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+    throw std::out_of_range(
+        "Geometry does not contain point " + std::to_string(i));
   }
   return Cell(data->getGeometryRef(i));
 }
 
 const Cell Cells::getGeometry(size_t i) const {
   if (i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+    throw std::out_of_range(
+        "Cells does not contain cell at " + std::to_string(i));
   }
   return Cell(data->getGeometryRef(i));
 }
@@ -102,29 +106,29 @@ void Cells::addGeometry(const Cell& c) {
 }
 
 void Cells::addRing(size_t i, const LinearRing& ring) {
-  downCast<OGRPolygon*>(this->data->getGeometryRef(i))->addRing(ring.get());
+  downCast<OGRPolygon*>(data->getGeometryRef(i))->addRing(ring.clone().get());
 }
 
 size_t Cells::size() const {
   return isEmpty() ? 0 : data->getNumGeometries();
 }
 
-Cell Cells::getCell(size_t i) const {
-  return Cell(data->getGeometryRef(i));
+const Cell Cells::getCell(size_t i) const {
+  return getGeometry(i);
 }
 
-LinearRing Cells::getCellBorder(size_t i) const {
+const LinearRing Cells::getCellBorder(size_t i) const {
   return LinearRing(
       downCast<OGRPolygon*>(data->getGeometryRef(i))->getExteriorRing());
 }
 
-LinearRing Cells::getInteriorRing(size_t i_cell, size_t i_ring) const {
+const LinearRing Cells::getInteriorRing(size_t i_cell, size_t i_ring) const {
   return LinearRing(downCast<OGRPolygon*>(data->getGeometryRef(i_cell))
       ->getInteriorRing(i_ring));
 }
 
 bool Cells::isConvex() const {
-  return (isEmpty() || data->getNumGeometries() != 1)? false :
+  return (isEmpty() || data->getNumGeometries() != 1) ? false :
     getCell(0).isConvex();
 }
 
@@ -138,8 +142,11 @@ Cell Cells::ConvexHull() const {
 Cells Cells::Intersection(const Cells& c) const {
   auto inter = data->Intersection(c.get());
   if (wkbFlatten(inter->getGeometryType()) ==
-        OGRwkbGeometryType::wkbPolygon ||
-      wkbFlatten(inter->getGeometryType()) ==
+        OGRwkbGeometryType::wkbPolygon) {
+    Cell cell(inter->toPolygon());
+    OGRGeometryFactory::destroyGeometry(inter);
+    return static_cast<Cells>(cell);
+  } else if (wkbFlatten(inter->getGeometryType()) ==
         OGRwkbGeometryType::wkbMultiPolygon) {
     Cells cells(inter->toMultiPolygon());
     OGRGeometryFactory::destroyGeometry(inter);
@@ -229,7 +236,7 @@ bool Cells::isPointIn(const Point& p) const {
   return p.Within(*this);
 }
 
-Cell Cells::getCellWherePoint(const Point& p) const {
+const Cell Cells::getCellWherePoint(const Point& p) const {
   for (auto&& cell : *this) {
     if (p.Touches(cell) || p.Within(cell)) {
       return cell;

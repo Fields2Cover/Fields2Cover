@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                           BSD-3 License
 //=============================================================================
@@ -26,6 +26,8 @@ struct Point : public Geometry<OGRPoint, wkbPoint> {
 
  public:
   bool operator==(const Point& b) const;
+
+  bool operator!=(const Point& b) const;
 
   bool operator<(const Point& b) const;
 
@@ -88,16 +90,16 @@ T Point::rotateFromPoint(double angle, const T& t) const {
 
 inline OGRPoint operator+(const OGRPoint& a, const f2c::types::Point& b) {
   return std::move(OGRPoint(
-      a.getX() + b->getX(),
-      a.getY() + b->getY(),
-      a.getZ() + b->getZ()));
+      a.getX() + b.getX(),
+      a.getY() + b.getY(),
+      a.getZ() + b.getZ()));
 }
 
 inline OGRPoint operator-(const OGRPoint& a, const f2c::types::Point& b) {
   return std::move(OGRPoint(
-      a.getX() - b->getX(),
-      a.getY() - b->getY(),
-      a.getZ() - b->getZ()));
+      a.getX() - b.getX(),
+      a.getY() - b.getY(),
+      a.getZ() - b.getZ()));
 }
 
 template <class T>

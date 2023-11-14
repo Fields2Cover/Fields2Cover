@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -31,35 +31,48 @@ size_t MultiPoint::size() const {
   return isEmpty() ? 0 : this->data->getNumGeometries();
 }
 
-void MultiPoint::getGeometry(int i, Point& point) {
-  if (i < 0 || i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+void MultiPoint::getGeometry(size_t i, Point& point) {
+  if (i >= this->size()) {
+    throw std::out_of_range(
+        "MultiPoint does not contain point " + std::to_string(i));
   }
   point = Point(data->getGeometryRef(i), EmptyDestructor());
 }
 
-void MultiPoint::getGeometry(int i, Point& point) const {
-  if (i < 0 || i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+void MultiPoint::getGeometry(size_t i, Point& point) const {
+  if (i >= this->size()) {
+    throw std::out_of_range(
+        "MultiPoint does not contain point " + std::to_string(i));
   }
   point = Point(data->getGeometryRef(i), EmptyDestructor());
 }
 
-Point MultiPoint::getGeometry(int i) {
-  if (i < 0 || i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+Point MultiPoint::getGeometry(size_t i) {
+  if (i >= this->size()) {
+    throw std::out_of_range(
+        "MultiPoint does not contain point " + std::to_string(i));
   }
   return Point(data->getGeometryRef(i));
 }
 
-const Point MultiPoint::getGeometry(int i) const {
-  if (i < 0 || i >= this->size()) {
-    throw std::out_of_range("Geometry does not contain point " + std::to_string(i));
+const Point MultiPoint::getGeometry(size_t i) const {
+  if (i >= this->size()) {
+    throw std::out_of_range(
+        "MultiPoint does not contain point " + std::to_string(i));
   }
   return Point(data->getGeometryRef(i));
 }
 
-void MultiPoint::setGeometry(int i, const Point& p) {
+const Point MultiPoint::getFirstPoint() const {
+  return getGeometry(0);
+}
+
+const Point MultiPoint::getLastPoint() const {
+  return getGeometry(size() - 1);
+}
+
+
+void MultiPoint::setGeometry(size_t i, const Point& p) {
     OGRPoint* point = downCast<OGRPoint*>(data->getGeometryRef(i));
     point->setX(p.getX());
     point->setY(p.getY());
@@ -72,7 +85,13 @@ void MultiPoint::addGeometry(const Point& p) {
 }
 
 void MultiPoint::addPoint(const Point& p) {
-  this->data->addGeometry(p.get());
+  this->addPoint(p.getX(), p.getY(), p.getZ());
+}
+
+void MultiPoint::addPoints(const MultiPoint& ps) {
+  for (auto&& p : ps) {
+    this->addPoint(p);
+  }
 }
 
 void MultiPoint::addPoint(double x, double y, double z) {

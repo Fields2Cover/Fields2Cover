@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -9,11 +9,22 @@
 
 TEST(fields2cover_types_linearring, init) {
   F2CLinearRing ring1;
+  EXPECT_EQ(ring1.size(), 0);
+
   ring1.addPoint(1,1);
   ring1.addPoint(2,1);
   EXPECT_EQ(ring1.size(), 2);
+
   F2CLinearRing ring2{F2CPoint(1,2), F2CPoint(3,2), F2CPoint(1,3)};
   EXPECT_EQ(ring2.size(), 3);
+
+
+  F2CPoint error_p;
+  const F2CLinearRing c_line = ring1.clone();
+  EXPECT_THROW(ring1.getGeometry(100, error_p), std::out_of_range);
+  EXPECT_THROW(c_line.getGeometry(100, error_p), std::out_of_range);
+  EXPECT_THROW(ring1.getGeometry(100), std::out_of_range);
+  EXPECT_THROW(c_line.getGeometry(100), std::out_of_range);
 }
 
 TEST(fields2cover_types_linearring, getArea) {

@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                           BSD-3 License
 //=============================================================================
@@ -37,8 +37,9 @@ struct Geometry {
   Geometry& operator=(const Geometry& g);
 
   std::shared_ptr<T> operator->();
-  std::shared_ptr<T> operator->() const;
-  T* get() const;
+  std::shared_ptr<const T> operator->() const;
+  T* get();
+  const T* get() const;
 
   bool operator !=(const Geometry<T, R>& geom2) const;
   bool operator ==(const Geometry<T, R>& geom2) const;
@@ -139,6 +140,8 @@ struct Geometry {
   OGRGeometry* OGRGeometryRebuildCurves(const OGRGeometry *poGeom,
       const OGRGeometry *poOtherGeom, OGRGeometry *poOGRProduct) const;
 
+
+  static double mod(double a, double b);
 };
 
 
