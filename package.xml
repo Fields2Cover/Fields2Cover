@@ -18,7 +18,6 @@
   <depend>eigen</depend>
   <depend>git</depend>
   <depend>libgdal-dev</depend>
-  <depend>swig</depend>
   <depend>tbb</depend>
   <exec_depend>python3-matplotlib</exec_depend>
   <exec_depend>python3-tk</exec_depend>
