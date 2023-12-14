@@ -39,6 +39,9 @@ else(${CMAKE_VERSION} VERSION_LESS 3.22)
   cmake_policy(VERSION 3.22)
 endif(${CMAKE_VERSION} VERSION_LESS 3.22)
 
+if(POLICY CMP0094)
+  cmake_policy(SET CMP0094 NEW)
+endif(POLICY CMP0094)
 if(POLICY CMP0135)
   cmake_policy(SET CMP0135 NEW)
 endif(POLICY CMP0135)
@@ -147,7 +150,7 @@ target_compile_features(Fields2Cover PUBLIC cxx_std_17)
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
   target_compile_options(Fields2Cover PRIVATE
     -pedantic -Wall -Wfatal-errors
-    -Werror -Wno-dev -Wextra -Wno-unused-parameter -Wno-unused-result -Wno-sign-compare
+    -Werror -Wno-dev -Wextra -Wno-unused-parameter -Wno-sign-compare
     -Wno-attributes -Wl,--no-undefined -Wshadow
   )
 elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
