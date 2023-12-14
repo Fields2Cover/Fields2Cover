@@ -18,7 +18,7 @@ void Parser::importGml(const std::string& file, F2CFields& fields) {
   fields.emplace_back(importFieldGml(file));
 }
 
-F2CField Parser::importFieldGml(const std::string& file) {
+F2CField Parser::importFieldGml(const std::string& file, bool coord_frame_fail_silently) {
   // Tinyxml2 depends on locale when parsing files. It may expect float numbers
   // as "1,5" instead of "1.5", which is parsed as "1". The next line solves
   // the issue.
@@ -66,7 +66,7 @@ F2CField Parser::importFieldGml(const std::string& file) {
   findAndReplaceAll(p_coords, ";", " ");
   p_coords = "POLYGON ((" + p_coords + "))";
   OGRGeometry* new_geom{};
-  auto spt_ref = Transform::createSptRef(coord_sys);
+  auto spt_ref = Transform::createSptRef(coord_sys, coord_frame_fail_silently);
   OGRGeometryFactory::createFromWkt(p_coords.c_str(), spt_ref.get(), &new_geom);
 
   F2CField field(F2CCells(new_geom), id);

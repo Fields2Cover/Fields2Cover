@@ -61,7 +61,7 @@ class Transform {
   static F2CPoint getRefPointInGPS(const F2CField& field);
 
   static std::unique_ptr<OGRSpatialReference, void(*)(OGRSpatialReference*)>
-        createSptRef(const std::string& coord_sys);
+        createSptRef(const std::string& coord_sys, bool fail_silently = false);
 
   static std::unique_ptr<OGRCoordinateTransformation,
     void(*)(OGRCoordinateTransformation*)> createCoordTransf(
