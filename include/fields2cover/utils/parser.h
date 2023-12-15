@@ -24,7 +24,7 @@ class Parser {
     /// @param fields Set of fields saved on _file.
     static void importGml(const std::string& file, F2CFields& fields);
 
-    static F2CField importFieldGml(const std::string& file);
+    static F2CField importFieldGml(const std::string& file, bool fail_silently = false);
 
     /// Function to import file with Json extension.
     /// @param file Path to the imported file.

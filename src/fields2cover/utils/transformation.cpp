@@ -177,12 +177,12 @@ F2CPoint Transform::getRefPointInGPS(const F2CField& field) {
 }
 
 std::unique_ptr<OGRSpatialReference, void(*)(OGRSpatialReference*)>
-      Transform::createSptRef(const std::string& coord_sys) {
+      Transform::createSptRef(const std::string& coord_sys, bool fail_silently) {
   auto spt_ref =
     std::unique_ptr<OGRSpatialReference, void(*)(OGRSpatialReference*)>(
       new OGRSpatialReference(), [](OGRSpatialReference* ref) {
       OGRSpatialReference::DestroySpatialReference(ref);});
-  if (coord_sys.empty()) {
+  if (coord_sys.empty() && !fail_silently) {
     throw std::invalid_argument("Coordinate system empty");
   } else if (F2CField::isCoordSystemEPSG(coord_sys)) {
     spt_ref->importFromEPSG(F2CField::getEPSGCoordSystem(coord_sys));
@@ -195,7 +195,7 @@ std::unique_ptr<OGRSpatialReference, void(*)(OGRSpatialReference*)>
         " +datum=" + F2CField::getUTMDatum(coord_sys))
       + " +units=m +no_defs ");
     spt_ref->importFromProj4(proj.c_str());
-  } else  {
+  } else if (!fail_silently) {
     throw std::invalid_argument("Coordinate system not recognized");
   }
   if (GDALVersionInfo("VERSION_NUM")[0] == '3') {
