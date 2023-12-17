@@ -43,6 +43,21 @@ F2CPath Transform::transformPathWithFieldRef(const F2CPath& path,
   return new_path;
 }
 
+F2CSwath Transform::transformSwathWithFieldRef(const F2CSwath& swath,
+      const F2CField& field, const std::string& coord_sys_to) {
+  return F2CSwath(transform(swath.getPath(), field.getRefPoint(), field.getCRS(), coord_sys_to),
+                   swath.getWidth(), swath.getId());
+}
+
+F2CSwaths Transform::transformSwathsWithFieldRef(const F2CSwaths& swaths,
+      const F2CField& field, const std::string& coord_sys_to) {
+  F2CSwaths new_swaths;
+  for (auto&& swath : swaths) {
+    new_swaths.emplace_back(
+        transformSwathWithFieldRef(swath, field, coord_sys_to));
+  }
+  return new_swaths;
+}
 
 F2CStrip Transform::transformStrip(const F2CStrip& strip,
       const std::string& coord_sys_from, const std::string& coord_sys_to) {
@@ -87,7 +102,6 @@ F2CPath Transform::transformPath(const F2CPath& path,
   }
   return new_path;
 }
-
 
 void Transform::transformToUTM(F2CField& field, bool is_etrs89_opt) {
   std::string field_crs = field.getCRS();
@@ -162,12 +176,12 @@ F2CStrips Transform::transformToPrevCRS(
 
 F2CSwath Transform::transformToPrevCRS(
     const F2CSwath& s, const F2CField& field) {
-  return transformSwath(s, field.getCRS(), field.getPrevCRS());
+  return transformSwathWithFieldRef(s, field, field.getPrevCRS());
 }
 
 F2CSwaths Transform::transformToPrevCRS(
     const F2CSwaths& s, const F2CField& field) {
-  return transformSwaths(s, field.getCRS(), field.getPrevCRS());
+  return transformSwathsWithFieldRef(s, field, field.getPrevCRS());
 }
 
 F2CPoint Transform::getRefPointInGPS(const F2CField& field) {

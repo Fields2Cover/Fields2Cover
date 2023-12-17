@@ -193,6 +193,10 @@ void Swath::setType(SwathType type) {
   this->type_ = type;
 }
 
+void Swath::moveTo(const Point& ref_pt) {
+  for (auto&& s : this->path_) {
+    s = s + ref_pt;
+  }
+}
 
 }  // namespace f2c::types
-

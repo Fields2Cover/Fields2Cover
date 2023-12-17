@@ -141,6 +141,11 @@ Swaths Swaths::clone() const {
   return new_s;
 }
 
+void Swaths::moveTo(const Point& ref_pt) {
+  for (auto&& s : data) {
+    s.moveTo(ref_pt);
+  }
+}
 
 
 }  // namespace f2c::types
