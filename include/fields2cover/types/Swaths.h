@@ -63,6 +63,7 @@ struct Swaths {
       double width = 0, SwathType type = SwathType::MAINLAND);
   void sort();
   void reverseDirOddSwaths();
+  void moveTo(const Point& ref_pt);
 
   Swaths clone() const;
 

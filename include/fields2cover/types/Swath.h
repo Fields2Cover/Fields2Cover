@@ -91,6 +91,9 @@ struct Swath {
   /// less than pi
   void targetOppositeDirAs(const Swath& s);
 
+  /// Moves swath data by a reference point
+  void moveTo(const Point& ref_pt);
+
  private:
   int id_ {0};  // Id of the swath
   LineString path_;

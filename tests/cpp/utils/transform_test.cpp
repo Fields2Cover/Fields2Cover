@@ -156,7 +156,8 @@ TEST(fields2cover_utils_transformer, convert_types) {
   EXPECT_NEAR(returned_path3.states[0].point.getX(), 6.062131843297665, 1e-3);
   EXPECT_NEAR(returned_path3.states[0].point.getY(), 51.51238564279176, 1e-3);
 
-
-
-
+  auto returned_swaths =
+    f2c::Transform::transformSwathsWithFieldRef(moved_swaths, field, "EPSG:4326");
+  EXPECT_NEAR(returned_path2.states[0].point.getX(), 6.062131843297665, 1e-3);
+  EXPECT_NEAR(returned_path2.states[0].point.getY(), 51.51238564279176, 1e-3);
 }
