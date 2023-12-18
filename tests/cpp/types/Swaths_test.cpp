@@ -101,5 +101,22 @@ TEST(fields2cover_types_swaths, push_back) {
 }
 
 
+TEST(fields2cover_types_swaths, move_to) {
+  const int n = 10;
+  F2CSwaths swaths;
+  for (int i = 1; i <= n; ++i) {
+    F2CSwath swath {F2CLineString({F2CPoint(i, i), F2CPoint(i, i + 1)}), 1.0*i, i};
+    swaths.push_back(swath);
+  }
+
+  F2CSwaths init_swaths = swaths.clone();
+  F2CPoint pt(1.0, 2.0);
+  swaths.moveTo(pt);
+
+  for (int i = 1; i < n; ++i) {
+    EXPECT_EQ(swaths.at(i).startPoint(), init_swaths.at(i).startPoint() + pt);
+  }
+}
+
 
 
