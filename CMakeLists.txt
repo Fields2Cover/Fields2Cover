@@ -84,16 +84,20 @@ FetchContent_Declare(json FETCHCONTENT_UPDATES_DISCONNECTED
   URL https://github.com/nlohmann/json/releases/download/v3.10.5/json.tar.xz
 )
 FetchContent_Declare(tinyxml2 FETCHCONTENT_UPDATES_DISCONNECTED
-  URL https://github.com/leethomason/tinyxml2/archive/refs/tags/9.0.0.tar.gz
+  GIT_REPOSITORY https://github.com/leethomason/tinyxml2.git
+  GIT_TAG c2d30872e20621955ca7feb9168bad996d591a19
 )
 FetchContent_Declare(steering_functions FETCHCONTENT_UPDATES_DISCONNECTED
   GIT_REPOSITORY https://github.com/Fields2Cover/steering_functions.git
+  GIT_TAG 33fc010017efa1ef2c8a2d4779fcda94b4b30d20
 )
 FetchContent_Declare(spline FETCHCONTENT_UPDATES_DISCONNECTED
   GIT_REPOSITORY https://github.com/Fields2Cover/spline.git
+  GIT_TAG 1b5d4bad29082997076b264de84ca6d46c2ae6ab
 )
 FetchContent_Declare(matplotlib_cpp FETCHCONTENT_UPDATES_DISCONNECTED
   GIT_REPOSITORY https://github.com/Fields2Cover/matplotlib-cpp.git
+  GIT_TAG 75c15d0c907a4b68bca5ef97032302bd14ccab8e
 )
 
 FetchContent_MakeAvailable(
