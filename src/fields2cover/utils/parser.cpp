@@ -39,10 +39,12 @@ F2CField Parser::importFieldGml(const std::string& file, bool coord_frame_fail_s
     id = e_result;
   }
 
-  auto* p_field = p_parcel->FirstChildElement("Field");
+  // auto* p_field = p_parcel->FirstChildElement("Field");
+  auto* p_field = p_parcel->FirstChildElement("gml:featureMember");
 
   auto* p_polygon = p_field\
-            ->FirstChildElement("geometry")\
+            ->FirstChildElement("ogr:Untitled")\
+            ->FirstChildElement("ogr:geometryProperty")\
             ->FirstChildElement("gml:Polygon");
 
   std::string coord_sys = p_polygon->Attribute("srsName");
