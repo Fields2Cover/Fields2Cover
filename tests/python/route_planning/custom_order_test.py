@@ -21,14 +21,15 @@ def test_fields2cover_custom_order(n, custom_order, expected):
           f2c.LineString(
             f2c.VectorPoint([
               f2c.Point(0, i),
-              f2c.Point(1, i)])), 
-          1, 
+              f2c.Point(1, i)])),
+          1,
           i
         )
     )
   swath_order = f2c.RP_CustomOrder(f2c.VectorSize(custom_order))
   swaths = swath_order.genSortedSwaths(swaths)
-  actual = [swath.getId() for swath in swaths]
+
+  actual = [swaths.at(i).getId() for i in range(swaths.size())]
   assert len(actual) == len(expected)
   assert all(a == b for a, b in zip(actual, expected))
 
@@ -43,6 +44,6 @@ def test_fields2cover_wrong_custom_order(n, custom_order, expected):
                                  f2c.Point(1, i)])), 1, i))
   swath_order = f2c.RP_CustomOrder(f2c.VectorSize(custom_order))
   swaths = swath_order.genSortedSwaths(swaths)
-  actual = [swath.getId() for swath in swaths]
+  actual = [swaths.at(i).getId() for i in range(swaths.size())]
   assert any(a != b for a, b in zip(actual, expected))
 

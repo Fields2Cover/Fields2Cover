@@ -1,7 +1,7 @@
 //=============================================================================
-//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
-//                           BSD-3 License
+//                        BSD-3 License
 //=============================================================================
 
 #pragma once
@@ -14,6 +14,8 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <utility>
+#include <iostream>
 #include <boost/math/constants/constants.hpp>
 
 namespace f2c::types {
@@ -40,6 +42,7 @@ struct Geometry {
   std::shared_ptr<const T> operator->() const;
   T* get();
   const T* get() const;
+
 
   bool operator !=(const Geometry<T, R>& geom2) const;
   bool operator ==(const Geometry<T, R>& geom2) const;
@@ -70,32 +73,33 @@ struct Geometry {
 
   /// Compute shortest distance between this and another geometry.
   template <class T2, OGRwkbGeometryType R2>
-  double Distance(const Geometry<T2, R2>& p) const;
+  double distance(const Geometry<T2, R2>& p) const;
 
   /// Check if this and another geometry are disjoint.
   template <class T2, OGRwkbGeometryType R2>
-  bool Disjoint(const Geometry<T2, R2>& geom) const;
+  bool disjoint(const Geometry<T2, R2>& geom) const;
 
   /// Check if this and another geometry cross.
   template <class T2, OGRwkbGeometryType R2>
-  bool Crosses(const Geometry<T2, R2>& geom) const;
+  bool crosses(const Geometry<T2, R2>& geom) const;
 
   /// Check if this and another geometry touch each other.
   template <class T2, OGRwkbGeometryType R2>
-  bool Touches(const Geometry<T2, R2>& geom) const;
+  bool touches(const Geometry<T2, R2>& geom) const;
 
   /// Check if this geometry is inside another geometry.
   template <class T2, OGRwkbGeometryType R2>
-  bool Within(const Geometry<T2, R2>& geom) const;
+  bool within(const Geometry<T2, R2>& geom) const;
 
   /// Check if this and another geometry intersects.
   template <class T2, OGRwkbGeometryType R2>
-  bool Intersects(const Geometry<T2, R2>& geom) const;
+  bool intersects(const Geometry<T2, R2>& geom) const;
 
   /// Transform from \f$ [-\inf, \inf) \f$ to \f$ [0, 2\pi) \f$ applying
   /// \f$2\pi\f$ modulus.
   /// @return value modulus in the range of \f$ [0, 2\pi) \f$
   static double mod_2pi(double val);
+  static double mod(double a, double b);
 
   static double getAngContinuity(double prev_val, double val);
   static std::vector<double> getAngContinuity(const std::vector<double>& val);
@@ -106,6 +110,8 @@ struct Geometry {
   /// @return difference between both angles
   static double getAngleDiffAbs(double a, double b);
 
+  /// Get the angle that is between a and b in the shortest direction
+  static double getAngleAvg(double a, double b);
 
   bool isEmpty() const;
 
@@ -115,8 +121,12 @@ struct Geometry {
   std::string exportToKML() const;
   std::string exportToJson() const;
 
+  // Code adapted from:
+  // https://github.com/OSGeo/gdal/blob/717dcc0eed252e2f78c142b1f7866e49c5511224/ogr/ogrgeometry.cpp#L4309
+  OGRGeometry* OGRBuffer(double dfDist, int side = 0) const;
+
  protected:
-  std::shared_ptr<T> data;
+  std::shared_ptr<T> data_;
 
  protected:
   // Code adapted from:
@@ -124,24 +134,19 @@ struct Geometry {
   template <typename To, typename From>
   inline To downCast(From *f) const;
 
- public:
-  // Code adapted from:
-  // https://github.com/OSGeo/gdal/blob/717dcc0eed252e2f78c142b1f7866e49c5511224/ogr/ogrgeometry.cpp#L4309
-  OGRGeometry* OGRBuffer(double dfDist, int side = 0) const;
+  template<typename RetType>
+  static RetType destroyResGeom(OGRGeometry*);
 
  private:
   // Code extracted from:
   // https://github.com/OSGeo/gdal/blob/717dcc0eed252e2f78c142b1f7866e49c5511224/ogr/ogrgeometry.cpp#L4309
-  OGRGeometry* BuildGeometryFromGEOS(
+  OGRGeometry* buildGeometryFromGEOS(
       GEOSContextHandle_t hGEOSCtxt, GEOSGeom hGeosProduct,
       const OGRGeometry *poSelf, const OGRGeometry *poOtherGeom) const;
   // Code extracted from:
   // https://github.com/OSGeo/gdal/blob/717dcc0eed252e2f78c142b1f7866e49c5511224/ogr/ogrgeometry.cpp#L4309
   OGRGeometry* OGRGeometryRebuildCurves(const OGRGeometry *poGeom,
       const OGRGeometry *poOtherGeom, OGRGeometry *poOGRProduct) const;
-
-
-  static double mod(double a, double b);
 };
 
 

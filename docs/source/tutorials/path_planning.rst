@@ -22,7 +22,7 @@ Before continue, we will define the path planner and some parameters that will b
 .. code-block:: cpp
 
   f2c::pp::PathPlanning path_planner;
-  robot.setMinRadius(2);  // m
+  robot.setMinTurningRadius(2);  // m
   robot.linear_curv_change = 0.1;  // 1/m^2
 
 

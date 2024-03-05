@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -10,11 +10,11 @@
 namespace f2c::types {
 
 Field::Field() = default;
-Field::Field(const Cells& cells, const std::string& id_p) : id(id_p) {
+Field::Field(const Cells& cells, const std::string& id_p) : id_(id_p) {
   if (!cells.isEmpty()) {
-    ref_point = cells.getCellBorder(0).StartPoint().clone();
+    this->ref_point_ = cells.getCellBorder(0).startPoint();
   }
-  field = cells - ref_point;
+  this->field_ = cells - this->ref_point_;
 }
 
 Field::~Field() = default;
@@ -23,14 +23,68 @@ Field::Field(Field&&) = default;
 Field& Field::operator=(Field&&) = default;
 Field& Field::operator=(const Field&) = default;
 
+
+
+std::string Field::getId() const {
+  return this->id_;
+}
+
+void Field::setId(const std::string& _id) {
+  this->id_ = _id;
+}
+
+std::string Field::getCRS() const {
+  return this->coord_sys_;
+}
+
+void Field::setCRS(const std::string& crs) {
+  this->coord_sys_ = crs;
+}
+
+std::string Field::getPrevCRS() const {
+  return this->prev_coord_sys_;
+}
+
+void Field::setPrevCRS(const std::string& prev_crs) {
+  this->prev_coord_sys_ = prev_crs;
+}
+
+Point& Field::getRefPoint() {
+  return this->ref_point_;
+}
+
+const Point& Field::getRefPoint() const {
+  return this->ref_point_;
+}
+
+void Field::setRefPoint(const Point& _ref_point) {
+  this->ref_point_ = _ref_point;
+}
+
+Cells& Field::getField() {
+  return this->field_;
+}
+
+const Cells& Field::getField() const {
+  return this->field_;
+}
+
+void Field::setField(const Cells& _field) {
+  this->field_ = _field;
+}
+
 Field Field::clone() const {
-  Field new_field {this->field + this->ref_point, this->id};
-  new_field.coord_sys = this->coord_sys;
+  Field new_field {this->field_ + this->ref_point_, this->id_};
+  new_field.coord_sys_ = this->coord_sys_;
   return new_field;
 }
 
-double Field::getArea(void) const {
-  return field.getArea();
+double Field::area(void) const {
+  return this->field_.area();
+}
+
+bool Field::isEmpty() const {
+  return this->field_.isEmpty();
 }
 
 bool Field::isCoordSystemUTM(const std::string& coord_sys) {
@@ -38,7 +92,7 @@ bool Field::isCoordSystemUTM(const std::string& coord_sys) {
 }
 
 bool Field::isCoordSystemUTM() const {
-  return isCoordSystemUTM(coord_sys);
+  return isCoordSystemUTM(this->coord_sys_);
 }
 
 std::string Field::getUTMCoordSystem(
@@ -62,11 +116,11 @@ std::string Field::getUTMDatum(
 }
 
 std::string Field::getUTMCoordSystem() const {
-  return getUTMCoordSystem(coord_sys);
+  return getUTMCoordSystem(this->coord_sys_);
 }
 
 std::string Field::getUTMDatum() const {
-  return getUTMDatum(this->coord_sys);
+  return getUTMDatum(this->coord_sys_);
 }
 
 bool Field::isCoordSystemEPSG(const std::string& coord_sys) {
@@ -74,7 +128,7 @@ bool Field::isCoordSystemEPSG(const std::string& coord_sys) {
 }
 
 bool Field::isCoordSystemEPSG() const {
-  return isCoordSystemEPSG(coord_sys);
+  return isCoordSystemEPSG(this->coord_sys_);
 }
 
 int Field::getEPSGCoordSystem(const std::string& coord_sys) {
@@ -83,28 +137,28 @@ int Field::getEPSGCoordSystem(const std::string& coord_sys) {
 }
 
 int Field::getEPSGCoordSystem() const {
-  return getEPSGCoordSystem(coord_sys);
+  return getEPSGCoordSystem(this->coord_sys_);
 }
 
 void Field::setEPSGCoordSystem(int epsg) {
-  this->coord_sys = "EPSG:" + std::to_string(epsg);
+  this->coord_sys_ = "EPSG:" + std::to_string(epsg);
 }
 
 void Field::setUTMCoordSystem(const std::string& utm) {
-  this->coord_sys =
+  this->coord_sys_ =
     "UTM:" + getUTMCoordSystem(utm, utm) +
     " datum:" + getUTMDatum(utm);
 }
 
 void Field::setUTMCoordSystem(
     const std::string& utm, const std::string& datum) {
-  this->coord_sys =
+  this->coord_sys_ =
     "UTM:" + getUTMCoordSystem(utm, utm) +
     " datum:" + getUTMDatum(datum, datum);
 }
 
 Cells Field::getCellsAbsPosition() const {
-  return this->field + this->ref_point;
+  return this->field_ + this->ref_point_;
 }
 
 std::string Field::getUTMZone(const std::string& coord_sys) {
@@ -112,7 +166,7 @@ std::string Field::getUTMZone(const std::string& coord_sys) {
 }
 
 std::string Field::getUTMZone() const {
-  return getUTMZone(coord_sys);
+  return getUTMZone(this->coord_sys_);
 }
 
 std::string Field::getUTMHemisphere(const std::string& coord_sys) {
@@ -127,7 +181,7 @@ std::string Field::getUTMHemisphere(const std::string& coord_sys) {
 }
 
 std::string Field::getUTMHemisphere() const {
-  return getUTMHemisphere(coord_sys);
+  return getUTMHemisphere(this->coord_sys_);
 }
 
 }  // namespace f2c::types

@@ -79,7 +79,7 @@ Usually, this is not needed, as a simple access has been provided:
 .. code-block:: cpp
 
    std::cout << "Access to OGRPoints: " << p4->Distance(p5.get()) << std::endl;
-   std::cout << "Without accessing: " << p4.Distance(p5) << std::endl;
+   std::cout << "Without accessing: " << p4.distance(p5) << std::endl;
 
 | *Access to OGRPoints: 5*
 | *Without accessing: 5*
@@ -135,7 +135,7 @@ A ``F2CLineString`` (``f2c::types::LineString``) represents a line. The ways to 
       F2CLineString line1;
       line1.addPoint(3, 0);
       line1.addPoint(p5);  // Point(0, 4)
-      std::cout << "Length of line 1: " << line1.getLength() << std::endl;
+      std::cout << "Length of line 1: " << line1.length() << std::endl;
 
    *Length of line 1: 5*
 
@@ -144,7 +144,7 @@ A ``F2CLineString`` (``f2c::types::LineString``) represents a line. The ways to 
    .. code-block:: cpp
 
       F2CLineString line2({F2CPoint(1, 0), F2CPoint(1, 1), F2CPoint(0, 1)});
-      std::cout << "Length of line 2: " << line2.getLength() << std::endl;
+      std::cout << "Length of line 2: " << line2.length() << std::endl;
 
    *Length of line 2: 2*
 
@@ -159,7 +159,7 @@ It can be initialized as a ``F2CLineString``:
    .. code-block:: cpp
 
       F2CLinearRing ring{F2CPoint(1,1), F2CPoint(1,2), F2CPoint(2,2), F2CPoint(1,1)};
-      std::cout << "Area of the ring: " << ring.getArea() << std::endl;
+      std::cout << "Area of the ring: " << ring.area() << std::endl;
 
    *Area of the ring: 0.5*
 
@@ -179,7 +179,7 @@ A ``F2CMultiLineString`` (``f2c::types::MultiLineString``) are several ``F2CLine
 
    std::cout << "Lines have length: ";
    for (auto line : lines) {
-     std::cout << line.getLength() << ", ";
+     std::cout << line.length() << ", ";
    }
    std::cout << std::endl;
 
@@ -199,7 +199,7 @@ First ``F2CLinearRing`` has to be the outter one.
    F2CCell cell;
    cell.addRing(outter_ring);
    cell.addRing(inner_ring);
-   std::cout << "The area of the cell is: " << cell.getArea() << std::endl;
+   std::cout << "The area of the cell is: " << cell.area() << std::endl;
 
 *The area of the cell is: 3*
 
@@ -209,7 +209,7 @@ A ``F2CCells`` (``f2c::types::Cells``) is a multipolygon. It contains zero, one 
 
    F2CCells cells;
    cells.addGeometry(cell);
-   std::cout << "The area of the cells is: " << cells.getArea() << std::endl;
+   std::cout << "The area of the cells is: " << cells.area() << std::endl;
 
 *The area of the cells is: 3*
 
@@ -277,7 +277,7 @@ Other important parameters of ``F2CRobot`` are:
 
 - *cruise_speed*: is the speed of the vehicle when traveling through the field.
 
-- *max_icc*: is the maximum Instantaneous Center of Curvature on a turn. It's the inverse of the radius. It's preferable to use the function ``setMinRadius(double)``.
+- *max_icc*: is the maximum Instantaneous Center of Curvature on a turn. It's the inverse of the radius. It's preferable to use the function ``setMinTurningRadius(double)``.
 
 - *linear_curv_change*: is the maximum change of curvature in a turn. It's used to prevent instant changes of curvature.
 
@@ -323,7 +323,7 @@ First, you can define your figure id with:
 
 .. code-block:: cpp
 
-   f2c::Visualizer::figure(100);
+   f2c::Visualizer::figure();
 
 The previous line could be omitted, and it will create one itself.
 Then, draw the data using that figure as:

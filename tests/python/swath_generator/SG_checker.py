@@ -1,5 +1,5 @@
 #==============================================================================
-#     Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+#     Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 #                      Author: Gonzalo Mier
 #                         BSD-3 License
 #==============================================================================
@@ -14,9 +14,9 @@ def near(a, b):
 def IsSwathGenerationCorrect(sw_gen, obj, poly, swath_width = 1.0, checks = 100):
   swaths = sw_gen.generateBestSwaths(obj, swath_width, poly);
   assert not (swaths.size() < 1), "Error 2001: No swaths were generated.";
-  assert not (swaths.size() > poly.getArea() / (swath_width * swath_width)),       \
+  assert not (swaths.size() > poly.area() / (swath_width * swath_width)),       \
       "Error 2002: " + str(swaths.size()) + " swaths were generated." +            \
-      "Expected less than " + str(poly.getArea() / (swath_width * swath_width)) +  \
+      "Expected less than " + str(poly.area() / (swath_width * swath_width)) +  \
       "swaths.";
 
   rand = f2c.Random();
@@ -30,9 +30,9 @@ def IsSwathGenerationCorrect(sw_gen, obj, poly, swath_width = 1.0, checks = 100)
             ", but the cost (signed) of a non-optimal angle (" +                \
             str(rand_ang) + ") is " +                                                \
             str(obj.computeCostWithMinimizingSign(swaths2)) + ".";
-    assert not (swaths.size() > poly.getArea() / (swath_width * swath_width)), \
+    assert not (swaths.size() > poly.area() / (swath_width * swath_width)), \
         "Error 2004: " + str(swaths2.size()) +                                      \
         " swaths were generated with angle " + str(rand_ang) +                      \
-        "Expected less than " + str(poly.getArea() / (swath_width * swath_width)) + \
+        "Expected less than " + str(poly.area() / (swath_width * swath_width)) + \
         "swaths.";
-  
+

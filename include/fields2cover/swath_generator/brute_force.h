@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -17,12 +17,15 @@
 
 namespace f2c::sg {
 
-class BruteForce : public SwathGeneratorBase<BruteForce> {
+class BruteForce : public SwathGeneratorBase {
  public:
-  F2CSwaths generateBestSwaths(f2c::obj::SGObjective& obj,
+  double getStepAngle() const;
+  void setStepAngle(double d);
+
+  double computeBestAngle(f2c::obj::SGObjective& obj,
       double op_width, const F2CCell& poly) override;
 
- public:
+ private:
   double step_angle {boost::math::constants::degree<double>()};  // radians
 };
 

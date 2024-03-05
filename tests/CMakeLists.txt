@@ -6,7 +6,7 @@ file(
 )
 file(
   GLOB_RECURSE TEST_SOURCES
-  LIST_DIRECTORIES false unittests.cpp cpp/*/*.cpp
+  LIST_DIRECTORIES false unittests.cpp cpp/*/*.cpp cpp/*/*/*.cpp
 )
 
 add_executable(unittests ${TEST_SOURCES})

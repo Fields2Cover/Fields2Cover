@@ -9,8 +9,8 @@ Lets create a random field with ``5`` sides and ``1e4`` meters squared of area, 
 .. code-block:: python
 
   rand = f2c.Random(42);
-  field = rand.generateRandField(5, 1e4);
-  cells = field.field;
+  field = rand.generateRandField(1e4, 5);
+  cells = field.getField();
   robot = f2c.Robot(2.0, 26.0);
 
 
@@ -22,9 +22,9 @@ This class creates a constant headland around the field.
 .. code-block:: python
 
   const_hl = f2c.HG_Const_gen();
-  no_hl = const_hl.generateHeadlands(cells, 3.0 * robot.robot_width);
-  print("The complete area is ", cells.getArea(),
-      ", and the area without headlands is ", no_hl.getArea());
+  no_hl = const_hl.generateHeadlands(cells, 3.0 * robot.getWidth());
+  print("The complete area is ", cells.area(),
+      ", and the area without headlands is ", no_hl.area());
 
 *The complete area is 10000, and the area without headlands is 7676.63*
 

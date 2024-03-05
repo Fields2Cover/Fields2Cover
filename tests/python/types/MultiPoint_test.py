@@ -1,5 +1,5 @@
 #==============================================================================
-#     Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+#     Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 #                      Author: Gonzalo Mier
 #                         BSD-3 License
 #==============================================================================
@@ -31,7 +31,7 @@ def test_fields2cover_types_multipoint_init():
     near(p.getX(), i);
     near(p.getY(), -i);
     near(p.getZ(), 3*i);
-  
+
 
 def test_fields2cover_types_multipoint_getGeometry():
   ps1 = f2c.MultiPoint(f2c.VectorPoint([

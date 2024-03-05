@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -8,6 +8,42 @@
 #include "fields2cover/utils/random.h"
 #include "fields2cover/types.h"
 
+TEST(fields2cover_utils_Random, init) {
+  f2c::Random rand1(1);
+  double d1 = rand1.getRandomDouble();
+  double d2 = rand1.getRandomDouble();
+  EXPECT_NE(d1, d2);
+
+  f2c::Random rand2(rand1);
+  d1 = rand1.getRandomDouble();
+  d2 = rand2.getRandomDouble();
+  EXPECT_EQ(d1, d2);
+
+  f2c::Random rand3 {rand1};
+  d1 = rand1.getRandomDouble();
+  d2 = rand3.getRandomDouble();
+  EXPECT_EQ(d1, d2);
+
+  rand2 = rand1;
+  d1 = rand1.getRandomDouble();
+  d2 = rand2.getRandomDouble();
+  EXPECT_EQ(d1, d2);
+
+  std::vector<f2c::Random> v_rand {rand1, rand2, rand3};
+
+
+  for (auto&& r : v_rand) {
+    auto r2 = r;
+    d1 = r.getRandomDouble();
+    d2 = r2.getRandomDouble();
+    EXPECT_EQ(d1, d2);
+
+    f2c::Random r3 = r;
+    d1 = r.getRandomDouble();
+    d2 = r3.getRandomDouble();
+    EXPECT_EQ(d1, d2);
+  }
+}
 
 
 TEST(fields2cover_utils_Random, get_angle_random) {
@@ -91,34 +127,35 @@ TEST(fields2cover_utils_Random, get_random_exp_dist) {
 
 
 TEST(fields2cover_utils_Random, mod_2pi) {
+  const double two_pi {boost::math::constants::two_pi<double>()};
   for (double i = 0.01; i < 100.0; i += 0.1) {
     auto ang = i;
-    EXPECT_NEAR(fmod(ang, boost::math::constants::two_pi<double>()), F2CPoint::mod_2pi(ang), 1e-3);
+    EXPECT_NEAR(fmod(ang, two_pi), F2CPoint::mod_2pi(ang), 1e-3);
     EXPECT_EQ(i, ang);
-    EXPECT_NEAR(fmod(1e5 * boost::math::constants::two_pi<double>() - i, boost::math::constants::two_pi<double>()),
+    EXPECT_NEAR(fmod(1e5 * two_pi - i, two_pi),
         F2CPoint::mod_2pi(-i), 1e-3);
   }
 }
 
 TEST(fields2cover_utils_Random, genRandField) {
   f2c::Random rand;
-  auto field = rand.generateRandField( 4, 1e2);
-  EXPECT_NEAR(field.field.getArea(), 1e2 , 1e-6);
-  EXPECT_THROW(rand.generateRandField( -2, 1e2), std::invalid_argument);
-  EXPECT_THROW(rand.generateRandField( 0, 1e2), std::invalid_argument);
-  EXPECT_THROW(rand.generateRandField( 2, 1e2), std::invalid_argument);
-  EXPECT_THROW(rand.generateRandField( 6, -1e2), std::invalid_argument);
+  auto field = rand.generateRandField(1e2, 4);
+  EXPECT_NEAR(field.area(), 1e2 , 1e-6);
+  EXPECT_THROW(rand.generateRandField(1e2, -2), std::invalid_argument);
+  EXPECT_THROW(rand.generateRandField(1e2, 0), std::invalid_argument);
+  EXPECT_THROW(rand.generateRandField(1e2, 2), std::invalid_argument);
+  EXPECT_THROW(rand.generateRandField(-1e2, 6), std::invalid_argument);
 }
 
 TEST(fields2cover_utils_Random, isConvex) {
   f2c::Random rand(4);
   int n {100};
-  auto field = rand.generateRandField( 3, 1e2);
-  auto poly = field.field.getCell(0);
+  auto field = rand.generateRandField(1e2, 3);
+  auto poly = field.getField().getCell(0);
   int convex_fields {0}, non_convex_fields {0};
   for (int i = 0; i < n; ++i) {
     field = rand.genConvexField(1e2);
-    if (field.field.isConvex()) {
+    if (field.getField().isConvex()) {
       ++convex_fields;
     }
   }
@@ -126,7 +163,7 @@ TEST(fields2cover_utils_Random, isConvex) {
 
   for (int i = 0; i < n; ++i) {
     field = rand.genNonConvexField(1e2);
-    if (!field.field.isConvex()) {
+    if (!field.getField().isConvex()) {
       ++non_convex_fields;
     }
   }

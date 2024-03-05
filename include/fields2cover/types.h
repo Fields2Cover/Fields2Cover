@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -25,13 +25,15 @@
 
 #include "fields2cover/types/Swath.h"
 #include "fields2cover/types/Swaths.h"
+#include "fields2cover/types/SwathsByCells.h"
 #include "fields2cover/types/Route.h"
 #include "fields2cover/types/Path.h"
-#include "fields2cover/types/OptimizationParams.h"
 #include "fields2cover/types/Robot.h"
 
+#include "fields2cover/types/Graph.h"
+#include "fields2cover/types/Graph2D.h"
+
 using F2CRobot = f2c::types::Robot;
-using F2COptim = f2c::types::OptimizationParams;
 
 using F2CPoint = f2c::types::Point;
 using F2CMultiPoint = f2c::types::MultiPoint;
@@ -47,10 +49,12 @@ using F2CPathState = f2c::types::PathState;
 using F2CRoute = f2c::types::Route;
 using F2CSwath = f2c::types::Swath;
 using F2CSwaths = f2c::types::Swaths;
+using F2CSwathsByCells = f2c::types::SwathsByCells;
+using F2CGraph = f2c::types::Graph;
+using F2CGraph2D = f2c::types::Graph2D;
 
 using F2CRobots = std::vector<F2CRobot>;
 using F2CStrips = std::vector<F2CStrip>;
 using F2CFields = std::vector<F2CField>;
-using F2CSwathsByCells = std::vector<F2CSwaths>;
 
 #endif  //  FIELDS2COVER_TYPES_H_

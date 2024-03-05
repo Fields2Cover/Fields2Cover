@@ -1,5 +1,5 @@
 #==============================================================================
-#     Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+#     Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 #                      Author: Gonzalo Mier
 #                         BSD-3 License
 #==============================================================================
@@ -17,9 +17,6 @@ def test_fields2cover_route_boustrophedon_genSortedSwaths():
   for i in range(1, n):
     swaths.push_back(f2c.Swath(f2c.LineString(f2c.VectorPoint(  \
         [f2c.Point(i, 0), f2c.Point(i, 1)])), i, i));
-
-  #auto rng = std.default_random_engine {};
-  #std.shuffle(swaths.begin(), swaths.end(), rng);
 
   swath_sorter = f2c.RP_Boustrophedon();
   objective = f2c.OBJ_DirectDistPathObj();

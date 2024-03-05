@@ -1,7 +1,7 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
-//                           BSD-3 License
+//                        BSD-3 License
 //=============================================================================
 
 #pragma once
@@ -14,11 +14,19 @@
 namespace f2c::types {
 
 struct Strip {
-  f2c::types::Cell cell;
-  std::string name;
-
  public:
+  Cell& getCell();
+  const Cell& getCell() const;
+  void setCell(const Cell& cell);
+
+  std::string getName() const;
+  void setName(const std::string& str);
+
   Strip clone() const;
+
+ private:
+  Cell cell_;
+  std::string name_;
 };
 
 }  // namespace f2c::types

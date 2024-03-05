@@ -1,5 +1,5 @@
 #==============================================================================
-#     Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+#     Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 #                      Author: Gonzalo Mier
 #                         BSD-3 License
 #==============================================================================
@@ -16,8 +16,8 @@ def test_fields2cover_types_cell_constructor():
     [f2c.Point(), f2c.Point(2,0), f2c.Point(2,2), f2c.Point(0,2), f2c.Point()]));
   cell = f2c.Cell(line);
   cell_clone = cell.clone();
-  near(cell.getArea(), 4)
-  near(cell_clone.getArea(), 4)
+  near(cell.area(), 4)
+  near(cell_clone.area(), 4)
 
 def test_fields2cover_types_cell_addRing():
   ring1 = f2c.LinearRing(f2c.VectorPoint(
@@ -30,26 +30,26 @@ def test_fields2cover_types_cell_addRing():
 
   cell1 = f2c.Cell();
   cell1.addRing(ring1)
-  near(cell1.getArea(), 4)
+  near(cell1.area(), 4)
   cell1.addRing(ring2)
-  near(cell1.getArea(), 3)
+  near(cell1.area(), 3)
   near(cell1.size(), 2);
 
   cell1_ring1 = cell1.getGeometry(0);
   near(cell1_ring1.size(), 5);
-  near(cell1_ring1.getLength(), 8);
+  near(cell1_ring1.length(), 8);
   cell1_ring2 = cell1.getGeometry(1);
   near(cell1_ring2.size(), 5);
-  near(cell1_ring2.getLength(), 4);
+  near(cell1_ring2.length(), 4);
 
   cell_ring3 = f2c.LinearRing();
   cell1.getGeometry(0, cell_ring3);
   near(cell_ring3.size(), 5);
-  near(cell_ring3.getLength(), 8);
+  near(cell_ring3.length(), 8);
   cell_ring4 = f2c.LinearRing();
   cell1.getGeometry(1, cell_ring4);
   near(cell_ring4.size(), 5);
-  near(cell_ring4.getLength(), 4);
+  near(cell_ring4.length(), 4);
 
 
 def test_fields2cover_types_cell_createLineUntilBorder():
@@ -76,23 +76,23 @@ def test_fields2cover_types_cell_isPointInBorder():
   assert not cell.isPointInBorder(f2c.Point(1,1))
   assert not cell.isPointInBorder(f2c.Point(10,10))
 
-def test_fields2cover_types_cell_Buffer():
+def test_fields2cover_types_cell_buffer():
   cell = f2c.Cell(f2c.LinearRing(f2c.VectorPoint(
     [f2c.Point(), f2c.Point(1,0), f2c.Point(1,1), f2c.Point(0,1), f2c.Point()])))
-  near(cell.getArea(), 1)
+  near(cell.area(), 1)
 
-  cell_buffer = f2c.Cell.Buffer(cell, 2.0);
-  near(cell.getArea(), 1)
-  near(cell_buffer.getArea(), 25, 0.1)
+  cell_buffer = f2c.Cell.buffer(cell, 2.0);
+  near(cell.area(), 1)
+  near(cell_buffer.area(), 25, 0.1)
 
   p = f2c.Point(1, 2);
-  point_buffer = f2c.Cell.Buffer(p, 3.0)
-  near(point_buffer.getArea(), 3 * 3 * math.pi, 0.2)
+  point_buffer = f2c.Cell.buffer(p, 3.0)
+  near(point_buffer.area(), 3 * 3 * math.pi, 0.2)
   near(p.getX(), 1)
   near(p.getY(), 2)
 
   line = f2c.LineString(f2c.VectorPoint([f2c.Point(3,4), f2c.Point(3,6)]))
-  line_buffer = f2c.Cell.Buffer(line, 4.0)
-  near(line_buffer.getArea(), 2 * (4 * 2), 1e-5);
+  line_buffer = f2c.Cell.buffer(line, 4.0)
+  near(line_buffer.area(), 2 * (4 * 2), 1e-5);
 
 

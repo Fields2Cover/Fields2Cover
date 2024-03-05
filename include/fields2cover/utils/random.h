@@ -1,7 +1,7 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
-//                           BSD-3 License
+//                        BSD-3 License
 //=============================================================================
 
 #pragma once
@@ -24,15 +24,14 @@ class Random {
  public:
   /// Constructor to initialize the seed to a known value to make experiments
   /// reproducible
-  explicit Random(uint32_t seed = static_cast<uint32_t>(time(NULL))) :
-    mt_(seed) {}
+  explicit Random(uint32_t seed = static_cast<uint32_t>(time(NULL)));
 
   /// @cond DOXYGEN_SHOULD_SKIP_THIS
-  ~Random() = default;
-  Random(const Random&) = default;
-  Random &operator=(const Random&) = default;
-  Random(Random&&) = default;
-  Random &operator=(Random&&) = default;
+  ~Random();
+  Random(const Random&);
+  Random &operator=(const Random&);
+  Random(Random&&);
+  Random &operator=(Random&&);
   /// @endcond
 
  public:
@@ -64,19 +63,23 @@ class Random {
   /// @return random angle \f$ \in [0, 2\pi) \f$
   double getAngleRandom();
 
+  f2c::types::Cell generateRandCell(double area, int n_sides,
+      double min_width = 0.5, double max_width = 1.0);
   /// Random field generator to make tests.
-  /// @param n_sides Number of sides of the generated field.
   /// @param area Area of the generated field
+  /// @param n_sides Number of sides of the generated field.
   /// @param min_width Minimum distance to the center for the base field.
   /// @param max_width Maximum distance to the center for the base field.
   /// @return Field with area area an n_sides.
-  f2c::types::Field generateRandField(int n_sides, double area,
+  f2c::types::Field generateRandField(double area, int n_sides,
       double min_width = 0.5, double max_width = 1.0);
 
+  f2c::types::Cell genConvexCell(double area, size_t n_sides = 4);
   /// Generate a convex field
   /// @param area Area of the generated field
   f2c::types::Field genConvexField(double area, size_t n_sides = 4);
 
+  f2c::types::Cell genNonConvexCell(double area);
   /// Generate a non-convex field
   /// @param area Area of the generated field
   f2c::types::Field genNonConvexField(double area);

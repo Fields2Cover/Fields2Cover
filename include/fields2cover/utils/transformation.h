@@ -1,7 +1,7 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
-//                           BSD-3 License
+//                        BSD-3 License
 //=============================================================================
 
 #pragma once
@@ -39,9 +39,12 @@ class Transform {
 
   static F2CPath transformToPrevCRS(const F2CPath& p, const F2CField& field);
   static F2CStrip transformToPrevCRS(const F2CStrip& s, const F2CField& field);
-  static F2CStrips transformToPrevCRS(const F2CStrips& s, const F2CField& field);
-  static F2CSwath transformToPrevCRS(const F2CSwath& s, const F2CField& field);
-  static F2CSwaths transformToPrevCRS(const F2CSwaths& s, const F2CField& field);
+  static F2CStrips transformToPrevCRS(
+      const F2CStrips& s, const F2CField& field);
+  static F2CSwath transformToPrevCRS(
+      const F2CSwath& s, const F2CField& field);
+  static F2CSwaths transformToPrevCRS(
+      const F2CSwaths& s, const F2CField& field);
 
   static F2CPath transformPath(const F2CPath& p,
       const std::string& coord_sys_from, const std::string& coord_sys_to);

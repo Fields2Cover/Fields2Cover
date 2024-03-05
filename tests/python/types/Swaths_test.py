@@ -1,5 +1,5 @@
 #==============================================================================
-#     Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+#     Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 #                      Author: Gonzalo Mier
 #                         BSD-3 License
 #==============================================================================
@@ -13,18 +13,18 @@ def near(a, b):
 
 def test_fields2cover_types_swaths_append():
   ring = f2c.LinearRing();
-  ring.addPoint(-10, 0); 
-  ring.addPoint(-10, 20); 
-  ring.addPoint(10, 20); 
-  ring.addPoint(10, 0); 
-  ring.addPoint(-10, 0); 
+  ring.addPoint(-10, 0);
+  ring.addPoint(-10, 20);
+  ring.addPoint(10, 20);
+  ring.addPoint(10, 0);
+  ring.addPoint(-10, 0);
   polygon = f2c.Cell();
   polygon.addRing(ring);
   polys = f2c.Cells();
   polys.addGeometry(polygon);
   line = f2c.LineString();
-  line.addPoint(-20, -10); 
-  line.addPoint(-5, 5); 
+  line.addPoint(-20, -10);
+  line.addPoint(-5, 5);
 
   swaths = f2c.Swaths();
   near(swaths.size(), 0);
@@ -32,8 +32,8 @@ def test_fields2cover_types_swaths_append():
   near(swaths.size(), 1);
   swaths.append(line, polys, 2.0);
   near(swaths.size(), 2);
-  line.addPoint(-19.9, -10); 
-  line.addPoint(-5, 5.1); 
+  line.addPoint(-19.9, -10);
+  line.addPoint(-5, 5.1);
   swaths.append(line, polys, 3.0);
   near(swaths.size(), 4);
   lines = f2c.MultiLineString();

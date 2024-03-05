@@ -1,7 +1,7 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
-//                           BSD-3 License
+//                        BSD-3 License
 //=============================================================================
 
 #pragma once
@@ -40,6 +40,10 @@ struct MultiPoint :
   void addPoint(const Point& p);
   void addPoint(double x, double y, double z = 0);
   void addPoints(const MultiPoint& ps);
+
+  double getInAngle(size_t i) const;
+  double getOutAngle(size_t i) const;
+  double getPointAngle(size_t i) const;
 
   void operator*=(double b);
 };

@@ -1,5 +1,5 @@
 #==============================================================================
-#     Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+#     Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 #                      Author: Gonzalo Mier
 #                         BSD-3 License
 #==============================================================================
@@ -24,10 +24,10 @@ def test_fields2cover_utils_transformer_convertToF2CAndReturn():
   field = f2c.Field(f2c.Cells(poly_to_transform));
   field.setEPSGCoordSystem(4326);
   f2c.Transform.transform(field, "EPSG:28992");
-  near(field.field.getCellBorder(0).StartPoint().getX(), 0);
-  near(field.field.getCellBorder(0).StartPoint().getY(), 0);
-  near(field.field.getCellBorder(0).StartPoint().getZ(), 0);
-  assert (field.coord_sys == "EPSG:28992");
+  near(field.getField().getCellBorder(0).startPoint().getX(), 0);
+  near(field.getField().getCellBorder(0).startPoint().getY(), 0);
+  near(field.getField().getCellBorder(0).startPoint().getZ(), 0);
+  assert (field.getCRS() == "EPSG:28992");
 
   ref_gps_point = f2c.Transform.getRefPointInGPS(field);
   near(ref_gps_point.getX(), 6.062131843297665, 1e-3);

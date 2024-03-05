@@ -1,13 +1,14 @@
 FROM osgeo/gdal:ubuntu-full-3.6.2
 
 LABEL NAME="fields2cover" \
-      VERSION="1.2.1" \
+      VERSION="2.0.0" \
       DESC="Fields2Cover is a complete coverage path planning package for autonomous robots" \
       MAINTAINER="Gonzalo Mier"
 
 
 ENV DEBIAN_FRONTEND noninteractive
 
+WORKDIR /workspaces/
 RUN mkdir -p /usr/include/new_gdal && \
     cp -r /usr/include/gdal* /usr/include/new_gdal/ && \
     cp /usr/include/ogr* /usr/include/new_gdal/ && \
@@ -39,6 +40,7 @@ RUN apt-get install -y --allow-unauthenticated --no-install-recommends \
                     doxygen \
                     g++ \
                     git \
+                    gnuplot \
                     lcov \
                     libboost-dev \
                     libgeos-dev \
@@ -82,18 +84,21 @@ RUN if gdalinfo --version | grep -o " 3\.[0-2]\."; then \
       apt-get install -y --no-install-recommends  --allow-unauthenticated swig; \
     fi
 
+RUN git clone https://github.com/google/or-tools.git && cd or-tools && git checkout tags/v9.3 \
+    && cmake -S . -B build -DBUILD_DEPS=ON \
+    && cmake --build build --config Release --target install -v
+
 COPY . /workspace/fields2cover
 RUN rm -rf /workspace/fields2cover/build && mkdir /workspace/fields2cover/build
 WORKDIR /workspace/fields2cover/build
 
 RUN cmake -DBUILD_PYTHON=ON \
-          -DBUILD_TUTORIALS=OFF \
-          -DBUILD_TESTS=ON \
-          -DBUILD_DOC=OFF \
-          -DCMAKE_BUILD_TYPE=Debug ..
-RUN make -j8
-RUN export LANG=en_US.UTF-8 && \
-    export LC_ALL=C.UTF-8 && \
-    make install
+    -DBUILD_TUTORIALS=OFF \
+    -DBUILD_TESTS=ON \
+    -DBUILD_DOC=OFF \
+    -DCMAKE_BUILD_TYPE=Release ..
+
+RUN make -j4 install
+
 
 

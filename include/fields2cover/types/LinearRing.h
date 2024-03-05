@@ -1,7 +1,7 @@
 //=============================================================================
-//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
-//                           BSD-3 License
+//                        BSD-3 License
 //=============================================================================
 
 #pragma once
@@ -28,7 +28,7 @@ struct LinearRing : public Geometries<LinearRing, OGRLinearRing, wkbLinearRing,
   double getX(size_t i) const;
   double getY(size_t i) const;
   double getZ(size_t i) const;
-  double getLength() const;
+  double length() const;
   void reversePoints();
   size_t size() const;
 
@@ -43,9 +43,11 @@ struct LinearRing : public Geometries<LinearRing, OGRLinearRing, wkbLinearRing,
   void addPoint(const Point& p);
   void addGeometry(const Point& p);
 
-  const Point StartPoint() const;
-  const Point EndPoint() const;
+  const Point startPoint() const;
+  const Point endPoint() const;
   bool isClockwise() const;
+
+  Point closestPointTo(const Point& p) const;
 };
 
 

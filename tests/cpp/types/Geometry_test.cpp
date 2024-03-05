@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -7,26 +7,69 @@
 #include <gtest/gtest.h>
 #include "fields2cover/types.h"
 
-TEST(fields2cover_types_geometry, getAngContinuity) {
+template <class T>
+class fields2cover_types_geometry : public testing::Test {};
+
+typedef ::testing::Types<f2c::types::Geometry<OGRPoint, wkbPoint>, F2CPoint, f2c::types::Geometry<OGRLinearRing, wkbLinearRing>, F2CLinearRing, f2c::types::Geometry<OGRLineString, wkbLineString>, F2CLineString, f2c::types::Geometry<OGRMultiPoint, wkbMultiPoint>, F2CMultiPoint, f2c::types::Geometry<OGRMultiLineString, wkbMultiLineString>, F2CMultiLineString, f2c::types::Geometry<OGRPolygon, wkbPolygon>, F2CCell, f2c::types::Geometry<OGRMultiPolygon, wkbMultiPolygon>, F2CCells> Implementations;
+TYPED_TEST_CASE(fields2cover_types_geometry, Implementations);
+
+TYPED_TEST(fields2cover_types_geometry, getAngContinuity) {
   std::vector<double> v;
   for (double d = -50.0; d < 50.0; d += 0.1) {
-    v.push_back(F2CPoint::mod_2pi(d));
-    EXPECT_NEAR(F2CPoint::getAngContinuity(d - 0.1, F2CPoint::mod_2pi(d)), d, 1e-5);
+    v.push_back(TypeParam::mod_2pi(d));
+    EXPECT_NEAR(TypeParam::getAngContinuity(d - 0.1, TypeParam::mod_2pi(d)), d, 1e-5);
   }
   for (double d = 50.0; d > -50.0; d -= 0.1) {
-    v.push_back(F2CPoint::mod_2pi(d));
-    EXPECT_NEAR(F2CPoint::getAngContinuity(d + 0.1, F2CPoint::mod_2pi(d)), d, 1e-5);
-    EXPECT_NEAR(F2CLinearRing::getAngContinuity(d - 0.1, F2CLinearRing::mod_2pi(d)), d, 1e-5);
-    EXPECT_NEAR(F2CLineString::getAngContinuity(d + 0.5, F2CLineString::mod_2pi(d)), d, 1e-5);
-    EXPECT_NEAR(F2CMultiLineString::getAngContinuity(d - 0.5, F2CMultiLineString::mod_2pi(d)), d, 1e-5);
-    EXPECT_NEAR(F2CMultiPoint::getAngContinuity(d + 1.0, F2CMultiPoint::mod_2pi(d)), d, 1e-5);
-    EXPECT_NEAR(F2CCell::getAngContinuity(d - 1.0, F2CCell::mod_2pi(d)), d, 1e-5);
-    EXPECT_NEAR(F2CCells::getAngContinuity(d + 0.0, F2CCells::mod_2pi(d)), d, 1e-5);
+    v.push_back(TypeParam::mod_2pi(d));
+    EXPECT_NEAR(TypeParam::getAngContinuity(d + 0.1, TypeParam::mod_2pi(d)), d, 1e-5);
   }
-  auto restored_v = F2CPoint::getAngContinuity(v);
+  auto restored_v = TypeParam::getAngContinuity(v);
   for (int i = 1; i < restored_v.size(); ++i) {
     EXPECT_NEAR(fabs(restored_v[i] - restored_v[i - 1]), 0.1, 1e-5);
   }
+}
+
+TYPED_TEST(fields2cover_types_geometry, getAngleAvg) {
+  EXPECT_NEAR(TypeParam::getAngleAvg(0, M_PI / 2.0), M_PI / 4.0, 1e-7);
+  EXPECT_NEAR(TypeParam::getAngleAvg(0, -M_PI / 2.0), 7.0 * M_PI / 4.0, 1e-7);
+  EXPECT_NEAR(TypeParam::getAngleAvg(M_PI, -M_PI / 2.0), 5.0 * M_PI / 4.0, 1e-7);
+  EXPECT_NEAR(TypeParam::getAngleAvg(5. * M_PI / 4., 3. * M_PI / 4.), M_PI, 1e-7);
+  EXPECT_NEAR(TypeParam::getAngleAvg(3. * M_PI / 4., 5. * M_PI / 4.), M_PI, 1e-7);
+}
+
+TYPED_TEST(fields2cover_types_geometry, getAngleDiff) {
+  EXPECT_NEAR(TypeParam::getAngleDiffAbs(M_PI*0.25, M_PI), 0.75*M_PI, 1e-5);
+  EXPECT_NEAR(TypeParam::getAngleDiffAbs(-M_PI*0.25, M_PI), 0.75*M_PI, 1e-5);
+  EXPECT_NEAR(TypeParam::getAngleDiffAbs(-M_PI*0.25, 0), 0.25*M_PI, 1e-5);
+  EXPECT_NEAR(TypeParam::getAngleDiffAbs(-M_PI*0.25, M_PI*0.5), 0.75*M_PI, 1e-5);
+}
+
+TYPED_TEST(fields2cover_types_geometry, mod) {
+  EXPECT_EQ(TypeParam::mod(2.0, 6.5), 2.0);
+  EXPECT_EQ(TypeParam::mod(20.0, 7.0), 6.0);
+  EXPECT_EQ(TypeParam::mod(-1.0, 4.0), 3.0);
+}
+TYPED_TEST(fields2cover_types_geometry, init) {
+  TypeParam t;
+  TypeParam t2 = TypeParam(t.get());
+  auto p_t3 = t->clone();
+  TypeParam t3 = TypeParam(p_t3);
+  OGRGeometryFactory::destroyGeometry(p_t3);
+  TypeParam t4 {t};
+  TypeParam t5 = TypeParam(t.operator->());
+  TypeParam t6 = TypeParam(static_cast<OGRGeometry*>(t.get()));
+  TypeParam t7 = TypeParam(static_cast<OGRGeometry const*>(t.get()));
+  TypeParam t8;
+  t8 = t;
+  EXPECT_FALSE(t != t2);
+  EXPECT_FALSE(t != t3);
+  EXPECT_TRUE(t == t2);
+  EXPECT_TRUE(t == t3);
+  EXPECT_TRUE(t == t4);
+  EXPECT_TRUE(t == t5);
+  EXPECT_TRUE(t == t6);
+  EXPECT_TRUE(t == t7);
+  EXPECT_TRUE(t == t8);
 }
 
 TEST(fields2cover_types_geometry, intersects) {
@@ -38,64 +81,64 @@ TEST(fields2cover_types_geometry, intersects) {
   F2CCell cell1 {ring1};
   F2CCells cells1 {cell1};
 
-  EXPECT_FALSE(p_t.Intersects(p_n));
-  EXPECT_TRUE(p_t.Intersects(ps));
-  EXPECT_TRUE(p_t.Intersects(line));
-  EXPECT_TRUE(p_t.Intersects(lines));
-  EXPECT_FALSE(p_t.Intersects(ring1));
-  EXPECT_TRUE(p_t.Intersects(cell1));
-  EXPECT_TRUE(p_t.Intersects(cells1));
-  EXPECT_FALSE(p_n.Intersects(ring1));
-  EXPECT_FALSE(p_n.Intersects(cell1));
-  EXPECT_FALSE(p_n.Intersects(cells1));
+  EXPECT_FALSE(p_t.intersects(p_n));
+  EXPECT_TRUE(p_t.intersects(ps));
+  EXPECT_TRUE(p_t.intersects(line));
+  EXPECT_TRUE(p_t.intersects(lines));
+  EXPECT_FALSE(p_t.intersects(ring1));
+  EXPECT_TRUE(p_t.intersects(cell1));
+  EXPECT_TRUE(p_t.intersects(cells1));
+  EXPECT_FALSE(p_n.intersects(ring1));
+  EXPECT_FALSE(p_n.intersects(cell1));
+  EXPECT_FALSE(p_n.intersects(cells1));
 
-  EXPECT_TRUE(ps.Intersects(p_n));
-  EXPECT_TRUE(ps.Intersects(ps));
-  EXPECT_TRUE(ps.Intersects(line));
-  EXPECT_TRUE(ps.Intersects(lines));
-  EXPECT_FALSE(ps.Intersects(ring1));
-  EXPECT_TRUE(ps.Intersects(cell1));
-  EXPECT_TRUE(ps.Intersects(cells1));
+  EXPECT_TRUE(ps.intersects(p_n));
+  EXPECT_TRUE(ps.intersects(ps));
+  EXPECT_TRUE(ps.intersects(line));
+  EXPECT_TRUE(ps.intersects(lines));
+  EXPECT_FALSE(ps.intersects(ring1));
+  EXPECT_TRUE(ps.intersects(cell1));
+  EXPECT_TRUE(ps.intersects(cells1));
 
-  EXPECT_TRUE(line.Intersects(p_t));
-  EXPECT_TRUE(line.Intersects(ps));
-  EXPECT_TRUE(line.Intersects(line));
-  EXPECT_TRUE(line.Intersects(lines));
-  EXPECT_FALSE(line.Intersects(ring1));
-  EXPECT_TRUE(line.Intersects(cell1));
-  EXPECT_TRUE(line.Intersects(cells1));
+  EXPECT_TRUE(line.intersects(p_t));
+  EXPECT_TRUE(line.intersects(ps));
+  EXPECT_TRUE(line.intersects(line));
+  EXPECT_TRUE(line.intersects(lines));
+  EXPECT_FALSE(line.intersects(ring1));
+  EXPECT_TRUE(line.intersects(cell1));
+  EXPECT_TRUE(line.intersects(cells1));
 
-  EXPECT_TRUE(lines.Intersects(p_t));
-  EXPECT_TRUE(lines.Intersects(ps));
-  EXPECT_TRUE(lines.Intersects(line));
-  EXPECT_TRUE(lines.Intersects(lines));
-  EXPECT_FALSE(lines.Intersects(ring1));
-  EXPECT_TRUE(lines.Intersects(cell1));
-  EXPECT_TRUE(lines.Intersects(cells1));
+  EXPECT_TRUE(lines.intersects(p_t));
+  EXPECT_TRUE(lines.intersects(ps));
+  EXPECT_TRUE(lines.intersects(line));
+  EXPECT_TRUE(lines.intersects(lines));
+  EXPECT_FALSE(lines.intersects(ring1));
+  EXPECT_TRUE(lines.intersects(cell1));
+  EXPECT_TRUE(lines.intersects(cells1));
 
-  EXPECT_FALSE(ring1.Intersects(p_t));
-  EXPECT_FALSE(ring1.Intersects(ps));
-  EXPECT_FALSE(ring1.Intersects(line));
-  EXPECT_FALSE(ring1.Intersects(lines));
-  EXPECT_FALSE(ring1.Intersects(ring1));
-  EXPECT_FALSE(ring1.Intersects(cell1));
-  EXPECT_FALSE(ring1.Intersects(cells1));
+  EXPECT_FALSE(ring1.intersects(p_t));
+  EXPECT_FALSE(ring1.intersects(ps));
+  EXPECT_FALSE(ring1.intersects(line));
+  EXPECT_FALSE(ring1.intersects(lines));
+  EXPECT_FALSE(ring1.intersects(ring1));
+  EXPECT_FALSE(ring1.intersects(cell1));
+  EXPECT_FALSE(ring1.intersects(cells1));
 
-  EXPECT_TRUE(cell1.Intersects(p_t));
-  EXPECT_TRUE(cell1.Intersects(ps));
-  EXPECT_TRUE(cell1.Intersects(line));
-  EXPECT_TRUE(cell1.Intersects(lines));
-  EXPECT_FALSE(cell1.Intersects(ring1));
-  EXPECT_TRUE(cell1.Intersects(cell1));
-  EXPECT_TRUE(cell1.Intersects(cells1));
+  EXPECT_TRUE(cell1.intersects(p_t));
+  EXPECT_TRUE(cell1.intersects(ps));
+  EXPECT_TRUE(cell1.intersects(line));
+  EXPECT_TRUE(cell1.intersects(lines));
+  EXPECT_FALSE(cell1.intersects(ring1));
+  EXPECT_TRUE(cell1.intersects(cell1));
+  EXPECT_TRUE(cell1.intersects(cells1));
 
-  EXPECT_TRUE(cells1.Intersects(p_t));
-  EXPECT_TRUE(cells1.Intersects(ps));
-  EXPECT_TRUE(cells1.Intersects(line));
-  EXPECT_TRUE(cells1.Intersects(lines));
-  EXPECT_FALSE(cells1.Intersects(ring1));
-  EXPECT_TRUE(cells1.Intersects(cell1));
-  EXPECT_TRUE(cells1.Intersects(cells1));
+  EXPECT_TRUE(cells1.intersects(p_t));
+  EXPECT_TRUE(cells1.intersects(ps));
+  EXPECT_TRUE(cells1.intersects(line));
+  EXPECT_TRUE(cells1.intersects(lines));
+  EXPECT_FALSE(cells1.intersects(ring1));
+  EXPECT_TRUE(cells1.intersects(cell1));
+  EXPECT_TRUE(cells1.intersects(cells1));
 }
 
 TEST(fields2cover_types_geometry, touches) {
@@ -107,64 +150,64 @@ TEST(fields2cover_types_geometry, touches) {
   F2CCell cell1 {ring1};
   F2CCells cells1 {cell1};
 
-  EXPECT_FALSE(p_t.Touches(p_n));
-  EXPECT_FALSE(p_t.Touches(ps));
-  EXPECT_TRUE(p_t.Touches(line));
-  EXPECT_TRUE(p_t.Touches(lines));
-  EXPECT_FALSE(p_t.Touches(ring1));
-  EXPECT_FALSE(p_t.Touches(cell1));
-  EXPECT_FALSE(p_t.Touches(cells1));
-  EXPECT_FALSE(p_n.Touches(ring1));
-  EXPECT_FALSE(p_n.Touches(cell1));
-  EXPECT_FALSE(p_n.Touches(cells1));
+  EXPECT_FALSE(p_t.touches(p_n));
+  EXPECT_FALSE(p_t.touches(ps));
+  EXPECT_TRUE(p_t.touches(line));
+  EXPECT_TRUE(p_t.touches(lines));
+  EXPECT_FALSE(p_t.touches(ring1));
+  EXPECT_FALSE(p_t.touches(cell1));
+  EXPECT_FALSE(p_t.touches(cells1));
+  EXPECT_FALSE(p_n.touches(ring1));
+  EXPECT_FALSE(p_n.touches(cell1));
+  EXPECT_FALSE(p_n.touches(cells1));
 
-  EXPECT_FALSE(ps.Touches(p_n));
-  EXPECT_FALSE(ps.Touches(ps));
-  EXPECT_TRUE(ps.Touches(line));
-  EXPECT_TRUE(ps.Touches(lines));
-  EXPECT_FALSE(ps.Touches(ring1));
-  EXPECT_FALSE(ps.Touches(cell1));
-  EXPECT_FALSE(ps.Touches(cells1));
+  EXPECT_FALSE(ps.touches(p_n));
+  EXPECT_FALSE(ps.touches(ps));
+  EXPECT_TRUE(ps.touches(line));
+  EXPECT_TRUE(ps.touches(lines));
+  EXPECT_FALSE(ps.touches(ring1));
+  EXPECT_FALSE(ps.touches(cell1));
+  EXPECT_FALSE(ps.touches(cells1));
 
-  EXPECT_TRUE(line.Touches(p_t));
-  EXPECT_TRUE(line.Touches(ps));
-  EXPECT_FALSE(line.Touches(line));
-  EXPECT_FALSE(line.Touches(lines));
-  EXPECT_FALSE(line.Touches(ring1));
-  EXPECT_FALSE(line.Touches(cell1));
-  EXPECT_FALSE(line.Touches(cells1));
+  EXPECT_TRUE(line.touches(p_t));
+  EXPECT_TRUE(line.touches(ps));
+  EXPECT_FALSE(line.touches(line));
+  EXPECT_FALSE(line.touches(lines));
+  EXPECT_FALSE(line.touches(ring1));
+  EXPECT_FALSE(line.touches(cell1));
+  EXPECT_FALSE(line.touches(cells1));
 
-  EXPECT_TRUE(lines.Touches(p_t));
-  EXPECT_TRUE(lines.Touches(ps));
-  EXPECT_FALSE(lines.Touches(line));
-  EXPECT_FALSE(lines.Touches(lines));
-  EXPECT_FALSE(lines.Touches(ring1));
-  EXPECT_FALSE(lines.Touches(cell1));
-  EXPECT_FALSE(lines.Touches(cells1));
+  EXPECT_TRUE(lines.touches(p_t));
+  EXPECT_TRUE(lines.touches(ps));
+  EXPECT_FALSE(lines.touches(line));
+  EXPECT_FALSE(lines.touches(lines));
+  EXPECT_FALSE(lines.touches(ring1));
+  EXPECT_FALSE(lines.touches(cell1));
+  EXPECT_FALSE(lines.touches(cells1));
 
-  EXPECT_FALSE(ring1.Touches(p_t));
-  EXPECT_FALSE(ring1.Touches(ps));
-  EXPECT_FALSE(ring1.Touches(line));
-  EXPECT_FALSE(ring1.Touches(lines));
-  EXPECT_FALSE(ring1.Touches(ring1));
-  EXPECT_FALSE(ring1.Touches(cell1));
-  EXPECT_FALSE(ring1.Touches(cells1));
+  EXPECT_FALSE(ring1.touches(p_t));
+  EXPECT_FALSE(ring1.touches(ps));
+  EXPECT_FALSE(ring1.touches(line));
+  EXPECT_FALSE(ring1.touches(lines));
+  EXPECT_FALSE(ring1.touches(ring1));
+  EXPECT_FALSE(ring1.touches(cell1));
+  EXPECT_FALSE(ring1.touches(cells1));
 
-  EXPECT_FALSE(cell1.Touches(p_t));
-  EXPECT_FALSE(cell1.Touches(ps));
-  EXPECT_FALSE(cell1.Touches(line));
-  EXPECT_FALSE(cell1.Touches(lines));
-  EXPECT_FALSE(cell1.Touches(ring1));
-  EXPECT_FALSE(cell1.Touches(cell1));
-  EXPECT_FALSE(cell1.Touches(cells1));
+  EXPECT_FALSE(cell1.touches(p_t));
+  EXPECT_FALSE(cell1.touches(ps));
+  EXPECT_FALSE(cell1.touches(line));
+  EXPECT_FALSE(cell1.touches(lines));
+  EXPECT_FALSE(cell1.touches(ring1));
+  EXPECT_FALSE(cell1.touches(cell1));
+  EXPECT_FALSE(cell1.touches(cells1));
 
-  EXPECT_FALSE(cells1.Touches(p_t));
-  EXPECT_FALSE(cells1.Touches(ps));
-  EXPECT_FALSE(cells1.Touches(line));
-  EXPECT_FALSE(cells1.Touches(lines));
-  EXPECT_FALSE(cells1.Touches(ring1));
-  EXPECT_FALSE(cells1.Touches(cell1));
-  EXPECT_FALSE(cells1.Touches(cells1));
+  EXPECT_FALSE(cells1.touches(p_t));
+  EXPECT_FALSE(cells1.touches(ps));
+  EXPECT_FALSE(cells1.touches(line));
+  EXPECT_FALSE(cells1.touches(lines));
+  EXPECT_FALSE(cells1.touches(ring1));
+  EXPECT_FALSE(cells1.touches(cell1));
+  EXPECT_FALSE(cells1.touches(cells1));
 }
 
 TEST(fields2cover_types_geometry, disjoint) {
@@ -178,64 +221,64 @@ TEST(fields2cover_types_geometry, disjoint) {
 
 
 
-  EXPECT_TRUE(p_t.Disjoint(p_n));
-  EXPECT_FALSE(p_t.Disjoint(ps));
-  EXPECT_FALSE(p_t.Disjoint(line));
-  EXPECT_FALSE(p_t.Disjoint(lines));
-  EXPECT_FALSE(p_t.Disjoint(ring1));
-  EXPECT_FALSE(p_t.Disjoint(cell1));
-  EXPECT_FALSE(p_t.Disjoint(cells1));
-  EXPECT_FALSE(p_n.Disjoint(ring1));
-  EXPECT_TRUE(p_n.Disjoint(cell1));
-  EXPECT_TRUE(p_n.Disjoint(cells1));
+  EXPECT_TRUE(p_t.disjoint(p_n));
+  EXPECT_FALSE(p_t.disjoint(ps));
+  EXPECT_FALSE(p_t.disjoint(line));
+  EXPECT_FALSE(p_t.disjoint(lines));
+  EXPECT_FALSE(p_t.disjoint(ring1));
+  EXPECT_FALSE(p_t.disjoint(cell1));
+  EXPECT_FALSE(p_t.disjoint(cells1));
+  EXPECT_FALSE(p_n.disjoint(ring1));
+  EXPECT_TRUE(p_n.disjoint(cell1));
+  EXPECT_TRUE(p_n.disjoint(cells1));
 
-  EXPECT_FALSE(ps.Disjoint(p_n));
-  EXPECT_FALSE(ps.Disjoint(ps));
-  EXPECT_FALSE(ps.Disjoint(line));
-  EXPECT_FALSE(ps.Disjoint(lines));
-  EXPECT_FALSE(ps.Disjoint(ring1));
-  EXPECT_FALSE(ps.Disjoint(cell1));
-  EXPECT_FALSE(ps.Disjoint(cells1));
+  EXPECT_FALSE(ps.disjoint(p_n));
+  EXPECT_FALSE(ps.disjoint(ps));
+  EXPECT_FALSE(ps.disjoint(line));
+  EXPECT_FALSE(ps.disjoint(lines));
+  EXPECT_FALSE(ps.disjoint(ring1));
+  EXPECT_FALSE(ps.disjoint(cell1));
+  EXPECT_FALSE(ps.disjoint(cells1));
 
-  EXPECT_FALSE(line.Disjoint(p_t));
-  EXPECT_FALSE(line.Disjoint(ps));
-  EXPECT_FALSE(line.Disjoint(line));
-  EXPECT_FALSE(line.Disjoint(lines));
-  EXPECT_FALSE(line.Disjoint(ring1));
-  EXPECT_FALSE(line.Disjoint(cell1));
-  EXPECT_FALSE(line.Disjoint(cells1));
+  EXPECT_FALSE(line.disjoint(p_t));
+  EXPECT_FALSE(line.disjoint(ps));
+  EXPECT_FALSE(line.disjoint(line));
+  EXPECT_FALSE(line.disjoint(lines));
+  EXPECT_FALSE(line.disjoint(ring1));
+  EXPECT_FALSE(line.disjoint(cell1));
+  EXPECT_FALSE(line.disjoint(cells1));
 
-  EXPECT_FALSE(lines.Disjoint(p_t));
-  EXPECT_FALSE(lines.Disjoint(ps));
-  EXPECT_FALSE(lines.Disjoint(line));
-  EXPECT_FALSE(lines.Disjoint(lines));
-  EXPECT_FALSE(lines.Disjoint(ring1));
-  EXPECT_FALSE(lines.Disjoint(cell1));
-  EXPECT_FALSE(lines.Disjoint(cells1));
+  EXPECT_FALSE(lines.disjoint(p_t));
+  EXPECT_FALSE(lines.disjoint(ps));
+  EXPECT_FALSE(lines.disjoint(line));
+  EXPECT_FALSE(lines.disjoint(lines));
+  EXPECT_FALSE(lines.disjoint(ring1));
+  EXPECT_FALSE(lines.disjoint(cell1));
+  EXPECT_FALSE(lines.disjoint(cells1));
 
-  EXPECT_FALSE(ring1.Disjoint(p_t));
-  EXPECT_FALSE(ring1.Disjoint(ps));
-  EXPECT_FALSE(ring1.Disjoint(line));
-  EXPECT_FALSE(ring1.Disjoint(lines));
-  EXPECT_FALSE(ring1.Disjoint(ring1));
-  EXPECT_FALSE(ring1.Disjoint(cell1));
-  EXPECT_FALSE(ring1.Disjoint(cells1));
+  EXPECT_FALSE(ring1.disjoint(p_t));
+  EXPECT_FALSE(ring1.disjoint(ps));
+  EXPECT_FALSE(ring1.disjoint(line));
+  EXPECT_FALSE(ring1.disjoint(lines));
+  EXPECT_FALSE(ring1.disjoint(ring1));
+  EXPECT_FALSE(ring1.disjoint(cell1));
+  EXPECT_FALSE(ring1.disjoint(cells1));
 
-  EXPECT_FALSE(cell1.Disjoint(p_t));
-  EXPECT_FALSE(cell1.Disjoint(ps));
-  EXPECT_FALSE(cell1.Disjoint(line));
-  EXPECT_FALSE(cell1.Disjoint(lines));
-  EXPECT_FALSE(cell1.Disjoint(ring1));
-  EXPECT_FALSE(cell1.Disjoint(cell1));
-  EXPECT_FALSE(cell1.Disjoint(cells1));
+  EXPECT_FALSE(cell1.disjoint(p_t));
+  EXPECT_FALSE(cell1.disjoint(ps));
+  EXPECT_FALSE(cell1.disjoint(line));
+  EXPECT_FALSE(cell1.disjoint(lines));
+  EXPECT_FALSE(cell1.disjoint(ring1));
+  EXPECT_FALSE(cell1.disjoint(cell1));
+  EXPECT_FALSE(cell1.disjoint(cells1));
 
-  EXPECT_FALSE(cells1.Disjoint(p_t));
-  EXPECT_FALSE(cells1.Disjoint(ps));
-  EXPECT_FALSE(cells1.Disjoint(line));
-  EXPECT_FALSE(cells1.Disjoint(lines));
-  EXPECT_FALSE(cells1.Disjoint(ring1));
-  EXPECT_FALSE(cells1.Disjoint(cell1));
-  EXPECT_FALSE(cells1.Disjoint(cells1));
+  EXPECT_FALSE(cells1.disjoint(p_t));
+  EXPECT_FALSE(cells1.disjoint(ps));
+  EXPECT_FALSE(cells1.disjoint(line));
+  EXPECT_FALSE(cells1.disjoint(lines));
+  EXPECT_FALSE(cells1.disjoint(ring1));
+  EXPECT_FALSE(cells1.disjoint(cell1));
+  EXPECT_FALSE(cells1.disjoint(cells1));
 }
 
 TEST(fields2cover_types_geometry, within) {
@@ -248,64 +291,64 @@ TEST(fields2cover_types_geometry, within) {
   F2CCells cells1 {cell1};
 
 
-  EXPECT_FALSE(p_t.Within(p_n));
-  EXPECT_TRUE(p_t.Within(ps));
-  EXPECT_FALSE(p_t.Within(line));
-  EXPECT_FALSE(p_t.Within(lines));
-  EXPECT_FALSE(p_t.Within(ring1));
-  EXPECT_TRUE(p_t.Within(cell1));
-  EXPECT_TRUE(p_t.Within(cells1));
-  EXPECT_FALSE(p_n.Within(ring1));
-  EXPECT_FALSE(p_n.Within(cell1));
-  EXPECT_FALSE(p_n.Within(cells1));
+  EXPECT_FALSE(p_t.within(p_n));
+  EXPECT_TRUE(p_t.within(ps));
+  EXPECT_FALSE(p_t.within(line));
+  EXPECT_FALSE(p_t.within(lines));
+  EXPECT_FALSE(p_t.within(ring1));
+  EXPECT_TRUE(p_t.within(cell1));
+  EXPECT_TRUE(p_t.within(cells1));
+  EXPECT_FALSE(p_n.within(ring1));
+  EXPECT_FALSE(p_n.within(cell1));
+  EXPECT_FALSE(p_n.within(cells1));
 
-  EXPECT_FALSE(ps.Within(p_n));
-  EXPECT_TRUE(ps.Within(ps));
-  EXPECT_FALSE(ps.Within(line));
-  EXPECT_FALSE(ps.Within(lines));
-  EXPECT_FALSE(ps.Within(ring1));
-  EXPECT_FALSE(ps.Within(cell1));
-  EXPECT_FALSE(ps.Within(cells1));
+  EXPECT_FALSE(ps.within(p_n));
+  EXPECT_TRUE(ps.within(ps));
+  EXPECT_FALSE(ps.within(line));
+  EXPECT_FALSE(ps.within(lines));
+  EXPECT_FALSE(ps.within(ring1));
+  EXPECT_FALSE(ps.within(cell1));
+  EXPECT_FALSE(ps.within(cells1));
 
-  EXPECT_FALSE(line.Within(p_t));
-  EXPECT_FALSE(line.Within(ps));
-  EXPECT_TRUE(line.Within(line));
-  EXPECT_TRUE(line.Within(lines));
-  EXPECT_FALSE(line.Within(ring1));
-  EXPECT_FALSE(line.Within(cell1));
-  EXPECT_FALSE(line.Within(cells1));
+  EXPECT_FALSE(line.within(p_t));
+  EXPECT_FALSE(line.within(ps));
+  EXPECT_TRUE(line.within(line));
+  EXPECT_TRUE(line.within(lines));
+  EXPECT_FALSE(line.within(ring1));
+  EXPECT_FALSE(line.within(cell1));
+  EXPECT_FALSE(line.within(cells1));
 
-  EXPECT_FALSE(lines.Within(p_t));
-  EXPECT_FALSE(lines.Within(ps));
-  EXPECT_TRUE(lines.Within(line));
-  EXPECT_TRUE(lines.Within(lines));
-  EXPECT_FALSE(lines.Within(ring1));
-  EXPECT_FALSE(lines.Within(cell1));
-  EXPECT_FALSE(lines.Within(cells1));
+  EXPECT_FALSE(lines.within(p_t));
+  EXPECT_FALSE(lines.within(ps));
+  EXPECT_TRUE(lines.within(line));
+  EXPECT_TRUE(lines.within(lines));
+  EXPECT_FALSE(lines.within(ring1));
+  EXPECT_FALSE(lines.within(cell1));
+  EXPECT_FALSE(lines.within(cells1));
 
-  EXPECT_FALSE(ring1.Within(p_t));
-  EXPECT_FALSE(ring1.Within(ps));
-  EXPECT_FALSE(ring1.Within(line));
-  EXPECT_FALSE(ring1.Within(lines));
-  EXPECT_FALSE(ring1.Within(ring1));
-  EXPECT_FALSE(ring1.Within(cell1));
-  EXPECT_FALSE(ring1.Within(cells1));
+  EXPECT_FALSE(ring1.within(p_t));
+  EXPECT_FALSE(ring1.within(ps));
+  EXPECT_FALSE(ring1.within(line));
+  EXPECT_FALSE(ring1.within(lines));
+  EXPECT_FALSE(ring1.within(ring1));
+  EXPECT_FALSE(ring1.within(cell1));
+  EXPECT_FALSE(ring1.within(cells1));
 
-  EXPECT_FALSE(cell1.Within(p_t));
-  EXPECT_FALSE(cell1.Within(ps));
-  EXPECT_FALSE(cell1.Within(line));
-  EXPECT_FALSE(cell1.Within(lines));
-  EXPECT_FALSE(cell1.Within(ring1));
-  EXPECT_TRUE(cell1.Within(cell1));
-  EXPECT_TRUE(cell1.Within(cells1));
+  EXPECT_FALSE(cell1.within(p_t));
+  EXPECT_FALSE(cell1.within(ps));
+  EXPECT_FALSE(cell1.within(line));
+  EXPECT_FALSE(cell1.within(lines));
+  EXPECT_FALSE(cell1.within(ring1));
+  EXPECT_TRUE(cell1.within(cell1));
+  EXPECT_TRUE(cell1.within(cells1));
 
-  EXPECT_FALSE(cells1.Within(p_t));
-  EXPECT_FALSE(cells1.Within(ps));
-  EXPECT_FALSE(cells1.Within(line));
-  EXPECT_FALSE(cells1.Within(lines));
-  EXPECT_FALSE(cells1.Within(ring1));
-  EXPECT_TRUE(cells1.Within(cell1));
-  EXPECT_TRUE(cells1.Within(cells1));
+  EXPECT_FALSE(cells1.within(p_t));
+  EXPECT_FALSE(cells1.within(ps));
+  EXPECT_FALSE(cells1.within(line));
+  EXPECT_FALSE(cells1.within(lines));
+  EXPECT_FALSE(cells1.within(ring1));
+  EXPECT_TRUE(cells1.within(cell1));
+  EXPECT_TRUE(cells1.within(cells1));
 }
 
 TEST(fields2cover_types_geometry, crosses) {
@@ -318,64 +361,64 @@ TEST(fields2cover_types_geometry, crosses) {
   F2CCells cells1 {cell1};
 
 
-  EXPECT_FALSE(p_t.Crosses(p_n));
-  EXPECT_FALSE(p_t.Crosses(ps));
-  EXPECT_FALSE(p_t.Crosses(line));
-  EXPECT_FALSE(p_t.Crosses(lines));
-  EXPECT_FALSE(p_t.Crosses(ring1));
-  EXPECT_FALSE(p_t.Crosses(cell1));
-  EXPECT_FALSE(p_t.Crosses(cells1));
-  EXPECT_FALSE(p_n.Crosses(ring1));
-  EXPECT_FALSE(p_n.Crosses(cell1));
-  EXPECT_FALSE(p_n.Crosses(cells1));
+  EXPECT_FALSE(p_t.crosses(p_n));
+  EXPECT_FALSE(p_t.crosses(ps));
+  EXPECT_FALSE(p_t.crosses(line));
+  EXPECT_FALSE(p_t.crosses(lines));
+  EXPECT_FALSE(p_t.crosses(ring1));
+  EXPECT_FALSE(p_t.crosses(cell1));
+  EXPECT_FALSE(p_t.crosses(cells1));
+  EXPECT_FALSE(p_n.crosses(ring1));
+  EXPECT_FALSE(p_n.crosses(cell1));
+  EXPECT_FALSE(p_n.crosses(cells1));
 
-  EXPECT_FALSE(ps.Crosses(p_n));
-  EXPECT_FALSE(ps.Crosses(ps));
-  EXPECT_FALSE(ps.Crosses(line));
-  EXPECT_FALSE(ps.Crosses(lines));
-  EXPECT_FALSE(ps.Crosses(ring1));
-  EXPECT_TRUE(ps.Crosses(cell1));
-  EXPECT_TRUE(ps.Crosses(cells1));
+  EXPECT_FALSE(ps.crosses(p_n));
+  EXPECT_FALSE(ps.crosses(ps));
+  EXPECT_FALSE(ps.crosses(line));
+  EXPECT_FALSE(ps.crosses(lines));
+  EXPECT_FALSE(ps.crosses(ring1));
+  EXPECT_TRUE(ps.crosses(cell1));
+  EXPECT_TRUE(ps.crosses(cells1));
 
-  EXPECT_FALSE(line.Crosses(p_t));
-  EXPECT_FALSE(line.Crosses(ps));
-  EXPECT_FALSE(line.Crosses(line));
-  EXPECT_FALSE(line.Crosses(lines));
-  EXPECT_FALSE(line.Crosses(ring1));
-  EXPECT_TRUE(line.Crosses(cell1));
-  EXPECT_TRUE(line.Crosses(cells1));
+  EXPECT_FALSE(line.crosses(p_t));
+  EXPECT_FALSE(line.crosses(ps));
+  EXPECT_FALSE(line.crosses(line));
+  EXPECT_FALSE(line.crosses(lines));
+  EXPECT_FALSE(line.crosses(ring1));
+  EXPECT_TRUE(line.crosses(cell1));
+  EXPECT_TRUE(line.crosses(cells1));
 
-  EXPECT_FALSE(lines.Crosses(p_t));
-  EXPECT_FALSE(lines.Crosses(ps));
-  EXPECT_FALSE(lines.Crosses(line));
-  EXPECT_FALSE(lines.Crosses(lines));
-  EXPECT_FALSE(lines.Crosses(ring1));
-  EXPECT_TRUE(lines.Crosses(cell1));
-  EXPECT_TRUE(lines.Crosses(cells1));
+  EXPECT_FALSE(lines.crosses(p_t));
+  EXPECT_FALSE(lines.crosses(ps));
+  EXPECT_FALSE(lines.crosses(line));
+  EXPECT_FALSE(lines.crosses(lines));
+  EXPECT_FALSE(lines.crosses(ring1));
+  EXPECT_TRUE(lines.crosses(cell1));
+  EXPECT_TRUE(lines.crosses(cells1));
 
-  EXPECT_FALSE(ring1.Crosses(p_t));
-  EXPECT_FALSE(ring1.Crosses(ps));
-  EXPECT_FALSE(ring1.Crosses(line));
-  EXPECT_FALSE(ring1.Crosses(lines));
-  EXPECT_FALSE(ring1.Crosses(ring1));
-  EXPECT_FALSE(ring1.Crosses(cell1));
-  EXPECT_FALSE(ring1.Crosses(cells1));
+  EXPECT_FALSE(ring1.crosses(p_t));
+  EXPECT_FALSE(ring1.crosses(ps));
+  EXPECT_FALSE(ring1.crosses(line));
+  EXPECT_FALSE(ring1.crosses(lines));
+  EXPECT_FALSE(ring1.crosses(ring1));
+  EXPECT_FALSE(ring1.crosses(cell1));
+  EXPECT_FALSE(ring1.crosses(cells1));
 
-  EXPECT_FALSE(cell1.Crosses(p_t));
-  EXPECT_TRUE(cell1.Crosses(ps));
-  EXPECT_TRUE(cell1.Crosses(line));
-  EXPECT_TRUE(cell1.Crosses(lines));
-  EXPECT_FALSE(cell1.Crosses(ring1));
-  EXPECT_FALSE(cell1.Crosses(cell1));
-  EXPECT_FALSE(cell1.Crosses(cells1));
+  EXPECT_FALSE(cell1.crosses(p_t));
+  EXPECT_TRUE(cell1.crosses(ps));
+  EXPECT_TRUE(cell1.crosses(line));
+  EXPECT_TRUE(cell1.crosses(lines));
+  EXPECT_FALSE(cell1.crosses(ring1));
+  EXPECT_FALSE(cell1.crosses(cell1));
+  EXPECT_FALSE(cell1.crosses(cells1));
 
-  EXPECT_FALSE(cells1.Crosses(p_t));
-  EXPECT_TRUE(cells1.Crosses(ps));
-  EXPECT_TRUE(cells1.Crosses(line));
-  EXPECT_TRUE(cells1.Crosses(lines));
-  EXPECT_FALSE(cells1.Crosses(ring1));
-  EXPECT_FALSE(cells1.Crosses(cell1));
-  EXPECT_FALSE(cells1.Crosses(cells1));
+  EXPECT_FALSE(cells1.crosses(p_t));
+  EXPECT_TRUE(cells1.crosses(ps));
+  EXPECT_TRUE(cells1.crosses(line));
+  EXPECT_TRUE(cells1.crosses(lines));
+  EXPECT_FALSE(cells1.crosses(ring1));
+  EXPECT_FALSE(cells1.crosses(cell1));
+  EXPECT_FALSE(cells1.crosses(cells1));
 }
 
 TEST(fields2cover_types_geometry, distance) {
@@ -389,64 +432,64 @@ TEST(fields2cover_types_geometry, distance) {
   F2CCells cells1 {cell1};
 
 
-  EXPECT_NEAR(p_t.Distance(p_n), sqrt(2), 1e-7);
-  EXPECT_NEAR(p_t.Distance(ps), 0, 1e-7);
-  EXPECT_NEAR(p_t.Distance(line), 0, 1e-7);
-  EXPECT_NEAR(p_t.Distance(lines), 0, 1e-7);
-  EXPECT_NEAR(p_t.Distance(ring1), -1, 1e-7);
-  EXPECT_NEAR(p_t.Distance(cell1), 0, 1e-7);
-  EXPECT_NEAR(p_t.Distance(cells1), 0, 1e-7);
-  EXPECT_NEAR(p_n.Distance(ring1), -1, 1e-7);
-  EXPECT_NEAR(p_n.Distance(cell1), sqrt(2)/2.0, 1e-7);
-  EXPECT_NEAR(p_n.Distance(cells1), sqrt(2)/2.0, 1e-7);
+  EXPECT_NEAR(p_t.distance(p_n), sqrt(2), 1e-7);
+  EXPECT_NEAR(p_t.distance(ps), 0, 1e-7);
+  EXPECT_NEAR(p_t.distance(line), 0, 1e-7);
+  EXPECT_NEAR(p_t.distance(lines), 0, 1e-7);
+  EXPECT_NEAR(p_t.distance(ring1), -1, 1e-7);
+  EXPECT_NEAR(p_t.distance(cell1), 0, 1e-7);
+  EXPECT_NEAR(p_t.distance(cells1), 0, 1e-7);
+  EXPECT_NEAR(p_n.distance(ring1), -1, 1e-7);
+  EXPECT_NEAR(p_n.distance(cell1), sqrt(2)/2.0, 1e-7);
+  EXPECT_NEAR(p_n.distance(cells1), sqrt(2)/2.0, 1e-7);
 
-  EXPECT_NEAR(ps.Distance(p_n), 0, 1e-7);
-  EXPECT_NEAR(ps.Distance(ps), 0, 1e-7);
-  EXPECT_NEAR(ps.Distance(line), 0, 1e-7);
-  EXPECT_NEAR(ps.Distance(lines), 0, 1e-7);
-  EXPECT_NEAR(ps.Distance(ring1), -1, 1e-7);
-  EXPECT_NEAR(ps.Distance(cell1), 0, 1e-7);
-  EXPECT_NEAR(ps.Distance(cells1), 0, 1e-7);
+  EXPECT_NEAR(ps.distance(p_n), 0, 1e-7);
+  EXPECT_NEAR(ps.distance(ps), 0, 1e-7);
+  EXPECT_NEAR(ps.distance(line), 0, 1e-7);
+  EXPECT_NEAR(ps.distance(lines), 0, 1e-7);
+  EXPECT_NEAR(ps.distance(ring1), -1, 1e-7);
+  EXPECT_NEAR(ps.distance(cell1), 0, 1e-7);
+  EXPECT_NEAR(ps.distance(cells1), 0, 1e-7);
 
-  EXPECT_NEAR(line.Distance(p_t), 0, 1e-7);
-  EXPECT_NEAR(line.Distance(ps), 0, 1e-7);
-  EXPECT_NEAR(line.Distance(line), 0, 1e-7);
-  EXPECT_NEAR(line.Distance(lines), 0, 1e-7);
-  EXPECT_NEAR(line.Distance(ring1), -1, 1e-7);
-  EXPECT_NEAR(line.Distance(cell1), 0, 1e-7);
-  EXPECT_NEAR(line.Distance(cells1), 0, 1e-7);
+  EXPECT_NEAR(line.distance(p_t), 0, 1e-7);
+  EXPECT_NEAR(line.distance(ps), 0, 1e-7);
+  EXPECT_NEAR(line.distance(line), 0, 1e-7);
+  EXPECT_NEAR(line.distance(lines), 0, 1e-7);
+  EXPECT_NEAR(line.distance(ring1), -1, 1e-7);
+  EXPECT_NEAR(line.distance(cell1), 0, 1e-7);
+  EXPECT_NEAR(line.distance(cells1), 0, 1e-7);
 
-  EXPECT_NEAR(lines.Distance(p_t), 0, 1e-7);
-  EXPECT_NEAR(lines.Distance(ps), 0, 1e-7);
-  EXPECT_NEAR(lines.Distance(line), 0, 1e-7);
-  EXPECT_NEAR(lines.Distance(lines), 0, 1e-7);
-  EXPECT_NEAR(lines.Distance(ring1), -1, 1e-7);
-  EXPECT_NEAR(lines.Distance(cell1), 0, 1e-7);
-  EXPECT_NEAR(lines.Distance(cells1), 0, 1e-7);
+  EXPECT_NEAR(lines.distance(p_t), 0, 1e-7);
+  EXPECT_NEAR(lines.distance(ps), 0, 1e-7);
+  EXPECT_NEAR(lines.distance(line), 0, 1e-7);
+  EXPECT_NEAR(lines.distance(lines), 0, 1e-7);
+  EXPECT_NEAR(lines.distance(ring1), -1, 1e-7);
+  EXPECT_NEAR(lines.distance(cell1), 0, 1e-7);
+  EXPECT_NEAR(lines.distance(cells1), 0, 1e-7);
 
-  EXPECT_NEAR(ring1.Distance(p_t), -1, 1e-7);
-  EXPECT_NEAR(ring1.Distance(ps), -1, 1e-7);
-  EXPECT_NEAR(ring1.Distance(line), -1, 1e-7);
-  EXPECT_NEAR(ring1.Distance(lines), -1, 1e-7);
-  EXPECT_NEAR(ring1.Distance(ring1), -1, 1e-7);
-  EXPECT_NEAR(ring1.Distance(cell1), -1, 1e-7);
-  EXPECT_NEAR(ring1.Distance(cells1), -1, 1e-7);
+  EXPECT_NEAR(ring1.distance(p_t), -1, 1e-7);
+  EXPECT_NEAR(ring1.distance(ps), -1, 1e-7);
+  EXPECT_NEAR(ring1.distance(line), -1, 1e-7);
+  EXPECT_NEAR(ring1.distance(lines), -1, 1e-7);
+  EXPECT_NEAR(ring1.distance(ring1), -1, 1e-7);
+  EXPECT_NEAR(ring1.distance(cell1), -1, 1e-7);
+  EXPECT_NEAR(ring1.distance(cells1), -1, 1e-7);
 
-  EXPECT_NEAR(cell1.Distance(p_t), 0, 1e-7);
-  EXPECT_NEAR(cell1.Distance(ps), 0, 1e-7);
-  EXPECT_NEAR(cell1.Distance(line), 0, 1e-7);
-  EXPECT_NEAR(cell1.Distance(lines), 0, 1e-7);
-  EXPECT_NEAR(cell1.Distance(ring1), -1, 1e-7);
-  EXPECT_NEAR(cell1.Distance(cell1), 0, 1e-7);
-  EXPECT_NEAR(cell1.Distance(cells1), 0, 1e-7);
+  EXPECT_NEAR(cell1.distance(p_t), 0, 1e-7);
+  EXPECT_NEAR(cell1.distance(ps), 0, 1e-7);
+  EXPECT_NEAR(cell1.distance(line), 0, 1e-7);
+  EXPECT_NEAR(cell1.distance(lines), 0, 1e-7);
+  EXPECT_NEAR(cell1.distance(ring1), -1, 1e-7);
+  EXPECT_NEAR(cell1.distance(cell1), 0, 1e-7);
+  EXPECT_NEAR(cell1.distance(cells1), 0, 1e-7);
 
-  EXPECT_NEAR(cells1.Distance(p_t), 0, 1e-7);
-  EXPECT_NEAR(cells1.Distance(ps), 0, 1e-7);
-  EXPECT_NEAR(cells1.Distance(line), 0, 1e-7);
-  EXPECT_NEAR(cells1.Distance(lines), 0, 1e-7);
-  EXPECT_NEAR(cells1.Distance(ring1), -1, 1e-7);
-  EXPECT_NEAR(cells1.Distance(cell1), 0, 1e-7);
-  EXPECT_NEAR(cells1.Distance(cells1), 0, 1e-7);
+  EXPECT_NEAR(cells1.distance(p_t), 0, 1e-7);
+  EXPECT_NEAR(cells1.distance(ps), 0, 1e-7);
+  EXPECT_NEAR(cells1.distance(line), 0, 1e-7);
+  EXPECT_NEAR(cells1.distance(lines), 0, 1e-7);
+  EXPECT_NEAR(cells1.distance(ring1), -1, 1e-7);
+  EXPECT_NEAR(cells1.distance(cell1), 0, 1e-7);
+  EXPECT_NEAR(cells1.distance(cells1), 0, 1e-7);
 
 
 }
@@ -684,10 +727,10 @@ TEST(fields2cover_types_geometry, rotateFromPoint) {
   line->addPoint(1, 2);
   line->addPoint(3, 4);
   line = F2CPoint(5, 6).rotateFromPoint(pi, line);
-  p_out = line.StartPoint();
+  p_out = line.startPoint();
   EXPECT_NEAR(p_out.getX(), 9, 1e-7);
   EXPECT_NEAR(p_out.getY(), 10, 1e-7);
-  p_out = line.EndPoint();
+  p_out = line.endPoint();
   EXPECT_NEAR(p_out.getX(), 7, 1e-7);
   EXPECT_NEAR(p_out.getY(), 8, 1e-7);
 }

@@ -21,7 +21,7 @@ import exhale
 # -- Project information -----------------------------------------------------
 
 project = 'Fields2Cover'
-copyright = '2022, Wageningen University'
+copyright = '2020-2024, Wageningen University'
 author = 'Wageningen University'
 
 # The full version, including alpha/beta/rc tags

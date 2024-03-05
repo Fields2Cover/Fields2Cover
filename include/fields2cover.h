@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -19,22 +19,29 @@
 
 #include "fields2cover/objectives/base_objective.h"
 
-#include "fields2cover/objectives/hg_objective.h"
-#include "fields2cover/objectives/rem_area.h"
+#include "fields2cover/objectives/hg_obj/hg_objective.h"
+#include "fields2cover/objectives/hg_obj/rem_area.h"
 
-#include "fields2cover/objectives/sg_objective.h"
-#include "fields2cover/objectives/n_swath.h"
-#include "fields2cover/objectives/field_coverage.h"
-#include "fields2cover/objectives/overlaps.h"
-#include "fields2cover/objectives/swath_length.h"
+#include "fields2cover/objectives/sg_obj/sg_objective.h"
+#include "fields2cover/objectives/sg_obj/n_swath.h"
+#include "fields2cover/objectives/sg_obj/n_swath_modified.h"
+#include "fields2cover/objectives/sg_obj/field_coverage.h"
+#include "fields2cover/objectives/sg_obj/overlaps.h"
+#include "fields2cover/objectives/sg_obj/swath_length.h"
 
-#include "fields2cover/objectives/rp_objective.h"
-#include "fields2cover/objectives/direct_dist_path_obj.h"
-#include "fields2cover/objectives/complete_turn_path_obj.h"
+#include "fields2cover/objectives/rp_obj/rp_objective.h"
+#include "fields2cover/objectives/rp_obj/direct_dist_path_obj.h"
+#include "fields2cover/objectives/rp_obj/complete_turn_path_obj.h"
 
-#include "fields2cover/objectives/pp_objective.h"
-#include "fields2cover/objectives/path_length.h"
+#include "fields2cover/objectives/pp_obj/pp_objective.h"
+#include "fields2cover/objectives/pp_obj/path_length.h"
 
+#include "fields2cover/objectives/decomp_obj/decomp_objective.h"
+
+
+#include "fields2cover/decomposition/decomposition_base.h"
+#include "fields2cover/decomposition/trapezoidal_decomp.h"
+#include "fields2cover/decomposition/boustrophedon_decomp.h"
 
 #include "fields2cover/headland_generator/headland_generator_base.h"
 #include "fields2cover/headland_generator/constant_headland.h"
@@ -42,11 +49,14 @@
 #include "fields2cover/swath_generator/swath_generator_base.h"
 #include "fields2cover/swath_generator/brute_force.h"
 
+
 #include "fields2cover/route_planning/single_cell_swaths_order_base.h"
 #include "fields2cover/route_planning/boustrophedon_order.h"
 #include "fields2cover/route_planning/snake_order.h"
 #include "fields2cover/route_planning/spiral_order.h"
 #include "fields2cover/route_planning/custom_order.h"
+
+#include "fields2cover/route_planning/route_planner_base.h"
 
 #include "fields2cover/path_planning/turning_base.h"
 #include "fields2cover/path_planning/dubins_curves.h"

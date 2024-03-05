@@ -1,7 +1,7 @@
 //=============================================================================
-//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
-//                           BSD-3 License
+//                        BSD-3 License
 //=============================================================================
 
 #pragma once
@@ -61,6 +61,8 @@ struct Swaths {
       double width = 0, SwathType type = SwathType::MAINLAND);
   void append(const MultiLineString& lines, const Cells& poly,
       double width = 0, SwathType type = SwathType::MAINLAND);
+  void append(const Swaths& swaths);
+
   void sort();
   void reverseDirOddSwaths();
   void moveTo(const Point& ref_pt);
@@ -68,7 +70,7 @@ struct Swaths {
   Swaths clone() const;
 
  private:
-  std::vector<Swath> data;
+  std::vector<Swath> data_;
 };
 
 

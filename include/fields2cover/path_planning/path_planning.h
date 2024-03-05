@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -16,12 +16,21 @@ namespace f2c::pp {
 /// Path planning class to connect a path using a TurningBase class method
 class PathPlanning {
  public:
-  /// Connect one swath to the next one in order using a Turning algorithm
-  F2CPath searchBestPath(const F2CRobot& robot, const F2CSwaths& swaths,
-      TurningBase& turn);
+  F2CPath planPath(const F2CRobot& robot, const F2CSwaths& swaths,
+      TurningBase& turn) const;
 
- public:
-  double turn_point_dist {0.0};
+  F2CPath planPathForConnection(const F2CRobot& robot,
+      const F2CPoint& p1, double ang1,
+      const F2CMultiPoint& mp,
+      const F2CPoint& p2, double ang2,
+      TurningBase& turn) const;
+
+  F2CPath planPathForConnection(const F2CRobot& robot,
+      const F2CSwaths& s1, const F2CMultiPoint& mp, const F2CSwaths& s2,
+      TurningBase& turn) const;
+
+  F2CPath planPath(const F2CRobot& robot, const F2CRoute& route,
+      TurningBase& turn) const;
 };
 
 }  // namespace f2c::pp

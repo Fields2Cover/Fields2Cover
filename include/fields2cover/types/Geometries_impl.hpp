@@ -1,7 +1,7 @@
 //=============================================================================
-//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
-//                           MIT License
+//                        BSD-3 License
 //=============================================================================
 
 #pragma once
@@ -11,8 +11,8 @@
 namespace f2c::types {
 
 template <class SAMETYPE, class T, OGRwkbGeometryType R, class CHILDRENTYPE>
-double Geometries<SAMETYPE, T, R, CHILDRENTYPE>::getArea() const {
-  return (this->data ? this->data->get_Area() : 0.0);
+double Geometries<SAMETYPE, T, R, CHILDRENTYPE>::area() const {
+  return (this->data_ ? this->data_->get_Area() : 0.0);
 }
 
 template <class SAMETYPE, class T, OGRwkbGeometryType R, class CHILDRENTYPE>
@@ -21,6 +21,16 @@ SAMETYPE Geometries<SAMETYPE, T, R, CHILDRENTYPE>::clone() const {
   cloned.importFromWkt(this->exportToWkt());
   return cloned;
 }
+
+template <class SAMETYPE, class T, OGRwkbGeometryType R, class CHILDRENTYPE>
+SAMETYPE Geometries<SAMETYPE, T, R, CHILDRENTYPE>::simplify(
+    double d_tol) const {
+  OGRGeometry* s = this->data_->SimplifyPreserveTopology(d_tol);
+  SAMETYPE f2c_s(s);
+  OGRGeometryFactory::destroyGeometry(s);
+  return f2c_s;
+}
+
 
 template <class SAMETYPE, class T, OGRwkbGeometryType R, class CHILDRENTYPE>
 Geometries<SAMETYPE, T, R, CHILDRENTYPE>::Iterator::Private::Private()
@@ -167,6 +177,29 @@ typename Geometries<SAMETYPE, T, R, CHILDRENTYPE>::ConstIterator
     Geometries<SAMETYPE, T, R, CHILDRENTYPE>::end(const SAMETYPE* poSelf) {
   return poSelf->end();
 }
+
+template <class SAMETYPE, class T, OGRwkbGeometryType R, class CHILDRENTYPE>
+const CHILDRENTYPE Geometries<SAMETYPE, T, R, CHILDRENTYPE>::operator[](
+    int i) const {
+  return static_cast<SAMETYPE const*>(this)->getGeometry(i);
+}
+template <class SAMETYPE, class T, OGRwkbGeometryType R, class CHILDRENTYPE>
+const CHILDRENTYPE Geometries<SAMETYPE, T, R, CHILDRENTYPE>::at(int i) const {
+  return static_cast<SAMETYPE const*>(this)->getGeometry(i);
+}
+template <class SAMETYPE, class T, OGRwkbGeometryType R, class CHILDRENTYPE>
+const CHILDRENTYPE Geometries<SAMETYPE, T, R, CHILDRENTYPE>::back() const {
+  size_t N = static_cast<SAMETYPE const*>(this)->size();
+  return static_cast<SAMETYPE const*>(this)->getGeometry(N-1);
+}
+
+template <class SAMETYPE, class T, OGRwkbGeometryType R, class CHILDRENTYPE>
+SAMETYPE& Geometries<SAMETYPE, T, R, CHILDRENTYPE>::append(
+    const SAMETYPE& other) {
+  this->insert(this->end(), other.begin(), other.end());
+  return *this;
+}
+
 
 }  // namespace f2c::types
 

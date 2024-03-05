@@ -23,7 +23,7 @@ Before continue, we will define the path planner and some parameters that will b
 
 .. code-block:: python
 
-  robot.setMinRadius(2)  # m
+  robot.setMinTurningRadius(2)  # m
   robot.linear_curv_change = 0.1  # 1/m^2
   path_planner = f2c.PP_PathPlanning()
 

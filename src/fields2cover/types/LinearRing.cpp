@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -10,7 +10,7 @@
 namespace f2c::types {
 
 LinearRing::LinearRing() {
-  data = std::shared_ptr<OGRLinearRing>(
+  this->data_ = std::shared_ptr<OGRLinearRing>(
     static_cast<OGRLinearRing*>(
       OGRGeometryFactory::createGeometry(wkbLinearRing)),
     [](OGRLinearRing* f) {OGRGeometryFactory::destroyGeometry(f);});
@@ -35,25 +35,25 @@ void LinearRing::operator*=(double b) {
 }
 
 double LinearRing::getX(size_t i) const {
-  return data->getX(i);
+  return this->data_->getX(i);
 }
 
 double LinearRing::getY(size_t i) const {
-  return data->getY(i);
+  return this->data_->getY(i);
 }
 double LinearRing::getZ(size_t i) const {
-  return data->getZ(i);
+  return this->data_->getZ(i);
 }
-double LinearRing::getLength() const {
-  return this->data->get_Length();
+double LinearRing::length() const {
+  return this->data_->get_Length();
 }
 
 void LinearRing::reversePoints() {
-  this->data->reversePoints();
+  this->data_->reversePoints();
 }
 
 size_t LinearRing::size() const {
-  return isEmpty() ? 0 : this->data->getNumPoints();
+  return isEmpty() ? 0 : this->data_->getNumPoints();
 }
 
 void LinearRing::getGeometry(size_t i, Point& point) {
@@ -62,7 +62,7 @@ void LinearRing::getGeometry(size_t i, Point& point) {
         "Error getGeometry: LinearRing does not contain point " +
         std::to_string(i));
   }
-  data->getPoint(i, point.get());
+  data_->getPoint(i, point.get());
 }
 
 void LinearRing::getGeometry(size_t i, Point& point) const {
@@ -71,7 +71,7 @@ void LinearRing::getGeometry(size_t i, Point& point) const {
         "Error getGeometry: LinearRing does not contain point " +
         std::to_string(i));
   }
-  data->getPoint(i, point.get());
+  data_->getPoint(i, point.get());
 }
 
 Point LinearRing::getGeometry(size_t i) {
@@ -81,7 +81,7 @@ Point LinearRing::getGeometry(size_t i) {
         std::to_string(i));
   }
   OGRPoint point;
-  data->getPoint(i, &point);
+  data_->getPoint(i, &point);
   return Point(point);
 }
 
@@ -91,11 +91,11 @@ const Point LinearRing::getGeometry(size_t i) const {
         "Error getGeometry: LinearRing does not contain point " +
         std::to_string(i));
   }
-  return Point(data->getX(i), data->getY(i), data->getZ(i));
+  return Point(data_->getX(i), data_->getY(i), data_->getZ(i));
 }
 
 void LinearRing::setGeometry(size_t i, const Point& p) {
-  data->setPoint(i, p.getX(), p.getY(), p.getZ());
+  data_->setPoint(i, p.getX(), p.getY(), p.getZ());
 }
 
 void LinearRing::addGeometry(const Point& p) {
@@ -103,25 +103,34 @@ void LinearRing::addGeometry(const Point& p) {
 }
 
 void LinearRing::addPoint(double x, double y, double z) {
-  data->addPoint(x, y, z);
+  data_->addPoint(x, y, z);
 }
 
 void LinearRing::addPoint(const Point& p) {
-  data->addPoint(p.getX(), p.getY(), p.getZ());
+  data_->addPoint(p.getX(), p.getY(), p.getZ());
 }
 
-const Point LinearRing::StartPoint() const {
+const Point LinearRing::startPoint() const {
   return getGeometry(0);
 }
 
-const Point LinearRing::EndPoint() const {
+const Point LinearRing::endPoint() const {
   return getGeometry(size()-1);
 }
 
 bool LinearRing::isClockwise() const {
-  return data->isClockwise();
+  return data_->isClockwise();
 }
 
+Point LinearRing::closestPointTo(const Point& p) const {
+  std::vector<double> dist;
+  std::vector<Point> ps;
+  for (size_t i = 0; i < this->size() - 1; ++i) {
+    ps.emplace_back(p.closestPointInSegment(this->at(i), this->at(i+1)));
+    dist.emplace_back(ps.back().distance(p));
+  }
+  return ps[std::min_element(dist.begin(), dist.end()) - dist.begin()];
+}
 
 
 }  // namespace f2c::types

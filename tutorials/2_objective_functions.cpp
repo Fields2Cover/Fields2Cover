@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -65,7 +65,7 @@ int main() {
       F2CSwath(F2CLineString({F2CPoint(0.0, 0.0), F2CPoint(0.0, 1.0)})),
       F2CSwath(F2CLineString({F2CPoint(1.0, 1.0), F2CPoint(1.0, 0.0)}))});
   F2CRobot robot(2.0, 3.0);
-  robot.setMinRadius(0.5);
+  robot.setMinTurningRadius(0.5);
   f2c::obj::CompleteTurnPathObj<f2c::pp::DubinsCurves> complete_length(robot);
   std::cout << "The complete length is: " <<
     complete_length.computeCost(swaths_path) <<

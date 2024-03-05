@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -11,11 +11,11 @@
 std::vector<F2CLinearRing> create_polygon_border(void) {
   std::vector<F2CLinearRing> v_line;
   F2CLinearRing line;
-  line.addPoint(-10, 0); 
-  line.addPoint(-10, 20); 
-  line.addPoint(10, 20); 
-  line.addPoint(10, 0); 
-  line.addPoint(-10, 0); 
+  line.addPoint(-10, 0);
+  line.addPoint(-10, 20);
+  line.addPoint(10, 20);
+  line.addPoint(10, 0);
+  line.addPoint(-10, 0);
   v_line.emplace_back(line);
   return v_line;
 }
@@ -27,8 +27,8 @@ TEST(fields2cover_types_swaths, append) {
   polygon.addRing(rings[0]);
   polys.addGeometry(polygon);
   F2CLineString line;
-  line.addPoint(-20, -10); 
-  line.addPoint(-5, 5); 
+  line.addPoint(-20, -10);
+  line.addPoint(-5, 5);
 
   F2CSwaths swaths;
   EXPECT_EQ(swaths.size(), 0);
@@ -36,8 +36,8 @@ TEST(fields2cover_types_swaths, append) {
   EXPECT_EQ(swaths.size(), 1);
   swaths.append(line, polys, 2.0);
   EXPECT_EQ(swaths.size(), 2);
-  line.addPoint(-19.9, -10); 
-  line.addPoint(-5, 5.1); 
+  line.addPoint(-19.9, -10);
+  line.addPoint(-5, 5.1);
   swaths.append(line, polys, 3.0);
   EXPECT_EQ(swaths.size(), 4);
   F2CMultiLineString lines;

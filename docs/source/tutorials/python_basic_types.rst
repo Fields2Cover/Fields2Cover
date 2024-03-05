@@ -269,7 +269,7 @@ Other important parameters of ``Robot`` are:
 
 - *cruise_speed*: is the speed of the vehicle when traveling through the field.
 
-- *max_icc*: is the maximum Instantaneous Center of Curvature on a turn. It's the inverse of the radius. It's preferable to use the function ``setMinRadius(double)``.
+- *max_icc*: is the maximum Instantaneous Center of Curvature on a turn. It's the inverse of the radius. It's preferable to use the function ``setMinTurningRadius(double)``.
 
 - *linear_curv_change*: is the maximum change of curvature in a turn. It's used to prevent instant changes of curvature.
 

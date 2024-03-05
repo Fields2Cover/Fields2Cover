@@ -1,12 +1,12 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
 
 #include <gtest/gtest.h>
 #include "fields2cover/types.h"
-#include "fields2cover/objectives/direct_dist_path_obj.h"
+#include "fields2cover/objectives/rp_obj/direct_dist_path_obj.h"
 #include "fields2cover/route_planning/snake_order.h"
 
 TEST(fields2cover_route_snake, genSortedSwaths_even) {
@@ -18,7 +18,7 @@ TEST(fields2cover_route_snake, genSortedSwaths_even) {
 
   f2c::rp::SnakeOrder swath_sorter;
   f2c::obj::DirectDistPathObj objective;
-  
+
   swaths = swath_sorter.genSortedSwaths(swaths);
 
   EXPECT_EQ(swaths[0].getWidth(), 1);

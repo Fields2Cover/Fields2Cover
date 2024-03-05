@@ -1,7 +1,7 @@
 #=============================================================================
-#    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
-#                     Author: Gonzalo Mier
-#                        BSD-3 License
+#     Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
+#                      Author: Gonzalo Mier
+#                         BSD-3 License
 #=============================================================================
 
 import math
@@ -17,33 +17,38 @@ f2c.Transform.transformToUTM(field);
 
 robot = f2c.Robot(2.0, 6.0);
 const_hl = f2c.HG_Const_gen()
-no_hl = const_hl.generateHeadlands(field.field, 3.0 * robot.robot_width)
+no_hl = const_hl.generateHeadlands(field.getField(), 3.0 * robot.getWidth())
 bf = f2c.SG_BruteForce()
-swaths = bf.generateSwaths(math.pi, robot.op_width, no_hl.getGeometry(0))
+swaths = bf.generateSwaths(math.pi, robot.getCovWidth(), no_hl.getGeometry(0))
 snake_sorter = f2c.RP_Snake()
 swaths = snake_sorter.genSortedSwaths(swaths)
 
-robot.setMinRadius(2)
+robot.setMinTurningRadius(2)
 path_planner = f2c.PP_PathPlanning()
 dubins = f2c.PP_DubinsCurves()
-path = path_planner.searchBestPath(robot, swaths, dubins);
+path = path_planner.planPath(robot, swaths, dubins);
 
 
-f2c.Visualizer.figure(71);
+f2c.Visualizer.figure();
 f2c.Visualizer.plot(field);
 f2c.Visualizer.plot(no_hl);
 f2c.Visualizer.plot(path);
-f2c.Visualizer.save("Tutorial_7_1_UTM");
+f2c.Visualizer.save("Tutorial_7_1_UTM.png");
 
 
 # Transform the generated path back to the previousa CRS.
 path_gps = f2c.Transform.transformToPrevCRS(path, field);
 f2c.Transform.transformToPrevCRS(field);
 
-f2c.Visualizer.figure(72);
+ps = [path_gps.getState(i).point for i in range(path_gps.size())]
+L = f2c.LineString(f2c.VectorPoint(ps))
+
+f2c.Visualizer.figure();
 f2c.Visualizer.plot(orig_field.getCellsAbsPosition());
-f2c.Visualizer.plot(path_gps);
-f2c.Visualizer.save("Tutorial_7_1_GPS");
+f2c.Visualizer.plot(L);
+#f2c.Visualizer.plot(path_gps);
+#f2c.Visualizer.axis_equal();
+f2c.Visualizer.save("Tutorial_7_1_GPS.png");
 
 
 

@@ -1,5 +1,5 @@
 #==============================================================================
-#     Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+#     Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 #                      Author: Gonzalo Mier
 #                         BSD-3 License
 #==============================================================================
@@ -15,9 +15,9 @@ def near(a, b, error = 1e-7):
 
 def test_fields2cover_pp_reeds_shepp_turnDist():
   robot = f2c.Robot(2.1, 2.5);
-  robot.cruise_speed = 2.0;
-  robot.max_icc = 1.0;
-  robot.linear_curv_change = 1.0;
+  robot.setCruiseVel(2.0);
+  robot.setMaxCurv(1.0);
+  robot.setMaxDiffCurv(1.0);
 
   turn = f2c.PP_ReedsSheppCurves();
   start = f2c.Point(0.0, 0.0);
@@ -27,9 +27,9 @@ def test_fields2cover_pp_reeds_shepp_turnDist():
 
 def test_fields2cover_pp_reeds_shepp_randomPoints():
   robot = f2c.Robot(2.1, 2.5);
-  robot.cruise_speed = 2.0;
-  robot.max_icc = 1.0;
-  robot.linear_curv_change = 1.0;
+  robot.setCruiseVel(2.0);
+  robot.setMaxCurv(1.0);
+  robot.setMaxDiffCurv(1.0);
   turn = f2c.PP_ReedsSheppCurves();
   turn.using_cache = False;
   for ang in np.arange(0.25, math.pi, 0.25):

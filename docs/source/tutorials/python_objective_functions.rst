@@ -144,7 +144,7 @@ Compute the complete distance of the path, including turns. This objective funct
   swaths_path.push_back(swath1);
   swaths_path.push_back(swath2);
   robot = f2c.Robot(2.0, 3.0);
-  robot.setMinRadius(0.5);
+  robot.setMinTurningRadius(0.5);
   complete_length = f2c.OBJ_CompleteTurnPathObj_Dubins(robot);
   print("The complete length is: ", complete_length.computeCost(swaths_path),
     " =~= ", 1 + 1 + math.pi/2.0);

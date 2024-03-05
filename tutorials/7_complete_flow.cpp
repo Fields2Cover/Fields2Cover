@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -17,32 +17,32 @@ int main() {
 
   F2CRobot robot (2.0, 6.0);
   f2c::hg::ConstHL const_hl;
-  F2CCells no_hl = const_hl.generateHeadlands(field.field, 3.0 * robot.robot_width);
+  F2CCells no_hl = const_hl.generateHeadlands(field.getField(), 3.0 * robot.getCovWidth());
   f2c::sg::BruteForce bf;
-  F2CSwaths swaths = bf.generateSwaths(M_PI, robot.op_width, no_hl.getGeometry(0));
+  F2CSwaths swaths = bf.generateSwaths(M_PI, robot.getCovWidth(), no_hl.getGeometry(0));
   f2c::rp::SnakeOrder snake_sorter;
   swaths = snake_sorter.genSortedSwaths(swaths);
   f2c::pp::PathPlanning path_planner;
-  robot.setMinRadius(2);  // m
+  robot.setMinTurningRadius(2);  // m
   f2c::pp::DubinsCurves dubins;
-  F2CPath path = path_planner.searchBestPath(robot, swaths, dubins);
+  F2CPath path = path_planner.planPath(robot, swaths, dubins);
 
 
-  f2c::Visualizer::figure(71);
+  f2c::Visualizer::figure();
   f2c::Visualizer::plot(field);
   f2c::Visualizer::plot(no_hl);
   f2c::Visualizer::plot(path);
-  f2c::Visualizer::save("Tutorial_7_1_UTM");
+  f2c::Visualizer::save("Tutorial_7_1_UTM.png");
 
 
   // Transform the generated path back to the previousa CRS.
   F2CPath path_gps = f2c::Transform::transformToPrevCRS(path, field);
   f2c::Transform::transformToPrevCRS(field);
 
-  f2c::Visualizer::figure(72);
+  f2c::Visualizer::figure();
   f2c::Visualizer::plot(orig_field.getCellsAbsPosition());
   f2c::Visualizer::plot(path_gps);
-  f2c::Visualizer::save("Tutorial_7_1_GPS");
+  f2c::Visualizer::save("Tutorial_7_1_GPS.png");
 
   return 0;
 }

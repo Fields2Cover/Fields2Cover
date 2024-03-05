@@ -1,47 +1,54 @@
 //=============================================================================
-//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
 
 #include <gtest/gtest.h>
-#include "fields2cover/types.h"
+#include "fields2cover.h"
+#include "../test_helpers/robot_data.hpp"
+#include "../test_helpers/path_planning_checker.hpp"
+
+
 
 TEST(fields2cover_types_robot, init) {
-  F2CRobot robot(3, 6);
-  EXPECT_EQ(robot.robot_width, 3);
-  EXPECT_EQ(robot.op_width, 6);
-  EXPECT_EQ(robot.getRobotWidth(), 3);
+  F2CRobot robot_def_const(1., 2.);
+  EXPECT_NEAR(robot_def_const.getWidth(),    1., 1e-5);
+  EXPECT_NEAR(robot_def_const.getCovWidth(), 2., 1e-5);
 
-  EXPECT_THROW( F2CRobot(0,0), std::out_of_range);
-  EXPECT_THROW( F2CRobot(-3,3), std::out_of_range);
-  EXPECT_THROW( F2CRobot(3,-3), std::out_of_range);
-  EXPECT_THROW( F2CRobot(6,3), std::out_of_range);
+  F2CRobot robot;
+  robot.setName("robot test");
+  EXPECT_EQ(robot.getName(), "robot test");
+  robot.setWidth(5.0);
+  EXPECT_NEAR(robot.getWidth(),              5.0, 1e-5);
+  robot.setCovWidth(10.0);
+  EXPECT_NEAR(robot.getCovWidth(),           10., 1e-5);
 
-  auto r1 = robot;
-  EXPECT_EQ(r1.robot_width, 3);
-  EXPECT_EQ(r1.op_width, 6);
-  EXPECT_EQ(r1.getRobotWidth(), 3);
+  robot.setMinTurningRadius(10.0);
+  EXPECT_NEAR(robot.getMaxCurv(),            0.1, 1e-5);
+  EXPECT_NEAR(robot.getMinTurningRadius(),   10., 1e-5);
 
-  auto r2 {robot};
-  EXPECT_EQ(r2.robot_width, 3);
-  EXPECT_EQ(r2.op_width, 6);
-  EXPECT_EQ(r2.getRobotWidth(), 3);
+  robot.setMaxCurv(0.4);
+  EXPECT_NEAR(robot.getMaxCurv(),            0.4, 1e-5);
+  EXPECT_NEAR(robot.getMinTurningRadius(),   2.5, 1e-5);
+  robot.setMaxDiffCurv(0.3);
+  EXPECT_NEAR(robot.getMaxDiffCurv(),        0.3, 1e-5);
 
-  auto r3 = F2CRobot(1, 2);
-  EXPECT_EQ(r3.robot_width, 1);
-  EXPECT_EQ(r3.op_width, 2);
+  robot.setCruiseVel(2.0);
+  EXPECT_NEAR(robot.getCruiseVel(),          2.0, 1e-5);
+  EXPECT_NEAR(robot.getTurnVel(),            2.0, 1e-5);
+  robot.setTurnVel(5.0);
+  EXPECT_NEAR(robot.getTurnVel(),            5.0, 1e-5);
 
-  F2CRobot r4;
-  r4.setMinRadius(20.0);
-  EXPECT_NEAR(r4.op_width, 0, 1e-7);
-  EXPECT_NEAR(r4.robot_width, 0, 1e-7);
-  EXPECT_NEAR(r4.max_icc, 1/20.0, 1e-7);
 
-  F2CRobot r5 = std::move(r4);
-  EXPECT_NEAR(r5.op_width, 0, 1e-7);
-  EXPECT_NEAR(r5.robot_width, 0, 1e-7);
-  EXPECT_NEAR(r5.max_icc, 1/20.0, 1e-7);
+  EXPECT_THROW( F2CRobot(0), std::out_of_range);
+  EXPECT_THROW( F2CRobot(-3), std::out_of_range);
+
+  F2CRobot r1 = robot;
+  EXPECT_NEAR(r1.getWidth(), 5.0, 1e-5);
+
+  const F2CRobot r2 {robot};
+  EXPECT_EQ(r2.getWidth(), 5.0);
 }
 
 

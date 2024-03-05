@@ -1,0 +1,40 @@
+
+
+
+- f2c::types:
+    + Functions use camelCase (thanks for the advice @An, Yi): Distance -> distance; Difference -> difference; Within -> within; StartPoint -> startPoint...
+    + Other renames: getArea() -> area(); getLength() -> length(); getSemiLongCurve(...) -> createSemiLongLine(...) ...
+    + F2CField:
+        Parameters of F2CRobot can be accessed now only by setters and getters: field.field -> field.getField()
+    +  New classes F2CGraph and F2CGraph2D.
+    + F2CRoute:
+        Definition of this class is modified. The class is composed by a vector of F2CMultiPoint (connections) and a vector of F2CSwaths (v_swaths). The order of the route is: 1. Go to connections[0], going through all the points. 2. Cover v_swaths[0]. 3. Go to connections[1]. and so on...
+        If the first point is a swath, connections[0] does not contain any point.
+        To add information to this class, use functions addConnection() and addSwaths(). Both handle this methodology. There are more functions that you can check in the file of Route.h.
+    + F2CRobot:
+        Constructor F2CRobot robot(double width, double cov_width) : physical width and coverage width.
+        Parameters of F2CRobot can be accessed now only by setters and getters: robot.getMaxCurv(), robot.getMaxDiffCurv(), robot.getCruiseVel(), robot.getWidth(), robot.getCovWidth() ...
+
+- f2c::Random
+    + reorder params to match other functions style: generateRandField( int n_sides, double area) -> generateRandField(double area, int n_sides)
+    + New functions: F2CCell generateRandCell(double area, size_t n_sides), F2CCell genConvexCell(double area, size_t n_sides) and F2CCell genNonConvexCell(double area, size_t n_sides)
+
+- f2c::pp::PathPlanning : "searchBestPath" function is renamed to "planPath"
+
+- f2c::rp::RoutePlannerBase:
+    + To create a route, you only need to execute the function: F2CRoute genRoute(const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells, bool show_log). cells is the path in the border that the planner will use to go from one side to the other of the field. I generally do:
+            auto hl_swaths = const_hl.generateHeadlandSwaths(field.getField(), robot.getCovWidth(), 3, false);
+            F2CRoute route = route_planner.genRoute(hl_swaths[1], swaths);
+        When using genRoute, do "show_log = true" to see the progress. It only optimizes Euclidian distance and objective value is multiplied by 1e3. If objective value is bigger than 1e10, then it couldn't find any correct route (without crossing the field).
+
+
+
+
+
+
+
+
+
+
+
+

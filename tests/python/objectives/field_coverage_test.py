@@ -1,5 +1,5 @@
 #==============================================================================
-#     Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+#     Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 #                      Author: Gonzalo Mier
 #                         BSD-3 License
 #==============================================================================
@@ -54,21 +54,21 @@ def test_fields2cover_obj_field_coverage_computeCost():
   path2.addPoint( 0.0, 3.0);
   path2.addPoint( 4.0, 3.0);
   path3.addPoint( 0.0, 2.0);
-  path3.addPoint( 4.0, 2.0);  
+  path3.addPoint( 4.0, 2.0);
   swath1 = f2c.Swath(path1, width);
   swath2 = f2c.Swath(path2, width);
   swath3 = f2c.Swath(path3, width);
-  	
+
   swaths_full = f2c.Swaths();
   [swaths_full.push_back(i) for i in [swath1,swath2]]
   swaths_overlap = f2c.Swaths();
   [swaths_overlap.push_back(i) for i in [swath1,swath3]]
   swaths_half = f2c.Swaths();
   [swaths_half.push_back(i) for i in [swath1]]
-  
+
   fields = f2c.Cells();
   field = f2c.Cell();
-  
+
   line = f2c.LinearRing();
   line.addPoint(0, 0);
   line.addPoint(4, 0);
@@ -77,7 +77,7 @@ def test_fields2cover_obj_field_coverage_computeCost():
   line.addPoint(0, 0);
   field.addRing(line);
   fields.addGeometry(field);
-  
+
   coverage = f2c.OBJ_FieldCoverage();
 
   near(coverage.computeCost(fields, swaths_full), 1.0);

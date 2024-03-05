@@ -1,5 +1,5 @@
 #==============================================================================
-#     Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+#     Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 #                      Author: Gonzalo Mier
 #                         BSD-3 License
 #==============================================================================
@@ -18,42 +18,34 @@ def test_fields2cover_utils_parser_importGml():
   fields = f2c.Fields();
   f2c.Parser.importGml(DATA_PATH + "test1.xml", fields);
 
-  assert (fields[0].id == "b913fe9d-ed9f-4cc4-aa77-a10652165455");
-  assert (fields[0].coord_sys == "EPSG:4258");
+  assert (fields[0].getId() == "b913fe9d-ed9f-4cc4-aa77-a10652165455");
+  assert (fields[0].getCRS() == "EPSG:4258");
 
 def test_fields2cover_utils_parser_getAreaImported():
   fields = f2c.Fields();
   f2c.Parser.importGml(DATA_PATH + "test1.xml", fields);
   # f2c.Transform.transform(fields[0], "EPSG:28992");
-  near(fields[0].field.getArea(), 2.24e-05, 1e-7);
-
-"""
-def test_fields2cover_utils_parser_fileNotFound():
-  fields = f2c.Fields();
-  EXPECT_THROW(f2c.Parser.importGml("file_not_found.xml",
-      fields), std.invalid_argument);
-"""
+  near(fields[0].getField().area(), 2.24e-05, 1e-7);
 
 
 def test_fields2cover_utils_parser_importJson():
   # Need more complex tests
   fields = f2c.Fields();
   f2c.Parser.importJson(DATA_PATH + "test.json", fields);
-  field = fields[0]; 
+  field = fields[0];
   field.setEPSGCoordSystem(4326);
 
-  assert (field.id == "test parcel");
-  assert (field.coord_sys == "EPSG:4326");
+  assert (field.getId() == "test parcel");
+  assert (field.getCRS() == "EPSG:4326");
 
-  f2c.Visualizer.figure(200);
+  f2c.Visualizer.figure();
   f2c.Visualizer.plot(field);
-  f2c.Visualizer.show(False);
-  #f2c.Visualizer.show(True);
+  f2c.Visualizer.show();
 
 def test_fields2cover_utils_parser_importJson_2_cell():
   fields = f2c.Fields();
   f2c.Parser.importJson(DATA_PATH + "test_2_cell.json", fields);
   assert (fields.size() == 2);
-  assert (fields[0].id == "field1");
-  assert (fields[1].id == "field2");
+  assert (fields[0].getId() == "field1");
+  assert (fields[1].getId() == "field2");
 

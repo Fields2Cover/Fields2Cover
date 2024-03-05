@@ -1,7 +1,7 @@
 //=============================================================================
-//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
-//                           BSD-3 License
+//                        BSD-3 License
 //=============================================================================
 
 #pragma once
@@ -55,10 +55,10 @@ struct Swath {
   void setType(SwathType type);
 
  public:
-  double getLength() const;
+  double length() const;
 
-  double getArea() const;
-  double getArea(const Cells& polys) const;
+  double area() const;
+  double area(const Cells& polys) const;
 
   void reverse();
 
@@ -70,11 +70,11 @@ struct Swath {
 
   Point endPoint() const;
 
-  Cells computeAreaCovered() const;
-  Cells computeAreaCovered(const Cells& polys) const;
+  Cells areaCovered() const;
+  Cells areaCovered(const Cells& polys) const;
   Swath clone() const;
 
-  size_t getNumPoints() const;
+  size_t numPoints() const;
 
   Point getPoint(int i);
   const Point getPoint(int i) const;

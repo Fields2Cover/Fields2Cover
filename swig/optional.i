@@ -24,7 +24,7 @@ public:
 #if defined(SWIGPYTHON)
     %include "python/optional.i"
 #else
-    #error "No OptionalValue<> typemaps for this language."
+    /*#error "No OptionalValue<> typemaps for this language."*/
 #endif
 
 // If there is no language-specific DEFINE_OPTIONAL_CLASS() definition, assume
