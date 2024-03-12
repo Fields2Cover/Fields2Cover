@@ -1,4 +1,4 @@
-FROM osgeo/gdal:ubuntu-full-3.6.2
+FROM osgeo/gdal:ubuntu-full-3.6.3
 
 LABEL NAME="fields2cover" \
       VERSION="2.0.0" \

@@ -11,12 +11,12 @@ jobs:
     if: github.repository_owner == 'Fields2Cover'
     name: "Building docs"
     runs-on: ubuntu-latest
-    container: "osgeo/gdal:ubuntu-full-3.6.2"
+    container: "osgeo/gdal:ubuntu-full-3.6.3"
     strategy:
       fail-fast: false
       matrix:
         gcc: [12]
-        gdal: ["3.6.2"]
+        gdal: ["3.6.3"]
         swig: ["v4.2.1"]
         shared: ["ON"]
         generators: ["Unix Makefiles"]
