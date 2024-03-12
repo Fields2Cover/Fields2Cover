@@ -82,20 +82,22 @@ struct Cell : public Geometries<Cell, OGRPolygon, wkbPolygon, LinearRing> {
   /// If the point is in this geometry, the line also crosses it.
   LineString createStraightLongLine(const Point& point, double angle) const;
 
-  /// Compute the sections of a LineString that is inside this Cell
+  /// Compute the sections of a LineString that is inside this cell
   MultiLineString getLinesInside(const LineString& line) const;
 
-  /// Compute the sections of a MultiLineString that is inside this Cell
+  /// Compute the sections of a MultiLineString that is inside this cell
   MultiLineString getLinesInside(const MultiLineString& lines) const;
 
-  /// Check if a point is in the border of this Cell
+  /// Check if a point is in the border of this cell
   bool isPointInBorder(const Point& p) const;
 
+  /// Check if a point is inside this cell
   bool isPointIn(const Point& p) const;
 
-  /// Generate a line from a point to the border of this Cell
+  /// Generate a line from a point to the border of this cell
   LineString createLineUntilBorder(const Point& p, double ang) const;
 
+  /// Find the closest point from a point to the border of the field
   Point closestPointOnBorderTo(const Point& p) const;
 };
 

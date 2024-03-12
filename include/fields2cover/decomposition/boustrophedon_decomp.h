@@ -22,6 +22,9 @@ namespace f2c::decomp {
 /// to the \a split_angle.
 class BoustrophedonDecomp : public TrapezoidalDecomp {
  public:
+  /// Split the field into several cells that are easier to cover
+  /// @param cells Original cells
+  /// @return Smaller cells that compound the field
   F2CMultiLineString genSplitLines(const F2CCells& cells,
       const obj::DecompObjective& obj = obj::DecompObjective()) override;
 };

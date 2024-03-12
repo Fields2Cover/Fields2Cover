@@ -111,5 +111,22 @@ bool TurningBase::isTurnValid(const types::Path& path,
     (fabs(p_end.getY()) < max_dist);
 }
 
+double TurningBase::getDiscretization() const {
+  return this->discretization;
+}
+
+void TurningBase::setDiscretization(double d) {
+  this->discretization = d;
+}
+
+bool TurningBase::getUsingCache() const {
+  return this->using_cache;
+}
+
+void TurningBase::setUsingCache(bool c) {
+  this->using_cache = c;
+}
+
+
 }  // namespace f2c::pp
 

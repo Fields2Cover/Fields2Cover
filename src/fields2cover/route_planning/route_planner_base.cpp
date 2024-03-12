@@ -31,14 +31,8 @@ F2CRoute RoutePlannerBase::genRoute(
       v_route, swaths, cov_graph, shortest_graph);
 }
 
-std::vector<F2CRoute> RoutePlannerBase::genRoute(
-    const F2CCells& cells, const std::vector<F2CSwathsByCells>& v_swaths,
-    bool show_log, double d_tol) {
-  std::vector<F2CRoute> routes;
-  for (auto&& s : v_swaths) {
-    routes.emplace_back(genRoute(cells, s, show_log, d_tol));
-  }
-  return routes;
+void RoutePlannerBase::setStartAndEndPoint(const F2CPoint& p) {
+  this->r_start_end = p;
 }
 
 F2CGraph2D RoutePlannerBase::createShortestGraph(

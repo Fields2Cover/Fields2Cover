@@ -17,10 +17,28 @@ namespace f2c::hg {
 /// Class to generate headlands with equal width in each border.
 class ConstHL : public HeadlandGeneratorBase {
  public:
+  /// Generate headland area of the field at a given distance from borders
+  /// @param field Borders of the field and the obstacles on it.
+  /// @param dist_headland Distance between exterior and interior of the headlands.
+  /// @return Headland area
   F2CCells generateHeadlands(
     const F2CCells& field, double dist_headland) override;
+
+  /// Generate headland area of the field for a given number of swaths with given width.
+  /// @param field Borders of the field and the obstacles on it.
+  /// @param swath_width Width of each headland swath.
+  /// @param n_swaths Number of headland swaths.
+  /// @return Headland area
   F2CCells generateHeadlandArea(
     const F2CCells& field, double swath_width, int n_swaths) override;
+
+  /// Generate headland swaths of the field for a given number of swaths with given width.
+  /// @param field Borders of the field and the obstacles on it.
+  /// @param swath_width Width of each headland swath.
+  /// @param n_swaths Number of headland swaths.
+  /// @param dir_out2in When true, headland swaths are created from outer borders to inner borders. Otherwise, they are created from inner borders to outers.
+  /// @return Vector of size \a n_swaths for each headland swath.
+  ///   Each F2CLinearRing on it is a headland swath ring.
   std::vector<F2CCells> generateHeadlandSwaths(
     const F2CCells& field, double swath_width, int n_swaths,
     bool dir_out2in = true) override;

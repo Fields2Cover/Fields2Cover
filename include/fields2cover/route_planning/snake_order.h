@@ -18,8 +18,6 @@ class SnakeOrder : public SingleCellSwathsOrderBase {
   void sortSwaths(F2CSwaths& swaths) const override;
 };
 
-
-
 }  // namespace f2c::rp
 
 #endif  // FIELDS2COVER_ROUTE_PLANNING_SNAKE_ORDER_H_

@@ -19,10 +19,15 @@ namespace f2c::decomp {
 /// \a split_angle.
 class TrapezoidalDecomp : public DecompositionBase {
  public:
+  /// Get split angle used to decompose the field
   double getSplitAngle() const;
+  /// Set split angle used to decompose the field
   void setSplitAngle(double ang);
 
  public:
+  /// Split the field into several cells that are easier to cover
+  /// @param cells Original cells
+  /// @return Smaller cells that compound the field
   F2CMultiLineString genSplitLines(const F2CCells& cells,
       const obj::DecompObjective& obj = obj::DecompObjective()) override;
 

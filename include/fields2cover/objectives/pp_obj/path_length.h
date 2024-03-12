@@ -12,6 +12,7 @@
 
 namespace f2c::obj {
 
+/// Compute the length of the coverage path, including turns.
 class PathLength : public PPObjective {
  public:
   using PPObjective::computeCost;

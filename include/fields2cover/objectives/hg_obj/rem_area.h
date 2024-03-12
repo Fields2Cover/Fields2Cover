@@ -13,6 +13,7 @@
 
 namespace f2c::obj {
 
+/// Compute the area of the mainland (field - headlands).
 class RemArea : public HGObjective {
  public:
   using HGObjective::computeCost;

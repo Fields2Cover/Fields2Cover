@@ -11,6 +11,22 @@
 namespace f2c::pp {
 
 F2CPath PathPlanning::planPath(const F2CRobot& robot,
+    const F2CRoute& route, TurningBase& turn) const {
+  F2CPath path;
+  for (size_t i = 0; i < route.sizeVectorSwaths(); ++i) {
+    auto prev_swaths = (i >0) ? route.getSwaths(i-1) : F2CSwaths();
+    path += planPathForConnection(robot,
+        prev_swaths, route.getConnection(i), route.getSwaths(i), turn);
+    path += planPath(robot, route.getSwaths(i), turn);
+  }
+  if (route.sizeConnections() > route.sizeVectorSwaths()) {
+    path += planPathForConnection(robot,
+      route.getLastSwaths(), route.getLastConnection(), F2CSwaths(), turn);
+  }
+  return path;
+}
+
+F2CPath PathPlanning::planPath(const F2CRobot& robot,
     const F2CSwaths& swaths, TurningBase& turn) const {
   F2CPath path;
   if (swaths.size() > 1) {
@@ -28,7 +44,55 @@ F2CPath PathPlanning::planPath(const F2CRobot& robot,
   return path;
 }
 
-double getSmoothTurningRadius(const F2CRobot& robot) {
+F2CPath PathPlanning::planPathForConnection(const F2CRobot& robot,
+    const F2CSwaths& s1,
+    const F2CMultiPoint& mp,
+    const F2CSwaths& s2,
+    TurningBase& turn) const {
+  F2CPoint p1, p2;
+  double ang1, ang2;
+
+  if (s1.size() > 0) {
+    p1 = s1.back().endPoint();
+    ang1 = s1.back().getOutAngle();
+  } else if (mp.size() > 0) {
+    p1 = mp[0];
+    ang1 = mp.getOutAngle(0);
+  } else {
+    return {};
+  }
+  if (s2.size() > 0) {
+    p2 = s2[0].startPoint();
+    ang2 = s2[0].getInAngle();
+  } else if (mp.size() > 0) {
+    p2 = mp.getLastPoint();
+    ang2 = mp.getInAngle(mp.size()-1);
+  } else {
+    return {};
+  }
+  return planPathForConnection(robot, p1, ang1, mp, p2, ang2, turn);
+}
+
+F2CPath PathPlanning::planPathForConnection(const F2CRobot& robot,
+    const F2CPoint& p1, double ang1,
+    const F2CMultiPoint& mp,
+    const F2CPoint& p2, double ang2,
+    TurningBase& turn) const {
+  auto v_con = simplifyConnection(robot,
+      p1, ang1, mp, p2, ang2);
+
+  F2CPath path;
+  for (int i = 1; i < v_con.size(); ++i) {
+    path += turn.createTurn(robot,
+        v_con[i-1].first, v_con[i-1].second,
+        v_con[i].first, v_con[i].second);
+  }
+  return path;
+}
+
+
+
+double PathPlanning::getSmoothTurningRadius(const F2CRobot& robot) const {
   double x, y, ang, k;
   end_of_clothoid(0.0, 0.0, 0.0, 0.0, robot.getMaxDiffCurv(), 1.0,
       robot.getMaxCurv() / robot.getMaxDiffCurv(),
@@ -38,11 +102,11 @@ double getSmoothTurningRadius(const F2CRobot& robot) {
   return sqrt(xi*xi + yi*yi);
 }
 
-std::vector<std::pair<F2CPoint, double>> simplifyConnection(
+std::vector<std::pair<F2CPoint, double>> PathPlanning::simplifyConnection(
     const F2CRobot& robot,
     const F2CPoint& p1, double ang1,
     const F2CMultiPoint& mp,
-    const F2CPoint& p2, double ang2) {
+    const F2CPoint& p2, double ang2) const {
   const double safe_dist = getSmoothTurningRadius(robot);
   std::vector<std::pair<F2CPoint, double>> path;
   path.emplace_back(p1, ang1);
@@ -85,70 +149,6 @@ std::vector<std::pair<F2CPoint, double>> simplifyConnection(
   path.emplace_back(p2, ang2);
   return path;
 }
-
-F2CPath PathPlanning::planPathForConnection(const F2CRobot& robot,
-    const F2CPoint& p1, double ang1,
-    const F2CMultiPoint& mp,
-    const F2CPoint& p2, double ang2,
-    TurningBase& turn) const {
-  auto v_con = simplifyConnection(robot,
-      p1, ang1, mp, p2, ang2);
-
-  F2CPath path;
-  for (int i = 1; i < v_con.size(); ++i) {
-    path += turn.createTurn(robot,
-        v_con[i-1].first, v_con[i-1].second,
-        v_con[i].first, v_con[i].second);
-  }
-  return path;
-}
-
-
-F2CPath PathPlanning::planPath(const F2CRobot& robot,
-    const F2CRoute& route, TurningBase& turn) const {
-  F2CPath path;
-  for (size_t i = 0; i < route.sizeVectorSwaths(); ++i) {
-    auto prev_swaths = (i >0) ? route.getSwaths(i-1) : F2CSwaths();
-    path += planPathForConnection(robot,
-        prev_swaths, route.getConnection(i), route.getSwaths(i), turn);
-    path += planPath(robot, route.getSwaths(i), turn);
-  }
-  if (route.sizeConnections() > route.sizeVectorSwaths()) {
-    path += planPathForConnection(robot,
-      route.getLastSwaths(), route.getLastConnection(), F2CSwaths(), turn);
-  }
-  return path;
-}
-
-F2CPath PathPlanning::planPathForConnection(const F2CRobot& robot,
-    const F2CSwaths& s1,
-    const F2CMultiPoint& mp,
-    const F2CSwaths& s2,
-    TurningBase& turn) const {
-  F2CPoint p1, p2;
-  double ang1, ang2;
-
-  if (s1.size() > 0) {
-    p1 = s1.back().endPoint();
-    ang1 = s1.back().getOutAngle();
-  } else if (mp.size() > 0) {
-    p1 = mp[0];
-    ang1 = mp.getOutAngle(0);
-  } else {
-    return {};
-  }
-  if (s2.size() > 0) {
-    p2 = s2[0].startPoint();
-    ang2 = s2[0].getInAngle();
-  } else if (mp.size() > 0) {
-    p2 = mp.getLastPoint();
-    ang2 = mp.getInAngle(mp.size()-1);
-  } else {
-    return {};
-  }
-  return planPathForConnection(robot, p1, ang1, mp, p2, ang2, turn);
-}
-
 
 }  // namespace f2c::pp
 

@@ -32,7 +32,9 @@ TEST(fields2cover_pp_reeds_shepp, random_points) {
   robot.setMaxCurv(1.0);
   robot.setMaxDiffCurv(1.0);
   f2c::pp::ReedsSheppCurves turn;
-  turn.using_cache = false;
+  EXPECT_TRUE(turn.getUsingCache());
+  turn.setUsingCache(false);
+  EXPECT_FALSE(turn.getUsingCache());
   for (double ang = 0.25; ang < boost::math::constants::pi<double>(); ang += 0.25) {
       F2CPoint start(0.0, 0.0), end(4.0, 0.0);
       auto path = turn.createTurn(robot, start, ang,

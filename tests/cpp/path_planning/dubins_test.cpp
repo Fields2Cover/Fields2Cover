@@ -32,7 +32,9 @@ TEST(fields2cover_pp_dubins, random_points) {
   robot.setMaxCurv(1.0);
   robot.setMaxDiffCurv(1.0);
   f2c::pp::DubinsCurves turn;
-  turn.using_cache = false;
+  EXPECT_TRUE(turn.getUsingCache());
+  turn.setUsingCache(false);
+  EXPECT_FALSE(turn.getUsingCache());
   const double step = 0.1;
   for (double ang = step; ang < boost::math::constants::pi<double>(); ang += step) {
     F2CPoint start(0.0, 0.0), end(4.0, 0.0);
@@ -50,7 +52,9 @@ TEST(fields2cover_pp_dubins, cached_turn) {
   robot.setMaxCurv(0.3);
   robot.setMaxDiffCurv(1.0);
   f2c::pp::DubinsCurves turn;
-  turn.using_cache = true;
+  turn.setUsingCache(true);
+  EXPECT_TRUE(turn.getUsingCache());
+
   auto path1 = turn.createTurn(robot,
       F2CPoint(-331.021, 418.463), 4.71239,
       F2CPoint(-328.021, 404.284), 1.5708);

@@ -66,19 +66,29 @@ class TurningBase {
       double max_rot_error = 0.1);
 
 
+  /// Get discretization distance from points in the turn
+  double getDiscretization() const;
+  /// Set discretization distance from points in the turn
+  void setDiscretization(double d);
+
+  /// Get if turns are being cached or not.
+  bool getUsingCache() const;
+  /// Set if cache should be used when planning same turn as before.
+  void setUsingCache(bool c);
+
+
  private:
   static void correctPath(F2CPath& path,
       const F2CPoint& start_pos,
       const F2CPoint& end_pos,
       float max_error_dist = 0.05);
 
- public:
-  bool using_cache {true};
-
  protected:
   // To prevent memory consumption and comparative errors because of doubles
   // ints are used multiplied by 1000.
   std::map<std::vector<int>, F2CPath> path_cache_;
+  double discretization {0.01};
+  bool using_cache {true};
 };
 
 }  // namespace f2c::pp
