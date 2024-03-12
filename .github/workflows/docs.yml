@@ -17,7 +17,7 @@ jobs:
       matrix:
         gcc: [12]
         gdal: ["3.6.2"]
-        swig: ["v4.1.1"]
+        swig: ["v4.2.1"]
         shared: ["ON"]
         generators: ["Unix Makefiles"]
         build_type: ["Debug"]

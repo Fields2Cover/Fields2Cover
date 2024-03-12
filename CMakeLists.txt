@@ -108,6 +108,8 @@ FetchContent_MakeAvailable(
   matplot
 )
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
 find_package(GDAL 3.0 REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(ortools CONFIG REQUIRED)
@@ -203,7 +205,7 @@ target_include_directories(Fields2Cover PUBLIC
 target_link_libraries(Fields2Cover
   PUBLIC
     ${GDAL_LIBRARIES}
-    -lpthread
+    ${CMAKE_THREAD_LIBS_INIT}
     -lgeos_c
   PRIVATE
     nlohmann_json::nlohmann_json
