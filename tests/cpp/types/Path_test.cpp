@@ -110,19 +110,23 @@ TEST(fields2cover_types_path, setters) {
 
   path.setBackwardDir();
   for (auto&& s : path) {
-    EXPECT_EQ(s.dir, f2c::types::PathDirection::BACKWARD);
+    EXPECT_EQ(static_cast<int>(s.dir),
+              static_cast<int>(f2c::types::PathDirection::BACKWARD));
   }
   path.setForwardDir();
   for (auto&& s : path) {
-    EXPECT_EQ(s.dir, f2c::types::PathDirection::FORWARD);
+    EXPECT_EQ(static_cast<int>(s.dir),
+              static_cast<int>(f2c::types::PathDirection::FORWARD));
   }
   path.setSwathType();
   for (auto&& s : path) {
-    EXPECT_EQ(s.type, f2c::types::PathSectionType::SWATH);
+    EXPECT_EQ(static_cast<int>(s.type),
+              static_cast<int>(f2c::types::PathSectionType::SWATH));
   }
   path.setTurnType();
   for (auto&& s : path) {
-    EXPECT_EQ(s.type, f2c::types::PathSectionType::TURN);
+    EXPECT_EQ(static_cast<int>(s.type),
+              static_cast<int>(f2c::types::PathSectionType::TURN));
   }
 }
 

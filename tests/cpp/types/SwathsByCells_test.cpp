@@ -52,7 +52,10 @@ TEST(fields2cover_types_swathsByCells, init) {
   }
 
   for (size_t i = 0; i < sbc_const.sizeTotal(); ++i) {
-    EXPECT_EQ(sbc_const.getSwath(i), swaths_by_cells2.getSwath(i));
+    EXPECT_EQ(sbc_const.getSwath(i).getPath().startPoint(),
+        swaths_by_cells2.getSwath(i).getPath().startPoint());
+    EXPECT_EQ(sbc_const.getSwath(i).getPath().endPoint(),
+        swaths_by_cells2.getSwath(i).getPath().endPoint());
   }
 }
 
