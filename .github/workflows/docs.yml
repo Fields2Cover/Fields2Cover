@@ -63,6 +63,18 @@ jobs:
           cp /usr/include/cpl* /usr/include/new_gdal/
           mv /usr/include/new_gdal/ /usr/include/gdal/
 
+      - name: Configure Or-tools
+        shell: bash
+        run: |
+          wget https://github.com/google/or-tools/releases/download/v9.9/or-tools_amd64_ubuntu-22.04_cpp_v9.9.3963.tar.gz -q -O /tmp/ortools.tar.gz
+          mkdir -p /tmp/ortools
+          tar -zxf /tmp/ortools.tar.gz -C /tmp/ortools --strip-components=1
+          cp -r /tmp/ortools/bin/. /usr/bin
+          cp -r /tmp/ortools/include/. /usr/include
+          cp -r /tmp/ortools/lib/. /usr/lib
+          cp -r /tmp/ortools/lib/cmake/. /usr/share
+          cp -r /tmp/ortools/share/. /usr/share/ortools
+
       - name: Configure
         working-directory: ${{github.workspace}}
         shell: bash

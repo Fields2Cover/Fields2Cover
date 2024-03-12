@@ -84,9 +84,14 @@ RUN if gdalinfo --version | grep -o " 3\.[0-2]\."; then \
       apt-get install -y --no-install-recommends  --allow-unauthenticated swig; \
     fi
 
-RUN git clone https://github.com/google/or-tools.git && cd or-tools && git checkout tags/v9.3 \
-    && cmake -S . -B build -DBUILD_DEPS=ON \
-    && cmake --build build --config Release --target install -v
+RUN wget https://github.com/google/or-tools/releases/download/v9.9/or-tools_amd64_ubuntu-22.04_cpp_v9.9.3963.tar.gz -q -O /tmp/ortools.tar.gz \
+    && mkdir -p /tmp/ortools \
+    && tar -zxf /tmp/ortools.tar.gz -C /tmp/ortools --strip-components=1 \
+    && cp -r /tmp/ortools/bin/. /usr/bin \
+    && cp -r /tmp/ortools/include/. /usr/include \
+    && cp -r /tmp/ortools/lib/. /usr/lib \
+    && cp -r /tmp/ortools/lib/cmake/. /usr/share \
+    && cp -r /tmp/ortools/share/. /usr/share/ortools
 
 COPY . /workspace/fields2cover
 RUN rm -rf /workspace/fields2cover/build && mkdir /workspace/fields2cover/build
