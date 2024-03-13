@@ -71,7 +71,7 @@ MultiLineString MultiLineString::Intersection(const Geometry<T, R>& g) const {
 template <class T, OGRwkbGeometryType R>
 MultiLineString MultiLineString::Intersection(
     const LineString& line, const Geometry<T, R>& g) {
-  return std::move(MultiLineString(line.get()).Intersection(g));
+  return MultiLineString(line.get()).Intersection(g);
 }
 
 
