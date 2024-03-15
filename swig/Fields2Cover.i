@@ -272,6 +272,8 @@ DEFINE_PP_COSTS(BaseObjective<f2c::obj::PPObjective>, computeCostWithMinimizingS
 %include "fields2cover/objectives/sg_obj/sg_objective.h"
 %rename(OBJ_NSwath) f2c::obj::NSwath;
 %include "fields2cover/objectives/sg_obj/n_swath.h"
+%rename(OBJ_NSwathModified) f2c::obj::NSwathModified;
+%include "fields2cover/objectives/sg_obj/n_swath_modified.h"
 %rename(OBJ_FieldCoverage) f2c::obj::FieldCoverage;
 %include "fields2cover/objectives/sg_obj/field_coverage.h"
 %rename(OBJ_Overlaps) f2c::obj::Overlaps;
