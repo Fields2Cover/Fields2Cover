@@ -339,5 +339,5 @@ or saved as:
 
 The result should be an image as:
 
-.. image:: ../../figures/Tutorial_image_1_9.png
+.. image:: ../../figures/Tutorial_image.png
 

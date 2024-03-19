@@ -1,5 +1,5 @@
 Part 4: Swath generator
-===========================
+=======================
 
 Swath generators plan swaths on the field to be able to cover it completely.
 Usually, they have a search method to find the best angle to cover the field.
@@ -17,7 +17,7 @@ For these examples, we will continue from the previous tutorial:
 
 
 Brute force
--------------------------------
+-----------
 
 Brute force algorithm tries all the possible angles (using a step_angle) and keeps the one that produces the smallest cost of the objective function.
 

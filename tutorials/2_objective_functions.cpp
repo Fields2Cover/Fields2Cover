@@ -45,6 +45,12 @@ int main() {
     << n_swaths.computeCost(F2CSwaths({swath1})) << " and with all of the swaths "
     << n_swaths.computeCost(field, F2CSwaths({swath1, swath2, swath3})) <<std::endl;
 
+  f2c::obj::NSwathModified n_swaths_mod;
+  std::cout << "The number of swaths with swath1 is "
+    << n_swaths_mod.computeCost(F2CSwaths({swath1})) << " and with all of the swaths "
+    << n_swaths_mod.computeCost(field, F2CSwaths({swath1, swath2, swath3})) <<std::endl;
+
+
   std::cout << std::endl;
   std::cout << "####### Tutorial 2.2.3 Overlap ######" << std::endl;
   f2c::obj::Overlaps overlaps;

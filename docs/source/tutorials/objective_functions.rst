@@ -2,16 +2,20 @@ Part 2: Objective functions
 ===========================
 
 One of the main problems in the Coverage Path Planning problem is to define the objective function.
-The objective function defines how good a path is.
-By default, the objective functions are defined as minimization problems.
+The objective function defines how good is our optimizer solving our problem.
+By default, objective functions are defined as minimization problems.
 
-Fields2Cover defines different objective functions for each module: HG (Headland Generator), SG (Swath Generator), RP (Route Planner) and PP (Path Planner).
+Fields2Cover defines different objective functions for each module: Decomp (Decomposition), HG (Headland Generator), SG (Swath Generator), RP (Route Planner) and PP (Path Planner).
 
 
+Decomp objective functions
+--------------------------
+
+*There is none yet*
 
 
 HG objective functions
---------------------------
+----------------------
 
 Remaining area
 ^^^^^^^^^^^^^^
@@ -38,7 +42,7 @@ Compute the percentage of main field over the total field. The cost is a value b
 
 
 SG objective functions
---------------------------
+----------------------
 
 Field coverage
 ^^^^^^^^^^^^^^
@@ -63,7 +67,7 @@ Compute the percentage of the field covered by the swaths. The cost is a value b
 
 | *The field coverage with swath1 is 0.5 and with all of the swaths 1*
 
-If you want to create an algorithm that reduce the objective function, use ``computeCostWithMinimizingSign()`` function instead, as it consider if it is a maximization or minimization problem:
+If we want to create an algorithm that reduce this objective function, use ``computeCostWithMinimizingSign()`` function instead, as it considers that it is a maximization problem:
 
 
 .. code-block:: cpp
@@ -78,7 +82,7 @@ If you want to create an algorithm that reduce the objective function, use ``com
 Number of swaths
 ^^^^^^^^^^^^^^^^
 
-Compute the number of swaths needed to cover the field. The idea is the slowest part of covering a field is turning between swaths. If the number of swaths are reduced, the number of turns too, and consequently, the time needed to cover the field.
+Compute the number of swaths needed to cover the field. Turning between swaths is a slow and non-productive process of covering a field. If the number of swaths are reduced, the number of turns too, and consequently, the time needed to cover the field.
 
 .. code-block:: cpp
 
@@ -90,14 +94,23 @@ Compute the number of swaths needed to cover the field. The idea is the slowest 
 
 *The number of swaths with swath1 is 1 and with all of the swaths 3*
 
-.. note::
-  As the number of swaths do not depend on the field, the parameter can be omitted.
+A fast approximation of this function can be computed (using \cite jin2010optimal) as:
+
+.. code-block:: cpp
+
+  f2c::obj::NSwathModified n_swaths_mod;
+
+  std::cout << "The number of swaths with swath1 is "
+     << n_swaths_mod.computeCost(F2CSwaths({swath1})) << " and with all of the swaths "
+     << n_swaths_mod.computeCost(field, F2CSwaths({swath1, swath2, swath3})) <<std::endl;
+
+*The number of swaths with swath1 is 1 and with all of the swaths 3*
 
 
 Overlap
 ^^^^^^^
 
-Compute percentage of the overlapping area in relation with the area of the field.
+Compute the percentage of the overlapping area in relation with the area of the field.
 
 .. code-block:: cpp
 
@@ -113,7 +126,7 @@ Compute percentage of the overlapping area in relation with the area of the fiel
 Swath Length
 ^^^^^^^^^^^^
 
-Compute the sum of the path length of each swath.
+Compute the sum of the length of each swath.
 
 .. code-block:: cpp
 
@@ -127,7 +140,7 @@ Compute the sum of the path length of each swath.
 
 
 RP objective functions
-------------------------
+----------------------
 
 Distance with turns
 ^^^^^^^^^^^^^^^^^^^
@@ -170,7 +183,7 @@ This is faster than computing the turns and doesn't require to provide a class t
 
 
 PP objective functions
-------------------------
+----------------------
 
 Path length
 ^^^^^^^^^^^

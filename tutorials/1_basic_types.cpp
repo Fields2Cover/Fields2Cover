@@ -48,18 +48,6 @@ int main() {
   std::cout << "Without accessing: " << p4.distance(p5) << std::endl;
 
   std::cout << std::endl;
-  // Difference between cloning and copying a point
-  F2CPoint old_p (1, 2);
-  F2CPoint cloned_p = old_p.clone();
-  std::cout << "The old point is " << old_p << std::endl;
-  cloned_p *= 5.0;
-  std::cout << "Old point is: " << old_p <<
-    " and cloned point is: " << cloned_p << std::endl;
-  F2CPoint copy_p = old_p;
-  copy_p *= 5.5;
-  std::cout << "Old point is: " << old_p <<
-    " and copied point is: " << copy_p << std::endl;
-
 
   std::cout << std::endl << std::endl;
   std::cout << "####### Tutorial 1.3 Initialize a F2CLineString ######"

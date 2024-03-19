@@ -1,5 +1,5 @@
 Part 6: Path planning
-=======================
+=====================
 
 Lastly, time to create the final path. A good path planner will do this task.
 
@@ -27,7 +27,7 @@ Before continue, we will define the path planner and some parameters that will b
 
 
 Dubins curves
--------------------------------
+-------------
 
 Dubins curves are generated with 3 segments of turn. Segments of turn in Dubins are always going forward.
 Segment types are straight, right curve or left curve.
@@ -44,7 +44,7 @@ Dubins produces the shortest turn possible.
 .. image:: ../../figures/Tutorial_6_1_Dubins.png
 
 Dubins curves with Continuous curvature
-------------------------------------------
+---------------------------------------
 
 While Dubins curves produces the shortest path possible, going from one segment of the curve to another creates instant curvature change.
 A vehicle could not follow a path with this issue, so this path planner implements an integrator to change the curvature smoothly.
@@ -58,7 +58,7 @@ A vehicle could not follow a path with this issue, so this path planner implemen
 
 
 Reeds-Shepp curves
--------------------------------
+------------------
 
 Reeds-Shepp curves also computes the shortest path, but allowing the vehicle to go backwards.
 
@@ -72,7 +72,7 @@ Reeds-Shepp curves also computes the shortest path, but allowing the vehicle to 
 
 
 Reeds-Shepp curves with Continuous curvature
-------------------------------------------------
+--------------------------------------------
 
 As with Dubins, instantaneous curvature change is a problem in this kind of curves.
 This planner has an integrator to smooth the path.

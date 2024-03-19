@@ -12,7 +12,7 @@ int main() {
   f2c::Random rand(42);
   F2CField field = rand.generateRandField(1e4, 5);
   F2CCells cells = field.getField();
-  F2CRobot robot (2.0, 26.0);
+  F2CRobot robot (2.0, 6.0);
 
   std::cout << "####### Tutorial 3.1 Constant width headland generator ######" << std::endl;
   f2c::hg::ConstHL const_hl;

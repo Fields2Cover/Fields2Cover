@@ -17,7 +17,7 @@ int main() {
 
   F2CRobot robot (2.0, 6.0);
   f2c::hg::ConstHL const_hl;
-  F2CCells no_hl = const_hl.generateHeadlands(field.getField(), 3.0 * robot.getCovWidth());
+  F2CCells no_hl = const_hl.generateHeadlands(field.getField(), 3.0 * robot.getWidth());
   f2c::sg::BruteForce bf;
   F2CSwaths swaths = bf.generateSwaths(M_PI, robot.getCovWidth(), no_hl.getGeometry(0));
   f2c::rp::SnakeOrder snake_sorter;

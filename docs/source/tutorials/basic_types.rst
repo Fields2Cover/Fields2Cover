@@ -14,7 +14,7 @@ Initialize a F2CPoint
 
 Points are the most basic type. There are many ways to initialize a ``F2CPoint`` (``f2c::types::Point``)
 
-1. With x and y axis on the constructor
+1. Using x and y coordinates
 
    .. code-block:: cpp
 
@@ -23,7 +23,7 @@ Points are the most basic type. There are many ways to initialize a ``F2CPoint``
 
    *Point 1: Point(1.2, 3.4, 0)*
 
-2. With x, y and z axis on the constructor
+2. Using x, y and z coordinates
 
    .. code-block:: cpp
 
@@ -85,50 +85,13 @@ Usually, this is not needed, as a simple access has been provided:
 | *Without accessing: 5*
 
 
-One of the effects of using shared pointers in the classes is the difference between copying and cloning.
-
-When a class is cloned, the value of the shared pointer is copied to another shared pointer with different direction.
-Due to this, changing the value of the shared pointer after cloning it do not affect the cloned value:
-
-.. code-block:: cpp
-
-   F2CPoint old_p (1, 2);
-   F2CPoint cloned_p = old_p.clone();
-   std::cout << "The old point is " << old_p << std::endl;
-   cloned_p *= 5.0;
-   std::cout << "Old point is: " << old_p <<
-      " and cloned point is: " << cloned_p << std::endl;
-
-| *The old point is Point(1, 2, 0)*
-| *Old point is: Point(1, 2, 0) and cloned point is: Point(5, 10, 0)*
-
-
-On the other hand, if the shared pointer is copied, you are copying the direction of the pointer.
-If one of the values is modified, the other value is modified as well:
-
-.. code-block:: cpp
-
-   F2CPoint copy_p = old_p;
-   copy_p *= 5.5;
-   std::cout << "Old point is: " << old_p <<
-      " and copied point is: " << copy_p << std::endl;
-
-*Old point is: Point(5.5, 11, 0) and copied point is: Point(5.5, 11, 0)*
-
-
-.. warning::
-   Despite the effect of the shared pointers on basic types is on purpouse,
-   it can lead on many bugs. As developer, be aware of this effect.
-
-
-
 
 Initialize a F2CLineString
 --------------------------
 
-A ``F2CLineString`` (``f2c::types::LineString``) represents a line. The ways to initialize a ``F2CLineString`` are:
+A ``F2CLineString`` (``f2c::types::LineString``) is a line defined by a vector of points. To initialize a ``F2CLineString``, we can:
 
-1. Creating an empty ``F2CLineString`` and adding several ``F2CPoint``:
+1. Create an empty ``F2CLineString`` and adding several ``F2CPoint``:
 
    .. code-block:: cpp
 
@@ -139,7 +102,7 @@ A ``F2CLineString`` (``f2c::types::LineString``) represents a line. The ways to 
 
    *Length of line 1: 5*
 
-2. Creating an empty ``F2CLineString`` and adding several ``F2CPoint``:
+2. Give a sequence of ``F2CPoint``:
 
    .. code-block:: cpp
 
@@ -186,8 +149,8 @@ A ``F2CMultiLineString`` (``f2c::types::MultiLineString``) are several ``F2CLine
 *Lines have length: 5, 2,*
 
 A ``F2CCell`` (``f2c::types::Cell``) is a polygon created by one outter ``F2CLinearRing`` and zero, one or many inner ``F2CLinearRing``.
-First ``F2CLinearRing`` has to be the outter one.
-``F2CLinearRing`` should not cross each others.
+The first ``F2CLinearRing`` is the outter one.
+Moreover, all the ``F2CLinearRing`` should not intersect with each others.
 
 .. code-block:: cpp
 
@@ -244,7 +207,7 @@ To access each of the elements in a collection, the function ``getGeometry(int n
 *First point in points: Point(1, 2, 0)*
 
 Unfortunately, if we change the child element, it is not changed on the collection.
-If you want to keep it, you have to set the geometry back with ``setGeometry()``
+If we want to keep it, we have to set the geometry back with ``setGeometry()``
 
 .. code-block:: cpp
 
@@ -267,21 +230,21 @@ F2CRobot
 
 The vehicle to cover the field is defined as a ``F2CRobot`` struct.
 To initialize it, the constructor needs the width of the robot and the width of the operation.
-For example, if we have a vehicle to fertilize a field, with a width of 3 meters width and a fertilizer width of 39 meters, we should initialize it as:
+For example, if we have a vehicle to fertilize a field, with 3m width and a 39m operational width, we should initialize it as:
 
 .. code-block:: cpp
 
    F2CRobot robot (3.0, 39.0);
 
-Other important parameters of ``F2CRobot`` are:
+Important functions of ``F2CRobot`` are:
 
-- *cruise_speed*: is the speed of the vehicle when traveling through the field.
+- *getWidth/setWidth*: get/set the width of the robot. If something is closer than this value from the robot, we can expect it will be hit.
+- *getCovWidth/setCovWidth*: get/set the coverage width of the robot, also called operational width. This parameter defines the width of the swaths in the field.
+- *getMinTurningRadius/setMinTurningRadius* and *getMaxCurv/setMaxCurv*: get/set the minimum turning radius or the maximum curvature, respectively. Both are saved as the same parameter, as maximum curvature is the inverse of the minimum turning radius.
+- *getMaxDiffCurv/setMaxDiffCurv*: get/set the maximum linear change of the curvature.
 
-- *max_icc*: is the maximum Instantaneous Center of Curvature on a turn. It's the inverse of the radius. It's preferable to use the function ``setMinTurningRadius(double)``.
-
-- *linear_curv_change*: is the maximum change of curvature in a turn. It's used to prevent instant changes of curvature.
-
-- *max_vel*: if not set, the velocity when turning is *cruise_speed*.
+- *getCruiseVel/setCruiseVel*: get/set the speed of the vehicle when traveling through the field.
+- *getTurnVel/setTurnVel*: get/set the speed of the vehicle when making turns or going through the headlands.
 
 
 F2CSwath, F2CSwaths and F2CSwathsByCells
@@ -293,46 +256,49 @@ Swaths are coded in the Fields2Cover library as ``F2CSwath``.
 A ``F2CSwath`` is defined by a ``F2CLineString``, which defines the path of the swath, and the width of the swath.
 
 ``F2CSwaths`` is a collection of ``F2CSwath``. ``F2CSwaths`` groups all the ``F2CSwath`` on a ``F2CCell``.
-``F2CSwathsByCells`` collects the ``F2CSwaths`` for each ``F2CCell``.
+``F2CSwathsByCells`` collects the ``F2CSwaths`` for each ``F2CCell`` in a ``F2CCells``.
 
 
 
-F2CRoute and F2CPath
----------------------
+F2CRoute
+--------
 
-Lastly, a ``F2CRoute`` defines a route, as a sequence of ``F2CSwaths`` and ``F2CMultiPoint``.
-The type of the ``F2CRoute`` points if there is an start and/or end point in the route.
-If there are none, the ``F2CRoute`` will start with the first ``F2CSwaths``, then the first ``F2CMultiPoint``, then the second ``F2CSwaths``, and so on...
-``F2CMultiPoint`` are employed to go from the end of one ``F2CSwaths`` to the start of the next ``F2CSwaths``.
-The ``F2CMultiPoint`` could be empty.
+A ``F2CRoute`` defines a route, as a sequence of ``std::vector<F2CSwaths>`` and ``std::vector<F2CMultiPoint>``.
+The order of the sequence is:
+- First, follow the first ``F2CMultiPoint``. If it doesn't contain any point, skip it.
+- Then, cover the first ``F2CSwaths`` in order, going from the end of each swath to the start of the next one, until all of them are covered.
+- Use the next ``F2CMultiPoint`` to go from the end of the last ``F2CSwaths`` covered until the start of the next ``F2CSwaths``, if any. If there is any ``F2CSwaths`` left, the ``F2CMultiPoint`` goes to the end of the route. If ``F2CMultiPoint`` is empty, skip it.
+- Follow the last two steps until all ``F2CSwaths`` are covered.
 
-A ``F2CRoute`` is not a path because it doesn't have the turns or the velocities the vehicle has to have.
-On the other hand, ``F2CPath`` defines the point, angle, velocity and duration of each step.
-With a ``F2CPath``, a vehicle knows exactly where, when and how should it be.
+Fortunately, this class handles this behaviour with functions like *addSwaths* and *addConection*, so we do not have to worry about it.
 
-.. warning::
-  ``F2CRoute`` are not used in this version of Fields2Cover
+A ``F2CRoute`` is not a path because it doesn't have the turns or the velocities the vehicle needs to follow it.
+
+F2CPath
+-------
+
+
+Lastly, ``F2CPath`` defines a coverage path by a vector of the point, angle, length and velocity of each step. It also provides information about the direction and if it is traversing through the mainland or not.
 
 
 Visualizing Fields2Cover data
-------------------------------
+-----------------------------
 
-To visualize Fields2Cover data, the library provides the class ``f2c::Visualizer`` to easily plot it.
+To visualize Fields2Cover data, the library provides the class ``f2c::Visualizer`` to easily plot our results.
 
-First, you can define your figure id with:
+First, we need to create our figure as:
 
 .. code-block:: cpp
 
    f2c::Visualizer::figure();
 
-The previous line could be omitted, and it will create one itself.
-Then, draw the data using that figure as:
+Then, we can draw our data as:
 
 .. code-block:: cpp
 
    f2c::Visualizer::plot(lines);
 
-Lastly, the data can be plot as:
+Finally, the data is plotted as:
 
 .. code-block:: cpp
 
@@ -342,10 +308,15 @@ or saved as:
 
 .. code-block:: cpp
 
-   f2c::Visualizer::save("Tutorial_image");
+   f2c::Visualizer::save("Tutorial_image.png");
+
+.. note::
+
+    Remember to add the extension to your images (.png)
 
 
-The result should be an image as:
 
-.. image:: ../../figures/Tutorial_image_1_9.png
+The result should be this image:
+
+.. image:: ../../figures/Tutorial_image.png
 

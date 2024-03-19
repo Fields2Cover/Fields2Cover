@@ -1,5 +1,5 @@
 Part 4: Swath generator
-===========================
+=======================
 
 Swath generators plan swaths on the field to be able to cover it completely.
 Usually, they have a search method to find the best angle to cover the field.

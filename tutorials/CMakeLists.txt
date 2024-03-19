@@ -21,3 +21,12 @@ target_compile_definitions(
     DATA_PATH="${PROJECT_SOURCE_DIR}/data/"
 )
 target_link_libraries(7_complete_flow PUBLIC Fields2Cover)
+
+add_executable(quick_start quick_start.cpp)
+target_compile_definitions(
+  quick_start
+  PRIVATE
+    DATA_PATH="${PROJECT_SOURCE_DIR}/data/"
+)
+target_link_libraries(quick_start PUBLIC Fields2Cover)
+
