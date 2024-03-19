@@ -33,7 +33,6 @@ struct PathState {
   double velocity {1.0};
 
  public:
-  PathState clone() const;
   Point atEnd() const;
 };
 

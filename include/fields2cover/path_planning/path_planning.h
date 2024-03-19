@@ -8,6 +8,8 @@
 #ifndef FIELDS2COVER_PATH_PLANNING_PATH_PLANNING_H_
 #define FIELDS2COVER_PATH_PLANNING_PATH_PLANNING_H_
 
+#include <utility>
+#include <vector>
 #include "fields2cover/types.h"
 #include "fields2cover/path_planning/turning_base.h"
 
@@ -17,34 +19,34 @@ namespace f2c::pp {
 class PathPlanning {
  public:
   /// Compute the coverage path using a route as a reference.
-  F2CPath planPath(const F2CRobot& robot, const F2CRoute& route,
-      TurningBase& turn) const;
+  static F2CPath planPath(const F2CRobot& robot, const F2CRoute& route,
+      TurningBase& turn);
 
   /// Compute path that covers the swaths in order,
   /// using a path planner to connect swaths.
-  F2CPath planPath(const F2CRobot& robot, const F2CSwaths& swaths,
-      TurningBase& turn) const;
+  static F2CPath planPath(const F2CRobot& robot, const F2CSwaths& swaths,
+      TurningBase& turn);
 
   /// Compute path that goes from the end of the last swath in a F2CSwaths
   /// to the beginning of the first one in another F2CSwaths.
-  F2CPath planPathForConnection(const F2CRobot& robot,
+  static F2CPath planPathForConnection(const F2CRobot& robot,
       const F2CSwaths& s1, const F2CMultiPoint& mp, const F2CSwaths& s2,
-      TurningBase& turn) const;
+      TurningBase& turn);
 
   /// Compute path that connects two points with angles and visit middle points.
-  F2CPath planPathForConnection(const F2CRobot& robot,
+  static F2CPath planPathForConnection(const F2CRobot& robot,
       const F2CPoint& p1, double ang1,
       const F2CMultiPoint& mp,
       const F2CPoint& p2, double ang2,
-      TurningBase& turn) const;
+      TurningBase& turn);
 
  private:
-  double getSmoothTurningRadius(const F2CRobot& robot) const;
-  std::vector<std::pair<F2CPoint, double>> simplifyConnection(
+  static double getSmoothTurningRadius(const F2CRobot& robot);
+  static std::vector<std::pair<F2CPoint, double>> simplifyConnection(
       const F2CRobot& robot,
       const F2CPoint& p1, double ang1,
       const F2CMultiPoint& mp,
-      const F2CPoint& p2, double ang2) const;
+      const F2CPoint& p2, double ang2);
 };
 
 }  // namespace f2c::pp

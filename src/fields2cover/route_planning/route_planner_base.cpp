@@ -154,7 +154,7 @@ std::vector<int64_t> RoutePlannerBase::computeBestRoute(
   searchParameters.set_use_full_propagation(false);
   searchParameters.set_first_solution_strategy(
     ortools::FirstSolutionStrategy::AUTOMATIC);
-  //searchParameters.set_local_search_metaheuristic(
+  //  searchParameters.set_local_search_metaheuristic(
   //   ortools::LocalSearchMetaheuristic::GUIDED_LOCAL_SEARCH);
   searchParameters.set_local_search_metaheuristic(
     ortools::LocalSearchMetaheuristic::AUTOMATIC);
@@ -189,14 +189,16 @@ F2CRoute RoutePlannerBase::transformSolutionToRoute(
       F2CSwath swath = swaths_by_cells.getSwath(j).clone();
       if (p_s == swath.startPoint() && p_e == swath.endPoint()) {
         if (route.isEmpty() && r_start_end) {
-          route.addConnection(shortest_graph.shortestPath(*r_start_end, swath.startPoint()));
+          route.addConnection(shortest_graph.shortestPath(
+                *r_start_end, swath.startPoint()));
         }
         route.addSwath(swath, shortest_graph);
         break;
       } else if (p_e == swath.startPoint() && p_s == swath.endPoint()) {
         swath.reverse();
         if (route.isEmpty() && r_start_end) {
-          route.addConnection(shortest_graph.shortestPath(*r_start_end, swath.startPoint()));
+          route.addConnection(shortest_graph.shortestPath(
+                *r_start_end, swath.startPoint()));
         }
         route.addSwath(swath, shortest_graph);
         break;
@@ -204,7 +206,8 @@ F2CRoute RoutePlannerBase::transformSolutionToRoute(
     }
   }
   if (r_start_end) {
-    route.addConnection(shortest_graph.shortestPath(route.endPoint(), *r_start_end));
+    route.addConnection(shortest_graph.shortestPath(
+          route.endPoint(), *r_start_end));
   }
   return route;
 }

@@ -51,7 +51,6 @@ struct Path {
 
 
   Path& operator+=(const Path& path);
-  Path clone() const;
   size_t size() const;
 
   double getDimMinX() const;

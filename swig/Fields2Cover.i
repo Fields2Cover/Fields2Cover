@@ -348,5 +348,6 @@ DEFINE_PP("fields2cover/path_planning/reeds_shepp_curves_hc.h", ReedsSheppCurves
 %rename(PP_PathPlanning) f2c::pp::PathPlanning;
 %include "fields2cover/path_planning/path_planning.h"
 
+%include "fields2cover.h"
 
 %include "python/Fields2Cover.i"

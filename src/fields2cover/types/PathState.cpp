@@ -8,12 +8,6 @@
 
 namespace f2c::types {
 
-PathState PathState::clone() const {
-  PathState new_state {*this};
-  new_state.point = this->point.clone();
-  return new_state;
-}
-
 Point PathState::atEnd() const {
   return point.getPointFromAngle(angle, len * static_cast<double>(dir));
 }

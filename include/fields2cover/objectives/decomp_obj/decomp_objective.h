@@ -14,7 +14,7 @@
 
 namespace f2c::obj {
 
-/// @brief Base class for objective functions of route planners.
+/// @brief Base class for objective functions of cell decomposition.
 class DecompObjective : public BaseObjective<DecompObjective> {
  public:
   virtual double computeCost(const F2CCells& cells);

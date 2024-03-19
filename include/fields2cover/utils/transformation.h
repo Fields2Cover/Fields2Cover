@@ -24,11 +24,15 @@ class Transform {
       generateCoordTransf(
           const std::string& coord_sys_from, const std::string& coord_sys_to);
 
+  static F2CRoute transformRouteWithFieldRef(const F2CRoute& route,
+      const F2CField& field, const std::string& coord_sys_to);
   static F2CPath transformPathWithFieldRef(const F2CPath& path,
       const F2CField& field, const std::string& coord_sys_to);
   static F2CSwath transformSwathWithFieldRef(const F2CSwath& swath,
       const F2CField& field, const std::string& coord_sys_to);
   static F2CSwaths transformSwathsWithFieldRef(const F2CSwaths& swaths,
+      const F2CField& field, const std::string& coord_sys_to);
+  static F2CMultiPoint transformMultiPointWithFieldRef(const F2CMultiPoint& mp,
       const F2CField& field, const std::string& coord_sys_to);
 
 
@@ -37,6 +41,7 @@ class Transform {
   static void transformToUTM(F2CField& field, bool is_etrs89_opt = true);
   static void transformToPrevCRS(F2CField& field);
 
+  static F2CRoute transformToPrevCRS(const F2CRoute& p, const F2CField& field);
   static F2CPath transformToPrevCRS(const F2CPath& p, const F2CField& field);
   static F2CStrip transformToPrevCRS(const F2CStrip& s, const F2CField& field);
   static F2CStrips transformToPrevCRS(

@@ -11,7 +11,7 @@
 namespace f2c::pp {
 
 F2CPath PathPlanning::planPath(const F2CRobot& robot,
-    const F2CRoute& route, TurningBase& turn) const {
+    const F2CRoute& route, TurningBase& turn) {
   F2CPath path;
   for (size_t i = 0; i < route.sizeVectorSwaths(); ++i) {
     auto prev_swaths = (i >0) ? route.getSwaths(i-1) : F2CSwaths();
@@ -27,7 +27,7 @@ F2CPath PathPlanning::planPath(const F2CRobot& robot,
 }
 
 F2CPath PathPlanning::planPath(const F2CRobot& robot,
-    const F2CSwaths& swaths, TurningBase& turn) const {
+    const F2CSwaths& swaths, TurningBase& turn) {
   F2CPath path;
   if (swaths.size() > 1) {
     for (size_t i = 0; i < swaths.size()-1; ++i) {
@@ -48,7 +48,7 @@ F2CPath PathPlanning::planPathForConnection(const F2CRobot& robot,
     const F2CSwaths& s1,
     const F2CMultiPoint& mp,
     const F2CSwaths& s2,
-    TurningBase& turn) const {
+    TurningBase& turn) {
   F2CPoint p1, p2;
   double ang1, ang2;
 
@@ -77,7 +77,7 @@ F2CPath PathPlanning::planPathForConnection(const F2CRobot& robot,
     const F2CPoint& p1, double ang1,
     const F2CMultiPoint& mp,
     const F2CPoint& p2, double ang2,
-    TurningBase& turn) const {
+    TurningBase& turn) {
   auto v_con = simplifyConnection(robot,
       p1, ang1, mp, p2, ang2);
 
@@ -92,7 +92,7 @@ F2CPath PathPlanning::planPathForConnection(const F2CRobot& robot,
 
 
 
-double PathPlanning::getSmoothTurningRadius(const F2CRobot& robot) const {
+double PathPlanning::getSmoothTurningRadius(const F2CRobot& robot) {
   double x, y, ang, k;
   end_of_clothoid(0.0, 0.0, 0.0, 0.0, robot.getMaxDiffCurv(), 1.0,
       robot.getMaxCurv() / robot.getMaxDiffCurv(),
@@ -106,7 +106,7 @@ std::vector<std::pair<F2CPoint, double>> PathPlanning::simplifyConnection(
     const F2CRobot& robot,
     const F2CPoint& p1, double ang1,
     const F2CMultiPoint& mp,
-    const F2CPoint& p2, double ang2) const {
+    const F2CPoint& p2, double ang2) {
   const double safe_dist = getSmoothTurningRadius(robot);
   std::vector<std::pair<F2CPoint, double>> path;
   path.emplace_back(p1, ang1);

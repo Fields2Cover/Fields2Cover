@@ -89,10 +89,10 @@ F2CPath TurningBase::createTurnIfNotCached(const F2CRobot& robot,
   };
   auto it = path_cache_.find(v_turn);
   if (it != path_cache_.end()) {
-    return it->second.clone();
+    return it->second;
   }
   auto path = createSimpleTurn(robot, dist_start_end, start_angle, end_angle);
-  path_cache_.insert({v_turn, path.clone()});
+  path_cache_.insert({v_turn, path});
   return path;
 }
 

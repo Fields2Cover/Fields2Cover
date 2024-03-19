@@ -24,7 +24,8 @@ namespace f2c::types {
 
 struct Robot {
  public:
-  explicit Robot(double robot_width_p, double robot_cov_width_p = 0.0);
+  explicit Robot(double width, double cov_width = 0.0,
+      double max_curv = 1.0, double max_diff_curv = 0.3);
   Robot();
   ~Robot();
   Robot(const Robot&);
@@ -51,7 +52,6 @@ struct Robot {
   void setMinTurningRadius(double rad);
 
   double getMaxCurv() const;
-  /// This function is redundant with getMinTurningRadius()
   void setMaxCurv(double);
 
   double getMaxDiffCurv() const;
@@ -62,23 +62,19 @@ struct Robot {
 
   /// Width of the robot
   double width_ {0.0};
-  /// Width of the coverage area of therobot_cov_width robot
+  /// Width of the coverage area of the robot
   double cov_width_ {0.0};
 
   /// Velocity of the robot when not doing turns.
-  /// If the robot has a implement attached with vel_impl_on or vel_impl_off
-  /// setted, those values are used instead.
   double cruise_speed_ {1.0};
 
-  /// Maximum instantaneous curvature change (usually refered as kappa)
+  /// Maximum instantaneous curvature change
   double max_icc_ {1.0};  // [1/m]
 
   /// Maximum linear curvature change
   double linear_curv_change_ {0.3};  // [1/m^2]
 
-  /// Velocity of the robot when doing turns.
-  /// If the robot has a implement attached with vel_impl_on or vel_impl_off
-  /// setted, those values are used instead.
+  /// Velocity of the robot when doing turns. If not set, cruise_speed_ is used
   std::optional<double> turn_vel_;
 };
 

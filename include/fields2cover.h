@@ -69,26 +69,101 @@
 /// Main namespace of the fields2cover library
 namespace f2c {
 
+
 /// Types used by fields2cover library
 namespace types {}
-
-/// Swath generator algorithms' namespace
-namespace sg {}
-
-/// Route planning algorithms' namespace
-namespace rp {}
-
-/// Path planning algorithms' namespace
-namespace pp {}
 
 /// Objective algorithms' namespace
 namespace obj {}
 
+/// Swath generator algorithms' namespace
+namespace sg {}
+
+enum class SGAlg {
+  BRUTE_FORCE = 0,  //Default
+  GIVEN_ANGLE = 1,
+};
+
+enum class SGObjFunc {
+  N_SWATH_MOD = 0,  // Default
+  N_SWATH = 1,
+  SWATH_LENGTH = 2,
+  FIELD_COV = 3,
+  OVERLAPS = 4,
+};
+
+/// Route planning algorithms' namespace
+namespace rp {}
+
+enum class RPAlg {
+  SHORTEST_ROUTE = 0,  // Default
+  //BOUSTROPHEDON = 1,
+  //SNAKE = 2,
+  //SPIRAL = 3,
+  //CUSTOM = 4,
+};
+
+/// Path planning algorithms' namespace
+namespace pp {}
+
+enum class PPAlg {
+  DUBINS = 0,  // Default
+  DUBINS_CC = 1,
+  REEDS_SHEPP = 2,
+  REEDS_SHEPP_HC = 3,
+};
+
+
 /// Headland generator algorithms' namespace
 namespace hg {}
 
+enum class HGAlg {
+  NONE = 0,
+  CONST = 1,  // Default
+};
+
+
 /// Decomposition algorithms' namespace
 namespace decomp {}
+
+enum class DecompAlg {
+  NONE = 0,  // Default
+  // TRAPEZOIDAL = 1,
+  // BOUSTROPHEDON = 2,
+};
+
+struct Options {
+  DecompAlg decomp_alg {DecompAlg::NONE};
+  double decomp_angle {0.0};
+
+  HGAlg hg_alg {HGAlg::CONST};
+  int hg_swaths {3};
+
+  SGAlg sg_alg {SGAlg::BRUTE_FORCE};
+  SGObjFunc sg_obj {SGObjFunc::N_SWATH_MOD};
+  double sg_angle {0.0};
+
+  RPAlg rp_alg {RPAlg::SHORTEST_ROUTE};
+
+  PPAlg pp_alg {PPAlg::DUBINS};
+};
+
+F2CRoute planCovRoute(const F2CRobot& robot, const F2CCell& cell,
+    const Options& opt = Options());
+F2CRoute planCovRoute(const F2CRobot& robot, const F2CCells& cells,
+    const Options& opt = Options());
+F2CRoute planCovRoute(const F2CRobot& robot, const F2CField& field,
+    bool local_crs);
+F2CRoute planCovRoute(const F2CRobot& robot, const F2CField& field,
+    const Options& opt = Options(), bool local_crs = true);
+F2CPath planCovPath(const F2CRobot& robot, const F2CCell& cell,
+    const Options& opt = Options());
+F2CPath planCovPath(const F2CRobot& robot, const F2CCells& cells,
+    const Options& opt = Options());
+F2CPath planCovPath(const F2CRobot& robot, const F2CField& field,
+    bool local_crs);
+F2CPath planCovPath(const F2CRobot& robot, const F2CField& field,
+    const Options& opt = Options(), bool local_crs = true);
 
 }  // namespace f2c
 

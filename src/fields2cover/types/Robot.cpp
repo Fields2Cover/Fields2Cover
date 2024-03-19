@@ -9,15 +9,18 @@
 
 namespace f2c::types {
 
-Robot::Robot(double robot_width, double robot_cov_width) :
-  width_(robot_width), cov_width_(robot_cov_width) {
-  if (robot_width <= 0.0 || robot_cov_width < 0.0) {
+Robot::Robot(double width, double cov_width,
+    double max_curv, double max_diff_curv) :
+      width_(width), cov_width_(cov_width),
+      max_icc_(max_curv), linear_curv_change_(max_diff_curv) {
+  if (width <= 0.0 || cov_width < 0.0) {
     throw std::out_of_range("Robot widths have to be greater than 0.");
   }
-  if (robot_cov_width == 0.0) {
+  if (cov_width == 0.0) {
     this->cov_width_ = this->width_;
   }
 }
+
 Robot::Robot() = default;
 Robot::~Robot() = default;
 Robot::Robot(const Robot&) = default;

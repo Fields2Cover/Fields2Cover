@@ -98,15 +98,9 @@ PathState& Path::back() {
 
 Path& Path::operator+=(const Path& path) {
   for (auto&& new_state : path) {
-    this->states_.emplace_back(new_state.clone());
+    this->states_.emplace_back(new_state);
   }
   return *this;
-}
-
-Path Path::clone() const {
-  Path new_path;
-  new_path += *this;
-  return new_path;
 }
 
 size_t Path::size() const {
@@ -209,20 +203,14 @@ void Path::setTurnType(int i) {
 
 
 double Path::length() const {
-  if (size() < 1) {
-    return 0.0;
-  }
-  double total_length {0.0};
-  for (size_t i = 0; i < size(); ++i) {
-    total_length += fabs(states_[i].len);
-  }
-  return total_length;
+  return std::accumulate(states_.begin(), states_.end(), 0.0,
+      [](double d, const PathState& s) {return d + fabs(s.len);});
 }
 
 void Path::appendSwath(const Swath& swath, double cruise_speed) {
   for (size_t i = 0; i < swath.numPoints() - 1; ++i) {
     PathState s;
-    s.point = swath.getPoint(i).clone();
+    s.point = swath.getPoint(i);
     auto p_ang = Point(swath.getPoint(i + 1).getX() - swath.getPoint(i).getX(),
                        swath.getPoint(i + 1).getY() - swath.getPoint(i).getY());
     s.angle = p_ang.getAngleFromPoint();
@@ -248,12 +236,13 @@ PathState Path::at(double len) const {
     if (len_state < len) {
       len -= len_state;
     } else {
-      state_at = states_[i].clone();
+      state_at = states_[i];
+      Point p = states_[i].point;
+      double ang = states_[i].angle;
 
       len *= static_cast<double>(states_[i].dir);
-      state_at.point = Point(
-          state_at.point.getX() + len * cos(state_at.angle),
-          state_at.point.getY() + len * sin(state_at.angle));
+      state_at.point = Point(p.getX() + len * cos(ang),
+                             p.getY() + len * sin(ang));
       break;
     }
   }

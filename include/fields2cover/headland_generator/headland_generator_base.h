@@ -23,7 +23,9 @@ class HeadlandGeneratorBase {
   virtual F2CCells generateHeadlands(
     const F2CCells& field, double dist_headland) = 0;
 
-  /// Generate headland area of the field for a given number of swaths with given width.
+  /// Generate headland area of the field for a given number of swaths
+  ///   with given width.
+  ///
   /// @param field Borders of the field and the obstacles on it.
   /// @param swath_width Width of each headland swath.
   /// @param n_swaths Number of headland swaths.
@@ -31,11 +33,15 @@ class HeadlandGeneratorBase {
   virtual F2CCells generateHeadlandArea(
     const F2CCells& field, double swath_width, int n_swaths) = 0;
 
-  /// Generate headland swaths of the field for a given number of swaths with given width.
+  /// Generate headland swaths of the field for a given number of swaths
+  ///   with given width.
+  ///
   /// @param field Borders of the field and the obstacles on it.
   /// @param swath_width Width of each headland swath.
   /// @param n_swaths Number of headland swaths.
-  /// @param dir_out2in When true, headland swaths are created from outer borders to inner borders. Otherwise, they are created from inner borders to outers.
+  /// @param dir_out2in When true, headland swaths are created from
+  ///          outer borders to inner borders.
+  ///          Otherwise, they are created from inner borders to outers.
   /// @return Vector of size \a n_swaths for each headland swath.
   ///   Each F2CLinearRing on it is a headland swath ring.
   virtual std::vector<F2CCells> generateHeadlandSwaths(

@@ -260,7 +260,7 @@ TEST(fields2cover_types_path, populate_and_reduce) {
     EXPECT_EQ(static_cast<int>(s.dir),
         static_cast<int>(f2c::types::PathDirection::FORWARD));
   }
-  auto path_c = path1.clone();
+  auto path_c = path1;
   path1.populate(200);
   EXPECT_EQ(path1.size(), 200);
   EXPECT_NEAR(path1.length(), 7.0, 1e-2);

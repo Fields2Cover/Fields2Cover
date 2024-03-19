@@ -23,7 +23,8 @@ namespace f2c::rp {
 class RoutePlannerBase {
  public:
   /// Generate route to cover the swaths on a field.
-  /// If two consecutive swaths are far away, the route connects both through the headland.
+  ///   If two consecutive swaths are far away,
+  ///   the route connects both through the headland.
   ///
   /// @param cells Headland swath rings used to travel through the headlands
   /// @param swaths_by_cells Swaths to be covered.
@@ -37,7 +38,8 @@ class RoutePlannerBase {
   /// Set the start and the end of the route.
   void setStartAndEndPoint(const F2CPoint& p);
 
-  /// Create graph to compute the shortest path between two points in the headland.
+  /// Create graph to compute the shortest path between two points
+  ///   in the headlands.
   ///
   /// @param cells Headland swath rings used to travel through the headlands
   /// @param swaths_by_cells Swaths to be covered.
@@ -50,7 +52,8 @@ class RoutePlannerBase {
   ///
   /// @param cells Headland swath rings used to travel through the headlands
   /// @param swaths_by_cells Swaths to be covered.
-  /// @param shortest_graph Graph to compute the shortest path between two nodes.
+  /// @param shortest_graph Graph to compute the shortest path
+  ///          between two nodes.
   /// @param d_tol Tolerance distance to consider if two points are the same.
   virtual F2CGraph2D createCoverageGraph(
       const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells,
@@ -59,7 +62,8 @@ class RoutePlannerBase {
 
 
  protected:
-  /// Use the optimizer to generate the index of the points of the best coverage route
+  /// Use the optimizer to generate the index of the points of the best
+  ///   coverage route.
   virtual std::vector<int64_t> computeBestRoute(
       const F2CGraph2D& cov_graph, bool show_log) const;
 

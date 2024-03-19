@@ -16,7 +16,7 @@ Point::Point(double _x, double _y, double _z) : Geometry() {
   this->data_->setZ(_z);
 }
 
-Point::Point(const Point& p) : Geometry(p.clone()) {}
+Point::Point(const Point& p) : Geometry(p.clone()) {};
 Point::Point(Point&& p) = default;
 Point::~Point() = default;
 
@@ -120,9 +120,12 @@ void Point::setPoint(const Point& p) {
 Point Point::rotateFromPoint(double angle, const Point& p_r) const {
   const double s = sin(angle);
   const double c = cos(angle);
-  auto p = p_r - *this;
-  return Point(p.X() * c - p.Y() * s + this->X(),
-               p.X() * s + p.Y() * c + this->Y());
+  double x = this->X();
+  double y = this->Y();
+  double p_x = p_r.X() - x;
+  double p_y = p_r.Y() - y;
+  return Point(p_x * c - p_y * s + x,
+               p_x * s + p_y * c + y);
 }
 
 double Point::getAngleFromPoints(const Point& end) const {

@@ -19,7 +19,7 @@ namespace f2c {
 /// Class to plot Fields2Cover data structures
 class Visualizer {
  public:
-  static double getLineWidth() {return 1.0;};
+  static double getLineWidth() {return 1.0;}
 
   static void plot(double x, double y, const std::vector<double>& color = {});
   static void plot(const F2CPoint& p, const std::vector<double>& color = {});
@@ -116,7 +116,7 @@ class Visualizer {
 template<class T>
 std::vector<F2CPoint> Visualizer::data2vector(const T& t) {
   if constexpr (std::is_same<T, F2CPoint>::value) {
-    return std::vector<F2CPoint>{t.clone()};
+    return std::vector<F2CPoint>{t};
   } else {
     std::vector<F2CPoint> res;
     for (auto&& i : t) {
