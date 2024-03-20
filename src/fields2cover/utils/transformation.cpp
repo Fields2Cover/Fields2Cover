@@ -49,6 +49,8 @@ F2CRoute Transform::transformRouteWithFieldRef(const F2CRoute& route,
 
 F2CPath Transform::transformPathWithFieldRef(const F2CPath& path,
       const F2CField& field, const std::string& coord_sys_to) {
+  if (path.size() < 1) {return path;}
+
   auto new_path = path;
   F2CPathState s_end = path.back();
   if (s_end.len > 0.0) {

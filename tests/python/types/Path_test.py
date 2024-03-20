@@ -81,7 +81,8 @@ def test_fields2cover_types_path_populateAndReduce():
   near(path1.getTaskTime(), 6.5, 1e-6);
   for s in path1.getStates():
     near(s.dir, f2c.PathDirection_FORWARD);
-  path_c = path1.clone();
+  #path_c = path1.clone();
+  path_c = path1;
   path1.populate(200);
   assert (path1.length() > 8.0);
   assert (path1.length() < 2.0 * 8.0);
