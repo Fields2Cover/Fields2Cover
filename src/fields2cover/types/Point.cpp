@@ -16,7 +16,7 @@ Point::Point(double _x, double _y, double _z) : Geometry() {
   this->data_->setZ(_z);
 }
 
-Point::Point(const Point& p) : Geometry(p.clone()) {};
+Point::Point(const Point& p) : Geometry(p.clone()) {}
 Point::Point(Point&& p) = default;
 Point::~Point() = default;
 
@@ -26,6 +26,7 @@ Point& Point::operator=(Point&& p) {
   this->setZ(p.Z());
   return *this;
 }
+
 Point& Point::operator=(const Point& p) {
   this->setX(p.X());
   this->setY(p.Y());
