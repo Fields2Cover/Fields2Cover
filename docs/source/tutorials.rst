@@ -19,9 +19,6 @@ If you want to run the examples, go to your `build` folder and run:
 Computed images will appear in the same folder as you are now.
 
 
-C++ tutorials
-^^^^^^^^^^^^^
-
 .. toctree::
     :maxdepth: 3
 
@@ -31,18 +28,7 @@ C++ tutorials
     tutorials/swath_generator.rst
     tutorials/route_planning.rst
     tutorials/path_planning.rst
+    tutorials/decomposition.rst
     tutorials/complete_flow.rst
 
-Python tutorials
-^^^^^^^^^^^^^^^^
-.. toctree::
-    :maxdepth: 3
-
-    tutorials/python_basic_types.rst
-    tutorials/python_objective_functions.rst
-    tutorials/python_headland_generator.rst
-    tutorials/python_swath_generator.rst
-    tutorials/python_route_planning.rst
-    tutorials/python_path_planning.rst
-    tutorials/python_complete_flow.rst
 

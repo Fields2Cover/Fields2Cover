@@ -71,27 +71,6 @@ To test if the compilation and installation of the python interface is correct, 
 
 
 
-ROS Compatibility
-^^^^^^^^^^^^^^^^^
-
-
-We also provide a `ROS 1 and ROS 2 interface <https://github.com/Fields2Cover/fields2cover_ros>`__. On it, you can have a nice visualization of your field and the paths generated:
-
-.. image:: ../figures/demo_image.png
-  :align: center
-  :width: 1000px
-
-For being able to use the package from ROS, from `catkin_ws/`:
-
-.. code-block:: console
-
-  git clone https://github.com/Fields2Cover/Fields2Cover src/fields2cover
-  git clone https://github.com/Fields2Cover/fields2cover_ros src/fields2cover_ros
-  rosdep install -r --ignore-src --from-paths .
-  # If using ROS 1:
-  catkin_make_isolated
-  # If using ROS 2:
-  colcon build
 
 
 

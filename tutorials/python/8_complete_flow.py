@@ -33,7 +33,7 @@ f2c.Visualizer.figure();
 f2c.Visualizer.plot(field);
 f2c.Visualizer.plot(no_hl);
 f2c.Visualizer.plot(path);
-f2c.Visualizer.save("Tutorial_7_1_UTM.png");
+f2c.Visualizer.save("Tutorial_8_1_UTM.png");
 
 
 # Transform the generated path back to the previousa CRS.
@@ -48,7 +48,7 @@ f2c.Visualizer.plot(orig_field.getCellsAbsPosition());
 f2c.Visualizer.plot(L);
 #f2c.Visualizer.plot(path_gps);
 #f2c.Visualizer.axis_equal();
-f2c.Visualizer.save("Tutorial_7_1_GPS.png");
+f2c.Visualizer.save("Tutorial_8_1_GPS.png");
 
 
 

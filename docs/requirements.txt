@@ -1,6 +1,8 @@
-sphinx<5.0
+sphinx>5.0
 sphinx_rtd_theme>0.3.0
 sphinx-sitemap
+sphinx_code_tabs
 m2r2
 breathe>=4.32.0
 exhale>0.3.0
+
