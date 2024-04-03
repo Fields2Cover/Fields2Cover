@@ -54,7 +54,9 @@ RUN apt-get install -y --allow-unauthenticated --no-install-recommends \
                     python3-pytest \
                     python3-tk \
                     ranger \
-                    vim
+                    vim \
+                    libtinyxml2-dev \
+                    nlohmann-json3-dev
 #                    && \
 #                    apt-get autoclean && \
 #                    apt-get autoremove && \

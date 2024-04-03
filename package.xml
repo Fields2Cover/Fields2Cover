@@ -20,6 +20,8 @@
   <depend>libgdal-dev</depend>
   <depend>gtest</depend>
   <depend>tbb</depend>
+  <depend>libtinyxml2-dev</depend>
+  <depend>nlohmann-json3-dev</depend>
   <depend>python3</depend>
   <depend>python3-dev</depend>
   <exec_depend>python3-matplotlib</exec_depend>

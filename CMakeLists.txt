@@ -82,13 +82,6 @@ if(${CMAKE_VERSION} VERSION_LESS 3.14)
 endif(${CMAKE_VERSION} VERSION_LESS 3.14)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-FetchContent_Declare(json FETCHCONTENT_UPDATES_DISCONNECTED
-  URL https://github.com/nlohmann/json/releases/download/v3.10.5/json.tar.xz
-)
-FetchContent_Declare(tinyxml2 FETCHCONTENT_UPDATES_DISCONNECTED
-  GIT_REPOSITORY https://github.com/leethomason/tinyxml2.git
-  GIT_TAG c2d30872e20621955ca7feb9168bad996d591a19
-)
 FetchContent_Declare(steering_functions FETCHCONTENT_UPDATES_DISCONNECTED
   GIT_REPOSITORY https://github.com/Fields2Cover/steering_functions.git
   GIT_TAG 13e3f5658144b3832fb1eb31a0e2f5a3cbf57db9
@@ -102,14 +95,14 @@ FetchContent_Declare(matplot FETCHCONTENT_UPDATES_DISCONNECTED
 )
 
 FetchContent_MakeAvailable(
-  json
-  tinyxml2
   steering_functions
   spline
   matplot
 )
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(nlohmann_json REQUIRED)
+find_package(tinyxml2 REQUIRED)
 find_package(Threads REQUIRED)
 find_package(GDAL 3.0 REQUIRED)
 find_package(Eigen3 REQUIRED)
@@ -118,6 +111,7 @@ find_package(ortools CONFIG)
 
 if(NOT ortools_FOUND AND BUILD_ORTOOLS_BY_SOURCE)
   message("Or-tools not found -- Downloading and building from source")
+  option(BUILD_DEPS "BOOL" ON)
   FetchContent_Declare(ortools FETCHCONTENT_UPDATES_DISCONNECTED
     GIT_REPOSITORY https://github.com/google/or-tools
     GIT_TAG v9.9
@@ -244,9 +238,7 @@ endif()
 install(
   TARGETS
     Fields2Cover
-    tinyxml2
     steering_functions
-    nlohmann_json
     matplot
   EXPORT Fields2Cover-targets
   LIBRARY DESTINATION ${INSTALL_LIB_DIR}
@@ -296,9 +288,7 @@ install(
 export(
   TARGETS
     Fields2Cover
-    tinyxml2
     steering_functions
-    nlohmann_json
     matplot
   FILE
     Fields2Cover-${type}-Targets.cmake
