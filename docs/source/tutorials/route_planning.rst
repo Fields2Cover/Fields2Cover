@@ -131,7 +131,7 @@ For these examples, we will continue from the previous tutorial:
 
 
 Boustrophedon order
--------------------
+^^^^^^^^^^^^^^^^^^^
 
 Boustrophedon pattern is one of the most known patterns to cover a field.
 Swaths are traveled in the simplest order, covering first the first swath, then the second, and so on.
@@ -162,7 +162,7 @@ Once it has been called 4 times, the loop starts over.
 +------------------+------------------+
 
 Snake order
------------
+^^^^^^^^^^^
 
 Snake order covers the field skipping one swath each turn, and then coming back using uncovered swaths. This pattern, compared to boustrophedon, reduces the number of sharp turns.
 
@@ -190,7 +190,7 @@ As with boustrophedon pattern, snake pattern also has 4 variants:
 +----------+----------+
 
 Spiral order
-------------
+^^^^^^^^^^^^
 
 Spiral order covers the field in multiple spirals with predefined size.
 This pattern is commonly used when harvesting.
@@ -234,7 +234,7 @@ Same as previous patterns, spiral pattern also has 4 variants:
 
 
 Custom order
-------------
+^^^^^^^^^^^^
 
 To support more general approach for coverage path planning it's possible to define
 custom order of the swaths for the path planning process.
