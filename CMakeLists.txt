@@ -25,6 +25,7 @@ option(BUILD_TESTS "Build tests" ON)
 option(BUILD_PYTHON "Build Python SWIG module" OFF)
 option(BUILD_DOC "Build Documentation" OFF)
 option(BUILD_SHARED_LIBS "Build shared library(.so)" ON)
+option(BUILD_ORTOOLS_BY_SOURCE "Build OR-tools by source if not found" ON)
 
 
 
@@ -112,7 +113,17 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 find_package(GDAL 3.0 REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(ortools CONFIG REQUIRED)
+find_package(ortools CONFIG)
+
+
+if(NOT ortools_FOUND AND BUILD_ORTOOLS_BY_SOURCE)
+  message("Or-tools not found -- Downloading and building from source")
+  FetchContent_Declare(ortools FETCHCONTENT_UPDATES_DISCONNECTED
+    GIT_REPOSITORY https://github.com/google/or-tools
+    GIT_TAG v9.9
+  )
+  FetchContent_MakeAvailable(ortools)
+endif()
 
 
 
@@ -159,7 +170,7 @@ target_compile_features(Fields2Cover PUBLIC cxx_std_17)
 
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
   target_compile_options(Fields2Cover PRIVATE
-    -pedantic -Wall -Wfatal-errors
+    -Wall -Wfatal-errors
     -Wno-dev -Wextra -Wno-unused-parameter -Wno-sign-compare
     -Wno-attributes -Wl,--no-undefined
   )
@@ -175,7 +186,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   include(cmake/Modules/CodeCoverage.cmake)
   APPEND_COVERAGE_COMPILER_FLAGS()
   target_compile_options(Fields2Cover PRIVATE
-    -Werror -g --coverage -fprofile-arcs -ftest-coverage -fno-inline
+    -Werror -pedantic -g --coverage -fprofile-arcs -ftest-coverage -fno-inline
   )
   set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -lgcov")
 
