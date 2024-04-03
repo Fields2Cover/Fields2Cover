@@ -37,7 +37,7 @@ For this tutorial, let's use this field:
 
 .. image:: ../../figures/Tutorial_5_0_field.png
 
-
+This method searches the shortest route to cover all the swaths.
 Our inputs are: 1. the swaths; 2. The path to traverse through the headlands.
 
 Swaths were already generated using the Swath generator module. On the other hand, the path on the headland has not been computed yet. As we usually use 3 widths of the robot as the headland width, we create a headland path that navigates using the middle of the headland:
@@ -72,7 +72,7 @@ The route is then computed as:
 
   .. code-tab:: cpp
     :caption: C++
- 
+
     f2c::rp::RoutePlannerBase route_planner;
     F2CRoute route = route_planner.genRoute(mid_hl, swaths);
 
@@ -88,6 +88,10 @@ The route is then computed as:
 To plot the order, we have used green for earlier covered swaths and black for last covered.
 The direction of swaths is also green dot to black cross.
 
+Finally, we can use the function ``f2c::rp::RoutePlannerBase::setStartAndEndPoint(const F2CPoint& p)`` to set the start and end point of the route.
+If this function is not used, the route will start at the start of the first swath and will end at the end of the last swath.
+
+
 Known patterns
 --------------
 
@@ -99,7 +103,7 @@ For these examples, we will continue from the previous tutorial:
 
   .. code-tab:: cpp
     :caption: C++
- 
+
     f2c::Random rand(42);
     F2CRobot robot (2.0, 6.0);
     f2c::hg::ConstHL const_hl;
@@ -141,10 +145,10 @@ Once it has been called 4 times, the loop starts over.
 
   .. code-tab:: cpp
     :caption: C++
- 
+
     f2c::rp::BoustrophedonOrder boustrophedon_sorter;
     boustrophedon_swaths = boustrophedon_sorter.genSortedSwaths(swaths);
-  
+
   .. code-tab:: python
     :caption: Python
 
@@ -168,10 +172,10 @@ As with boustrophedon pattern, snake pattern also has 4 variants:
 
   .. code-tab:: cpp
     :caption: C++
- 
+
     f2c::rp::SnakeOrder snake_sorter;
     snake_swaths = snake_sorter.genSortedSwaths(swaths);
-  
+
   .. code-tab:: python
     :caption: Python
 
@@ -209,13 +213,13 @@ Same as previous patterns, spiral pattern also has 4 variants:
 
   .. code-tab:: cpp
     :caption: C++
- 
+
     f2c::rp::SpiralOrder spiral_sorter(6);
     spiral_swaths = spiral_sorter.genSortedSwaths(swaths);
-  
+
   .. code-tab:: python
     :caption: Python
-  
+
     spiral_sorter = f2c.RP_Spiral(6);
     swaths = spiral_sorter.genSortedSwaths(swaths);
 
@@ -239,13 +243,13 @@ custom order of the swaths for the path planning process.
 
   .. code-tab:: cpp
     :caption: C++
- 
+
     f2c::rp::CustomOrder custom_order({0, 1, 2, 3, 4});
     custom_swaths = custom_order.genSortedSwaths(swaths);
-  
+
   .. code-tab:: python
     :caption: Python
-  
+
     custom_order = f2c.RP_CustomOrder([0, 1, 2, 3, 4])
     swaths = custom_order.genSortedSwaths(swaths)
 
