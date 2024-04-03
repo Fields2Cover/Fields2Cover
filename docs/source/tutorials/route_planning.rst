@@ -1,5 +1,5 @@
 Part 5: Route planning
-=========================
+======================
 
 .. |boustrophedon1| image:: ../../figures/Tutorial_5_1_Boustrophedon_1.png
     :scale: 60%
@@ -28,35 +28,110 @@ Part 5: Route planning
 
 
 A route planner searches the best order to cover previously generated swaths.
-Usually, metaheuristics are used in the search.
+We can do this process using metaheuristics or known patterns. Let's first explain the metaheuristic approach.
 
-.. note::
-  In this version of Fields2Cover, no metaheuristic is provided, only predefined patterns.
-  Route patterns do not return ``F2CRoute``, but ``F2CSwaths`` instead.
-  In the next version, route planners will support metaheuristics, ``F2CCells`` as inputs, and ``F2CRoute`` as output.
+Metaheuristics for route planning
+---------------------------------
 
+For this tutorial, let's use this field:
+
+.. image:: ../../figures/Tutorial_5_0_field.png
+
+This method searches the shortest route to cover all the swaths.
+Our inputs are: 1. the swaths; 2. The path to traverse through the headlands.
+
+Swaths were already generated using the Swath generator module. On the other hand, the path on the headland has not been computed yet. As we usually use 3 widths of the robot as the headland width, we create a headland path that navigates using the middle of the headland:
+
+.. tabs:: lang
+
+  .. code-tab:: cpp
+    :caption: C++
+
+    f2c::hg::ConstHL const_hl;
+    F2CCells mid_hl = const_hl.generateHeadlands(cells, 1.5 * robot.getWidth());
+    F2CCells no_hl = const_hl.generateHeadlands(cells, 3.0 * robot.getWidth());
+
+    f2c::sg::BruteForce bf;
+    F2CSwathsByCells swaths = bf.generateSwaths(M_PI/2.0, robot.getCovWidth(), no_hl);
+
+  .. code-tab:: python
+    :caption: Python
+
+    const_hl = f2c.HG_Const_gen();
+    mid_hl = const_hl.generateHeadlands(cells, 1.5 * robot.getWidth());
+    no_hl = const_hl.generateHeadlands(cells, 3.0 * robot.getWidth());
+
+    bf = f2c.SG_BruteForce();
+    swaths = bf.generateSwaths(math.pi/2.0, robot.getCovWidth(), no_hl);
+
+
+For it, we rely on `OR-tools <https://developers.google.com/optimization>`__ to do the optimization process.
+The route is then computed as:
+
+.. tabs:: lang
+
+  .. code-tab:: cpp
+    :caption: C++
+
+    f2c::rp::RoutePlannerBase route_planner;
+    F2CRoute route = route_planner.genRoute(mid_hl, swaths);
+
+  .. code-tab:: python
+    :caption: Python
+
+    route_planner = f2c.RP_RoutePlannerBase();
+    route = route_planner.genRoute(mid_hl, swaths);
+
+
+.. image:: ../../figures/Tutorial_5_0_route.png
+
+To plot the order, we have used green for earlier covered swaths and black for last covered.
+The direction of swaths is also green dot to black cross.
+
+Finally, we can use the function ``f2c::rp::RoutePlannerBase::setStartAndEndPoint(const F2CPoint& p)`` to set the start and end point of the route.
+If this function is not used, the route will start at the start of the first swath and will end at the end of the last swath.
+
+
+Known patterns
+--------------
+
+On the other hand, for swaths that have been created in order (in convex fields), can be sorted faster using known patterns.
 
 For these examples, we will continue from the previous tutorial:
 
-.. code-block:: cpp
+.. tabs:: lang
 
-  f2c::Random rand(42);
-  F2CRobot robot (2.0, 6.0);
-  f2c::hg::ConstHL const_hl;
-  F2CCells cells = rand.generateRandField(5, 1e4).field;
-  F2CCells no_hl = const_hl.generateHeadlands(cells, 3.0 * robot.robot_width);
-  f2c::sg::BruteForce bf;
-  F2CSwaths swaths = bf.generateSwaths(M_PI, robot.op_width, no_hl.getGeometry(0));
+  .. code-tab:: cpp
+    :caption: C++
 
-Once planned the swaths, it would be awesome to find the best order to cover the field.
-To plot the order, we have used green for earlier covered swaths and black for last covered.
-The direction of swaths is also green dot to black cross.
+    f2c::Random rand(42);
+    F2CRobot robot (2.0, 6.0);
+    f2c::hg::ConstHL const_hl;
+    F2CCells cells = rand.generateRandField(1e4, 5).getField();
+    F2CCells no_hl = const_hl.generateHeadlands(cells, 3.0 * robot.getWidth());
+    f2c::sg::BruteForce bf;
+    F2CSwaths swaths = bf.generateSwaths(M_PI, robot.getCovWidth(), no_hl.getGeometry(0));
+
+  .. code-tab:: python
+    :caption: Python
+
+    rand = f2c.Random(42);
+    robot = f2c.Robot(2.0, 6.0);
+    const_hl = f2c.HG_Const_gen();
+    field = rand.generateRandField(1e4, 5);
+    cells = field.getField();
+    no_hl = const_hl.generateHeadlands(cells, 3.0 * robot.getWidth());
+    bf = f2c.SG_BruteForce();
+    swaths = bf.generateSwaths(math.pi, robot.getCovWidth(), no_hl.getGeometry(0));
+
+
+
 
 .. image:: ../../figures/Tutorial_4_1_Brute_force_Angle.png
 
 
 Boustrophedon order
--------------------------------
+-------------------
 
 Boustrophedon pattern is one of the most known patterns to cover a field.
 Swaths are traveled in the simplest order, covering first the first swath, then the second, and so on.
@@ -66,11 +141,19 @@ With the next code, swaths are order as the first image.
 Calling again ``genSortedSwaths`` produces the other variants.
 Once it has been called 4 times, the loop starts over.
 
-.. code-block:: cpp
+.. tabs:: lang
 
-   f2c::rp::BoustrophedonOrder boustrophedon_sorter;
-   boustrophedon_swaths = boustrophedon_sorter.genSortedSwaths(swaths);
+  .. code-tab:: cpp
+    :caption: C++
 
+    f2c::rp::BoustrophedonOrder boustrophedon_sorter;
+    boustrophedon_swaths = boustrophedon_sorter.genSortedSwaths(swaths);
+
+  .. code-tab:: python
+    :caption: Python
+
+    boustrophedon_sorter = f2c.RP_Boustrophedon();
+    swaths = boustrophedon_sorter.genSortedSwaths(swaths);
 
 +------------------+------------------+
 | |boustrophedon1| | |boustrophedon2| |
@@ -79,16 +162,26 @@ Once it has been called 4 times, the loop starts over.
 +------------------+------------------+
 
 Snake order
--------------------------------
+-----------
 
 Snake order covers the field skipping one swath each turn, and then coming back using uncovered swaths. This pattern, compared to boustrophedon, reduces the number of sharp turns.
 
 As with boustrophedon pattern, snake pattern also has 4 variants:
 
-.. code-block:: cpp
+.. tabs:: lang
 
-  f2c::rp::SnakeOrder snake_sorter;
-  snake_swaths = snake_sorter.genSortedSwaths(swaths);
+  .. code-tab:: cpp
+    :caption: C++
+
+    f2c::rp::SnakeOrder snake_sorter;
+    snake_swaths = snake_sorter.genSortedSwaths(swaths);
+
+  .. code-tab:: python
+    :caption: Python
+
+    snake_sorter = f2c.RP_Snake();
+    swaths = snake_sorter.genSortedSwaths(swaths);
+
 
 +----------+----------+
 | |snake1| | |snake2| |
@@ -97,7 +190,7 @@ As with boustrophedon pattern, snake pattern also has 4 variants:
 +----------+----------+
 
 Spiral order
--------------------------------
+------------
 
 Spiral order covers the field in multiple spirals with predefined size.
 This pattern is commonly used when harvesting.
@@ -116,10 +209,22 @@ With the spiral size of 6, the order of swaths travelled is:
 
 Same as previous patterns, spiral pattern also has 4 variants:
 
-.. code-block:: cpp
+.. tabs:: lang
 
-  f2c::rp::SpiralOrder spiral_sorter(6);
-  spiral_swaths = spiral_sorter.genSortedSwaths(swaths);
+  .. code-tab:: cpp
+    :caption: C++
+
+    f2c::rp::SpiralOrder spiral_sorter(6);
+    spiral_swaths = spiral_sorter.genSortedSwaths(swaths);
+
+  .. code-tab:: python
+    :caption: Python
+
+    spiral_sorter = f2c.RP_Spiral(6);
+    swaths = spiral_sorter.genSortedSwaths(swaths);
+
+
+
 
 +-----------+-----------+
 | |spiral1| | |spiral2| |
@@ -129,21 +234,24 @@ Same as previous patterns, spiral pattern also has 4 variants:
 
 
 Custom order
--------------------------------
+------------
 
 To support more general approach for coverage path planning it's possible to define
 custom order of the swaths for the path planning process.
 
-.. code-block:: cpp
+.. tabs:: lang
 
-  f2c::rp::CustomOrder custom_order({0, 1, 2, 3, 4});
-  custom_swaths = custom_order.genSortedSwaths(swaths);
+  .. code-tab:: cpp
+    :caption: C++
 
-.. code-block:: cpp
+    f2c::rp::CustomOrder custom_order({0, 1, 2, 3, 4});
+    custom_swaths = custom_order.genSortedSwaths(swaths);
 
-    f2c::rp::CustomOrder custom_order;
-    custom_order = custom_order.setCustomOrder({0, 1 , 2, 3, 4})
-    custom_swaths2 = custom_order.genSortedSwaths(swaths);
+  .. code-tab:: python
+    :caption: Python
+
+    custom_order = f2c.RP_CustomOrder([0, 1, 2, 3, 4])
+    swaths = custom_order.genSortedSwaths(swaths)
 
 
 .. note::

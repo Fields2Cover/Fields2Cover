@@ -1,5 +1,5 @@
 #==============================================================================
-#     Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+#     Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 #                      Author: Gonzalo Mier
 #                         BSD-3 License
 #==============================================================================
@@ -26,11 +26,11 @@ def test_fields2cover_pp_pp_turnDist():
   [swaths.push_back(i) for i in [swath1, swath2]]
 
   robot = f2c.Robot();
-  robot.max_icc = 1.0 / 1.5;
+  robot.setMaxCurv(1.0/1.5);
   path_planner = f2c.PP_PathPlanning();
   dubins = f2c.PP_DubinsCurves();
 
-  path = path_planner.searchBestPath(robot,swaths, dubins);
+  path = path_planner.planPath(robot,swaths, dubins);
   # Precision is quite low so this is just checking a prediction is done
   near(path.length(), 2 + 1.5 * math.pi, 0.1);
 

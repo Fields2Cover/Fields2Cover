@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -45,21 +45,9 @@ int main() {
 
   // Access to pointers
   std::cout << "Access to OGRPoints: " << p4->Distance(p5.get()) << std::endl;
-  std::cout << "Without accessing: " << p4.Distance(p5) << std::endl;
+  std::cout << "Without accessing: " << p4.distance(p5) << std::endl;
 
   std::cout << std::endl;
-  // Difference between cloning and copying a point
-  F2CPoint old_p (1, 2);
-  F2CPoint cloned_p = old_p.clone();
-  std::cout << "The old point is " << old_p << std::endl;
-  cloned_p *= 5.0;
-  std::cout << "Old point is: " << old_p <<
-    " and cloned point is: " << cloned_p << std::endl;
-  F2CPoint copy_p = old_p;
-  copy_p *= 5.5;
-  std::cout << "Old point is: " << old_p <<
-    " and copied point is: " << copy_p << std::endl;
-
 
   std::cout << std::endl << std::endl;
   std::cout << "####### Tutorial 1.3 Initialize a F2CLineString ######"
@@ -68,10 +56,10 @@ int main() {
   F2CLineString line1;
   line1.addPoint(3,0);
   line1.addPoint(p5);
-  std::cout << "Length of line 1: " << line1.getLength() << std::endl;
+  std::cout << "Length of line 1: " << line1.length() << std::endl;
 
   F2CLineString line2({F2CPoint(1, 0), F2CPoint(1, 1), F2CPoint(0, 1)});
-  std::cout << "Length of line 2: " << line2.getLength() << std::endl;
+  std::cout << "Length of line 2: " << line2.length() << std::endl;
 
 
   std::cout << std::endl << std::endl;
@@ -79,7 +67,7 @@ int main() {
     << std::endl;
 
   F2CLinearRing ring{F2CPoint(1,1), F2CPoint(1,2), F2CPoint(2,2), F2CPoint(1,1)};
-  std::cout << "Area of the ring: " << ring.getArea() << std::endl;
+  std::cout << "Area of the ring: " << ring.area() << std::endl;
 
   std::cout << std::endl << std::endl;
   std::cout << "####### Tutorial 1.5 Initializing other collections ######"
@@ -90,7 +78,7 @@ int main() {
   lines.addGeometry(line2);
   std::cout << "Lines have length: ";
   for (auto line : lines) {
-    std::cout << line.getLength() << ", ";
+    std::cout << line.length() << ", ";
   }
   std::cout << std::endl << std::endl;
 
@@ -102,11 +90,11 @@ int main() {
   F2CCell cell;
   cell.addRing(outter_ring);
   cell.addRing(inner_ring);
-  std::cout << "The area of the cell is: " << cell.getArea()
+  std::cout << "The area of the cell is: " << cell.area()
     << std::endl << std::endl;
   F2CCells cells;
   cells.addGeometry(cell);
-  std::cout << "The area of the cells is: " << cells.getArea() << std::endl;
+  std::cout << "The area of the cells is: " << cells.area() << std::endl;
 
   std::cout << std::endl << std::endl;
   F2CMultiPoint points {F2CPoint(1, 2), F2CPoint(3, 4)};
@@ -137,10 +125,10 @@ int main() {
   std::cout << "####### Tutorial 1.9 Visualizing Fields2Cover data ######"
     << std::endl;
 
-  f2c::Visualizer::figure(100);
+  f2c::Visualizer::figure();
   f2c::Visualizer::plot(lines);
   //f2c::Visualizer::show();
-  f2c::Visualizer::save("Tutorial_image");
+  f2c::Visualizer::save("Tutorial_image.png");
 
   return 0;
 }

@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -112,5 +112,39 @@ TEST(fields2cover_types_geometries, mult_iterators) {
     ++i;
   }
 }
+
+TEST(fields2cover_types_geometries, simplify) {
+  F2CLinearRing ring1{
+    F2CPoint(0,0), F2CPoint(1,0),F2CPoint(1, 1),F2CPoint(0, 1), F2CPoint(0, 0)};
+  F2CLineString line {ring1};
+  F2CMultiLineString lines {line};
+  F2CCell cell {ring1};
+  F2CCells cells {cell};
+  EXPECT_NEAR(line.length(), line.simplify(1e-2).length(), 0.1);
+  auto s_lines = lines.simplify(1e-2);
+  EXPECT_NEAR(lines[0].length(), s_lines.getGeometry(0).length(), 0.1);
+  EXPECT_NEAR(cell.area(), cell.simplify(1e-2).area(), 0.1);
+  EXPECT_NEAR(cells.area(), cells.simplify(1e-2).area(), 0.1);
+}
+
+TEST(fields2cover_types_geometries, area) {
+  F2CMultiPoint ps{
+    F2CPoint(0,0), F2CPoint(1,0),F2CPoint(1, 1),F2CPoint(0, 1), F2CPoint(0, 0)};
+  F2CLinearRing ring1{
+    F2CPoint(0,0), F2CPoint(1,0),F2CPoint(1, 1),F2CPoint(0, 1), F2CPoint(0, 0)};
+  F2CLineString line {ring1};
+  F2CMultiLineString lines {line};
+  F2CCell cell {ring1};
+  F2CCells cells {cell};
+  EXPECT_NEAR(ps.area(), 0, 1e-3);
+  EXPECT_NEAR(ring1.area(), 1, 1e-3);
+  EXPECT_NEAR(line.area(), 1, 1e-3);
+  EXPECT_NEAR(lines.area(), 1, 1e-3);
+  EXPECT_NEAR(cell.area(), 1, 1e-3);
+  EXPECT_NEAR(cells.area(), 1, 1e-3);
+  EXPECT_NEAR(cell.clone().area(), 1, 1e-3);
+}
+
+
 
 

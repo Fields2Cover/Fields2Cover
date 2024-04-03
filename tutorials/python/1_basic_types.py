@@ -1,7 +1,7 @@
 #=============================================================================
-#    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
-#                     Author: Gonzalo Mier
-#                        BSD-3 License
+#     Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
+#                      Author: Gonzalo Mier
+#                         BSD-3 License
 #=============================================================================
 
 import fields2cover as f2c
@@ -56,18 +56,18 @@ print("\n\n####### Tutorial 1.3 Initialize a LineString ######")
 line1 = f2c.LineString()
 line1.addPoint(3,0)
 line1.addPoint(p5)
-print("Length of line 1: ", line1.getLength())
+print("Length of line 1: ", line1.length())
 
 line2 = f2c.LineString();
 [line2.addPoint(p) for p in [f2c.Point(1, 0), f2c.Point(1, 1), f2c.Point(0, 1)]];
-print("Length of line 2: ", line2.getLength());
+print("Length of line 2: ", line2.length());
 
 
 print("\n\n####### Tutorial 1.4 Initialize a LinearRing ######")
 
 ring = f2c.LinearRing();
 [ring.addPoint(p) for p in [f2c.Point(1,1), f2c.Point(1,2), f2c.Point(2,2), f2c.Point(1,1)]];
-print("Area of the ring: ", ring.getArea())
+print("Area of the ring: ", ring.area())
 
 print("\n\n####### Tutorial 1.5 Initializing other collections ######")
 lines = f2c.MultiLineString();
@@ -75,7 +75,7 @@ lines.addGeometry(line1);
 lines.addGeometry(line2);
 print("Lines have length: ", end="")
 for i in range(lines.size()):
-  print(lines.getGeometry(i).getLength(), end = ", ")
+  print(lines.getGeometry(i).length(), end = ", ")
 print("\n")
 
 outter_ring = f2c.LinearRing();
@@ -88,11 +88,11 @@ inner_ring = f2c.LinearRing();
 cell = f2c.Cell();
 cell.addRing(outter_ring);
 cell.addRing(inner_ring);
-print("The area of the cell is: ", cell.getArea(), "\n");
+print("The area of the cell is: ", cell.area(), "\n");
 
 cells = f2c.Cells();
 cells.addGeometry(cell);
-print("The area of the cells is: ", cells.getArea(), "\n\n")
+print("The area of the cells is: ", cells.area(), "\n\n")
 
 points = f2c.MultiPoint();
 [points.addGeometry(p) for p in [f2c.Point(1, 2), f2c.Point(3, 4)]];
@@ -118,12 +118,12 @@ print("Modified first point in points: ", points.getGeometry(0));
 
 print("\n\n####### Tutorial 1.9 Visualizing Fields2Cover data ######")
 
-f2c.Visualizer.figure(100);
+f2c.Visualizer.figure();
 f2c.Visualizer.plot(lines);
 f2c.Visualizer.show();
 
-f2c.Visualizer.figure(101);
+f2c.Visualizer.figure();
 f2c.Visualizer.plot(lines);
-f2c.Visualizer.save("Tutorial_image");
+f2c.Visualizer.save("Tutorial_image.png");
 
 

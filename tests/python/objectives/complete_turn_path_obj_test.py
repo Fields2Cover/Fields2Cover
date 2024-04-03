@@ -1,5 +1,5 @@
 #==============================================================================
-#     Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+#     Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 #                      Author: Gonzalo Mier
 #                         BSD-3 License
 #==============================================================================
@@ -23,8 +23,8 @@ def test_fields2cover_obj_complete_turn_path_obj_computeCost():
   [swaths2.push_back(i) for i in [swath2]]
 
   robot = f2c.Robot(2.1, 2.5);
-  robot.max_icc = 2.0;
- 
+  robot.setMaxCurv(2.0);
+
   length = f2c.OBJ_CompleteTurnPathObj_Dubins(robot);
 
   # Precision is quite low so this is just checking a prediction is done

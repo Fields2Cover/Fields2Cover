@@ -8,51 +8,25 @@ on:
 
 jobs:
   build:
-    name: "GDAL ${{ matrix.gdal }}, g++ ${{matrix.gcc}}, swig ${{matrix.swig}}, shared ${{matrix.shared}}, ${{matrix.build_type}}"
+    name: "g++ ${{matrix.gcc}}, swig ${{matrix.swig}}, shared ${{matrix.shared}}, ${{matrix.build_type}}"
     runs-on: ubuntu-latest
     container: "osgeo/gdal:ubuntu-full-${{ matrix.gdal }}"
     strategy:
       fail-fast: false
       matrix:
-        gcc: [7, 8, 9, 10, 11, 12]
-        gdal: ["3.1.3", "3.2.3", "3.3.3", "3.4.3", "3.5.3", "3.6.2"]
-        swig: ["v4.0.0", "v4.0.1", "v4.0.2", "v4.1.0", "v4.1.1"]
+        gcc: [9, 10, 11, 12]
+        gdal: ["3.6.3"]
+        swig: ["v4.0.0", "v4.0.1", "v4.0.2", "v4.1.0", "v4.1.1", "v4.2.0", "v4.2.1"]
         shared: ["ON"]
         generators: ["Unix Makefiles"]
-        build_type: ["Release"]
-        exclude:
-          - gcc: 7
-            gdal: "3.6.2"
-          - gcc: 8
-            gdal: "3.6.2"
-          - gcc: 11
-            gdal: "3.1.3"
-          - gcc: 11
-            gdal: "3.2.3"
-          - gcc: 11
-            gdal: "3.3.3"
-          - gcc: 11
-            gdal: "3.4.3"
-          - gcc: 11
-            gdal: "3.5.3"
-          - gcc: 12
-            gdal: "3.1.3"
-          - gcc: 12
-            gdal: "3.2.3"
-          - gcc: 12
-            gdal: "3.3.3"
-          - gcc: 12
-            gdal: "3.4.3"
-          - gcc: 12
-            gdal: "3.5.3"
+        build_type: ["Debug", "Release"]
         include:
           - gcc: 12
             gdal: "3.6.2"
-            swig: "v4.1.1"
+            swig: "v4.2.1"
             shared: "OFF"
             generators: "Unix Makefiles"
             build_type: "Release"
-
 
     steps:
       - uses: actions/checkout@v3
@@ -68,7 +42,7 @@ jobs:
           export DEBIAN_FRONTEND=noninteractive
           apt-get update --allow-insecure-repositories -y
           apt-get install -y --allow-unauthenticated --no-install-recommends ca-certificates
-          apt-get install -y --allow-unauthenticated --no-install-recommends build-essential doxygen g++-${{ matrix.gcc }} gcc-${{ matrix.gcc }} git lcov libboost-dev libeigen3-dev libgeos-dev libgtest-dev libpython3-dev libtbb-dev python3 python3-matplotlib python3-pip python3-pytest python3-tk
+          apt-get install -y --allow-unauthenticated --no-install-recommends build-essential doxygen g++-${{ matrix.gcc }} gcc-${{ matrix.gcc }} gnuplot git lcov libboost-dev libeigen3-dev libgeos-dev libgtest-dev libpython3-dev libtbb-dev python3 python3-matplotlib python3-pip python3-pytest python3-tk
           python3 -m pip install gcovr setuptools
 
           # Solve issue with matplotlib
@@ -105,6 +79,17 @@ jobs:
           cp /usr/include/cpl* /usr/include/new_gdal/
           mv /usr/include/new_gdal/ /usr/include/gdal/
 
+      - name: Configure Or-tools
+        shell: bash
+        run: |
+          wget https://github.com/google/or-tools/releases/download/v9.9/or-tools_amd64_ubuntu-22.04_cpp_v9.9.3963.tar.gz -q -O /tmp/ortools.tar.gz
+          mkdir -p /tmp/ortools
+          tar -zxf /tmp/ortools.tar.gz -C /tmp/ortools --strip-components=1
+          cp -r /tmp/ortools/bin/. /usr/bin
+          cp -r /tmp/ortools/include/. /usr/include
+          cp -r /tmp/ortools/lib/. /usr/lib
+          cp -r /tmp/ortools/lib/cmake/. /usr/share
+          cp -r /tmp/ortools/share/. /usr/share/ortools
 
       - name: Configure
         working-directory: ${{github.workspace}}

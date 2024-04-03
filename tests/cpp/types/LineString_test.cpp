@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -16,6 +16,9 @@ TEST(fields2cover_types_linestring, init) {
   EXPECT_EQ(line2.size(), 3);
   EXPECT_EQ(line2.getX(0), 1);
   EXPECT_EQ(line2.getX(1), 3);
+  EXPECT_EQ(line2.X(1), 3);
+  EXPECT_EQ(line2.Y(1), 2);
+  EXPECT_EQ(line2.Z(1), 0);
   F2CLineString line3{F2CPoint(2,3)};
   EXPECT_EQ(line3.size(), 1);
   EXPECT_EQ(line3.getX(0), 2);
@@ -75,6 +78,22 @@ TEST(fields2cover_types_linestring, loop) {
 
   EXPECT_EQ(line.getX(0), -1);
   EXPECT_EQ(line.getY(0), -2);
+}
+
+
+TEST(fields2cover_types_linestring, closestPointTo) {
+  F2CLineString line(std::vector<F2CPoint>({F2CPoint(1,2), F2CPoint(3,2), F2CPoint(3,7)}));
+  EXPECT_EQ(line.closestPointTo(F2CPoint(0, 0)), F2CPoint(1, 2));
+  EXPECT_EQ(line.closestPointTo(F2CPoint(2, -5)), F2CPoint(2, 2));
+  EXPECT_EQ(line.closestPointTo(F2CPoint(3, 5)), F2CPoint(3, 5));
+  EXPECT_EQ(line.closestPointTo(F2CPoint(5, 4)), F2CPoint(3, 4));
+}
+
+TEST(fields2cover_types_linestring, startAngle_and_endAngle) {
+  F2CLineString line(std::vector<F2CPoint>({
+        F2CPoint(1,-1), F2CPoint(3,1), F2CPoint(4,2), F2CPoint(4,-2)}));
+  EXPECT_NEAR(line.startAngle(), 0.25*M_PI, 1e-3);
+  EXPECT_NEAR(line.endAngle(), 1.5*M_PI, 1e-3);
 }
 
 

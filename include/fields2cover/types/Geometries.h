@@ -1,7 +1,7 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
-//                           BSD-3 License
+//                        BSD-3 License
 //=============================================================================
 
 #pragma once
@@ -22,8 +22,9 @@ struct Geometries : public Geometry<T, R> {
  public:
   using Geometry<T, R>::Geometry;
   /// Compute area of the geometry
-  double getArea() const;
+  double area() const;
   SAMETYPE clone() const;
+  SAMETYPE simplify(double d_tol) const;
 
   #ifndef SWIG
   // Code adapted from OGRCurve::Iterator
@@ -90,6 +91,13 @@ struct Geometries : public Geometry<T, R> {
   ConstIterator end() const;
   ConstIterator begin(const SAMETYPE* poSelf);
   ConstIterator end(const SAMETYPE* poSelf);
+
+  const CHILDRENTYPE operator[](int i) const;
+  const CHILDRENTYPE at(int i) const;
+  const CHILDRENTYPE back() const;
+
+  SAMETYPE& append(const SAMETYPE& other);
+
   #endif
 };
 

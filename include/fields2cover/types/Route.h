@@ -1,7 +1,7 @@
 //=============================================================================
-//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
-//                           BSD-3 License
+//                        BSD-3 License
 //=============================================================================
 
 #pragma once
@@ -11,29 +11,59 @@
 #include <gdal/ogr_geometry.h>
 #include <vector>
 #include <numeric>
+#include <optional>
 #include "fields2cover/types/Swath.h"
 #include "fields2cover/types/Swaths.h"
 #include "fields2cover/types/LineString.h"
 #include "fields2cover/types/MultiPoint.h"
+#include "fields2cover/types/Graph2D.h"
 
 namespace f2c::types {
 
-enum RouteType { R_NONE = 0, R_START = 1, R_END = 2, R_START_END = 3};
-
 struct Route {
  public:
-  std::vector<Swaths> v_swaths;
-  std::vector<MultiPoint> connections;
-  RouteType type {RouteType::R_NONE};
+  const std::vector<Swaths>& getVectorSwaths() const;
 
- public:
-  double getLength() const;
+  Swaths& getSwaths(size_t i);
+  const Swaths& getSwaths(size_t i) const;
+  void setSwaths(size_t i, const Swaths& s);
+  void addSwaths(const Swaths& s = {});
+  void addConnectedSwaths(const MultiPoint& mp = {}, const Swaths& s = {});
 
-  LineString getRouteAsLine() const;
+  void addSwath(const Swath& s);
+  void addSwath(const Swath& s, Graph2D& g);
+  void addConnection();
+  void addConnection(const Point& p);
+  void addConnection(const MultiPoint& mp);
+  void addConnection(const std::vector<Point>& vp);
 
-  bool isValid() const;
+  MultiPoint& getLastConnection();
+  const MultiPoint& getLastConnection() const;
+  Swaths& getLastSwaths();
+  const Swaths& getLastSwaths() const;
+
+  const std::vector<MultiPoint>& getConnections() const;
+  MultiPoint& getConnection(size_t i);
+  const MultiPoint& getConnection(size_t i) const;
+  void setConnection(size_t i, const MultiPoint& mp);
+
+  Point startPoint() const;
+  Point endPoint() const;
+
+  size_t sizeVectorSwaths() const;
+  size_t sizeConnections() const;
+
+
+  double length() const;
+
+  LineString asLineString() const;
+
   bool isEmpty() const;
   Route clone() const;
+
+ private:
+  std::vector<Swaths> v_swaths_;
+  std::vector<MultiPoint> connections_;
 };
 
 

@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -81,9 +81,9 @@ TEST(fields2cover_types_multilinestring, getGeometry) {
   const auto const_lines = lines.clone();
   for (int i = 0; i < lines.size(); ++i) {
     EXPECT_EQ(lines.getGeometry(i).size(), 5-i);
-    EXPECT_EQ(lines.getGeometry(i).getLength(), 5-i-1);
+    EXPECT_EQ(lines.getGeometry(i).length(), 5-i-1);
     EXPECT_EQ(const_lines.getGeometry(i).size(), 5-i);
-    EXPECT_EQ(const_lines.getGeometry(i).getLength(), 5-i-1);
+    EXPECT_EQ(const_lines.getGeometry(i).length(), 5-i-1);
   }
 
 
@@ -116,27 +116,27 @@ TEST(fields2cover_types_multilinestring, setGeometry) {
   F2CLineString line2 {
     F2CPoint(0,0), F2CPoint(4,0), F2CPoint(4,4), F2CPoint(0,4)};
   F2CMultiLineString lines;
-  EXPECT_EQ(lines.getLength(), 0);
+  EXPECT_EQ(lines.length(), 0);
   EXPECT_EQ(lines.size(), 0);
 
   lines.setGeometry(0, line2);
-  EXPECT_EQ(lines.getLength(), 12);
+  EXPECT_EQ(lines.length(), 12);
   EXPECT_EQ(lines.size(), 1);
 
   lines.setGeometry(0, line);
-  EXPECT_EQ(lines.getLength(), 6);
+  EXPECT_EQ(lines.length(), 6);
   EXPECT_EQ(lines.size(), 1);
 
   lines.setGeometry(1, F2CLineString());
-  EXPECT_EQ(lines.getLength(), 6);
+  EXPECT_EQ(lines.length(), 6);
   EXPECT_EQ(lines.size(), 2);
 
   lines.setGeometry(10, line);
-  EXPECT_EQ(lines.getLength(), 12);
+  EXPECT_EQ(lines.length(), 12);
   EXPECT_EQ(lines.size(), 11);
 
   lines.setGeometry(0, line2);
-  EXPECT_EQ(lines.getLength(), 18);
+  EXPECT_EQ(lines.length(), 18);
   EXPECT_EQ(lines.size(), 11);
 }
 
@@ -145,6 +145,6 @@ TEST(fields2cover_types_multilinestring, getLineSegments) {
   F2CMultiLineString lines = F2CMultiLineString::getLineSegments(ring1);
   EXPECT_EQ(lines.size(), 4);
   EXPECT_EQ(lines.size(), ring1.size() - 1);
-  EXPECT_NEAR(lines.getLength(), 4.0, 1e-7);
+  EXPECT_NEAR(lines.length(), 4.0, 1e-7);
 }
 

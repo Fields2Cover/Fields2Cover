@@ -21,7 +21,7 @@ import exhale
 # -- Project information -----------------------------------------------------
 
 project = 'Fields2Cover'
-copyright = '2022, Wageningen University'
+copyright = '2020-2024, Wageningen University'
 author = 'Wageningen University'
 
 # The full version, including alpha/beta/rc tags
@@ -46,11 +46,13 @@ extensions = [
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
     'sphinx_sitemap',
+    'sphinx_code_tabs',
     'sphinx.ext.inheritance_diagram',
     "exhale",
     "breathe",
     "m2r2"
 ]
+
 
 source_suffix = [".rst", ".md"]
 
@@ -92,7 +94,7 @@ html_theme_options = {
     'logo_only': True,
     'display_version': False,
 }
-github_url = 'https://github.com/Fields2Cover-group/Fields2Cover'
+github_url = 'https://www.github.com/Fields2Cover/Fields2Cover'
 
 import time
 def setup(app):

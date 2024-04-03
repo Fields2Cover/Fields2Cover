@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -18,10 +18,7 @@ class DubinsCurvesCC : public TurningBase {
  public:
   F2CPath createSimpleTurn(const F2CRobot& robot,
       double dist_start_pos, double start_angle,
-      double end_angle, double max_headland_width = 1e5) override;
-
- public:
-  double discretization {0.01};
+      double end_angle) override;
 };
 
 }  // namespace f2c::pp

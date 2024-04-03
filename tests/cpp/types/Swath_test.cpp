@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -74,12 +74,12 @@ TEST(fields2cover_types_swath, length) {
   F2CSwath swath3(path3);
   F2CSwath swath4;
 
-  EXPECT_EQ(swath1.getLength(), 4);
-  EXPECT_EQ(swath2.getLength(), 4);
-  EXPECT_NEAR(std::pow(swath3.getLength(),2), 2, 1e-7);
+  EXPECT_EQ(swath1.length(), 4);
+  EXPECT_EQ(swath2.length(), 4);
+  EXPECT_NEAR(std::pow(swath3.length(),2), 2, 1e-7);
 
   swath4.setPath(path2);
-  EXPECT_EQ(swath4.getLength(), 4);
+  EXPECT_EQ(swath4.length(), 4);
 }
 TEST(fields2cover_types_swath, set_id) {
   F2CSwath swath;
@@ -105,16 +105,16 @@ TEST(fields2cover_types_swath, width) {
 
 TEST(fields2cover_types_swath, area) {
   F2CSwath swath_empty(F2CLineString(), 1.0);
-  EXPECT_TRUE(swath_empty.computeAreaCovered().isEmpty());
+  EXPECT_TRUE(swath_empty.areaCovered().isEmpty());
 
   F2CLineString line {F2CPoint(0, 1), F2CPoint(4, 1)};
   F2CSwath swath(line, 2.0);
-  auto cell = swath.computeAreaCovered();
-  EXPECT_EQ(swath.getWidth() * swath.getLength(), cell.getGeometry(0).getArea());
-  EXPECT_EQ(swath.getWidth() * swath.getLength(), swath.getArea());
+  auto cell = swath.areaCovered();
+  EXPECT_EQ(swath.getWidth() * swath.length(), cell.getGeometry(0).area());
+  EXPECT_EQ(swath.getWidth() * swath.length(), swath.area());
 
-  F2CCells cells = F2CCells::Buffer(line, 1.0);
-  EXPECT_NEAR(swath.getArea(cells), cells.getArea(), 1e-5);
+  F2CCells cells = F2CCells::buffer(line, 1.0);
+  EXPECT_NEAR(swath.area(cells), cells.area(), 1e-5);
 }
 
 

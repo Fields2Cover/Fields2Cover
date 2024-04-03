@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -15,7 +15,15 @@
 
 namespace f2c::sg {
 
-F2CSwaths BruteForce::generateBestSwaths(f2c::obj::SGObjective& obj,
+double BruteForce::getStepAngle() const {
+  return this->step_angle;
+}
+
+void BruteForce::setStepAngle(double d) {
+  this->step_angle = d;
+}
+
+double BruteForce::computeBestAngle(f2c::obj::SGObjective& obj,
     double op_width, const F2CCell& poly) {
   int n = static_cast<int>(
       boost::math::constants::two_pi<double>() / step_angle);
@@ -24,8 +32,7 @@ F2CSwaths BruteForce::generateBestSwaths(f2c::obj::SGObjective& obj,
   std::iota(ids.begin(), ids.end(), 0);
 
   auto getCostSwaths = [this, op_width, &poly, &obj] (const int& i) {
-    auto s = generateSwaths(i * step_angle, op_width, poly);
-    return obj.computeCostWithMinimizingSign(poly, s);
+    return computeCostOfAngle(obj, i * step_angle, op_width, poly);
   };
 
   #ifdef ALLOW_PARALLELIZATION
@@ -35,9 +42,8 @@ F2CSwaths BruteForce::generateBestSwaths(f2c::obj::SGObjective& obj,
     std::transform(ids.begin(), ids.end(), costs.begin(), getCostSwaths);
   #endif
 
-  int min_cost_pos = std::min_element(
-      costs.begin(), costs.end()) - costs.begin();
-  return generateSwaths(ids[min_cost_pos] * step_angle, op_width, poly);
+  return ids[std::min_element(
+      costs.begin(), costs.end()) - costs.begin()] * step_angle;
 }
 
 }  // namespace f2c::sg

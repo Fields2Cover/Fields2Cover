@@ -1,5 +1,5 @@
 #==============================================================================
-#     Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+#     Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 #                      Author: Gonzalo Mier
 #                         BSD-3 License
 #==============================================================================
@@ -20,7 +20,7 @@ def test_fields2cover_route_snake_genSortedSwathsEven():
 
   swath_sorter = f2c.RP_Snake();
   objective = f2c.OBJ_DirectDistPathObj();
-  
+
   swaths = swath_sorter.genSortedSwaths(swaths, 0);
 
   near(swaths[0].getWidth(), 1);

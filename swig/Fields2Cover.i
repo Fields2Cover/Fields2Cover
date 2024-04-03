@@ -1,6 +1,6 @@
 /* File: fields2cover.i */
 
-#pragma SWIG nowarn=315,320,362,503,509
+#pragma SWIG nowarn=315,317,320,362,503,509
 
 %module fields2cover
  %include <std_string.i>
@@ -10,8 +10,9 @@
  %include <std_vector.i>
  %include <optional.i>
  %include <exception.i>
+ %include <std_pair.i>
 
-#define __version__ "1.2.0"
+#define __version__ "2.0.0"
 
 %inline %{
   #include "fields2cover.h"
@@ -48,12 +49,12 @@
 
 %include "fields2cover/types/Geometry.h"
 
-DEFINE_GEOM_ALGS(Distance)
-DEFINE_GEOM_ALGS(Disjoint)
-DEFINE_GEOM_ALGS(Crosses)
-DEFINE_GEOM_ALGS(Touches)
-DEFINE_GEOM_ALGS(Within)
-DEFINE_GEOM_ALGS(Intersects)
+DEFINE_GEOM_ALGS(distance)
+DEFINE_GEOM_ALGS(disjoint)
+DEFINE_GEOM_ALGS(crosses)
+DEFINE_GEOM_ALGS(touches)
+DEFINE_GEOM_ALGS(within)
+DEFINE_GEOM_ALGS(intersects)
 %template(GeomPoint) f2c::types::Geometry<OGRPoint, wkbPoint>;
 %template(GeomMultiPoint) f2c::types::Geometry<OGRMultiPoint, wkbMultiPoint>;
 %template(GeomLinearRing) f2c::types::Geometry<OGRLinearRing, wkbLinearRing>;
@@ -126,6 +127,15 @@ EXTEND_OPERATOR(Cells)
 %include "fields2cover/types/MultiLineString.h"
 %include "fields2cover/types/Cell.h"
 %include "fields2cover/types/Cells.h"
+
+%ignore f2c::types::Graph::getEdges;
+%ignore f2c::types::Graph::getEdgesFrom;
+%ignore f2c::types::Graph::allPathsBetween;
+%ignore f2c::types::Graph::shortestPathsAndCosts;
+%include "fields2cover/types/Graph.h"
+%ignore f2c::types::Graph2D::allPathsBetween;
+%include "fields2cover/types/Graph2D.h"
+
 %include "fields2cover/types/Swath.h"
 %ignore f2c::types::Swaths::Swaths(std::initializer_list<Swath> const &);
 %ignore f2c::types::Swaths::operator[];
@@ -143,13 +153,17 @@ EXTEND_OPERATOR(Cells)
     self->at(i) = v;
   }
 }
+%ignore f2c::types::SwathsByCells::operator[];
+%include "fields2cover/types/SwathsByCells.h"
 
 
 %include "fields2cover/types/Strip.h"
 %include "fields2cover/types/Field.h"
+%ignore f2c::types::Route::addSwath;
 %include "fields2cover/types/Route.h"
+%include "fields2cover/types/PathState.h"
+%ignore f2c::types::Path::operator[];
 %include "fields2cover/types/Path.h"
-%include "fields2cover/types/OptimizationParams.h"
 %include "fields2cover/types/Robot.h"
 %include "fields2cover/types.h"
 
@@ -165,7 +179,11 @@ typedef long unsigned int size_t;
 %template(VectorPoint) std::vector<F2CPoint>;
 %template(VectorMultiPoint) std::vector<F2CMultiPoint>;
 %template(VectorSwath) std::vector<f2c::types::Swath>;
-%template(SwathsByCells) std::vector<f2c::types::Swaths>;
+%template(VectorSwaths) std::vector<f2c::types::Swaths>;
+%template(VectorLineString) std::vector<f2c::types::LineString>;
+%template(VectorLinearRing) std::vector<f2c::types::LinearRing>;
+%template(VectorCell) std::vector<f2c::types::Cell>;
+%template(VectorCells) std::vector<f2c::types::Cells>;
 %template(Strips) std::vector<f2c::types::Strip>;
 %template(PathStates) std::vector<f2c::types::PathState>;
 %template(Fields) std::vector<f2c::types::Field>;
@@ -176,22 +194,6 @@ typedef long unsigned int size_t;
 %include "fields2cover/utils/parser.h"
 %include "fields2cover/utils/visualizer.h"
 
-%template(plot) f2c::Visualizer::plot<f2c::types::Point>;
-%template(plot) f2c::Visualizer::plot<f2c::types::MultiPoint>;
-%template(plot) f2c::Visualizer::plot<f2c::types::LineString>;
-%template(plot) f2c::Visualizer::plot<f2c::types::LinearRing>;
-%template(plot) f2c::Visualizer::plot<f2c::types::Cell>;
-%template(plot) f2c::Visualizer::plot<f2c::types::Cells>;
-%template(plot) f2c::Visualizer::plot<f2c::types::MultiLineString>;
-%template(plot) f2c::Visualizer::plot<f2c::types::Field>;
-%template(plot) f2c::Visualizer::plot<std::vector<F2CField>>;
-%template(plot) f2c::Visualizer::plot<f2c::types::Robot>;
-%template(plot) f2c::Visualizer::plot<std::vector<F2CRobot>>;
-%template(plot) f2c::Visualizer::plot<double>;
-%template(plot) f2c::Visualizer::plot<f2c::types::Swath>;
-%template(plot) f2c::Visualizer::plot<f2c::types::Swaths>;
-%template(plot) f2c::Visualizer::plot<std::vector<f2c::types::Swaths>>;
-%template(plot) f2c::Visualizer::plot<f2c::types::Path>;
 
 %ignore f2c::Transform::generateCoordTransf;
 %ignore f2c::Transform::createSptRef;
@@ -263,29 +265,31 @@ DEFINE_SG_COSTS(BaseObjective<f2c::obj::SGObjective>, computeCostWithMinimizingS
 DEFINE_RP_COSTS(BaseObjective<f2c::obj::RPObjective>, computeCostWithMinimizingSign)
 DEFINE_PP_COSTS(BaseObjective<f2c::obj::PPObjective>, computeCostWithMinimizingSign)
 
-%include "fields2cover/objectives/hg_objective.h"
+%include "fields2cover/objectives/hg_obj/hg_objective.h"
 %rename(OBJ_RemArea) f2c::obj::RemArea;
-%include "fields2cover/objectives/rem_area.h"
+%include "fields2cover/objectives/hg_obj/rem_area.h"
 
-%include "fields2cover/objectives/sg_objective.h"
+%include "fields2cover/objectives/sg_obj/sg_objective.h"
 %rename(OBJ_NSwath) f2c::obj::NSwath;
-%include "fields2cover/objectives/n_swath.h"
+%include "fields2cover/objectives/sg_obj/n_swath.h"
+%rename(OBJ_NSwathModified) f2c::obj::NSwathModified;
+%include "fields2cover/objectives/sg_obj/n_swath_modified.h"
 %rename(OBJ_FieldCoverage) f2c::obj::FieldCoverage;
-%include "fields2cover/objectives/field_coverage.h"
+%include "fields2cover/objectives/sg_obj/field_coverage.h"
 %rename(OBJ_Overlaps) f2c::obj::Overlaps;
-%include "fields2cover/objectives/overlaps.h"
+%include "fields2cover/objectives/sg_obj/overlaps.h"
 %rename(OBJ_SwathLength) f2c::obj::SwathLength;
-%include "fields2cover/objectives/swath_length.h"
+%include "fields2cover/objectives/sg_obj/swath_length.h"
 
 
-%include "fields2cover/objectives/rp_objective.h"
+%include "fields2cover/objectives/rp_obj/rp_objective.h"
 %rename(OBJ_DirectDistPathObj) f2c::obj::DirectDistPathObj;
-%include "fields2cover/objectives/direct_dist_path_obj.h"
-%include "fields2cover/objectives/complete_turn_path_obj.h"
+%include "fields2cover/objectives/rp_obj/direct_dist_path_obj.h"
+%include "fields2cover/objectives/rp_obj/complete_turn_path_obj.h"
 
-%include "fields2cover/objectives/pp_objective.h"
+%include "fields2cover/objectives/pp_obj/pp_objective.h"
 %rename(OBJ_PathLength) f2c::obj::PathLength;
-%include "fields2cover/objectives/path_length.h"
+%include "fields2cover/objectives/pp_obj/path_length.h"
 
 %template(OBJ_CompleteTurnPathObj_Dubins) f2c::obj::CompleteTurnPathObj<f2c::pp::DubinsCurves>;
 %template(OBJ_CompleteTurnPathObj_DubinsCC) f2c::obj::CompleteTurnPathObj<f2c::pp::DubinsCurvesCC>;
@@ -298,11 +302,15 @@ DEFINE_PP_COSTS(BaseObjective<f2c::obj::PPObjective>, computeCostWithMinimizingS
 
 
 %include "fields2cover/swath_generator/swath_generator_base.h"
-%template(SG_Swath_gen_bf_template) f2c::sg::SwathGeneratorBase<f2c::sg::BruteForce>;
 %rename(SG_BruteForce) f2c::sg::BruteForce;
 %include "fields2cover/swath_generator/brute_force.h"
 
 
+%include "fields2cover/decomposition/decomposition_base.h"
+%rename(DECOMP_TrapezoidalDecomp) f2c::decomp::TrapezoidalDecomp;
+%include "fields2cover/decomposition/trapezoidal_decomp.h"
+%rename(DECOMP_Boustrophedon) f2c::decomp::BoustrophedonDecomp;
+%include "fields2cover/decomposition/boustrophedon_decomp.h"
 
 
 %rename(RP_Single_cell_order_base_class) f2c::rp::SingleCellSwathsOrderBase;
@@ -315,6 +323,15 @@ DEFINE_PP_COSTS(BaseObjective<f2c::obj::PPObjective>, computeCostWithMinimizingS
 %include "fields2cover/route_planning/spiral_order.h"
 %rename(RP_CustomOrder) f2c::rp::CustomOrder;
 %include "fields2cover/route_planning/custom_order.h"
+
+
+%ignore f2c::rp::RoutePlannerBase::createShortestGraph;
+%ignore f2c::rp::RoutePlannerBase::createCoverageGraph;
+%ignore f2c::rp::RoutePlannerBase::computeBestRoute;
+%ignore f2c::rp::RoutePlannerBase::transformSolutionToRoute;
+%rename(RP_RoutePlannerBase) f2c::rp::RoutePlannerBase;
+%include "fields2cover/route_planning/route_planner_base.h"
+
 
 %rename(PP_Turning_base_class) f2c::pp::TurningBase;
 %include "fields2cover/path_planning/turning_base.h"
@@ -331,5 +348,6 @@ DEFINE_PP("fields2cover/path_planning/reeds_shepp_curves_hc.h", ReedsSheppCurves
 %rename(PP_PathPlanning) f2c::pp::PathPlanning;
 %include "fields2cover/path_planning/path_planning.h"
 
+%include "fields2cover.h"
 
 %include "python/Fields2Cover.i"

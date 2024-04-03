@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -11,8 +11,7 @@
 namespace f2c::pp {
 
 F2CPath DubinsCurvesCC::createSimpleTurn(const F2CRobot& robot,
-    double dist_start_pos, double start_angle, double end_angle,
-    double max_headland_width) {
+    double dist_start_pos, double start_angle, double end_angle) {
   steer::State start, end;
 
   start.x = 0.0;
@@ -27,21 +26,9 @@ F2CPath DubinsCurvesCC::createSimpleTurn(const F2CRobot& robot,
   end.kappa = 0.0;
   end.d = 0;
 
-  double n = 0.0;
-
-  while (true) {
-    CC00_Dubins_State_Space ss(
-        robot.max_icc / (1+0.05*n),
-        robot.linear_curv_change / (1+0.2*n),
-        discretization,
-        true);
-    if (loop_detected(ss.get_controls(start, end)) && n <= 20.) {
-      n += 1.0;
-    } else {
-      return steerStatesToPath(ss.get_path(start, end),
-          robot.max_vel ? *robot.max_vel : robot.cruise_speed);
-    }
-  }
+  CC00_Dubins_State_Space ss(
+        robot.getMaxCurv(), robot.getMaxDiffCurv(), discretization, true);
+  return steerStatesToPath(ss.get_path(start, end), robot.getTurnVel());
 }
 
 }  // namespace f2c::pp

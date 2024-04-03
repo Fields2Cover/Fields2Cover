@@ -1,7 +1,7 @@
 //=============================================================================
-//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
-//                           BSD-3 License
+//                        BSD-3 License
 //=============================================================================
 
 #pragma once
@@ -34,11 +34,10 @@ struct Cell : public Geometries<Cell, OGRPolygon, wkbPolygon, LinearRing> {
   using Geometries<Cell, OGRPolygon, wkbPolygon, LinearRing>::Geometries;
   Cell();
   explicit Cell(const OGRGeometry* geom);
-
   explicit Cell(const f2c::types::LinearRing& ring);
+  ~Cell() = default;
 
   void getGeometry(size_t i, LinearRing& ring);
-
   void getGeometry(size_t i, LinearRing& ring) const;
 
   LinearRing getGeometry(size_t i);
@@ -53,15 +52,18 @@ struct Cell : public Geometries<Cell, OGRPolygon, wkbPolygon, LinearRing> {
   /// Scale this Cell by a scale factor
   void operator*=(double b);
 
-  static Cell Buffer(const Cell& geom, double width);
+  static Cell buffer(const Cell& geom, double width);
 
-  static Cell Buffer(const LineString& geom, double width);
+  static Cell buffer(const LineString& geom, double width);
 
-  static Cell Buffer(const LinearRing& ring, double width);
+  static Cell buffer(const LinearRing& ring, double width);
 
-  static Cell Buffer(const Point& geom, double width);
+  static Cell buffer(const Point& geom, double width);
 
-  Cell ConvexHull() const;
+  Cell convexHull() const;
+
+  template <class T, OGRwkbGeometryType R>
+  static Cell convexHull(const Geometry<T, R>& geom);
 
   void addRing(const LinearRing& ring);
   void addGeometry(const LinearRing& ring);
@@ -74,26 +76,39 @@ struct Cell : public Geometries<Cell, OGRPolygon, wkbPolygon, LinearRing> {
 
   /// Get a line that starts from a custom point with a custom angle.
   /// If the point is in this geometry, the line crosses the border.
-  LineString getSemiLongCurve(const Point& point, double angle) const;
+  LineString createSemiLongLine(const Point& point, double angle) const;
 
   /// Get a line that goes through a custom point with a custom angle.
   /// If the point is in this geometry, the line also crosses it.
-  LineString getStraightLongCurve(const Point& point, double angle) const;
+  LineString createStraightLongLine(const Point& point, double angle) const;
 
-  /// Compute the sections of a LineString that is inside this Cell
+  /// Compute the sections of a LineString that is inside this cell
   MultiLineString getLinesInside(const LineString& line) const;
 
-  /// Compute the sections of a MultiLineString that is inside this Cell
+  /// Compute the sections of a MultiLineString that is inside this cell
   MultiLineString getLinesInside(const MultiLineString& lines) const;
 
-  /// Check if a point is in the border of this Cell
+  /// Check if a point is in the border of this cell
   bool isPointInBorder(const Point& p) const;
 
+  /// Check if a point is inside this cell
   bool isPointIn(const Point& p) const;
 
-  /// Generate a line from a point to the border of this Cell
+  /// Generate a line from a point to the border of this cell
   LineString createLineUntilBorder(const Point& p, double ang) const;
+
+  /// Find the closest point from a point to the border of the field
+  Point closestPointOnBorderTo(const Point& p) const;
 };
+
+template <class T, OGRwkbGeometryType R>
+Cell Cell::convexHull(const Geometry<T, R>& geom) {
+  OGRGeometry* c_hull = geom->ConvexHull();
+  Cell cell {c_hull};
+  OGRGeometryFactory::destroyGeometry(c_hull);
+  return cell;
+}
+
 
 }  // namespace f2c::types
 

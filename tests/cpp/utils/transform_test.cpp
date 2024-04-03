@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -22,8 +22,8 @@ TEST(fields2cover_utils_transformer, convert_to_F2C_and_return) {
   F2CField field {F2CCells(poly_to_transform)};
   field.setEPSGCoordSystem(4326);
   f2c::Transform::transform(field, "EPSG:28992");
-  EXPECT_EQ(field.field.getCellBorder(0).StartPoint(), F2CPoint(0, 0, 0));
-  EXPECT_EQ(field.coord_sys, "EPSG:28992");
+  EXPECT_EQ(field.getField().getCellBorder(0).startPoint(), F2CPoint(0, 0, 0));
+  EXPECT_EQ(field.getCRS(), "EPSG:28992");
 
   auto ref_gps_point = f2c::Transform::getRefPointInGPS(field);
   EXPECT_NEAR(ref_gps_point.getX(), 6.062131843297665, 1e-3);
@@ -31,7 +31,7 @@ TEST(fields2cover_utils_transformer, convert_to_F2C_and_return) {
   EXPECT_NEAR(ref_gps_point.getZ(), 0, 1e-3);
 
   f2c::Transform::transform(field, "EPSG:4326");
-  auto final_field = (field.field + field.ref_point).getCellBorder(0);
+  auto final_field = (field.getField() + field.getRefPoint()).getCellBorder(0);
   for (int i = 0; i < final_field.size(); ++i) {
     EXPECT_NEAR(final_field.getGeometry(i).getX(),
         poly.getGeometry(0).getGeometry(i).getX(), 1e-3);
@@ -43,7 +43,7 @@ TEST(fields2cover_utils_transformer, convert_to_F2C_and_return) {
 
   EXPECT_NO_THROW(f2c::Transform::transform(field, "UTM:32N datum:WGS84"));
   EXPECT_THROW( f2c::Transform::transform(field, "NONE"), std::invalid_argument);
-  field.coord_sys = "";
+  field.setCRS("");
   EXPECT_THROW( f2c::Transform::transform(field, "EPSG:28992"), std::invalid_argument);
 }
 
@@ -60,12 +60,12 @@ TEST(fields2cover_utils_transformer, convert_to_UTM_and_return) {
   F2CField field {F2CCells(poly_to_transform)};
   field.setEPSGCoordSystem(4326);
   f2c::Transform::transformToUTM(field);
-  EXPECT_EQ(field.getField().getCellBorder(0).StartPoint(), F2CPoint(0, 0, 0));
+  EXPECT_EQ(field.getField().getCellBorder(0).startPoint(), F2CPoint(0, 0, 0));
   EXPECT_EQ(field.getCRS(), "UTM:32N datum:WGS84");
   EXPECT_EQ(field.getPrevCRS(), "EPSG:4326");
 
   f2c::Transform::transformToPrevCRS(field);
-  auto final_field = (field.field + field.ref_point).getCellBorder(0);
+  auto final_field = (field.getField() + field.getRefPoint()).getCellBorder(0);
   for (int i = 0; i < final_field.size(); ++i) {
     EXPECT_NEAR(final_field.getGeometry(i).getX(),
         poly.getGeometry(0).getGeometry(i).getX(), 1e-3);
@@ -76,31 +76,31 @@ TEST(fields2cover_utils_transformer, convert_to_UTM_and_return) {
   }
 
   field.setCRS("");
-  EXPECT_LT(field.getArea(), 1e-5);
-  EXPECT_GT(field.getArea(), 0);
+  EXPECT_LT(field.area(), 1e-5);
+  EXPECT_GT(field.area(), 0);
   f2c::Transform::transformToUTM(field, false);
   EXPECT_EQ(field.getCRS(), "UTM:32N datum:WGS84");
-  EXPECT_NEAR(field.getArea(), 5.9, 0.005);
+  EXPECT_NEAR(field.area(), 5.9, 0.005);
   f2c::Transform::transformToPrevCRS(field);
-  EXPECT_LT(field.getArea(), 1e-5);
-  EXPECT_GT(field.getArea(), 0);
+  EXPECT_LT(field.area(), 1e-5);
+  EXPECT_GT(field.area(), 0);
 
   field.setCRS("");
   f2c::Transform::transformToUTM(field, true);
   EXPECT_EQ(field.getCRS(), "UTM:32N datum:ETRS89");
-  EXPECT_NEAR(field.getArea(), 5.9, 0.005);
+  EXPECT_NEAR(field.area(), 5.9, 0.005);
   f2c::Transform::transformToPrevCRS(field);
-  EXPECT_LT(field.getArea(), 1e-5);
-  EXPECT_GT(field.getArea(), 0);
+  EXPECT_LT(field.area(), 1e-5);
+  EXPECT_GT(field.area(), 0);
 
 
   field.setCRS("EPSG:4258");
   f2c::Transform::transformToUTM(field);
   EXPECT_EQ(field.getCRS(), "UTM:32N datum:ETRS89");
-  EXPECT_NEAR(field.getArea(), 5.9, 0.005);
+  EXPECT_NEAR(field.area(), 5.9, 0.005);
   f2c::Transform::transformToPrevCRS(field);
-  EXPECT_LT(field.getArea(), 1e-5);
-  EXPECT_GT(field.getArea(), 0);
+  EXPECT_LT(field.area(), 1e-5);
+  EXPECT_GT(field.area(), 0);
 
   field.setCRS("ERROR");
   EXPECT_THROW( f2c::Transform::transformToUTM(field), std::invalid_argument);
@@ -119,25 +119,25 @@ TEST(fields2cover_utils_transformer, convert_types) {
   auto moved_swaths = f2c::Transform::transformSwaths(swaths, "EPSG:4326", "EPSG:28992");
 
   F2CStrip strip;
-  strip.cell = F2CCell::Buffer(moved_swaths[0].getPath(), 15);
+  strip.setCell(F2CCell::buffer(moved_swaths[0].getPath(), 15));
   F2CStrips strips;
   strips.emplace_back(strip);
 
 
-  auto cells = moved_swaths.at(0).computeAreaCovered();
+  auto cells = moved_swaths.at(0).areaCovered();
   F2CField field(cells, "field");
   field.setEPSGCoordSystem(28992);
   field.setPrevCRS("EPSG:4326");
-  EXPECT_NE(field.ref_point.getX(), 6.062131843297665);
-  EXPECT_NE(field.ref_point.getY(), 51.51238564279176);
-  EXPECT_GT(field.ref_point.getX(), 1e4);
-  EXPECT_GT(field.ref_point.getY(), 1e4);
-  EXPECT_NEAR(field.getArea(), 1150, 10);
-  EXPECT_NEAR(strip.cell.getArea(), 1150, 10);
+  EXPECT_NE(field.getRefPoint().getX(), 6.062131843297665);
+  EXPECT_NE(field.getRefPoint().getY(), 51.51238564279176);
+  EXPECT_GT(field.getRefPoint().getX(), 1e4);
+  EXPECT_GT(field.getRefPoint().getY(), 1e4);
+  EXPECT_NEAR(field.area(), 1150, 10);
+  EXPECT_NEAR(strip.getCell().area(), 1150, 10);
 
   auto moved_strips = f2c::Transform::transformStrips(strips, "EPSG:28992", "EPSG:4326");
   auto moved_cells = f2c::Transform::transform(cells, "EPSG:28992", "EPSG:4326");
-  EXPECT_NEAR(moved_strips[0].cell.getArea(), moved_cells.getArea(), 1e-7);
+  EXPECT_NEAR(moved_strips[0].getCell().area(), moved_cells.area(), 1e-7);
 
   F2CPath path;
   path.appendSwath(moved_swaths.at(0), 10);
@@ -147,17 +147,17 @@ TEST(fields2cover_utils_transformer, convert_types) {
 
 
   auto returned_path = f2c::Transform::transformPath(path, "EPSG:28992", "EPSG:4326");
-  EXPECT_NEAR(returned_path.states[0].point.getX(), 6.062131843297665, 1e-3);
-  EXPECT_NEAR(returned_path.states[0].point.getY(), 51.51238564279176, 1e-3);
+  EXPECT_NEAR(returned_path[0].point.getX(), 6.062131843297665, 1e-3);
+  EXPECT_NEAR(returned_path[0].point.getY(), 51.51238564279176, 1e-3);
   auto returned_path2 = f2c::Transform::transformPathWithFieldRef(path2, field, "EPSG:4326");
-  EXPECT_NEAR(returned_path2.states[0].point.getX(), 6.062131843297665, 1e-3);
-  EXPECT_NEAR(returned_path2.states[0].point.getY(), 51.51238564279176, 1e-3);
+  EXPECT_NEAR(returned_path2[0].point.getX(), 6.062131843297665, 1e-3);
+  EXPECT_NEAR(returned_path2[0].point.getY(), 51.51238564279176, 1e-3);
   auto returned_path3 = f2c::Transform::transformToPrevCRS(path2, field);
-  EXPECT_NEAR(returned_path3.states[0].point.getX(), 6.062131843297665, 1e-3);
-  EXPECT_NEAR(returned_path3.states[0].point.getY(), 51.51238564279176, 1e-3);
+  EXPECT_NEAR(returned_path3[0].point.getX(), 6.062131843297665, 1e-3);
+  EXPECT_NEAR(returned_path3[0].point.getY(), 51.51238564279176, 1e-3);
 
   auto returned_swaths =
     f2c::Transform::transformSwathsWithFieldRef(moved_swaths, field, "EPSG:4326");
-  EXPECT_NEAR(returned_path2.states[0].point.getX(), 6.062131843297665, 1e-3);
-  EXPECT_NEAR(returned_path2.states[0].point.getY(), 51.51238564279176, 1e-3);
+  EXPECT_NEAR(returned_path2[0].point.getX(), 6.062131843297665, 1e-3);
+  EXPECT_NEAR(returned_path2[0].point.getY(), 51.51238564279176, 1e-3);
 }

@@ -1,5 +1,5 @@
 #==============================================================================
-#     Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+#     Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 #                      Author: Gonzalo Mier
 #                         BSD-3 License
 #==============================================================================
@@ -28,7 +28,7 @@ def test_fields2cover_obj_n_swath_computeCost():
   swaths_cells = f2c.SwathsByCells();
   swaths_cells.push_back(swaths2);
   swaths_cells.push_back(swaths3);
-    
+
   obj = f2c.OBJ_NSwath();
 
   near(obj.computeCost(swaths1), 1.0);
@@ -39,7 +39,7 @@ def test_fields2cover_obj_n_swath_computeCost():
 
   near(obj.computeCost(swaths3), 2.0);
   near(obj.computeCostWithMinimizingSign(swaths3), 2.0);
-  
+
   near(obj.computeCost(swaths_cells), 4.0);
   near(obj.computeCostWithMinimizingSign(swaths_cells), 4.0);
 

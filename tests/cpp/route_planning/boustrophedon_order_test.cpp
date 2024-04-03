@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -7,7 +7,7 @@
 #include <gtest/gtest.h>
 #include <random>
 #include "fields2cover/types.h"
-#include "fields2cover/objectives/direct_dist_path_obj.h"
+#include "fields2cover/objectives/rp_obj/direct_dist_path_obj.h"
 #include "fields2cover/route_planning/boustrophedon_order.h"
 
 TEST(fields2cover_route_boustrophedon, genSortedSwaths) {

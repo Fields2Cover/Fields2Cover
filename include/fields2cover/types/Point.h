@@ -1,7 +1,7 @@
 //=============================================================================
-//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
-//                           BSD-3 License
+//                        BSD-3 License
 //=============================================================================
 
 #pragma once
@@ -23,6 +23,11 @@ struct Point : public Geometry<OGRPoint, wkbPoint> {
   using Geometry<OGRPoint, wkbPoint>::Geometry;
   Point();
   Point(double x, double y, double z = 0);
+  Point(const Point&);
+  Point(Point&&);
+  ~Point();
+  Point& operator=(const Point&);
+  Point& operator=(Point&&);
 
  public:
   bool operator==(const Point& b) const;
@@ -38,10 +43,19 @@ struct Point : public Geometry<OGRPoint, wkbPoint> {
   Point& operator*=(double b);
 
   Point operator*(double b) const;
+  double operator*(const Point& b) const;
+
+  Point operator/(double b) const;
+
+  static double det(const Point& u, const Point& v);
 
 
  public:
   Point clone() const;
+  double X() const;
+  double Y() const;
+  double Z() const;
+
   double getX() const;
   double getY() const;
   double getZ() const;
@@ -55,9 +69,19 @@ struct Point : public Geometry<OGRPoint, wkbPoint> {
 
   double getAngleFromPoints(const Point& end) const;
   double getAngleFromPoint() const;
+  /// Angle between vectors p1->p2 and p2->p3
+  static double getAngleFromPoints(
+      const Point& p1, const Point& p2, const Point& p3);
   Point getPointFromAngle(double angle, double dist) const;
 
   Point rotateFromPoint(double angle, const Point& p_r) const;
+
+  double signedDistance2Segment(const Point& start, const Point& end) const;
+  static Point intersectionOfLines(
+      const Point& l1_s, const Point& l1_e,
+      const Point& l2_s, const Point& l2_e);
+
+  Point closestPointInSegment(const Point& seg_s, const Point& seg_e) const;
 
   template <class T>
   std::vector<T> rotateFromPoint(double angle, const std::vector<T>& t) const;
@@ -89,17 +113,11 @@ T Point::rotateFromPoint(double angle, const T& t) const {
 
 
 inline OGRPoint operator+(const OGRPoint& a, const f2c::types::Point& b) {
-  return OGRPoint(
-      a.getX() + b.getX(),
-      a.getY() + b.getY(),
-      a.getZ() + b.getZ());
+  return {a.getX() + b.getX(), a.getY() + b.getY(), a.getZ() + b.getZ()};
 }
 
 inline OGRPoint operator-(const OGRPoint& a, const f2c::types::Point& b) {
-  return OGRPoint(
-      a.getX() - b.getX(),
-      a.getY() - b.getY(),
-      a.getZ() - b.getZ());
+  return {a.getX() - b.getX(), a.getY() - b.getY(), a.getZ() - b.getZ()};
 }
 
 template <class T>
@@ -160,5 +178,14 @@ inline T operator-(const T& t, const f2c::types::Point& dir) {
 }
 
 }  // namespace f2c::types
+
+namespace std {
+template<>
+struct hash<f2c::types::Point> {
+  inline size_t operator()(const f2c::types::Point& p) const {
+    return size_t(p.getX() + p.getY() * 1e10 + p.getZ() * 1e20);
+  }
+};
+}
 
 #endif  // FIELDS2COVER_TYPES_POINT_H_

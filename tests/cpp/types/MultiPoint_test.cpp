@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -23,11 +23,10 @@ TEST(fields2cover_types_multipoint, init) {
     ps4.addPoint( i, -i, 3 * i);
   }
   EXPECT_EQ(ps4.size(), 10);
+  EXPECT_EQ(ps4[5], F2CPoint(5, -5, 15));
   int i = 0;
   for (const auto& p : ps4) {
-    EXPECT_EQ(p.getX(), i);
-    EXPECT_EQ(p.getY(), -i);
-    EXPECT_EQ(p.getZ(), 3*i);
+    EXPECT_EQ(p, F2CPoint(i, -i, 3*i));
     ++i;
   }
   for (auto&& p : ps4) {
@@ -66,7 +65,6 @@ TEST(fields2cover_types_multipoint, init) {
   }
   EXPECT_EQ(ps4.getGeometry(10), F2CPoint(1,1));
   EXPECT_EQ(ps4.getGeometry(11), F2CPoint(2,1));
-
 }
 
 TEST(fields2cover_types_multipoint, getGeometry) {
@@ -89,5 +87,17 @@ TEST(fields2cover_types_multipoint, getGeometry) {
   EXPECT_EQ(ps2.getGeometry(2).getZ(), 0);
 }
 
+TEST(fields2cover_types_multipoint, getAngles) {
+  F2CMultiPoint ps1{F2CPoint(1,1), F2CPoint(2,2), F2CPoint(0, 2), F2CPoint(1, 1)};
+  EXPECT_EQ(ps1.size(), 4);
+  EXPECT_NEAR(ps1.getOutAngle(0), M_PI / 4.0, 1e-7);
+  EXPECT_NEAR(ps1.getInAngle(1), M_PI / 4.0, 1e-7);
+  EXPECT_NEAR(ps1.getOutAngle(1), M_PI, 1e-7);
+  EXPECT_NEAR(ps1.getInAngle(2), M_PI, 1e-7);
+  EXPECT_NEAR(ps1.getOutAngle(2), 7.0 * M_PI / 4.0, 1e-7);
+  EXPECT_NEAR(ps1.getInAngle(3), 7.0 * M_PI / 4.0, 1e-7);
+  EXPECT_THROW(ps1.getInAngle(0), std::invalid_argument);
+  EXPECT_THROW(ps1.getOutAngle(3), std::invalid_argument);
+}
 
 

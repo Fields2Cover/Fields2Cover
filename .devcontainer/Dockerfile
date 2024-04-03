@@ -1,13 +1,14 @@
-FROM osgeo/gdal:ubuntu-full-3.6.2
+FROM osgeo/gdal:ubuntu-full-3.6.3
 
 LABEL NAME="fields2cover" \
-      VERSION="1.2.0" \
+      VERSION="2.0.0" \
       DESC="Fields2Cover is a complete coverage path planning package for autonomous robots" \
       MAINTAINER="Gonzalo Mier"
 
 
 ENV DEBIAN_FRONTEND noninteractive
 
+WORKDIR /workspaces/
 RUN mkdir -p /usr/include/new_gdal && \
     cp -r /usr/include/gdal* /usr/include/new_gdal/ && \
     cp /usr/include/ogr* /usr/include/new_gdal/ && \
@@ -39,6 +40,7 @@ RUN apt-get install -y --allow-unauthenticated --no-install-recommends \
                     doxygen \
                     g++ \
                     git \
+                    gnuplot \
                     lcov \
                     libboost-dev \
                     libgeos-dev \
@@ -81,6 +83,18 @@ RUN if gdalinfo --version | grep -o " 3\.[0-2]\."; then \
     else \
       apt-get install -y --no-install-recommends  --allow-unauthenticated swig; \
     fi
+
+RUN wget https://github.com/google/or-tools/releases/download/v9.9/or-tools_amd64_ubuntu-22.04_cpp_v9.9.3963.tar.gz -q -O /tmp/ortools.tar.gz \
+    && mkdir -p /tmp/ortools \
+    && tar -zxf /tmp/ortools.tar.gz -C /tmp/ortools --strip-components=1 \
+    && cp -r /tmp/ortools/bin/. /usr/bin \
+    && cp -r /tmp/ortools/include/. /usr/include \
+    && cp -r /tmp/ortools/lib/. /usr/lib \
+    && cp -r /tmp/ortools/lib/cmake/. /usr/share \
+    && cp -r /tmp/ortools/share/. /usr/share/ortools
+
+WORKDIR /workspaces/Fields2Cover
+
 
 
 

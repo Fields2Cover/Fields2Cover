@@ -1,7 +1,7 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
-//                           BSD-3 License
+//                        BSD-3 License
 //=============================================================================
 
 #pragma once
@@ -28,7 +28,7 @@ struct MultiLineString :
 
   size_t size() const;
 
-  double getLength() const;
+  double length() const;
 
   void operator*=(double b);
 
@@ -51,17 +51,17 @@ struct MultiLineString :
   static MultiLineString getLineSegments(const LinearRing& line);
 
   template <class T, OGRwkbGeometryType R>
-  MultiLineString Intersection(const Geometry<T, R>& g) const;
+  MultiLineString intersection(const Geometry<T, R>& g) const;
 
   template <class T, OGRwkbGeometryType R>
-  static MultiLineString Intersection(
+  static MultiLineString intersection(
       const LineString& line, const Geometry<T, R>& g);
 };
 
 
 template <class T, OGRwkbGeometryType R>
-MultiLineString MultiLineString::Intersection(const Geometry<T, R>& g) const {
-  auto inter = data->Intersection(g.get());
+MultiLineString MultiLineString::intersection(const Geometry<T, R>& g) const {
+  auto inter = this->data_->Intersection(g.get());
   f2c::types::MultiLineString lines(inter);
   OGRGeometryFactory::destroyGeometry(inter);
   return lines;
@@ -69,9 +69,12 @@ MultiLineString MultiLineString::Intersection(const Geometry<T, R>& g) const {
 
 
 template <class T, OGRwkbGeometryType R>
-MultiLineString MultiLineString::Intersection(
+MultiLineString MultiLineString::intersection(
     const LineString& line, const Geometry<T, R>& g) {
-  return MultiLineString(line.get()).Intersection(g);
+  auto inter = line->Intersection(g.get());
+  f2c::types::MultiLineString lines(inter);
+  OGRGeometryFactory::destroyGeometry(inter);
+  return lines;
 }
 
 

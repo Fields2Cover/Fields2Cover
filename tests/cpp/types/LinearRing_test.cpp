@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -27,10 +27,10 @@ TEST(fields2cover_types_linearring, init) {
   EXPECT_THROW(c_line.getGeometry(100), std::out_of_range);
 }
 
-TEST(fields2cover_types_linearring, getArea) {
+TEST(fields2cover_types_linearring, area) {
   std::vector<F2CPoint> ps{F2CPoint(-1,2), F2CPoint(3,2), F2CPoint(-1,3), F2CPoint(-1,2)};
   F2CLinearRing ring{ps};
-  EXPECT_EQ(ring.getArea(), 2);
+  EXPECT_EQ(ring.area(), 2);
 }
 
 TEST(fields2cover_types_linearring, mult_equal) {
@@ -46,7 +46,7 @@ TEST(fields2cover_types_linearring, mult_equal) {
   EXPECT_EQ(ring.getY(2), 30);
   EXPECT_EQ(ring.getZ(2), 0);
   ring *= -0.01;
-  auto p = ring.EndPoint();
+  auto p = ring.endPoint();
   EXPECT_EQ(p.getX(), -0.1);
   EXPECT_EQ(p.getY(), -0.3);
   EXPECT_EQ(p.getZ(), 0);

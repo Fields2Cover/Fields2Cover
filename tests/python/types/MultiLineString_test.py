@@ -1,5 +1,5 @@
 #==============================================================================
-#     Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+#     Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 #                      Author: Gonzalo Mier
 #                         BSD-3 License
 #==============================================================================
@@ -38,9 +38,9 @@ def test_fields2cover_types_multilinestring_getGeometry():
   const_lines = lines.clone();
   for i in range(lines.size()):
     near(lines.getGeometry(i).size(), 5-i);
-    near(lines.getGeometry(i).getLength(), 5-i-1);
+    near(lines.getGeometry(i).length(), 5-i-1);
     near(const_lines.getGeometry(i).size(), 5-i);
-    near(const_lines.getGeometry(i).getLength(), 5-i-1);
+    near(const_lines.getGeometry(i).length(), 5-i-1);
 
 
 

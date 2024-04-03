@@ -13,11 +13,22 @@ add_executable(5_route_planning_tutorial 5_route_planning.cpp)
 target_link_libraries(5_route_planning_tutorial PUBLIC Fields2Cover)
 add_executable(6_path_planning_tutorial 6_path_planning.cpp)
 target_link_libraries(6_path_planning_tutorial PUBLIC Fields2Cover)
+add_executable(7_decomposition_tutorial 7_decomposition.cpp)
+target_link_libraries(7_decomposition_tutorial PUBLIC Fields2Cover)
 
-add_executable(7_complete_flow 7_complete_flow.cpp)
+add_executable(8_complete_flow 8_complete_flow.cpp)
 target_compile_definitions(
-  7_complete_flow
+  8_complete_flow
   PRIVATE
     DATA_PATH="${PROJECT_SOURCE_DIR}/data/"
 )
-target_link_libraries(7_complete_flow PUBLIC Fields2Cover)
+target_link_libraries(8_complete_flow PUBLIC Fields2Cover)
+
+add_executable(quick_start quick_start.cpp)
+target_compile_definitions(
+  quick_start
+  PRIVATE
+    DATA_PATH="${PROJECT_SOURCE_DIR}/data/"
+)
+target_link_libraries(quick_start PUBLIC Fields2Cover)
+

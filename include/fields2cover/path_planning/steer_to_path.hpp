@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -21,31 +21,28 @@ namespace f2c::pp {
 inline types::Path steerStatesToPath(
     const std::vector<steer::State>& curve, double const_vel) {
   types::Path path;
-  auto compute_time = [&](int i) {
+  auto compute_dist = [&curve](int i) {
     return ((i + 1 < curve.size()) ?
-        F2CPoint(curve[i].x, curve[i].y).Distance(
-        F2CPoint(curve[i + 1].x, curve[i + 1].y)) / const_vel : 0);
+        F2CPoint(curve[i].x, curve[i].y).distance(
+        F2CPoint(curve[i + 1].x, curve[i + 1].y)) : 0);
   };
-
-  f2c::types::PathState state;
   for (size_t i = 0; i < curve.size(); ++i) {
+    f2c::types::PathState state;
     state.point = F2CPoint(curve[i].x, curve[i].y);
     state.angle = curve[i].theta;
     state.velocity = const_vel;
-    state.duration = compute_time(i);
+    state.len = compute_dist(i);
     state.dir = static_cast<types::PathDirection>(curve[i].d);
     state.type = types::PathSectionType::TURN;
-    path.states.emplace_back(state);
+    path.addState(state);
   }
-  path.task_time = std::accumulate(
-      path.states.begin(), path.states.end(), 0.0,
-      [] (double d, const f2c::types::PathState& s) {return s.duration + d;});
   return path;
 }
 
 // Function loop_detected contributed by Phact (https://phact.nl/) company
 inline bool loop_detected(const std::vector<steer::Control>& controls) {
   double drTotal = 0;
+  double drAbsTotal = 0;
   for (auto&& c : controls) {
     if (c.kappa != 0) {
       double dr = 0.5 * c.delta_s * c.kappa / M_PI;
@@ -53,9 +50,10 @@ inline bool loop_detected(const std::vector<steer::Control>& controls) {
         return true;
       }
       drTotal += dr;
+      drAbsTotal += fabs(dr);
     }
   }
-  return (fabs(drTotal) > 0.9);
+  return (fabs(drTotal) > 0.9) || (drAbsTotal > 1.5);
 }
 // Function loop_detected contributed by Phact (https://phact.nl/) company
 

@@ -1,7 +1,7 @@
 #=============================================================================
-#    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
-#                     Author: Gonzalo Mier
-#                        BSD-3 License
+#     Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
+#                      Author: Gonzalo Mier
+#                         BSD-3 License
 #=============================================================================
 
 
@@ -74,7 +74,7 @@ swaths_path = f2c.Swaths();
 swaths_path.push_back(swath1);
 swaths_path.push_back(swath2);
 robot = f2c.Robot(2.0, 3.0);
-robot.setMinRadius(0.5);
+robot.setMinTurningRadius(0.5);
 complete_length = f2c.OBJ_CompleteTurnPathObj_Dubins(robot);
 print("The complete length is: ", complete_length.computeCost(swaths_path),
     " =~= ", 1 + 1 + math.pi/2.0);

@@ -1,7 +1,7 @@
 //=============================================================================
-//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
-//                           MIT License
+//                        BSD-3 License
 //=============================================================================
 
 #pragma once
@@ -18,30 +18,30 @@
 namespace f2c::types {
 
 template <class T, OGRwkbGeometryType R>
-Geometry<T, R>::Geometry() : data(
+Geometry<T, R>::Geometry() : data_(
   downCast<T*>(OGRGeometryFactory::createGeometry(R)),
   [](T* f) {OGRGeometryFactory::destroyGeometry(f);}) {}
 
 template <class T, OGRwkbGeometryType R>
-Geometry<T, R>::Geometry(const T& g) : data(downCast<T*>(g.clone()),
+Geometry<T, R>::Geometry(const T& g) : data_(downCast<T*>(g.clone()),
   [](T* f) {OGRGeometryFactory::destroyGeometry(f);}) {}
 
 template <class T, OGRwkbGeometryType R>
-Geometry<T, R>::Geometry(std::shared_ptr<T> g) : data(g) {}
+Geometry<T, R>::Geometry(std::shared_ptr<T> g) : data_(g) {}
 
 template <class T, OGRwkbGeometryType R>
-Geometry<T, R>::Geometry(T* g, EmptyDestructor) : data(g, [](T* f) {}) {}
+Geometry<T, R>::Geometry(T* g, EmptyDestructor) : data_(g, [](T* f) {}) {}
 
 template <class T, OGRwkbGeometryType R>
-Geometry<T, R>::Geometry(const T* g) : data(downCast<T*>(g->clone()),
+Geometry<T, R>::Geometry(const T* g) : data_(downCast<T*>(g->clone()),
   [](T* f) {OGRGeometryFactory::destroyGeometry(f);}) {}
 
 template <class T, OGRwkbGeometryType R>
 Geometry<T, R>::Geometry(OGRGeometry* g, EmptyDestructor) :
-  data(downCast<T*>(g), [](T* f) {}) {}
+  data_(downCast<T*>(g), [](T* f) {}) {}
 
 template <class T, OGRwkbGeometryType R>
-Geometry<T, R>::Geometry(const OGRGeometry* g) : data(downCast<T*>(g->clone()),
+Geometry<T, R>::Geometry(const OGRGeometry* g) : data_(downCast<T*>(g->clone()),
   [](T* f) {OGRGeometryFactory::destroyGeometry(f);}) {}
 
 template <class T, OGRwkbGeometryType R>
@@ -62,112 +62,112 @@ typename Geometry<T, R>::Geometry& Geometry<T, R>::operator=(
     const Geometry& g) = default;
 
 template <class T, OGRwkbGeometryType R>
-std::shared_ptr<T> Geometry<T, R>::operator->() {return data;}
+std::shared_ptr<T> Geometry<T, R>::operator->() {return data_;}
 
 template <class T, OGRwkbGeometryType R>
-std::shared_ptr<const T> Geometry<T, R>::operator->() const {return data;}
+std::shared_ptr<const T> Geometry<T, R>::operator->() const {return data_;}
 
 template <class T, OGRwkbGeometryType R>
-T* Geometry<T, R>::get() {return data.get();}
+T* Geometry<T, R>::get() {return data_.get();}
 
 template <class T, OGRwkbGeometryType R>
-const T* Geometry<T, R>::get() const {return data.get();}
+const T* Geometry<T, R>::get() const {return data_.get();}
 
 template <class T, OGRwkbGeometryType R>
 bool Geometry<T, R>::operator!=(const Geometry<T, R>& geom2) const {
-  return !geom2->Equals(data.get());
+  return !geom2->Equals(data_.get());
 }
 
 template <class T, OGRwkbGeometryType R>
 bool Geometry<T, R>::operator==(const Geometry<T, R>& geom2) const {
-  return geom2->Equals(data.get());
+  return geom2->Equals(data_.get());
 }
 
 
 template <class T, OGRwkbGeometryType R>
 double Geometry<T, R>::getDimMinX() const {
   OGREnvelope envelope;
-  data->getEnvelope(&envelope);
+  data_->getEnvelope(&envelope);
   return envelope.MinX;
 }
 
 template <class T, OGRwkbGeometryType R>
 double Geometry<T, R>::getDimMaxX() const {
   OGREnvelope envelope;
-  data->getEnvelope(&envelope);
+  data_->getEnvelope(&envelope);
   return envelope.MaxX;
 }
 
 template <class T, OGRwkbGeometryType R>
 double Geometry<T, R>::getDimMinY() const {
   OGREnvelope envelope;
-  data->getEnvelope(&envelope);
+  data_->getEnvelope(&envelope);
   return envelope.MinY;
 }
 
 template <class T, OGRwkbGeometryType R>
 double Geometry<T, R>::getDimMaxY() const {
   OGREnvelope envelope;
-  data->getEnvelope(&envelope);
+  data_->getEnvelope(&envelope);
   return envelope.MaxY;
 }
 
 template <class T, OGRwkbGeometryType R>
 double Geometry<T, R>::getHeight() const {
   OGREnvelope envelope;
-  data->getEnvelope(&envelope);
+  data_->getEnvelope(&envelope);
   return envelope.MaxY - envelope.MinY;
 }
 
 template <class T, OGRwkbGeometryType R>
 double Geometry<T, R>::getWidth() const {
   OGREnvelope envelope;
-  data->getEnvelope(&envelope);
+  data_->getEnvelope(&envelope);
   return envelope.MaxX - envelope.MinX;
 }
 
 template <class T, OGRwkbGeometryType R>
 double Geometry<T, R>::getMinSafeLength() const {
   OGREnvelope envelope;
-  data->getEnvelope(&envelope);
+  data_->getEnvelope(&envelope);
   return (envelope.MaxX - envelope.MinX) +
     (envelope.MaxY - envelope.MinY);
 }
 
 template <class T, OGRwkbGeometryType R>
 template <class T2, OGRwkbGeometryType R2>
-double Geometry<T, R>::Distance(const Geometry<T2, R2>& p) const {
-  return data->Distance(p.get());
+double Geometry<T, R>::distance(const Geometry<T2, R2>& p) const {
+  return data_->Distance(p.get());
 }
 
 template <class T, OGRwkbGeometryType R>
 template <class T2, OGRwkbGeometryType R2>
-bool Geometry<T, R>::Disjoint(const Geometry<T2, R2>& geom) const {
-  return data->Disjoint(geom.get());
+bool Geometry<T, R>::disjoint(const Geometry<T2, R2>& geom) const {
+  return data_->Disjoint(geom.get());
 }
 
 template <class T, OGRwkbGeometryType R>
 template <class T2, OGRwkbGeometryType R2>
-bool Geometry<T, R>::Crosses(const Geometry<T2, R2>& geom) const {
-  return data->Crosses(geom.get());
+bool Geometry<T, R>::crosses(const Geometry<T2, R2>& geom) const {
+  return data_->Crosses(geom.get());
 }
 
 template <class T, OGRwkbGeometryType R>
 template <class T2, OGRwkbGeometryType R2>
-bool Geometry<T, R>::Touches(const Geometry<T2, R2>& geom) const {
-  return data->Touches(geom.get());
+bool Geometry<T, R>::touches(const Geometry<T2, R2>& geom) const {
+  return data_->Touches(geom.get());
 }
 
 template <class T, OGRwkbGeometryType R>
 template <class T2, OGRwkbGeometryType R2>
-bool Geometry<T, R>::Within(const Geometry<T2, R2>& geom) const {
-  return data->Within(geom.get());
+bool Geometry<T, R>::within(const Geometry<T2, R2>& geom) const {
+  return data_->Within(geom.get());
 }
 
 template <class T, OGRwkbGeometryType R>
 template <class T2, OGRwkbGeometryType R2>
-bool Geometry<T, R>::Intersects(const Geometry<T2, R2>& geom) const {
-  return data->Intersects(geom.get());
+bool Geometry<T, R>::intersects(const Geometry<T2, R2>& geom) const {
+  return data_->Intersects(geom.get());
 }
 
 template <class T, OGRwkbGeometryType R>
@@ -207,14 +207,26 @@ double Geometry<T, R>::getAngleDiffAbs(double a, double b) {
 }
 
 template <class T, OGRwkbGeometryType R>
+double Geometry<T, R>::getAngleAvg(double a, double b) {
+  const auto pi = boost::math::constants::pi<double>();
+  double ma = mod_2pi(a);
+  double mb = mod_2pi(b);
+  if (abs(mb - ma) < pi) {
+    return 0.5 * (ma + mb);
+  } else {
+    return 0.5 * (ma + mb) + pi;
+  }
+}
+
+template <class T, OGRwkbGeometryType R>
 bool Geometry<T, R>::isEmpty() const {
-  return (!data || data->IsEmpty());
+  return (!data_ || data_->IsEmpty());
 }
 
 template <class T, OGRwkbGeometryType R>
 std::string Geometry<T, R>::exportToWkt() const {
   char *pszWKT = nullptr;
-  data->exportToWkt(&pszWKT);
+  data_->exportToWkt(&pszWKT);
   std::string result{pszWKT};
   CPLFree(pszWKT);
   return result;
@@ -222,23 +234,32 @@ std::string Geometry<T, R>::exportToWkt() const {
 
 template <class T, OGRwkbGeometryType R>
 std::string Geometry<T, R>::exportToGML() const {
-  return data->exportToGML();
+  char *s = data_->exportToGML();
+  std::string str(s);
+  CPLFree(s);
+  return str;
 }
 
 template <class T, OGRwkbGeometryType R>
 std::string Geometry<T, R>::exportToKML() const {
-  return data->exportToKML();
+  char *s = data_->exportToKML();
+  std::string str(s);
+  CPLFree(s);
+  return str;
 }
 
 template <class T, OGRwkbGeometryType R>
 std::string Geometry<T, R>::exportToJson() const {
-  return data->exportToJson();
+  char *s = data_->exportToJson();
+  std::string str(s);
+  CPLFree(s);
+  return str;
 }
 
 template <class T, OGRwkbGeometryType R>
 void Geometry<T, R>::importFromWkt(const std::string& text) {
   auto char_text = text.c_str();
-  data->importFromWkt(&char_text);
+  data_->importFromWkt(&char_text);
 }
 
 // ###############################
@@ -255,6 +276,14 @@ inline To Geometry<T, R>::downCast(From *f) const {
 }
 // ###############################
 
+template <class T, OGRwkbGeometryType R>
+template<typename RetType>
+RetType Geometry<T, R>::destroyResGeom(OGRGeometry* g) {
+  RetType res(g);
+  OGRGeometryFactory::destroyGeometry(g);
+  return res;
+}
+
 // ###############################
 // Code extracted from:
 // https://github.com/OSGeo/gdal/blob/717dcc0eed252e2f78c142b1f7866e49c5511224/ogr/ogrgeometry.cpp#L4309
@@ -263,7 +292,7 @@ OGRGeometry* Geometry<T, R>::OGRBuffer(double dfDist, int side) const {
   OGRGeometry *poOGRProduct = nullptr;
 
   GEOSContextHandle_t hGEOSCtxt = OGRGeometry::createGEOSContext();
-  GEOSGeom hGeosGeom = this->data->exportToGEOS(hGEOSCtxt);
+  GEOSGeom hGeosGeom = this->data_->exportToGEOS(hGEOSCtxt);
   if (hGeosGeom != nullptr) {
     GEOSBufferParams* hBufParams = GEOSBufferParams_create_r(hGEOSCtxt);
     GEOSBufferParams_setEndCapStyle_r(hGEOSCtxt, hBufParams,
@@ -277,8 +306,8 @@ OGRGeometry* Geometry<T, R>::OGRBuffer(double dfDist, int side) const {
     GEOSGeom_destroy_r(hGEOSCtxt, hGeosGeom);
     GEOSBufferParams_destroy_r(hGEOSCtxt, hBufParams);
 
-    poOGRProduct = BuildGeometryFromGEOS(hGEOSCtxt, hGeosProduct,
-        this->data.get(), nullptr);
+    poOGRProduct = buildGeometryFromGEOS(hGEOSCtxt, hGeosProduct,
+        this->data_.get(), nullptr);
   }
   OGRGeometry::freeGEOSContext(hGEOSCtxt);
   return poOGRProduct;
@@ -303,7 +332,7 @@ OGRGeometry* Geometry<T, R>::OGRGeometryRebuildCurves(
   return poOGRProduct;
 }
 template <class T, OGRwkbGeometryType R>
-OGRGeometry* Geometry<T, R>::BuildGeometryFromGEOS(
+OGRGeometry* Geometry<T, R>::buildGeometryFromGEOS(
     GEOSContextHandle_t hGEOSCtxt, GEOSGeom hGeosProduct,
     const OGRGeometry *poSelf, const OGRGeometry *poOtherGeom) const {
   OGRGeometry *poOGRProduct = nullptr;

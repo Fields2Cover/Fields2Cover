@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -32,8 +32,7 @@ class TurningBase {
   /// @return Path with the computed turn
   F2CPath createTurn(const F2CRobot& robot,
       const F2CPoint& start_pos, double start_angle,
-      const F2CPoint& end_pos, double end_angle,
-      double max_headland_width = 1e5);
+      const F2CPoint& end_pos, double end_angle);
 
   /// @brief Generate a turn if it has not been computed before.
   /// @param dist_start_pos Distance between start and end point
@@ -41,7 +40,7 @@ class TurningBase {
   /// (0 deg is the angle of the headland)
   /// @param end_angle Angle when going out of the headland
   F2CPath createTurnIfNotCached(const F2CRobot& robot, double dist_start_pos,
-      double start_angle, double end_angle, double max_headland_width = 1e5);
+      double start_angle, double end_angle);
 
   /// @brief Create a turn.
   /// @param dist_start_pos Distance between start and end point
@@ -49,8 +48,7 @@ class TurningBase {
   /// (0 deg is the angle of the headland)
   /// @param end_angle Angle when going out of the headland
   virtual F2CPath createSimpleTurn(const F2CRobot& robot, double dist_start_pos,
-      double start_angle, double end_angle,
-      double max_headland_width = 1e5) = 0;
+      double start_angle, double end_angle) = 0;
 
   /// @brief Transform the turn parameters representation from two points with
   /// two angles to one distance and two angles.
@@ -68,19 +66,29 @@ class TurningBase {
       double max_rot_error = 0.1);
 
 
+  /// Get discretization distance from points in the turn
+  double getDiscretization() const;
+  /// Set discretization distance from points in the turn
+  void setDiscretization(double d);
+
+  /// Get if turns are being cached or not.
+  bool getUsingCache() const;
+  /// Set if cache should be used when planning same turn as before.
+  void setUsingCache(bool c);
+
+
  private:
   static void correctPath(F2CPath& path,
       const F2CPoint& start_pos,
       const F2CPoint& end_pos,
       float max_error_dist = 0.05);
 
- public:
-  bool using_cache {true};
-
  protected:
   // To prevent memory consumption and comparative errors because of doubles
   // ints are used multiplied by 1000.
   std::map<std::vector<int>, F2CPath> path_cache_;
+  double discretization {0.01};
+  bool using_cache {true};
 };
 
 }  // namespace f2c::pp

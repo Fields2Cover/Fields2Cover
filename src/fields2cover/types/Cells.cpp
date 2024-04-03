@@ -1,15 +1,16 @@
 //=============================================================================
-//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
 
+#include <algorithm>
 #include "fields2cover/types/Cells.h"
 
 namespace f2c::types {
 
 Cells::Cells() {
-  data = std::shared_ptr<OGRMultiPolygon>(
+  this->data_ = std::shared_ptr<OGRMultiPolygon>(
     downCast<OGRMultiPolygon*>(
       OGRGeometryFactory::createGeometry(wkbMultiPolygon)),
     [](OGRMultiPolygon* f) {OGRGeometryFactory::destroyGeometry(f);});
@@ -17,33 +18,40 @@ Cells::Cells() {
 
 Cells::Cells(const OGRGeometry* geom) {
   if (wkbFlatten(geom->getGeometryType()) == OGRwkbGeometryType::wkbPolygon) {
-    this->data = std::shared_ptr<OGRMultiPolygon>(downCast<OGRMultiPolygon*>(
+    this->data_ = std::shared_ptr<OGRMultiPolygon>(downCast<OGRMultiPolygon*>(
         OGRGeometryFactory::createGeometry(wkbMultiPolygon)),
         [](OGRMultiPolygon* f) {OGRGeometryFactory::destroyGeometry(f);});
-    this->data->addGeometry(geom->toPolygon());
+    this->data_->addGeometry(geom->toPolygon());
   } else if (wkbFlatten(geom->getGeometryType()) ==
-    OGRwkbGeometryType::wkbMultiPolygon) {
-    this->data = std::shared_ptr<OGRMultiPolygon>(
+      OGRwkbGeometryType::wkbMultiPolygon) {
+    this->data_ = std::shared_ptr<OGRMultiPolygon>(
         downCast<OGRMultiPolygon*>(geom->clone()),
         [](OGRMultiPolygon* f) {OGRGeometryFactory::destroyGeometry(f);});
   } else if (wkbFlatten(geom->getGeometryType()) ==
-    OGRwkbGeometryType::wkbGeometryCollection) {
-      data = std::shared_ptr<OGRMultiPolygon>(
+      OGRwkbGeometryType::wkbGeometryCollection) {
+    this->data_ = std::shared_ptr<OGRMultiPolygon>(
         downCast<OGRMultiPolygon*>(
           OGRGeometryFactory::createGeometry(wkbMultiPolygon)),
             [](OGRMultiPolygon* f) {OGRGeometryFactory::destroyGeometry(f);});
+    auto* gc = downCast<const OGRGeometryCollection*>(geom);
+    for (int i = 0; i < gc->getNumGeometries(); ++i) {
+      auto* g_i = gc->getGeometryRef(i);
+      if (wkbFlatten(g_i->getGeometryType()) ==
+          OGRwkbGeometryType::wkbPolygon) {
+        this->data_->addGeometry(g_i);
+      }
+    }
   } else {
-    throw std::invalid_argument(sstr(
-        "Cells(const OGRGeometry*): Type of OGRGeometry* is " ,
-        wkbFlatten(geom->getGeometryType()) , " instead of wkbPolygon(",
-        OGRwkbGeometryType::wkbPolygon , ") or wkbMultiPolygon(",
-        OGRwkbGeometryType::wkbMultiPolygon , ")"));
+    this->data_ = std::shared_ptr<OGRMultiPolygon>(
+        downCast<OGRMultiPolygon*>(
+          OGRGeometryFactory::createGeometry(wkbMultiPolygon)),
+            [](OGRMultiPolygon* f) {OGRGeometryFactory::destroyGeometry(f);});
   }
 }
 
 
 Cells::Cells(const Cell& c) {
-  data->addGeometry(c.get());
+  this->data_->addGeometry(c.get());
 }
 
 void Cells::operator*=(double b) {
@@ -57,7 +65,7 @@ void Cells::getGeometry(size_t i, Cell& cell) {
     throw std::out_of_range(
         "Geometry does not contain point " + std::to_string(i));
   }
-  cell = Cell(data->getGeometryRef(i), EmptyDestructor());
+  cell = Cell(this->data_->getGeometryRef(i), EmptyDestructor());
 }
 
 void Cells::getGeometry(size_t i, Cell& cell) const {
@@ -65,7 +73,7 @@ void Cells::getGeometry(size_t i, Cell& cell) const {
     throw std::out_of_range(
         "Geometry does not contain point " + std::to_string(i));
   }
-  cell = Cell(data->getGeometryRef(i), EmptyDestructor());
+  cell = Cell(this->data_->getGeometryRef(i), EmptyDestructor());
 }
 
 Cell Cells::getGeometry(size_t i) {
@@ -73,7 +81,7 @@ Cell Cells::getGeometry(size_t i) {
     throw std::out_of_range(
         "Geometry does not contain point " + std::to_string(i));
   }
-  return Cell(data->getGeometryRef(i));
+  return Cell(this->data_->getGeometryRef(i));
 }
 
 const Cell Cells::getGeometry(size_t i) const {
@@ -81,7 +89,7 @@ const Cell Cells::getGeometry(size_t i) const {
     throw std::out_of_range(
         "Cells does not contain cell at " + std::to_string(i));
   }
-  return Cell(data->getGeometryRef(i));
+  return Cell(this->data_->getGeometryRef(i));
 }
 
 void Cells::setGeometry(size_t i, const Cell& cell) {
@@ -101,87 +109,78 @@ void Cells::setGeometry(size_t i, const Cell& cell) {
   this->addGeometry(cell);
 }
 
-void Cells::addGeometry(const Cell& c) {
-  this->data->addGeometry(c.get());
-}
-
-void Cells::addRing(size_t i, const LinearRing& ring) {
-  downCast<OGRPolygon*>(data->getGeometryRef(i))->addRing(ring.clone().get());
-}
-
-size_t Cells::size() const {
-  return isEmpty() ? 0 : data->getNumGeometries();
-}
-
 const Cell Cells::getCell(size_t i) const {
   return getGeometry(i);
 }
 
 const LinearRing Cells::getCellBorder(size_t i) const {
   return LinearRing(
-      downCast<OGRPolygon*>(data->getGeometryRef(i))->getExteriorRing());
+      downCast<OGRPolygon*>(this->data_->getGeometryRef(i))->getExteriorRing());
 }
 
 const LinearRing Cells::getInteriorRing(size_t i_cell, size_t i_ring) const {
-  return LinearRing(downCast<OGRPolygon*>(data->getGeometryRef(i_cell))
+  return LinearRing(downCast<OGRPolygon*>(this->data_->getGeometryRef(i_cell))
       ->getInteriorRing(i_ring));
 }
 
+void Cells::addGeometry(const Cell& c) {
+  this->data_->addGeometry(c.get());
+}
+
+void Cells::addRing(size_t i, const LinearRing& ring) {
+  downCast<OGRPolygon*>(this->data_->getGeometryRef(i))->addRing(
+      ring.clone().get());
+}
+
+size_t Cells::size() const {
+  return isEmpty() ? 0 : this->data_->getNumGeometries();
+}
+
 bool Cells::isConvex() const {
-  return (isEmpty() || data->getNumGeometries() != 1) ? false :
+  return (this->size() != 1) ? false :
     getCell(0).isConvex();
 }
 
-Cell Cells::ConvexHull() const {
-  auto convex_hull = data->ConvexHull();
-  Cell cell(convex_hull);
-  OGRGeometryFactory::destroyGeometry(convex_hull);
-  return cell;
+Cell Cells::convexHull() const {
+  return destroyResGeom<Cell>(this->data_->ConvexHull());
 }
 
-Cells Cells::Intersection(const Cells& c) const {
-  auto inter = data->Intersection(c.get());
-  if (wkbFlatten(inter->getGeometryType()) ==
-        OGRwkbGeometryType::wkbPolygon) {
-    Cell cell(inter->toPolygon());
-    OGRGeometryFactory::destroyGeometry(inter);
-    return static_cast<Cells>(cell);
-  } else if (wkbFlatten(inter->getGeometryType()) ==
-        OGRwkbGeometryType::wkbMultiPolygon) {
-    Cells cells(inter->toMultiPolygon());
-    OGRGeometryFactory::destroyGeometry(inter);
-    return cells;
-  } else {
-    OGRGeometryFactory::destroyGeometry(inter);
-    return Cells();
-  }
+Cells Cells::intersection(const Cell& cell, const Cell& c) {
+  return destroyResGeom<Cells>(cell->Intersection(c.get()));
 }
 
-Cells Cells::Difference(const Cells& c) const {
-  auto diff = data->Difference(c.get());
-  Cells cells(diff);
-  OGRGeometryFactory::destroyGeometry(diff);
-  return cells;
+Cells Cells::intersection(const Cell& c) const {
+  return destroyResGeom<Cells>(c->Intersection(this->get()));
 }
 
-Cells Cells::Union(const Cells& c) const {
-  auto c_union = data->Union(c.get());
-  Cells cells(c_union);
-  OGRGeometryFactory::destroyGeometry(c_union);
-  return cells;
+Cells Cells::intersection(const Cells& c) const {
+  return destroyResGeom<Cells>(this->data_->Intersection(c.get()));
 }
 
-Cells Cells::UnionCascaded() const {
-  auto c_union = data->UnionCascaded();
-  Cells cells(c_union);
-  OGRGeometryFactory::destroyGeometry(c_union);
-  return cells;
+Cells Cells::difference(const Cells& c) const {
+  return destroyResGeom<Cells>(this->data_->Difference(c.get()));
+}
+
+Cells Cells::difference(const Cell& c) const {
+  return destroyResGeom<Cells>(this->data_->Difference(c.get()));
+}
+
+Cells Cells::unionOp(const Cells& c) const {
+  return destroyResGeom<Cells>(this->data_->Union(c.get()));
+}
+
+Cells Cells::unionOp(const Cell& c) const {
+  return destroyResGeom<Cells>(this->data_->Union(c.get()));
+}
+
+Cells Cells::unionCascaded() const {
+  return destroyResGeom<Cells>(this->data_->UnionCascaded());
 }
 
 Cells Cells::splitByLine(const LineString& line) const {
-  Cells cells = this->Difference(Buffer(line, 1e-8));
+  Cells cells = this->difference(this->buffer(line, 1e-8));
   for (auto&& c : cells) {
-    c = Cell::Buffer(c, 1e-8/2.0);
+    c = Cell::buffer(c, 1e-8 * 0.5);
   }
   return cells;
 }
@@ -194,51 +193,41 @@ Cells Cells::splitByLine(const MultiLineString& lines) const {
   return cells;
 }
 
-Cells Cells::Intersection(const Cell& c) const {
-  return Cells(c).Intersection(*this);
-}
-
-Cells Cells::Intersection(
-    const Cell& cell, const Cell& c) {
-  return Cells(cell).Intersection(c);
-}
-
-LineString Cells::getSemiLongCurve(const Point& point, double angle) const {
+LineString Cells::createSemiLongLine(const Point& point, double angle) const {
   return LineString({point,
     point.getPointFromAngle(angle, this->getMinSafeLength())});
 }
 
-LineString Cells::getStraightLongCurve(
+LineString Cells::createStraightLongLine(
     const Point& point, double angle) const {
   return LineString({
-    point.getPointFromAngle(angle, this->getMinSafeLength()),
-    point.getPointFromAngle(
-    boost::math::constants::pi<double>() + angle, this->getMinSafeLength())});
+    point.getPointFromAngle(M_PI + angle, this->getMinSafeLength()),
+    point.getPointFromAngle(angle,        this->getMinSafeLength())});
 }
 
 MultiLineString Cells::getLinesInside(const LineString& line) const {
-  return MultiLineString::Intersection(line, *this);
+  return MultiLineString::intersection(line, *this);
 }
 
 MultiLineString Cells::getLinesInside(const MultiLineString& lines) const {
-  return lines.Intersection(*this);
+  return lines.intersection(*this);
 }
 
 Cells Cells::getCellsInside(const Cells& cell) const {
-  return this->Intersection(cell);
+  return this->intersection(cell);
 }
 
 bool Cells::isPointInBorder(const Point& p) const {
-  return p.Touches(*this);
+  return p.touches(*this);
 }
 
 bool Cells::isPointIn(const Point& p) const {
-  return p.Within(*this);
+  return p.within(*this);
 }
 
 const Cell Cells::getCellWherePoint(const Point& p) const {
   for (auto&& cell : *this) {
-    if (p.Touches(cell) || p.Within(cell)) {
+    if (p.touches(cell) || p.within(cell)) {
       return cell;
     }
   }
@@ -250,11 +239,18 @@ LineString Cells::createLineUntilBorder(
   return this->getCellWherePoint(p).createLineUntilBorder(p, ang);
 }
 
-Cells Cells::Buffer(double width) const {
-  auto buffer = this->OGRBuffer(width);
-  Cells cells {buffer};
-  OGRGeometryFactory::destroyGeometry(buffer);
-  return cells;
+Cells Cells::buffer(double width) const {
+  return destroyResGeom<Cells>(this->OGRBuffer(width));
+}
+
+Point Cells::closestPointOnBorderTo(const Point& p) const {
+  std::vector<double> dist;
+  std::vector<Point> ps;
+  for (auto&& cell : *this) {
+    ps.emplace_back(cell.closestPointOnBorderTo(p));
+    dist.emplace_back(ps.back().distance(p));
+  }
+  return ps[std::min_element(dist.begin(), dist.end()) - dist.begin()];
 }
 
 

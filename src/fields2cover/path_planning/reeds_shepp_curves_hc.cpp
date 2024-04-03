@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -11,8 +11,7 @@
 namespace f2c::pp {
 
 F2CPath ReedsSheppCurvesHC::createSimpleTurn(const F2CRobot& robot,
-    double dist_start_pos, double start_angle, double end_angle,
-    double max_headland_width) {
+    double dist_start_pos, double start_angle, double end_angle) {
   steer::State start, end;
 
   start.x = 0.0;
@@ -28,12 +27,12 @@ F2CPath ReedsSheppCurvesHC::createSimpleTurn(const F2CRobot& robot,
   end.d = 0;
 
   HC00_Reeds_Shepp_State_Space ss(
-      robot.max_icc,
-      robot.linear_curv_change,
+      robot.getMaxCurv(),
+      robot.getMaxDiffCurv(),
       discretization);
 
   return steerStatesToPath(ss.get_path(start, end),
-      robot.max_vel ? *robot.max_vel : robot.cruise_speed);
+      robot.getTurnVel());
 }
 
 }  // namespace f2c::pp

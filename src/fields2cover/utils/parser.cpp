@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -18,7 +18,8 @@ void Parser::importGml(const std::string& file, F2CFields& fields) {
   fields.emplace_back(importFieldGml(file));
 }
 
-F2CField Parser::importFieldGml(const std::string& file, bool coord_frame_fail_silently) {
+F2CField Parser::importFieldGml(
+    const std::string& file, bool coord_frame_fail_silently) {
   // Tinyxml2 depends on locale when parsing files. It may expect float numbers
   // as "1,5" instead of "1.5", which is parsed as "1". The next line solves
   // the issue.
@@ -143,12 +144,11 @@ F2CStrips Parser::importStripsJson(const std::string& file) {
   F2CStrips strips;
   for (auto&& imported_strip : imported_strips["features"]) {
     F2CStrip strip;
-    strip.name = imported_strip["properties"]["crop_id"];
-    strip.cell = getCellFromJson(imported_strip);
+    strip.setName(imported_strip["properties"]["crop_id"]);
+    strip.setCell(getCellFromJson(imported_strip));
     strips.emplace_back(strip);
   }
   return strips;
 }
-
 
 }  // namespace f2c

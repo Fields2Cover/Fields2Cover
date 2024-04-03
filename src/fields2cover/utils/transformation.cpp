@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -18,11 +18,11 @@ std::unique_ptr<OGRCoordinateTransformation,
 }
 
 void Transform::transform(F2CField& field, const std::string& coord_sys_to) {
-  if (!field.field.isEmpty()) {
+  if (!field.isEmpty()) {
     field.setField(field.getField() + field.getRefPoint());
-    field.field->transform(
+    field.getField()->transform(
         generateCoordTransf(field.getCRS(), coord_sys_to).get());
-    field.setRefPoint(field.field.getCellBorder(0).StartPoint().clone());
+    field.setRefPoint(field.getField().getCellBorder(0).startPoint());
     field.setField(field.getField() - field.getRefPoint());
   } else {
     field.setRefPoint( \
@@ -32,21 +32,64 @@ void Transform::transform(F2CField& field, const std::string& coord_sys_to) {
   field.setCRS(coord_sys_to);
 }
 
+F2CRoute Transform::transformRouteWithFieldRef(const F2CRoute& route,
+      const F2CField& field, const std::string& coord_sys_to) {
+  auto new_route = route.clone();
+  auto coords = generateCoordTransf(field.getCRS(), coord_sys_to);
+  for (size_t i = 0; i < new_route.sizeVectorSwaths(); ++i) {
+    new_route.setSwaths(i, transformSwathsWithFieldRef(
+          new_route.getSwaths(i), field, coord_sys_to));
+  }
+  for (size_t i = 0; i < new_route.sizeConnections(); ++i) {
+    new_route.setConnection(i, transformMultiPointWithFieldRef(
+          new_route.getConnection(i), field, coord_sys_to));
+  }
+  return new_route;
+}
+
 F2CPath Transform::transformPathWithFieldRef(const F2CPath& path,
       const F2CField& field, const std::string& coord_sys_to) {
-  auto new_path = path.clone();
+  if (path.size() < 1) {return path;}
+
+  auto new_path = path;
+  F2CPathState s_end = path.back();
+  if (s_end.len > 0.0) {
+    s_end.point = path.atEnd();
+    s_end.len = 0.0;
+    new_path.addState(s_end);
+  }
+
   auto coords = generateCoordTransf(field.getCRS(), coord_sys_to);
-  for (auto&& s : new_path.states) {
+  for (auto&& s : new_path) {
     s.point = s.point + field.getRefPoint();
     s.point->transform(coords.get());
   }
+  for (size_t i = 0; i < new_path.size() - 1; ++i) {
+    new_path[i].len = new_path[i].point.distance(new_path[i+1].point);
+    new_path[i].angle = (new_path[i+1].point - new_path[i].point).getAngleFromPoint();
+  }
+
+
   return new_path;
+}
+
+F2CMultiPoint Transform::transformMultiPointWithFieldRef(const F2CMultiPoint& mp,
+      const F2CField& field, const std::string& coord_sys_to) {
+  F2CMultiPoint new_mp;
+  auto coords = generateCoordTransf(field.getCRS(), coord_sys_to);
+  for (auto&& p : mp) {
+    F2CPoint abs_p = p + field.getRefPoint();
+    abs_p->transform(coords.get());
+    new_mp.addGeometry(abs_p);
+  }
+  return new_mp;
 }
 
 F2CSwath Transform::transformSwathWithFieldRef(const F2CSwath& swath,
       const F2CField& field, const std::string& coord_sys_to) {
-  return F2CSwath(transform(swath.getPath(), field.getRefPoint(), field.getCRS(), coord_sys_to),
-                   swath.getWidth(), swath.getId());
+  return F2CSwath(transform(
+        swath.getPath(), field.getRefPoint(), field.getCRS(), coord_sys_to),
+      swath.getWidth(), swath.getId());
 }
 
 F2CSwaths Transform::transformSwathsWithFieldRef(const F2CSwaths& swaths,
@@ -62,8 +105,8 @@ F2CSwaths Transform::transformSwathsWithFieldRef(const F2CSwaths& swaths,
 F2CStrip Transform::transformStrip(const F2CStrip& strip,
       const std::string& coord_sys_from, const std::string& coord_sys_to) {
   F2CStrip new_strip;
-  new_strip.name = strip.name;
-  new_strip.cell = transform(strip.cell, coord_sys_from, coord_sys_to);
+  new_strip.setName(strip.getName());
+  new_strip.setCell(transform(strip.getCell(), coord_sys_from, coord_sys_to));
   return new_strip;
 }
 
@@ -95,9 +138,9 @@ F2CSwath Transform::transformSwath(const F2CSwath& swath,
 
 F2CPath Transform::transformPath(const F2CPath& path,
       const std::string& coord_sys_from, const std::string& coord_sys_to) {
-  auto new_path = path.clone();
+  auto new_path = path;
   auto coords = generateCoordTransf(coord_sys_from, coord_sys_to);
-  for (auto&& s : new_path.states) {
+  for (auto&& s : new_path) {
     s.point->transform(coords.get());
   }
   return new_path;
@@ -159,6 +202,11 @@ void Transform::transformToPrevCRS(F2CField& field) {
   transform(field, field.getPrevCRS());
 }
 
+F2CRoute Transform::transformToPrevCRS(
+    const F2CRoute& route, const F2CField& field) {
+  return transformRouteWithFieldRef(route, field, field.getPrevCRS());
+}
+
 F2CPath Transform::transformToPrevCRS(
     const F2CPath& path, const F2CField& field) {
   return transformPathWithFieldRef(path, field, field.getPrevCRS());
@@ -185,13 +233,14 @@ F2CSwaths Transform::transformToPrevCRS(
 }
 
 F2CPoint Transform::getRefPointInGPS(const F2CField& field) {
-  auto point = field.getRefPoint().clone();
+  auto point = field.getRefPoint();
   point->transform(generateCoordTransf(field.getCRS(), "EPSG:4326").get());
   return point;
 }
 
 std::unique_ptr<OGRSpatialReference, void(*)(OGRSpatialReference*)>
-      Transform::createSptRef(const std::string& coord_sys, bool fail_silently) {
+      Transform::createSptRef(
+          const std::string& coord_sys, bool fail_silently) {
   auto spt_ref =
     std::unique_ptr<OGRSpatialReference, void(*)(OGRSpatialReference*)>(
       new OGRSpatialReference(), [](OGRSpatialReference* ref) {

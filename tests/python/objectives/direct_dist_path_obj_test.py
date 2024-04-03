@@ -1,5 +1,5 @@
 #==============================================================================
-#     Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+#     Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 #                      Author: Gonzalo Mier
 #                         BSD-3 License
 #==============================================================================
@@ -18,14 +18,14 @@ def test_fields2cover_obj_direct_dist_path_obj_computeCost():
       [f2c.Point(4.0, 3.0), f2c.Point(0.0, 3.0)])));
   swath3 = f2c.Swath(f2c.LineString(f2c.VectorPoint(
       [f2c.Point(0.0, 0.0), f2c.Point(1.0, 1.0)])));
- 
+
   def createRoute(s):
     route = f2c.Route();
-    route.connections.push_back(f2c.MultiPoint());
-    route.connections.push_back(f2c.MultiPoint());
-    route.v_swaths.push_back(s);
+    route.addConnection();
+    route.addSwaths(s);
+    route.addConnection();
     return route;
-    
+
   swaths1 = f2c.Swaths();
   [swaths1.push_back(i) for i in [swath1]]
   swaths2 = f2c.Swaths();
@@ -36,7 +36,7 @@ def test_fields2cover_obj_direct_dist_path_obj_computeCost():
   r1 = createRoute(swaths1);
   r2 = createRoute(swaths2);
   r4 = createRoute(swaths4);
-  
+
   length = f2c.OBJ_DirectDistPathObj();
 
   p1 = f2c.Point(0, 0);

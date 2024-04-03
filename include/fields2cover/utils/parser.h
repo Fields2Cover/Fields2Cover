@@ -1,7 +1,7 @@
 //=============================================================================
-//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
-//                           BSD-3 License
+//                        BSD-3 License
 //=============================================================================
 
 #pragma once
@@ -24,7 +24,8 @@ class Parser {
     /// @param fields Set of fields saved on _file.
     static void importGml(const std::string& file, F2CFields& fields);
 
-    static F2CField importFieldGml(const std::string& file, bool fail_silently = false);
+    static F2CField importFieldGml(
+        const std::string& file, bool fail_silently = false);
 
     /// Function to import file with Json extension.
     /// @param file Path to the imported file.

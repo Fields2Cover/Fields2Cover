@@ -1,12 +1,12 @@
 Installation
 ------------
 
-The Fields2Cover package has only been tested on Ubuntu 18.04, 20.04 and 22.04.
+The Fields2Cover package has only been tested on Ubuntu.
 If you are able to run it in other operative systems, open an issue/PR and it will be added to this guide
 
 
 Requirements on Linux
-^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
 
 Some packages are needed before compiling the package:
 
@@ -23,8 +23,9 @@ Some packages are needed before compiling the package:
    python3 -m pip install gcovr
 
 
+
 Compilation
-^^^^^^^^^^^^
+^^^^^^^^^^^
 
 First, clone this repository.
 Then, from the main folder of the project:
@@ -39,7 +40,7 @@ Then, from the main folder of the project:
 
 
 Add it to your projects
-^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^
 
 To add Fields2Cover into your CMakeLists.txt, it is as easy as:
 
@@ -69,27 +70,6 @@ To test if the compilation and installation of the python interface is correct, 
   import fields2cover
 
 
-
-ROS Compatibility
-^^^^^^^^^^^^^^^^^
-
-We also provide a `ROS 1 and ROS 2 interface <https://github.com/Fields2Cover/fields2cover_ros>`__. On it, you can have a nice visualization of your field and the paths generated:
-
-.. image:: ../figures/demo_image.png
-  :align: center
-  :width: 1000px
-
-For being able to use the package from ROS, from `catkin_ws/`:
-
-.. code-block:: console
-
-  git clone https://github.com/Fields2Cover/Fields2Cover src/fields2cover
-  git clone https://github.com/Fields2Cover/fields2cover_ros src/fields2cover_ros
-  rosdep install -r --ignore-src --from-paths .
-  # If using ROS 1:
-  catkin_make_isolated
-  # If using ROS 2:
-  colcon build
 
 
 

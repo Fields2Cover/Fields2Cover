@@ -1,5 +1,5 @@
 #==============================================================================
-#     Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+#     Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 #                      Author: Gonzalo Mier
 #                         BSD-3 License
 #==============================================================================
@@ -12,13 +12,13 @@ def near(a, b):
 
 def test_fields2cover_types_field_area():
   field = f2c.Field();
-  near(field.getArea(), 0);
+  near(field.area(), 0);
 
   cells = f2c.Cells(f2c.Cell(f2c.LinearRing(f2c.VectorPoint(
     [f2c.Point(0,0), f2c.Point(2,0),f2c.Point(2,2),f2c.Point(0,2), f2c.Point(0,0)]))));
-  field.field = cells;
-  near(field.getArea(), 4);
+  field.setField(cells);
+  near(field.area(), 4);
   field2 = field.clone();
-  near(field2.getArea(), 4);
+  near(field2.area(), 4);
 
 

@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2023 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -9,7 +9,7 @@
 namespace f2c::types {
 
 MultiLineString::MultiLineString() {
-  data = std::shared_ptr<OGRMultiLineString>(static_cast<OGRMultiLineString*>(
+  data_ = std::shared_ptr<OGRMultiLineString>(static_cast<OGRMultiLineString*>(
       OGRGeometryFactory::createGeometry(wkbMultiLineString)),
     [](OGRMultiLineString* f) {OGRGeometryFactory::destroyGeometry(f);});
 }
@@ -29,11 +29,11 @@ MultiLineString::MultiLineString(const std::initializer_list<LineString>& ls) {
 }
 
 size_t MultiLineString::size() const {
-  return isEmpty() ? 0 : data->getNumGeometries();
+  return isEmpty() ? 0 : data_->getNumGeometries();
 }
 
-double MultiLineString::getLength() const {
-  return this->data->get_Length();
+double MultiLineString::length() const {
+  return this->data_->get_Length();
 }
 
 void MultiLineString::operator*=(double b) {
@@ -46,23 +46,23 @@ void MultiLineString::append(const OGRGeometry* geom) {
   if (wkbFlatten(geom->getGeometryType()) ==
       OGRwkbGeometryType::wkbLineString) {
     if (!geom->IsEmpty()) {
-      data->addGeometry(geom);
+      data_->addGeometry(geom);
     }
   } else if (wkbFlatten(geom->getGeometryType()) ==
         OGRwkbGeometryType::wkbMultiLineString) {
     for (auto&& line : *geom->toMultiLineString()) {
-      data->addGeometry(line);
+      data_->addGeometry(line);
     }
   } else if (wkbFlatten(geom->getGeometryType()) ==
       OGRwkbGeometryType::wkbPolygon) {
     for (auto&& ring : *geom->toPolygon()) {
-      data->addGeometry(ring);
+      data_->addGeometry(ring);
     }
   } else if (wkbFlatten(geom->getGeometryType()) ==
       OGRwkbGeometryType::wkbMultiPolygon) {
     for (auto&& poly : *geom->toMultiPolygon()) {
       for (auto&& ring : poly) {
-        data->addGeometry(ring);
+        data_->addGeometry(ring);
       }
     }
   }
@@ -73,7 +73,7 @@ void MultiLineString::getGeometry(size_t i, LineString& line) {
     throw std::out_of_range(
         "Geometry does not contain point " + std::to_string(i));
   }
-  line = LineString(this->data->getGeometryRef(i), EmptyDestructor());
+  line = LineString(this->data_->getGeometryRef(i), EmptyDestructor());
 }
 
 void MultiLineString::getGeometry(size_t i, LineString& line) const {
@@ -81,7 +81,7 @@ void MultiLineString::getGeometry(size_t i, LineString& line) const {
     throw std::out_of_range(
         "Geometry does not contain point " + std::to_string(i));
   }
-  line = LineString(this->data->getGeometryRef(i), EmptyDestructor());
+  line = LineString(this->data_->getGeometryRef(i), EmptyDestructor());
 }
 
 LineString MultiLineString::getGeometry(size_t i) {
@@ -89,7 +89,7 @@ LineString MultiLineString::getGeometry(size_t i) {
     throw std::out_of_range(
         "Geometry does not contain point " + std::to_string(i));
   }
-  return LineString(this->data->getGeometryRef(i));
+  return LineString(this->data_->getGeometryRef(i));
 }
 
 const LineString MultiLineString::getGeometry(size_t i) const {
@@ -97,7 +97,7 @@ const LineString MultiLineString::getGeometry(size_t i) const {
     throw std::out_of_range(
         "Geometry does not contain point " + std::to_string(i));
   }
-  return LineString(this->data->getGeometryRef(i));
+  return LineString(this->data_->getGeometryRef(i));
 }
 
 void MultiLineString::setGeometry(size_t i, const LineString& line) {
@@ -118,7 +118,7 @@ void MultiLineString::setGeometry(size_t i, const LineString& line) {
 }
 
 void MultiLineString::addGeometry(const LineString& line) {
-  this->data->addGeometry(line.get());
+  this->data_->addGeometry(line.get());
 }
 
 void MultiLineString::addGeometry(const MultiLineString& lines) {

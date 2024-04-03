@@ -1,5 +1,5 @@
 //=============================================================================
-//    Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+//    Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 //                     Author: Gonzalo Mier
 //                        BSD-3 License
 //=============================================================================
@@ -45,6 +45,12 @@ int main() {
     << n_swaths.computeCost(F2CSwaths({swath1})) << " and with all of the swaths "
     << n_swaths.computeCost(field, F2CSwaths({swath1, swath2, swath3})) <<std::endl;
 
+  f2c::obj::NSwathModified n_swaths_mod;
+  std::cout << "The number of swaths with swath1 is "
+    << n_swaths_mod.computeCost(F2CSwaths({swath1})) << " and with all of the swaths "
+    << n_swaths_mod.computeCost(field, F2CSwaths({swath1, swath2, swath3})) <<std::endl;
+
+
   std::cout << std::endl;
   std::cout << "####### Tutorial 2.2.3 Overlap ######" << std::endl;
   f2c::obj::Overlaps overlaps;
@@ -65,7 +71,7 @@ int main() {
       F2CSwath(F2CLineString({F2CPoint(0.0, 0.0), F2CPoint(0.0, 1.0)})),
       F2CSwath(F2CLineString({F2CPoint(1.0, 1.0), F2CPoint(1.0, 0.0)}))});
   F2CRobot robot(2.0, 3.0);
-  robot.setMinRadius(0.5);
+  robot.setMinTurningRadius(0.5);
   f2c::obj::CompleteTurnPathObj<f2c::pp::DubinsCurves> complete_length(robot);
   std::cout << "The complete length is: " <<
     complete_length.computeCost(swaths_path) <<

@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fields2cover"
-version = "1.2.0"
+version = "2.0.0"
 description = "Robust and efficient coverage paths for autonomous agricultural vehicles. A modular and extensible Coverage Path Planning library"
 readme = "README.rst"
 authors = [{ name = "Wageningen University", email = "gonzalo.miermunoz@wur.nl" }]

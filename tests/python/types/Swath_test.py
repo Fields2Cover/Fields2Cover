@@ -1,5 +1,5 @@
 #==============================================================================
-#     Copyright (C) 2021-2022 Wageningen University - All Rights Reserved
+#     Copyright (C) 2021-2024 Wageningen University - All Rights Reserved
 #                      Author: Gonzalo Mier
 #                         BSD-3 License
 #==============================================================================
@@ -82,9 +82,9 @@ def test_fields2cover_types_swath_length():
   swath2 = f2c.Swath(path2);
   swath3 = f2c.Swath(path3);
 
-  near(swath1.getLength(), 4);
-  near(swath2.getLength(), 4);
-  near(pow(swath3.getLength(),2), 2, 1e-7);
+  near(swath1.length(), 4);
+  near(swath2.length(), 4);
+  near(pow(swath3.length(),2), 2, 1e-7);
 
 def test_fields2cover_types_swath_width():
   swath = f2c.Swath(5.0);
@@ -105,15 +105,15 @@ def test_fields2cover_types_swath_width():
 
 def test_fields2cover_types_swath_area():
   swath_empty = f2c.Swath(f2c.LineString(), 1.0);
-  assert (swath_empty.computeAreaCovered().isEmpty());
+  assert (swath_empty.areaCovered().isEmpty());
 
   line = f2c.LineString(f2c.VectorPoint(
       [f2c.Point(0, 1), f2c.Point(4, 1)]));
   swath = f2c.Swath(line, 2.0);
-  cell = swath.computeAreaCovered();
-  assert (swath.getWidth() * swath.getLength() == cell.getGeometry(0).getArea());
-  assert (swath.getWidth() * swath.getLength() >= 0.5 * swath.getArea());
-  assert (swath.getWidth() * swath.getLength() <= swath.getArea());
+  cell = swath.areaCovered();
+  assert (swath.getWidth() * swath.length() == cell.getGeometry(0).area());
+  assert (swath.getWidth() * swath.length() >= 0.5 * swath.area());
+  assert (swath.getWidth() * swath.length() <= swath.area());
 
 
 
@@ -134,10 +134,6 @@ def test_fields2cover_types_swath_angles():
 
   near(swath_empty.getInAngle(), -1.0);
   near(swath_empty.getOutAngle(), -1.0);
-  empty_p1 = swath_empty.startPoint();
-  empty_p2 = swath_empty.endPoint();
-  assert (empty_p1.isEmpty());
-  assert (empty_p2.isEmpty());
   near(math.fmod(swath1.getInAngle(), 2*math.pi), 0.0, 1e-5);
   near(math.fmod(swath2.getInAngle(),2*math.pi), math.pi/2, 1e-5);
   near(math.fmod(swath3.getInAngle(),2*math.pi), math.pi / 4.0, 1e-5);
