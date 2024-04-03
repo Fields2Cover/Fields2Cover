@@ -88,7 +88,8 @@ Some packages are needed before compiling the package:
    sudo apt-get update
    sudo apt-get install --no-install-recommends build-essential ca-certificates cmake \
         doxygen g++ git libeigen3-dev libgdal-dev libpython3-dev python3 python3-pip \
-        python3-matplotlib python3-tk lcov libgtest-dev libtbb-dev swig libgeos-dev
+        python3-matplotlib python3-tk lcov libgtest-dev libtbb-dev swig libgeos-dev \
+        gnuplot
    python3 -m pip install gcovr
 
 Also, `OR-tools <https://developers.google.com/optimization>`__ for C++ is needed. Follow its installation process.
