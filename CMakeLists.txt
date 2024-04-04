@@ -101,20 +101,22 @@ FetchContent_MakeAvailable(
 )
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
+include(cmake/Modules/FindTinyXML2.cmake)
 find_package(nlohmann_json REQUIRED)
-find_package(tinyxml2 REQUIRED)
 find_package(Threads REQUIRED)
 find_package(GDAL 3.0 REQUIRED)
 find_package(Eigen3 REQUIRED)
+find_library(MATH_LIBRARY m)
+
 find_package(ortools CONFIG)
-
-
-if(NOT ortools_FOUND AND BUILD_ORTOOLS_BY_SOURCE)
+if(NOT ortools_FOUND)
+  set(ORTOOLS ON)
   message("Or-tools not found -- Downloading and building from source")
-  option(BUILD_DEPS "BOOL" ON)
+
   FetchContent_Declare(ortools FETCHCONTENT_UPDATES_DISCONNECTED
     GIT_REPOSITORY https://github.com/google/or-tools
     GIT_TAG v9.9
+    CMAKE_ARGS -DBUILD_DEPS=ON
   )
   FetchContent_MakeAvailable(ortools)
 endif()
@@ -179,8 +181,11 @@ endif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   include(cmake/Modules/CodeCoverage.cmake)
   APPEND_COVERAGE_COMPILER_FLAGS()
+  if(NOT ORTOOLS)
+    target_compile_options(Fields2Cover PRIVATE -pedantic -Werror)
+  endif()
   target_compile_options(Fields2Cover PRIVATE
-    -Werror -pedantic -g --coverage -fprofile-arcs -ftest-coverage -fno-inline
+    -g --coverage -fprofile-arcs -ftest-coverage -fno-inline
   )
   set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -lgcov")
 
@@ -207,11 +212,13 @@ target_include_directories(Fields2Cover PUBLIC
 )
 
 
+
 target_link_libraries(Fields2Cover
   PUBLIC
     ${GDAL_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     -lgeos_c
+    ${MATH_LIBRARY}
   PRIVATE
     nlohmann_json::nlohmann_json
     tinyxml2::tinyxml2
@@ -230,22 +237,32 @@ set_target_properties(Fields2Cover
   PUBLIC_HEADER "include/fields2cover.h"
 )
 
-find_library(MATH_LIBRARY m)
-if(MATH_LIBRARY)
-  target_link_libraries(Fields2Cover PUBLIC ${MATH_LIBRARY})
-endif()
-
-install(
-  TARGETS
-    Fields2Cover
-    steering_functions
-    matplot
-  EXPORT Fields2Cover-targets
-  LIBRARY DESTINATION ${INSTALL_LIB_DIR}
-  ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
-  RUNTIME DESTINATION ${INSTALL_BIN_DIR}
-  PUBLIC_HEADER DESTINATION ${INSTALL_INCLUDE_DIR}
-)
+if(ORTOOLS)
+  install(
+    TARGETS
+      Fields2Cover
+      steering_functions
+      matplot
+      ortools
+    EXPORT Fields2Cover-targets
+    LIBRARY DESTINATION ${INSTALL_LIB_DIR}
+    ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
+    RUNTIME DESTINATION ${INSTALL_BIN_DIR}
+    PUBLIC_HEADER DESTINATION ${INSTALL_INCLUDE_DIR}
+  )
+else(ORTOOLS)
+  install(
+    TARGETS
+      Fields2Cover
+      steering_functions
+      matplot
+    EXPORT Fields2Cover-targets
+    LIBRARY DESTINATION ${INSTALL_LIB_DIR}
+    ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
+    RUNTIME DESTINATION ${INSTALL_BIN_DIR}
+    PUBLIC_HEADER DESTINATION ${INSTALL_INCLUDE_DIR}
+  )
+endif(ORTOOLS)
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(Fields2CoverConfigVersion.cmake
@@ -285,14 +302,26 @@ install(
   DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/fields2cover
 )
 
-export(
-  TARGETS
-    Fields2Cover
-    steering_functions
-    matplot
-  FILE
-    Fields2Cover-${type}-Targets.cmake
-)
+if(ORTOOLS)
+  export(
+    TARGETS
+      Fields2Cover
+      steering_functions
+      matplot
+      ortools
+    FILE
+      Fields2Cover-${type}-Targets.cmake
+  )
+else(ORTOOLS)
+  export(
+    TARGETS
+      Fields2Cover
+      steering_functions
+      matplot
+    FILE
+      Fields2Cover-${type}-Targets.cmake
+ )
+endif(ORTOOLS)
 
 # Copy public headers during `make install`
 install(
