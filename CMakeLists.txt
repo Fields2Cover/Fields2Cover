@@ -25,7 +25,6 @@ option(BUILD_TESTS "Build tests" ON)
 option(BUILD_PYTHON "Build Python SWIG module" OFF)
 option(BUILD_DOC "Build Documentation" OFF)
 option(BUILD_SHARED_LIBS "Build shared library(.so)" ON)
-option(BUILD_ORTOOLS_BY_SOURCE "Build OR-tools by source if not found" ON)
 
 
 
@@ -110,17 +109,14 @@ find_library(MATH_LIBRARY m)
 
 find_package(ortools CONFIG)
 if(NOT ortools_FOUND)
-  set(ORTOOLS ON)
   message("Or-tools not found -- Downloading and building from source")
 
   FetchContent_Declare(ortools FETCHCONTENT_UPDATES_DISCONNECTED
-    GIT_REPOSITORY https://github.com/google/or-tools
-    GIT_TAG v9.9
+    URL https://github.com/google/or-tools/releases/download/v9.9/or-tools_amd64_ubuntu-22.04_cpp_v9.9.3963.tar.gz
   )
-  set(BUILD_DEPS ON)
-  set(BUILD_SAMPLES OFF)
-  set(BUILD_EXAMPLES OFF)
-  FetchContent_MakeAvailable(ortools)
+  FetchContent_Populate(ortools)
+  include_directories(${ortools_SOURCE_DIR}/include)
+  include_directories(${ortools_SOURCE_DIR}/lib)
 endif()
 
 
@@ -183,7 +179,7 @@ endif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   include(cmake/Modules/CodeCoverage.cmake)
   APPEND_COVERAGE_COMPILER_FLAGS()
-  if(NOT ORTOOLS)
+  if(NOT ortools_POPULATED)
     target_compile_options(Fields2Cover PRIVATE -pedantic -Werror)
   endif()
   target_compile_options(Fields2Cover PRIVATE
@@ -206,14 +202,11 @@ else (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 
-
 target_include_directories(Fields2Cover PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
   ${EIGEN3_INCLUDE_DIRS}
 )
-
-
 
 target_link_libraries(Fields2Cover
   PUBLIC
@@ -227,8 +220,18 @@ target_link_libraries(Fields2Cover
     steering_functions
     spline
     matplot
-    ortools::ortools
 )
+
+if(ortools_POPULATED)
+  target_link_libraries(Fields2Cover PRIVATE
+    ${ortools_SOURCE_DIR}/lib/libortools.so
+    ${ortools_SOURCE_DIR}/lib/libprotobuf.a
+  )
+else(ortools_POPULATED)
+  target_link_libraries(Fields2Cover PRIVATE
+    ortools::ortools
+  )
+endif(ortools_POPULATED)
 
 if(ALLOW_PARALLELIZATION)
   target_link_libraries(Fields2Cover PRIVATE tbb)
@@ -239,32 +242,17 @@ set_target_properties(Fields2Cover
   PUBLIC_HEADER "include/fields2cover.h"
 )
 
-if(ORTOOLS)
-  install(
-    TARGETS
-      Fields2Cover
-      steering_functions
-      matplot
-      ortools
-    EXPORT Fields2Cover-targets
-    LIBRARY DESTINATION ${INSTALL_LIB_DIR}
-    ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
-    RUNTIME DESTINATION ${INSTALL_BIN_DIR}
-    PUBLIC_HEADER DESTINATION ${INSTALL_INCLUDE_DIR}
-  )
-else(ORTOOLS)
-  install(
-    TARGETS
-      Fields2Cover
-      steering_functions
-      matplot
-    EXPORT Fields2Cover-targets
-    LIBRARY DESTINATION ${INSTALL_LIB_DIR}
-    ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
-    RUNTIME DESTINATION ${INSTALL_BIN_DIR}
-    PUBLIC_HEADER DESTINATION ${INSTALL_INCLUDE_DIR}
-  )
-endif(ORTOOLS)
+install(
+  TARGETS
+    Fields2Cover
+    steering_functions
+    matplot
+  EXPORT Fields2Cover-targets
+  LIBRARY DESTINATION ${INSTALL_LIB_DIR}
+  ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
+  RUNTIME DESTINATION ${INSTALL_BIN_DIR}
+  PUBLIC_HEADER DESTINATION ${INSTALL_INCLUDE_DIR}
+)
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(Fields2CoverConfigVersion.cmake
@@ -304,26 +292,14 @@ install(
   DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/fields2cover
 )
 
-if(ORTOOLS)
-  export(
-    TARGETS
-      Fields2Cover
-      steering_functions
-      matplot
-      ortools
-    FILE
-      Fields2Cover-${type}-Targets.cmake
-  )
-else(ORTOOLS)
-  export(
-    TARGETS
-      Fields2Cover
-      steering_functions
-      matplot
-    FILE
-      Fields2Cover-${type}-Targets.cmake
- )
-endif(ORTOOLS)
+export(
+  TARGETS
+    Fields2Cover
+    steering_functions
+    matplot
+  FILE
+    Fields2Cover-${type}-Targets.cmake
+)
 
 # Copy public headers during `make install`
 install(
