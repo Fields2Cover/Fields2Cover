@@ -1,3 +1,5 @@
+.. _tutorial-route:
+
 Part 5: Route planning
 ======================
 

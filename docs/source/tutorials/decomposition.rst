@@ -1,3 +1,5 @@
+.. _tutorial-decomp:
+
 Part 7: Cell Decomposition
 ==========================
 

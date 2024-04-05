@@ -1,6 +1,6 @@
-==================
+============
 Fields2Cover
-==================
+============
 
   **Robust and efficient coverage paths for autonomous agricultural vehicles**
 
@@ -19,10 +19,40 @@ The Coverage Path Planning problem (CPP) aims to create a path to cover an area 
    :width: 500px
 
 
-
-
 Although the development of this project is focused on offline planning of agricultural vehicles,
 the library accepts pull requests from other types of coverage planners.
+
+
+F2C version 2.0
+===============
+
+The version 2.0 of Fields2Cover comes with support for non-convex fields and fields with obstacles!! This has been huge request from the community and finally it's here.
+
+A quick list of new additions to the library:
+
+#. :ref:`Decomposition algorithms<tutorial-decomp>`:
+
+   * Trapezoidal and Boustrophedon decomposition. Those algorithms are useful to split any concave field into several convex sub-fields.
+
+#. :ref:`Route planner<tutorial-route>`:
+
+   * Route optimizer using `OR-tools <https://developers.google.com/optimization>`__ can be used to order the swaths, instead of just using a known pattern.
+
+   * Support for a point used as the start and end points of the route.
+
+#. Path planner:
+
+   * Support for routes provided by the route optimizer.
+
+#. Swath generator:
+
+   * Speed improvement on swath generation.
+
+   * New cost function: ``NSwathModified``. It uses an approximation to compute the number of swaths, reducing computation costs.
+
+#. Many bugs fixed.
+
+For a little guide about the migration, please check: :ref:`migration-guide`.
 
 
 Citing
@@ -49,18 +79,19 @@ More information
 ================
 
 .. toctree::
-  :maxdepth: 2
+   :maxdepth: 2
 
-  self
-  source/installation.rst
-  source/tutorials.rst
-  source/faq.rst
-  api/f2c_library.rst
+   self
+   source/installation.rst
+   source/tutorials.rst
+   source/migration_to_v2.rst
+   source/faq.rst
+   api/f2c_library.rst
 
 
 
 Contribute
-===========
+==========
 
 If you find any issue/bug/proposal, open an issue and we will try to solve/discuss it.
 
