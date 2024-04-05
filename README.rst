@@ -36,6 +36,32 @@ Fields2Cover library provides several algorithms to plan the coverage path on an
 
 Although the development of this project is focused on offline planning of agricultural vehicles, the library accepts pull requests from other types of coverage planners.
 
+
+F2C version 2.0
+---------------
+
+The version 2.0 of Fields2Cover comes with support for non-convex fields and fields with obstacles!! This has been huge request from the community and finally it's here.
+
+A quick list of new additions to the library:
+
+1. Decomposition algorithms:
+  - Trapezoidal and Boustrophedon decomposition. Those algorithms are useful to split any concave field into several convex sub-fields.
+
+2. Route planner:
+  - Route optimizer using`OR-tools <https://developers.google.com/optimization>`__ can be used to order the swaths, instead of just using a known pattern.
+  - Support for a point used as the start and end points of the route.
+
+3. Path planner:
+  - Support for routes provided by the route optimizer.
+
+4. Swath generator:
+  - Speed improvement on swath generation.
+  - New cost function: `NSwathModified`. It uses an approximation to compute the number of swaths, reducing computation costs.
+
+5. Many bugs fixed!
+
+
+
 Citing
 ------
 
