@@ -44,21 +44,29 @@ The version 2.0 of Fields2Cover comes with support for non-convex fields and fie
 
 A quick list of new additions to the library:
 
-1. Decomposition algorithms:
-  - Trapezoidal and Boustrophedon decomposition. Those algorithms are useful to split any concave field into several convex sub-fields.
+#. Decomposition algorithms:
 
-2. Route planner:
-  - Route optimizer using`OR-tools <https://developers.google.com/optimization>`__ can be used to order the swaths, instead of just using a known pattern.
-  - Support for a point used as the start and end points of the route.
+   * Trapezoidal and Boustrophedon decomposition. Those algorithms are useful to split any concave field into several convex sub-fields.
 
-3. Path planner:
-  - Support for routes provided by the route optimizer.
+#. Route planner:
 
-4. Swath generator:
-  - Speed improvement on swath generation.
-  - New cost function: `NSwathModified`. It uses an approximation to compute the number of swaths, reducing computation costs.
+   * Route optimizer using `OR-tools <https://developers.google.com/optimization>`__ can be used to order the swaths, instead of just using a known pattern.
 
-5. Many bugs fixed!
+   * Support for a point used as the start and end points of the route.
+
+#. Path planner:
+
+   * Support for routes provided by the route optimizer.
+
+#. Swath generator:
+
+   * Speed improvement on swath generation.
+
+   * New cost function: `NSwathModified`. It uses an approximation to compute the number of swaths, reducing computation costs.
+
+#. Many bugs fixed.
+    
+  
 
 
 
