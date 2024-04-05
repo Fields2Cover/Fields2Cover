@@ -48,14 +48,16 @@ F2CSwaths SwathGeneratorBase::generateSwaths(double angle,
   F2CPoint min_point(rot_poly.getDimMinX(), rot_poly.getDimMinY());
   auto seed_curve = rot_poly.createStraightLongLine(min_point, 0.0);
 
-  F2CSwaths swaths;
   double curve_y {0.0};
+  F2CMultiLineString paths;
   while (field_height > curve_y + (allow_overlap ? 0.0 : 0.5 * op_width)) {
     curve_y += op_width;
-    auto path = F2CPoint(0.0, 0.0).rotateFromPoint(angle,
-        seed_curve + F2CPoint(0.0, curve_y));
-    swaths.append(path, poly, op_width, f2c::types::SwathType::MAINLAND);
+    paths.addGeometry(F2CPoint(0.0, 0.0).rotateFromPoint(angle,
+        seed_curve + F2CPoint(0.0, curve_y)));
   }
+
+  F2CSwaths swaths;
+  swaths.append(paths, poly, op_width, f2c::types::SwathType::MAINLAND);
   return swaths;
 }
 
