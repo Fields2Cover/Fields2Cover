@@ -93,15 +93,19 @@ FetchContent_Declare(matplot FETCHCONTENT_UPDATES_DISCONNECTED
   GIT_REPOSITORY https://github.com/alandefreitas/matplotplusplus
 )
 
+FetchContent_Declare(json FETCHCONTENT_UPDATES_DISCONNECTED
+  URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
+)
+
 FetchContent_MakeAvailable(
   steering_functions
   spline
   matplot
+  json
 )
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 include(cmake/Modules/FindTinyXML2.cmake)
-find_package(nlohmann_json REQUIRED)
 find_package(Threads REQUIRED)
 find_package(GDAL 3.0 REQUIRED)
 find_package(Eigen3 REQUIRED)
