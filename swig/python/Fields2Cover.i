@@ -128,15 +128,34 @@
 
 %define GeometryExtend(VT, T)
 %extend VT {
-  T __getitem__(int i) {
+  inline size_t __len__() const {return self->size();}
+  T __getitem__(int i)  throw(std::out_of_range) {
+    if (i >= self->size() || i < 0) {
+      throw std::out_of_range("out of bounds access");
+    }
     return (*self).getGeometry(i);
+  }
+  inline void __setitem__(size_t i, const T& v) throw(std::out_of_range) {
+    if (i >= self->size() || i < 0) {
+      throw std::out_of_range("out of bounds access");
+    }
+    self->setGeometry(i, v);
   }
 }
 %enddef
 %define ArrayExtend(VT, T)
 %extend VT {
-  T __getitem__(int i) {
-    return (*self)[i];
+  T __getitem__(int i)  throw(std::out_of_range) {
+    if (i >= self->size() || i < 0) {
+      throw std::out_of_range("out of bounds access");
+    }
+    return self->at(i);
+  }
+  inline void __setitem__(size_t i, const T& v) throw(std::out_of_range) {
+    if (i >= self->size() || i < 0) {
+      throw std::out_of_range("out of bounds access");
+    }
+    (*self)[i] = v;
   }
 }
 %enddef

@@ -140,19 +140,6 @@ EXTEND_OPERATOR(Cells)
 %ignore f2c::types::Swaths::Swaths(std::initializer_list<Swath> const &);
 %ignore f2c::types::Swaths::operator[];
 %include "fields2cover/types/Swaths.h"
-%extend f2c::types::Swaths {
-  inline size_t __len__() const { return self->size(); }
-  inline f2c::types::Swath& __getitem__(size_t i) throw(std::out_of_range) {
-    if (i >= self->size() || i < 0)
-      throw std::out_of_range("out of bounds access");
-    return self->at(i);
-  }
-  inline void __setitem__(size_t i, const f2c::types::Swath& v) throw(std::out_of_range) {
-    if (i >= self->size() || i < 0)
-      throw std::out_of_range("out of bounds access");
-    self->at(i) = v;
-  }
-}
 %ignore f2c::types::SwathsByCells::operator[];
 %include "fields2cover/types/SwathsByCells.h"
 
