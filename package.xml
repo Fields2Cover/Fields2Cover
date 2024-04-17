@@ -23,6 +23,7 @@
   <depend>tinyxml2</depend>
   <depend>python3</depend>
   <depend>python3-dev</depend>
+  <depend>gnuplot</depend>
   <depend>ortools_vendor</depend>
   <exec_depend>python3-matplotlib</exec_depend>
   <exec_depend>python3-tk</exec_depend>
