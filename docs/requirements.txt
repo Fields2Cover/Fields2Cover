@@ -1,4 +1,4 @@
-sphinx>5.0
+sphinx>5.0,<=7.2.6
 sphinx_rtd_theme>0.3.0
 sphinx-sitemap
 sphinx_code_tabs
