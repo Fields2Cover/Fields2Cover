@@ -105,10 +105,11 @@ FetchContent_MakeAvailable(
 )
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
-include(cmake/Modules/FindTinyXML2.cmake)
 find_package(Threads REQUIRED)
+find_package(Gnuplot)
 find_package(GDAL 3.0 REQUIRED)
 find_package(Eigen3 REQUIRED)
+find_package(TinyXML2 REQUIRED)
 find_library(MATH_LIBRARY m)
 
 find_package(ortools CONFIG)
@@ -372,7 +373,7 @@ endif(BUILD_PYTHON)
 ######################### test ######################
 #####################################################
 
-if(BUILD_TESTS)
+if(BUILD_TESTS AND GNUPLOT_FOUND)
   find_package(GTest REQUIRED)
   include(CTest)
   enable_testing()
@@ -380,7 +381,7 @@ if(BUILD_TESTS)
     GTEST_COLOR=1 ${CMAKE_CTEST_COMMAND} --verbose --test-dir tests/
   )
   add_subdirectory(tests)
-endif(BUILD_TESTS)
+endif(BUILD_TESTS AND GNUPLOT_FOUND)
 
 #####################################################
 ######################### docs ######################
