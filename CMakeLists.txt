@@ -214,6 +214,7 @@ endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 target_include_directories(Fields2Cover PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
+  $<INSTALL_INTERFACE:include/fields2cover>
   ${EIGEN3_INCLUDE_DIRS}
 )
 
@@ -284,7 +285,7 @@ endif(BUILD_SHARED_LIBS)
 install(
   EXPORT Fields2Cover-targets
   FILE Fields2Cover-${type}-Targets.cmake
-  DESTINATION ${INSTALL_CMAKE_DIR}/share/fields2cover
+  DESTINATION ${INSTALL_CMAKE_DIR}/share/fields2cover/cmake
 )
 
 set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
@@ -299,7 +300,7 @@ install(
     "${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfig.cmake"
     "${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfigVersion.cmake"
   DESTINATION
-    ${INSTALL_CMAKE_DIR}/share/fields2cover
+    ${INSTALL_CMAKE_DIR}/share/fields2cover/cmake
 )
 
 install(
