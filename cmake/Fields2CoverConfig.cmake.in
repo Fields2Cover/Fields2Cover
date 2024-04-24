@@ -1,4 +1,4 @@
-set(F2C_CMAKE_INSTALL_DIR @INSTALL_CMAKE_DIR@cmake/fields2cover)
+set(F2C_CMAKE_INSTALL_DIR @INSTALL_CMAKE_DIR@share/fields2cover/cmake)
 
 include(CMakeFindDependencyMacro)
 find_dependency(GDAL 3.0 REQUIRED)
