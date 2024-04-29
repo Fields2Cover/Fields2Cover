@@ -105,7 +105,8 @@ FetchContent_MakeAvailable(
 )
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
-include(cmake/Modules/FindTinyXML2.cmake)
+list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
+find_package(TinyXML2 REQUIRED)
 find_package(Threads REQUIRED)
 find_package(Gnuplot)
 find_package(GDAL 3.0 REQUIRED)
