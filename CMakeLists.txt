@@ -105,30 +105,33 @@ FetchContent_MakeAvailable(
 )
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
-include(cmake/Modules/FindTinyXML2.cmake)
+list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
+find_package(TinyXML2 REQUIRED)
 find_package(Threads REQUIRED)
 find_package(Gnuplot)
 find_package(GDAL 3.0 REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_library(MATH_LIBRARY m)
 
-find_package(ortools CONFIG)
-if(NOT ortools_FOUND)
-  message("Or-tools not found -- Downloading and building from source")
-  set(ORTOOLS_FETCH ON)
+find_package(ortools_vendor CONFIG)
+if(NOT ortools_vendor_FOUND)
+  find_package(ortools CONFIG)
+  if(NOT ortools_FOUND)
+    message("Or-tools not found -- Downloading and building from source")
+    set(ORTOOLS_FETCH ON)
 
-  FetchContent_Declare(ortools FETCHCONTENT_UPDATES_DISCONNECTED
-    GIT_REPOSITORY https://github.com/google/or-tools.git
-    GIT_TAG v9.9
-    CMAKE_ARGS -DBUILD_DEPS=ON
-  )
-  FetchContent_MakeAvailable(ortools)
+    FetchContent_Declare(ortools FETCHCONTENT_UPDATES_DISCONNECTED
+      GIT_REPOSITORY https://github.com/google/or-tools.git
+      GIT_TAG v9.9
+      CMAKE_ARGS -DBUILD_DEPS=ON
+    )
+    FetchContent_MakeAvailable(ortools)
 
-  set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
-  include(CTest)
-  include(GNUInstallDirs)
+    set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
+    include(CTest)
+    include(GNUInstallDirs)
+  endif()
 endif()
-
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
