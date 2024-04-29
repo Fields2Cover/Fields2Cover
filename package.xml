@@ -20,7 +20,8 @@
   <depend>libgdal-dev</depend>
   <depend>gtest</depend>
   <depend>tbb</depend>
-  <depend>tinyxml2_vendor</depend>
+  <depend condition="$ROS_VERSION == 1">tinyxml2</depend>
+  <depend condition="$ROS_VERSION == 2">tinyxml2_vendor</depend>
   <depend>python3</depend>
   <depend>python3-dev</depend>
   <depend>ortools_vendor</depend>
