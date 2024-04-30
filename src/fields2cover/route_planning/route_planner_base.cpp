@@ -19,12 +19,12 @@ namespace f2c::rp {
 namespace ortools = operations_research;
 
 F2CRoute RoutePlannerBase::genRoute(
-    const F2CCells& cells, const F2CSwathsByCells& swaths,
+    const F2CCells& cells, const F2CSwathsByCells& swaths, bool redirect_swaths,
     bool show_log, double d_tol) {
   F2CGraph2D shortest_graph = createShortestGraph(cells, swaths, d_tol);
 
   F2CGraph2D cov_graph = createCoverageGraph(
-      cells, swaths, shortest_graph, d_tol);
+      cells, swaths, redirect_swaths, shortest_graph, d_tol);
 
   std::vector<int64_t> v_route = computeBestRoute(cov_graph, show_log);
   return transformSolutionToRoute(
@@ -87,7 +87,7 @@ F2CGraph2D RoutePlannerBase::createShortestGraph(
 
 
 F2CGraph2D RoutePlannerBase::createCoverageGraph(
-    const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells,
+    const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells, bool redirect_swaths,
     F2CGraph2D& shortest_graph,
     double d_tol) const {
   F2CGraph2D g;
@@ -107,10 +107,12 @@ F2CGraph2D RoutePlannerBase::createCoverageGraph(
         for (const auto& s2 : swaths2) {
           auto s2_s = s2.startPoint();
           auto s2_e = s2.endPoint();
-          g.addEdge(s1_s, s2_s, shortest_graph);
+          if (redirect_swaths) {
+            g.addEdge(s1_s, s2_s, shortest_graph);
+            g.addEdge(s1_e, s2_e, shortest_graph);
+          }
           g.addEdge(s1_s, s2_e, shortest_graph);
           g.addEdge(s1_e, s2_s, shortest_graph);
-          g.addEdge(s1_e, s2_e, shortest_graph);
         }
       }
     }

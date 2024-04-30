@@ -32,7 +32,7 @@ class RoutePlannerBase {
   /// @param d_tol Tolerance distance to consider if two points are the same.
   /// @return Route that covers all the swaths
   virtual F2CRoute genRoute(
-      const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells,
+      const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells, bool redirect_swaths = true,
       bool show_log = false, double d_tol = 1e-4);
 
   /// Set the start and the end of the route.
@@ -56,7 +56,7 @@ class RoutePlannerBase {
   ///          between two nodes.
   /// @param d_tol Tolerance distance to consider if two points are the same.
   virtual F2CGraph2D createCoverageGraph(
-      const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells,
+      const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells, bool redirect_swaths,
       F2CGraph2D& shortest_graph,
       double d_tol) const;
 
