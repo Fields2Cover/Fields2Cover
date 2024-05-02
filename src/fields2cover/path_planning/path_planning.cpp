@@ -125,11 +125,22 @@ std::vector<std::pair<F2CPoint, double>> PathPlanning::simplifyConnection(
     }
   }
 
+  if (vp.size() < 2){
+    path.emplace_back(p2, ang2); 
+    return path;
+  }
+
   for (int i = 1; i < vp.size() - 1; ++i) {
     double dist_in  = vp[i].distance(vp[i-1]);
     double dist_out  = vp[i].distance(vp[i+1]);
     double d_in  = min(0.5 * dist_in,  safe_dist);
     double d_out  = min(0.5 * dist_out,  safe_dist);
+    // I haven't checked if this is possible, but
+    // if vp[i] == vp[i-1] or vp == vp[i+1], 
+    // we will get divide by zero error here (dist_in or dist_out).
+    // if (dist_in == 0.0 || dist_out == 0.0){
+    //   std::cout << "dist_in:" << dist_in << "dist_out:" << dist_out << std::endl << std::flush;
+    // }
     F2CPoint p_in =  (vp[i-1] - vp[i]) * (d_in  / dist_in)  + vp[i];
     F2CPoint p_out = (vp[i+1] - vp[i]) * (d_out / dist_out) + vp[i];
     if (p_in.distance(path.back().first) > 3.0 * safe_dist &&
