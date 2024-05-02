@@ -25,6 +25,7 @@ option(BUILD_TESTS "Build tests" ON)
 option(BUILD_PYTHON "Build Python SWIG module" OFF)
 option(BUILD_DOC "Build Documentation" OFF)
 option(BUILD_SHARED_LIBS "Build shared library(.so)" ON)
+option(USE_ORTOOLS_RELEASE_IF_NOT_FOUND "If or-tools is not found, use the release" OFF)
 
 
 
@@ -105,30 +106,51 @@ FetchContent_MakeAvailable(
 )
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
-include(cmake/Modules/FindTinyXML2.cmake)
+list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
+find_package(TinyXML2 REQUIRED)
 find_package(Threads REQUIRED)
 find_package(Gnuplot)
 find_package(GDAL 3.0 REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_library(MATH_LIBRARY m)
 
-find_package(ortools CONFIG)
-if(NOT ortools_FOUND)
-  message("Or-tools not found -- Downloading and building from source")
-  set(ORTOOLS_FETCH ON)
+find_package(ortools_vendor CONFIG)
+if(NOT ortools_vendor_FOUND)
+  find_package(ortools CONFIG)
+  if(NOT ortools_FOUND)
+    set(ORTOOLS_FETCH ON)
+    if(USE_ORTOOLS_RELEASE_IF_NOT_FOUND)
+      message("Or-tools not found -- Downloading and installing from release")
+      FetchContent_Declare(ortools FETCHCONTENT_UPDATES_DISCONNECTED
+        URL https://github.com/google/or-tools/releases/download/v9.9/or-tools_amd64_ubuntu-22.04_cpp_v9.9.3963.tar.gz
+      )
+      FetchContent_MakeAvailable(ortools)
+      find_package(ortools CONFIG REQUIRED HINTS ${ortools_SOURCE_DIR}/lib/cmake/ortools)
+    else(USE_ORTOOLS_RELEASE_IF_NOT_FOUND)
+      set(ORTOOLS_FETCH_SRC ON)
+      message("Or-tools not found -- Downloading and building from source")
 
-  FetchContent_Declare(ortools FETCHCONTENT_UPDATES_DISCONNECTED
-    GIT_REPOSITORY https://github.com/google/or-tools.git
-    GIT_TAG v9.9
-    CMAKE_ARGS -DBUILD_DEPS=ON
-  )
-  FetchContent_MakeAvailable(ortools)
+      set(BUILD_DEPS ON)
+      set(BUILD_SAMPLES OFF)
+      set(BUILD_EXAMPLES OFF)
 
-  set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
-  include(CTest)
-  include(GNUInstallDirs)
+      FetchContent_Declare(ortools FETCHCONTENT_UPDATES_DISCONNECTED
+        GIT_REPOSITORY https://github.com/google/or-tools.git
+        GIT_TAG v9.9
+        CMAKE_ARGS
+          "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}"
+          -DBUILD_DEPS:BOOL=ON
+          -DBUILD_SAMPLES:BOOL=OFF
+          -DBUILD_EXAMPLES:BOOL=OFF
+      )
+      FetchContent_MakeAvailable(ortools)
+
+      set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
+      include(CTest)
+      include(GNUInstallDirs)
+    endif(USE_ORTOOLS_RELEASE_IF_NOT_FOUND)
+  endif()
 endif()
-
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
@@ -214,6 +236,7 @@ endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 target_include_directories(Fields2Cover PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
+  $<INSTALL_INTERFACE:include/fields2cover>
   ${EIGEN3_INCLUDE_DIRS}
 )
 
@@ -232,6 +255,8 @@ target_link_libraries(Fields2Cover
     matplot
 )
 
+
+
 if(ALLOW_PARALLELIZATION)
   target_link_libraries(Fields2Cover PRIVATE tbb)
 endif(ALLOW_PARALLELIZATION)
@@ -241,7 +266,7 @@ set_target_properties(Fields2Cover
   PUBLIC_HEADER "include/fields2cover.h"
 )
 
-if(ORTOOLS_FETCH)
+if(ORTOOLS_FETCH_SRC)
   install(
     TARGETS
       Fields2Cover
@@ -254,20 +279,34 @@ if(ORTOOLS_FETCH)
     RUNTIME DESTINATION ${INSTALL_BIN_DIR}
     PUBLIC_HEADER DESTINATION ${INSTALL_INCLUDE_DIR}
   )
-else(ORTOOLS_FETCH)
+else(ORTOOLS_FETCH_SRC)
+  if(NOT "${ortools_SOURCE_DIR}" STREQUAL "")
+      install(
+        DIRECTORY "${ortools_SOURCE_DIR}/share"
+        DESTINATION "${INSTALL_LIB_DIR}/../"
+      )
+      install(
+        DIRECTORY "${ortools_SOURCE_DIR}/include"
+        DESTINATION "${INSTALL_INCLUDE_DIR}/../"
+      )
+      install(
+        DIRECTORY "${ortools_SOURCE_DIR}/lib"
+        DESTINATION "${INSTALL_LIB_DIR}/../"
+      )
+  endif(NOT "${ortools_SOURCE_DIR}" STREQUAL "")
+
   install(
     TARGETS
       Fields2Cover
       steering_functions
       matplot
-      #ortools
     EXPORT Fields2Cover-targets
     LIBRARY DESTINATION ${INSTALL_LIB_DIR}
     ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
     RUNTIME DESTINATION ${INSTALL_BIN_DIR}
     PUBLIC_HEADER DESTINATION ${INSTALL_INCLUDE_DIR}
 )
-endif(ORTOOLS_FETCH)
+endif(ORTOOLS_FETCH_SRC)
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(Fields2CoverConfigVersion.cmake
@@ -284,7 +323,7 @@ endif(BUILD_SHARED_LIBS)
 install(
   EXPORT Fields2Cover-targets
   FILE Fields2Cover-${type}-Targets.cmake
-  DESTINATION ${INSTALL_CMAKE_DIR}/share/fields2cover
+  DESTINATION ${INSTALL_CMAKE_DIR}/share/fields2cover/cmake
 )
 
 set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
@@ -299,7 +338,7 @@ install(
     "${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfig.cmake"
     "${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfigVersion.cmake"
   DESTINATION
-    ${INSTALL_CMAKE_DIR}/share/fields2cover
+    ${INSTALL_CMAKE_DIR}/share/fields2cover/cmake
 )
 
 install(
@@ -307,7 +346,7 @@ install(
   DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/fields2cover
 )
 
-if(ORTOOLS_FETCH)
+if(ORTOOLS_FETCH_SRC)
   export(
     TARGETS
       Fields2Cover
@@ -317,7 +356,7 @@ if(ORTOOLS_FETCH)
     FILE
       Fields2Cover-${type}-Targets.cmake
   )
-else(ORTOOLS_FETCH)
+else(ORTOOLS_FETCH_SRC)
   export(
     TARGETS
       Fields2Cover
@@ -326,7 +365,7 @@ else(ORTOOLS_FETCH)
     FILE
       Fields2Cover-${type}-Targets.cmake
   )
-endif(ORTOOLS_FETCH)
+endif(ORTOOLS_FETCH_SRC)
 
 # Copy public headers during `make install`
 install(
