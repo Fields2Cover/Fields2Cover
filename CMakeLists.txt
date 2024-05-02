@@ -25,7 +25,7 @@ option(BUILD_TESTS "Build tests" ON)
 option(BUILD_PYTHON "Build Python SWIG module" OFF)
 option(BUILD_DOC "Build Documentation" OFF)
 option(BUILD_SHARED_LIBS "Build shared library(.so)" ON)
-option(USE_ORTOOLS_RELEASE_IF_NOT_FOUND "If or-tools is not found, use the release" ON)
+option(USE_ORTOOLS_RELEASE_IF_NOT_FOUND "If or-tools is not found, use the release" OFF)
 
 
 
@@ -133,7 +133,11 @@ if(NOT ortools_vendor_FOUND)
       FetchContent_Declare(ortools FETCHCONTENT_UPDATES_DISCONNECTED
         GIT_REPOSITORY https://github.com/google/or-tools.git
         GIT_TAG v9.9
-        CMAKE_ARGS -DBUILD_DEPS=ON
+        CMAKE_ARGS
+          "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}"
+          -DBUILD_DEPS:BOOL=ON
+          -DBUILD_SAMPLES:BOOL=OFF
+          -DBUILD_EXAMPLES:BOOL=OFF
       )
       FetchContent_MakeAvailable(ortools)
 
