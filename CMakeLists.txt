@@ -130,6 +130,10 @@ if(NOT ortools_vendor_FOUND)
       set(ORTOOLS_FETCH_SRC ON)
       message("Or-tools not found -- Downloading and building from source")
 
+      set(BUILD_DEPS ON)
+      set(BUILD_SAMPLES OFF)
+      set(BUILD_EXAMPLES OFF)
+
       FetchContent_Declare(ortools FETCHCONTENT_UPDATES_DISCONNECTED
         GIT_REPOSITORY https://github.com/google/or-tools.git
         GIT_TAG v9.9
