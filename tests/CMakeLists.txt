@@ -36,6 +36,13 @@ add_test(
 )
 add_dependencies(check unittests)
 
+# FIXME: REMOVE THIS
+# Installing unittests to check installation of ortools
+install(TARGETS unittests
+  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   set(GCOVR_ADDITIONAL_ARGS
