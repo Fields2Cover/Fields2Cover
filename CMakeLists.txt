@@ -131,10 +131,11 @@ if(USE_ORTOOLS_RELEASE)
     message(FATAL_ERROR "Failed to find ortools in release tarball")
   endif()
 
-  #NOTE: in CMAKE 3.21 brings the ability to install
-  # IMPORTED_RUNTIME_ARTIFACTS
-  # https://cmake.org/cmake/help/v3.21/command/install.html#imported-runtime-artifactsA
-  # For now just brute force install it all
+  #NOTE: in CMAKE 3.21 introduces IMPORTED_RUNTIME_ARTIFACTS
+  # https://cmake.org/cmake/help/v3.21/command/install.html#imported-runtime-artifacts
+  # Which would allow creation of an ortools target with IMPORTED_LOCATION
+  # and then install with IMPORTED_RUNTIME_ARTIFACTS
+  # Just brute force install the contents of the directories for now.
   install(
     DIRECTORY "${ortools_SOURCE_DIR}/share/"
     DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}"
@@ -166,7 +167,6 @@ elseif(USE_ORTOOLS_FETCH_SRC)
 
   set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
   include(CTest)
-  include(GNUInstallDirs)
   set(ORTOOLS_TARGET "ortools")
 elseif(USE_ORTOOLS_VENDOR)
   find_package(ortools_vendor CONFIG REQUIRED)
@@ -291,31 +291,30 @@ write_basic_package_version_file(Fields2CoverConfigVersion.cmake
   COMPATIBILITY AnyNewerVersion
 )
 
-if(BUILD_SHARED_LIBS)
-  set(type shared)
-else(BUILD_SHARED_LIBS)
-  set(type static)
-endif(BUILD_SHARED_LIBS)
-
 install(
   EXPORT Fields2Cover-targets
-  FILE Fields2Cover-${type}-Targets.cmake
-  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/fields2cover/cmake
+  FILE Fields2Cover-Targets.cmake
+  DESTINATION "lib/cmake/fields2cover"
 )
 
-set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
-configure_file(cmake/Fields2CoverConfig.cmake.in
-  "Fields2CoverConfig.cmake" @ONLY)
-configure_file(cmake/Fields2CoverConfigVersion.cmake.in
-  "${PROJECT_BINARY_DIR}/Fields2CoverConfigVersion.cmake" @ONLY
+include(CMakePackageConfigHelpers)
+# generate the config file that includes the exports
+configure_package_config_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Fields2CoverConfig.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfig.cmake"
+  INSTALL_DESTINATION "lib/cmake/fields2cover"
+  NO_SET_AND_CHECK_MACRO
+  NO_CHECK_REQUIRED_COMPONENTS_MACRO
 )
-
-install(
-  FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfigVersion.cmake"
-  DESTINATION
-  ${CMAKE_INSTALL_DATAROOTDIR}/fields2cover/cmake
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfigVersion.cmake"
+  VERSION "${Tutorial_VERSION_MAJOR}.${Tutorial_VERSION_MINOR}"
+  COMPATIBILITY AnyNewerVersion
+)
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfig.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfigVersion.cmake
+  DESTINATION "lib/cmake/fields2cover"
 )
 
 install(
@@ -338,24 +337,6 @@ install(
   DIRECTORY include/
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/fields2cover
 )
-
-set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
-export(PACKAGE Fields2Cover)
-
-# Packaging support
-set(CPACK_PACKAGE_VENDOR "Wageningen University & Research")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PACKAGE_DESCRIPTION})
-set(CPACK_PACKAGE_VERSION_MAJOR ${FIELDS2COVER_VERSION_MAJOR})
-set(CPACK_PACKAGE_VERSION_MINOR ${FIELDS2COVER_VERSION_MINOR})
-set(CPACK_PACKAGE_VERSION_PATCH ${FIELDS2COVER_VERSION_PATCH})
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
-set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.rst")
-set(CPACK_PACKAGE_CONTACT "gonzalo.miermunoz@wur.nl")
-set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Gonzalo Mier<${CPACK_PACKAGE_CONTACT}>")
-
-set(CPACK_SOURCE_GENERATOR "TGZ;ZIP")
-set(CPACK_SOURCE_IGNORE_FILES .git dist .*build.* \\\\.DS_Store .dockerignore)
-include(CPack)
 
 
 #####################################################
@@ -396,3 +377,22 @@ endif(BUILD_TESTS AND GNUPLOT_FOUND)
 if(BUILD_DOC)
   add_subdirectory(docs)
 endif(BUILD_DOC)
+
+set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
+export(PACKAGE Fields2Cover)
+
+# Packaging support
+set(CPACK_PACKAGE_VENDOR "Wageningen University & Research")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PACKAGE_DESCRIPTION})
+set(CPACK_PACKAGE_VERSION_MAJOR ${FIELDS2COVER_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${FIELDS2COVER_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${FIELDS2COVER_VERSION_PATCH})
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.rst")
+set(CPACK_PACKAGE_CONTACT "gonzalo.miermunoz@wur.nl")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Gonzalo Mier<${CPACK_PACKAGE_CONTACT}>")
+
+set(CPACK_SOURCE_GENERATOR "TGZ;ZIP")
+set(CPACK_SOURCE_IGNORE_FILES .git dist .*build.* \\\\.DS_Store .dockerignore)
+include(CPack)
+
