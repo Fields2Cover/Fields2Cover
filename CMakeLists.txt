@@ -285,6 +285,7 @@ install(
   PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
 )
 
+#https://cmake.org/cmake/help/latest/guide/tutorial/Adding%20Export%20Configuration.html
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(Fields2CoverConfigVersion.cmake
   VERSION ${PACKAGE_VERSION}
@@ -297,7 +298,6 @@ install(
   DESTINATION "lib/cmake/fields2cover"
 )
 
-include(CMakePackageConfigHelpers)
 # generate the config file that includes the exports
 configure_package_config_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Fields2CoverConfig.cmake.in
