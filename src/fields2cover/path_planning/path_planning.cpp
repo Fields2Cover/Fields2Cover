@@ -111,6 +111,11 @@ std::vector<std::pair<F2CPoint, double>> PathPlanning::simplifyConnection(
   std::vector<std::pair<F2CPoint, double>> path;
   path.emplace_back(p1, ang1);
 
+  if (p1.distance(p2) < 6.0 * safe_dist || mp.size() < 2) {
+    path.emplace_back(p2, ang2);
+    return path;
+  }
+
   std::vector<F2CPoint> vp;
   for (int i = 1; i < mp.size() - 1; ++i) {
     double ang_in  = (mp[i] - mp[i-1]).getAngleFromPoint();
@@ -120,7 +125,7 @@ std::vector<std::pair<F2CPoint, double>> PathPlanning::simplifyConnection(
     }
   }
 
-  if (p1.distance(p2) < 6.0 * safe_dist || vp.size() <2) {
+  if (vp.size() < 2) {
     path.emplace_back(p2, ang2);
     return path;
   }
@@ -128,15 +133,11 @@ std::vector<std::pair<F2CPoint, double>> PathPlanning::simplifyConnection(
   for (int i = 1; i < vp.size() - 1; ++i) {
     double dist_in  = vp[i].distance(vp[i-1]);
     double dist_out  = vp[i].distance(vp[i+1]);
+    if (dist_in == 0.0 || dist_out == 0.0){
+      continue;
+    }
     double d_in  = min(0.5 * dist_in,  safe_dist);
     double d_out  = min(0.5 * dist_out,  safe_dist);
-    // I haven't checked if this is possible, but
-    // if vp[i] == vp[i-1] or vp == vp[i+1], 
-    // we will get divide by zero error here from dist_in/dist_out.
-    // if (dist_in == 0.0 || dist_out == 0.0){
-    //   do something or clean up vp to not have two duplicate points in a row
-    //   std::cout << "dist_in:" << dist_in << "dist_out:" << dist_out << std::endl << std::flush;
-    // }
     F2CPoint p_in =  (vp[i-1] - vp[i]) * (d_in  / dist_in)  + vp[i];
     F2CPoint p_out = (vp[i+1] - vp[i]) * (d_out / dist_out) + vp[i];
     if (p_in.distance(path.back().first) > 3.0 * safe_dist &&
