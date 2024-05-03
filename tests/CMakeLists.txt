@@ -36,7 +36,6 @@ add_test(
 )
 add_dependencies(check unittests)
 
-
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   set(GCOVR_ADDITIONAL_ARGS
     --exclude-throw-branches

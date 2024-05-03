@@ -1,12 +1,6 @@
-set(F2C_CMAKE_INSTALL_DIR @INSTALL_CMAKE_DIR@share/fields2cover/cmake)
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/Fields2Cover-Targets.cmake" )
 
 include(CMakeFindDependencyMacro)
 find_dependency(GDAL 3.0 REQUIRED)
-
-if(EXISTS "${F2C_CMAKE_INSTALL_DIR}/Fields2Cover-shared-Targets.cmake")
-  include("${F2C_CMAKE_INSTALL_DIR}/Fields2Cover-shared-Targets.cmake")
-else()
-  include("${F2C_CMAKE_INSTALL_DIR}/Fields2Cover-static-Targets.cmake")
-endif()
-
-
