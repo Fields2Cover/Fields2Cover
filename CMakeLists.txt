@@ -25,7 +25,7 @@ option(BUILD_TESTS "Build tests" ON)
 option(BUILD_PYTHON "Build Python SWIG module" OFF)
 option(BUILD_DOC "Build Documentation" OFF)
 option(BUILD_SHARED_LIBS "Build shared library(.so)" ON)
-option(USE_ORTOOLS_RELEASE_IF_NOT_FOUND "If or-tools is not found, use the release" OFF)
+option(USE_ORTOOLS_RELEASE_IF_NOT_FOUND "If or-tools is not found, use the release" ON)
 
 
 
@@ -120,12 +120,16 @@ if(NOT ortools_vendor_FOUND)
   if(NOT ortools_FOUND)
     set(ORTOOLS_FETCH ON)
     if(USE_ORTOOLS_RELEASE_IF_NOT_FOUND)
-      message("Or-tools not found -- Downloading and installing from release")
+      message(STATUS "Or-tools not found -- Downloading and installing from release")
       FetchContent_Declare(ortools FETCHCONTENT_UPDATES_DISCONNECTED
         URL https://github.com/google/or-tools/releases/download/v9.9/or-tools_amd64_ubuntu-22.04_cpp_v9.9.3963.tar.gz
       )
-      FetchContent_MakeAvailable(ortools)
-      find_package(ortools CONFIG REQUIRED HINTS ${ortools_SOURCE_DIR}/lib/cmake/ortools)
+      FetchContent_GetProperties(ortools)
+      if(NOT ortools_POPULATED)
+        FetchContent_Populate(ortools)
+        list(INSERT CMAKE_PREFIX_PATH 0 "${ortools_SOURCE_DIR}")
+        find_package(ortools CONFIG REQUIRED)
+      endif()
     else(USE_ORTOOLS_RELEASE_IF_NOT_FOUND)
       set(ORTOOLS_FETCH_SRC ON)
       message("Or-tools not found -- Downloading and building from source")
