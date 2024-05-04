@@ -4,3 +4,4 @@ include("${CMAKE_CURRENT_LIST_DIR}/Fields2Cover-Targets.cmake" )
 
 include(CMakeFindDependencyMacro)
 find_dependency(GDAL 3.0 REQUIRED)
+find_dependency(ortools REQUIRED)
