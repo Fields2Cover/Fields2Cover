@@ -15,6 +15,7 @@
   <license>BSD-3</license>
 
   <buildtool_depend>cmake</buildtool_depend>
+  <depend>boost</depend>
   <depend>eigen</depend>
   <depend>git</depend>
   <depend>libgdal-dev</depend>
