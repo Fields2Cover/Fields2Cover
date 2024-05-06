@@ -90,7 +90,6 @@ FetchContent_Declare(spline FETCHCONTENT_UPDATES_DISCONNECTED
   GIT_REPOSITORY https://github.com/Fields2Cover/spline.git
   GIT_TAG 1b5d4bad29082997076b264de84ca6d46c2ae6ab
 )
-#NOTE: matplotplusplus expects to pipe commands to gnuplot at runtime
 FetchContent_Declare(matplot FETCHCONTENT_UPDATES_DISCONNECTED
   GIT_REPOSITORY https://github.com/alandefreitas/matplotplusplus
 )
@@ -109,6 +108,7 @@ FetchContent_MakeAvailable(
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(TinyXML2 REQUIRED)
 find_package(Threads REQUIRED)
+find_package(Gnuplot)
 find_package(GDAL 3.0 REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_library(MATH_LIBRARY m)
@@ -147,10 +147,6 @@ if(USE_ORTOOLS_RELEASE)
   install(
     DIRECTORY "${ortools_SOURCE_DIR}/lib/"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-  )
-  install(
-    DIRECTORY "${ortools_SOURCE_DIR}/bin/"
-    DESTINATION "${CMAKE_INSTALL_BINDIR}"
   )
 elseif(USE_ORTOOLS_FETCH_SRC)
   message(STATUS "or-tools -- Downloading and building from source")
@@ -363,16 +359,15 @@ endif(BUILD_PYTHON)
 ######################### test ######################
 #####################################################
 
-if(BUILD_TESTS)
+if(BUILD_TESTS AND GNUPLOT_FOUND)
   find_package(GTest REQUIRED)
-  find_package(Gnuplot REQUIRED)
   include(CTest)
   enable_testing()
   add_custom_target(check COMMAND
     GTEST_COLOR=1 ${CMAKE_CTEST_COMMAND} --verbose --test-dir tests/
   )
   add_subdirectory(tests)
-endif(BUILD_TESTS)
+endif(BUILD_TESTS AND GNUPLOT_FOUND)
 
 #####################################################
 ######################### docs ######################
