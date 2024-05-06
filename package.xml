@@ -27,7 +27,6 @@
   <depend>protobuf-dev</depend>
   <exec_depend>python3-matplotlib</exec_depend>
   <exec_depend>python3-tk</exec_depend>
-  <exec_depend>gnuplot</exec_depend>
   <test_depend>gtest</test_depend>
   <test_depend>lcov</test_depend>
 
