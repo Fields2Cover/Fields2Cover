@@ -133,7 +133,7 @@ Compilation
 ^^^^^^^^^^^
 
 First, clone this repository.
-Then, from the main folder of the project:
+Then, from the source code folder of the project:
 
 .. code-block:: console
 
@@ -163,7 +163,7 @@ To add Fields2Cover into your CMakeLists.txt, it is as easy as:
 Compilation with python interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-As without the interface, clone this repository.
+Assuming you have satisfied the "Requirements on Linux" and completed the initial "Compilation" step.
 
 Install the packages required as:
 
@@ -172,7 +172,7 @@ Install the packages required as:
    sudo apt install swig python3-pytest
 
 
-Then, from the main folder of the project:
+Then, from the source code folder of the project, adjust the BUILD_PYTHON option of the existing build:
 
 .. code-block:: console
 
