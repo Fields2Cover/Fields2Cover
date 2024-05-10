@@ -148,6 +148,10 @@ if(USE_ORTOOLS_RELEASE)
     DIRECTORY "${ortools_SOURCE_DIR}/lib/"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}"
   )
+  install(
+    DIRECTORY "${ortools_SOURCE_DIR}/bin/"
+    DESTINATION "${CMAKE_INSTALL_BINDIR}"
+  )
 elseif(USE_ORTOOLS_FETCH_SRC)
   message(STATUS "or-tools -- Downloading and building from source")
   set(BUILD_DEPS ON)
