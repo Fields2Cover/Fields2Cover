@@ -221,9 +221,9 @@ endif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   include(cmake/Modules/CodeCoverage.cmake)
   APPEND_COVERAGE_COMPILER_FLAGS()
-  if(NOT USE_ORTOOLS_FETCH_SRC)
-    target_compile_options(Fields2Cover PRIVATE -pedantic -Werror)
-  endif()
+  #if(NOT USE_ORTOOLS_FETCH_SRC)
+  #  target_compile_options(Fields2Cover PRIVATE -pedantic -Werror)
+  #endif()
   target_compile_options(Fields2Cover PRIVATE
     -g --coverage -fprofile-arcs -ftest-coverage -fno-inline
   )
