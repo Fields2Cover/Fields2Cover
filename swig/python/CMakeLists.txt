@@ -101,9 +101,9 @@ file(
 if(Python_VERSION VERSION_GREATER_EQUAL 3)
   add_custom_target(install-python
     DEPENDS _fields2cover_python
-    COMMAND python3 ${SETUP_PY_OUT} install
+    COMMAND python3 ${SETUP_PY_OUT} install --prefix=${CMAKE_INSTALL_PREFIX}
   )
-  install(CODE "execute_process(COMMAND python3 ${SETUP_PY_OUT} install)")
+  install(CODE "execute_process(COMMAND python3 ${SETUP_PY_OUT} install --prefix=${CMAKE_INSTALL_PREFIX})")
 elseif(Python_VERSION VERSION_GREATER_EQUAL 2)
   add_custom_target(
     install-python
