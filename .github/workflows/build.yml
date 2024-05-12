@@ -130,7 +130,7 @@ jobs:
 
       - name: Test Python
         working-directory: ${{github.workspace}}
-        run: pytest-3 tests/python/
+        run: PYTHONPATH=${PYTHONPATH}:instdir/lib/python$(python3 -c 'import sys; print("%i.%i" % (sys.version_info.major, sys.version_info.minor))')/site-packages pytest-3 tests/python/
 
 
 
