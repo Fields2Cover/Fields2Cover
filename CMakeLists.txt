@@ -116,10 +116,21 @@ find_library(MATH_LIBRARY m)
 set(ORTOOLS_TARGET "")
 if(USE_ORTOOLS_RELEASE)
   message(STATUS "or-tools -- Downloading and installing from release tarball")
-  FetchContent_Declare(ortools FETCHCONTENT_UPDATES_DISCONNECTED
-    URL https://github.com/google/or-tools/releases/download/v9.9/or-tools_amd64_ubuntu-22.04_cpp_v9.9.3963.tar.gz
-    URL_HASH SHA256=a611133f4e9b75661c637347ebadff79539807cf8966eb9c176c2c560aad0a84
-  )
+  if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
+    message(STATUS "Target architecture is AMD64")
+    FetchContent_Declare(ortools FETCHCONTENT_UPDATES_DISCONNECTED
+      URL https://github.com/google/or-tools/releases/download/v9.9/or-tools_amd64_ubuntu-22.04_cpp_v9.9.3963.tar.gz
+      URL_HASH SHA256=a611133f4e9b75661c637347ebadff79539807cf8966eb9c176c2c560aad0a84
+    )
+  elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
+    message(STATUS "Target architecture is ARM64")
+    FetchContent_Declare(ortools FETCHCONTENT_UPDATES_DISCONNECTED
+      URL https://github.com/google/or-tools/releases/download/v9.9/or-tools_arm64_debian-11_cpp_v9.9.3963.tar.gz
+      URL_HASH SHA256=f308a06d89dce060f74e6fec4936b43f4bdf4874d18c131798697756200f4e7a
+    )
+  else()
+    message(FATAL_ERROR "Unknown/Unhandled target architecture: ${CMAKE_SYSTEM_PROCESSOR}")
+  endif()
   #NOTE: FetchContent_GetProperties variables only available in called scope
   FetchContent_GetProperties(ortools)
   if(NOT ortools_POPULATED)
