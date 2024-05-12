@@ -25,9 +25,8 @@ class CompiledLibInstall(setuptools.command.install.install):
             os.makedirs(install_dir)
 
         # Install files
-        for filename in filenames:
-            print(f"Install {filename} to {install_dir}")
-            shutil.copy(filename, install_dir)
+        [shutil.copy(filename, install_dir) for filename in filenames]
+
 
 # optional, use README.md as long_description
 this_directory = os.path.abspath(os.path.dirname(__file__))
