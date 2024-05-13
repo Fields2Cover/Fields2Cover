@@ -3,7 +3,7 @@
 
 <!-- A package.xml in the root of a cmake projects allows it to be built using catkin or colcon (the ROS build system) -->
 
-<package format="2">
+<package format="3">
   <name>fields2cover</name>
   <version>2.0.0</version>
   <description>
@@ -24,7 +24,7 @@
   <depend>python3</depend>
   <depend>python3-dev</depend>
   <depend>tinyxml2</depend>
-  <depend>libabsl-dev</depend>
+  <depend condition="$ROS_VERSION == 2">libabsl-dev</depend>
   <depend>protobuf-dev</depend>
   <exec_depend>python3-matplotlib</exec_depend>
   <exec_depend>python3-tk</exec_depend>
