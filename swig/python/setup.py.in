@@ -20,7 +20,9 @@ class CompiledLibInstall(setuptools.command.install.install):
         filenames = '${PYTHON_INSTALL_FILES}'.split(';')
 
         # Directory to install to
-        install_dir = get_python_lib()
+        install_dir = get_python_lib(prefix=self.prefix)
+        if not os.path.isdir(install_dir):
+            os.makedirs(install_dir)
 
         # Install files
         [shutil.copy(filename, install_dir) for filename in filenames]
