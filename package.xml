@@ -19,6 +19,7 @@
   <depend>eigen</depend>
   <depend>git</depend>
   <depend>libgdal-dev</depend>
+  <depend>libgeos++-dev</depend>
   <depend>gtest</depend>
   <depend>tbb</depend>
   <depend>python3</depend>
