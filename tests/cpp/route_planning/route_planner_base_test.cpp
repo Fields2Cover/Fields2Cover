@@ -89,7 +89,7 @@ TEST(fields2cover_rp_route_plan_base, redirect_flag) {
   
   F2CSwaths old_swaths = swaths.flatten();
   F2CSwaths new_swaths;
-  for (int sbc = 1; sbc < route.getVectorSwaths().size(); ++sbc){
+  for (int sbc = 1; sbc < route.sizeVectorSwaths(); ++sbc){
     new_swaths.append(route.getSwaths(sbc));
   }
 
