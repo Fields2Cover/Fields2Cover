@@ -89,11 +89,13 @@ TEST(fields2cover_rp_route_plan_base, redirect_flag) {
   
   F2CSwaths old_swaths = swaths.flatten();
   F2CSwaths new_swaths;
-  for (int sbc = 1; sbc < route.sizeVectorSwaths(); ++sbc){
+  for (size_t sbc = 0; sbc < route.sizeVectorSwaths(); ++sbc) {
     new_swaths.append(route.getSwaths(sbc));
   }
 
-  for (int s = 1; s < new_swaths.size(); ++s) {
+  EXPECT_EQ(new_swaths.size(), old_swaths.size());
+  
+  for (size_t s = 0; s < new_swaths.size(); ++s) {
     F2CSwath old_swath = old_swaths.at(s);
     F2CSwath new_swath = new_swaths.at(s);
     EXPECT_TRUE(new_swath.hasSameDir(old_swath));
