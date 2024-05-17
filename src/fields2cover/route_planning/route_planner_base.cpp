@@ -97,8 +97,7 @@ F2CGraph2D RoutePlannerBase::createCoverageGraph(
       if (redirect_swaths) {
         g.addEdge(s.startPoint(), mid_p, 0);
         g.addEdge(s.endPoint(), mid_p, 0);
-      }
-      else{
+      } else {
         g.addDirectedEdge(s.startPoint(), mid_p, 0);
         g.addDirectedEdge(mid_p, s.endPoint(), 0);
       }
@@ -118,8 +117,7 @@ F2CGraph2D RoutePlannerBase::createCoverageGraph(
             g.addEdge(s1_e, s2_e, shortest_graph);
             g.addEdge(s1_s, s2_e, shortest_graph);
             g.addEdge(s1_e, s2_s, shortest_graph);
-          }
-          else{
+          } else {
             g.addDirectedEdge(s1_e, s2_s, shortest_graph);
           }
         }
