@@ -111,7 +111,7 @@ std::vector<std::pair<F2CPoint, double>> PathPlanning::simplifyConnection(
   std::vector<std::pair<F2CPoint, double>> path;
   path.emplace_back(p1, ang1);
 
-  if (p1.distance(p2) < 6.0 * safe_dist || mp.size() <2) {
+  if (p1.distance(p2) < 6.0 * safe_dist || mp.size() < 2) {
     path.emplace_back(p2, ang2);
     return path;
   }
@@ -125,9 +125,17 @@ std::vector<std::pair<F2CPoint, double>> PathPlanning::simplifyConnection(
     }
   }
 
+  if (vp.size() < 2) {
+    path.emplace_back(p2, ang2);
+    return path;
+  }
+
   for (int i = 1; i < vp.size() - 1; ++i) {
     double dist_in  = vp[i].distance(vp[i-1]);
     double dist_out  = vp[i].distance(vp[i+1]);
+    if (dist_in == 0.0 || dist_out == 0.0){
+      continue;
+    }
     double d_in  = min(0.5 * dist_in,  safe_dist);
     double d_out  = min(0.5 * dist_out,  safe_dist);
     F2CPoint p_in =  (vp[i-1] - vp[i]) * (d_in  / dist_in)  + vp[i];

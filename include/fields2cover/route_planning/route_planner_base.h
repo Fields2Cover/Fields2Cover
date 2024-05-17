@@ -33,7 +33,7 @@ class RoutePlannerBase {
   /// @return Route that covers all the swaths
   virtual F2CRoute genRoute(
       const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells,
-      bool show_log = false, double d_tol = 1e-4);
+      bool show_log = false, double d_tol = 1e-4, bool redirect_swaths = true);
 
   /// Set the start and the end of the route.
   void setStartAndEndPoint(const F2CPoint& p);
@@ -58,7 +58,7 @@ class RoutePlannerBase {
   virtual F2CGraph2D createCoverageGraph(
       const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells,
       F2CGraph2D& shortest_graph,
-      double d_tol) const;
+      double d_tol, bool redirect_swaths = true) const;
 
 
  protected:
