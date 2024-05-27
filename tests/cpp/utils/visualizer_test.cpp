@@ -221,5 +221,12 @@ TEST(fields2cover_utils_visualizer, plot_vectors) {
   EXPECT_TRUE(checkIfFileExists("test_fig/test_everything2.png"));
 }
 
-
+TEST(fields2cover_utils_visualizer, save_Point_size) {
+  f2c::Visualizer::figure();
+  f2c::Visualizer::figure_size(100, 100);
+  f2c::Visualizer::plot(F2CPoint(1,5));
+  f2c::Visualizer::axis_equal();
+  f2c::Visualizer::save("test_fig/point_100x100.png");
+  EXPECT_TRUE(checkIfFileExists("test_fig/point_100x100.png"));
+}
 

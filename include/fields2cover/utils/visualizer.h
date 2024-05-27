@@ -81,6 +81,9 @@ class Visualizer {
   /// Create figure to plot on
   static void figure();
 
+  /// Change size of current figure
+  static void figure_size(unsigned int width, unsigned int height);
+
   static void axis_equal();
 
   /// Show the figure on screen

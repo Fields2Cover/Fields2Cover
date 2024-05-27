@@ -257,6 +257,14 @@ void Visualizer::figure() {
   axis_equal();
 }
 
+void Visualizer::figure_size(const unsigned int width, const unsigned int height) {
+  auto cf = plt::gcf(true);
+  if (cf != nullptr) {
+    cf->width(width);
+    cf->height(height);
+  }
+}
+
 void Visualizer::show() {
   plt::show();
 }
