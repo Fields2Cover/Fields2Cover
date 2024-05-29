@@ -26,9 +26,20 @@ F2CPath DubinsCurvesCC::createSimpleTurn(const F2CRobot& robot,
   end.kappa = 0.0;
   end.d = 0;
 
-  CC00_Dubins_State_Space ss(
-        robot.getMaxCurv(), robot.getMaxDiffCurv(), discretization, true);
-  return steerStatesToPath(ss.get_path(start, end), robot.getTurnVel());
+  double n = 0.0;
+  while (true) {
+    CC00_Dubins_State_Space ss(
+        robot.getMaxCurv() / (1+0.05*n),
+        robot.getMaxDiffCurv() / (1+0.2*n),
+        discretization,
+        true);
+    if (loop_detected(ss.get_controls(start, end)) && n <= 20.) {
+      n += 1.0;
+    } else {
+      return steerStatesToPath(ss.get_path(start, end),
+          robot.getTurnVel());
+    }
+  }
 }
 
 }  // namespace f2c::pp
