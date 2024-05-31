@@ -50,6 +50,8 @@ class BaseObjective {
   virtual bool isMinimizing() const { return true;}
   /// Return true if the objective is to maximize the cost function
   virtual bool isMaximizing() const { return !isMinimizing();}
+
+  virtual ~BaseObjective() = default;
 };
 
 

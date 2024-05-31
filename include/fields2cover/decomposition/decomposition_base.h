@@ -47,6 +47,8 @@ class DecompositionBase {
   /// @return Merged cells.
   virtual F2CCells merge(const F2CCells& cells,
       const obj::DecompObjective& obj);
+
+  virtual ~DecompositionBase() = default;
 };
 
 }  // namespace f2c::decomp

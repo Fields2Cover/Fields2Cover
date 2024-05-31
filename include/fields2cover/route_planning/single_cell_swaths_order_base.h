@@ -17,6 +17,8 @@ class SingleCellSwathsOrderBase {
   virtual F2CSwaths genSortedSwaths(
       const F2CSwaths& swaths, uint32_t variant = 0) const;
 
+  virtual ~SingleCellSwathsOrderBase() = default;
+
  protected:
   virtual void changeStartPoint(F2CSwaths& swaths, uint32_t variant) const;
   virtual void sortSwaths(F2CSwaths& swaths) const = 0;

@@ -37,6 +37,8 @@ class SwathGeneratorBase {
   virtual double computeBestAngle(f2c::obj::SGObjective& obj,
       double op_width, const F2CCell& poly) = 0;
 
+  virtual ~SwathGeneratorBase() = default;
+
  protected:
   bool allow_overlap {false};
 };
