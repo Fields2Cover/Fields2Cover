@@ -25,7 +25,6 @@
   <depend>python3</depend>
   <depend>python3-dev</depend>
   <depend>tinyxml2</depend>
-  <depend condition="$ROS_VERSION == 2">libabsl-dev</depend>
   <depend>protobuf-dev</depend>
   <depend>swig</depend>
   <exec_depend>python3-matplotlib</exec_depend>
