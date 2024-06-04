@@ -47,6 +47,8 @@ class HeadlandGeneratorBase {
   virtual std::vector<F2CCells> generateHeadlandSwaths(
     const F2CCells& field, double swath_width, int n_swaths,
     bool dir_out2in = true) = 0;
+
+  virtual ~HeadlandGeneratorBase() = default;
 };
 
 }  // namespace f2c::hg

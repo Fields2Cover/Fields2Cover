@@ -61,6 +61,8 @@ class RoutePlannerBase {
       double d_tol, bool redirect_swaths = true) const;
 
 
+  virtual ~RoutePlannerBase() = default;
+
  protected:
   /// Use the optimizer to generate the index of the points of the best
   ///   coverage route.

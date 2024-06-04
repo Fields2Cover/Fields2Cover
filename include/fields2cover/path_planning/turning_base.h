@@ -76,6 +76,8 @@ class TurningBase {
   /// Set if cache should be used when planning same turn as before.
   void setUsingCache(bool c);
 
+  virtual ~TurningBase() = default;
+
 
  private:
   static void correctPath(F2CPath& path,
