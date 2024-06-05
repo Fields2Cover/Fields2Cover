@@ -66,8 +66,6 @@ endif(WIN32)
 
 include(GNUInstallDirs)
 
-set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
-
 list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 
 include(FetchContent)
