@@ -84,10 +84,6 @@ FetchContent_Declare(steering_functions FETCHCONTENT_UPDATES_DISCONNECTED
   GIT_REPOSITORY https://github.com/Fields2Cover/steering_functions.git
   GIT_TAG 13e3f5658144b3832fb1eb31a0e2f5a3cbf57db9
 )
-FetchContent_Declare(spline FETCHCONTENT_UPDATES_DISCONNECTED
-  GIT_REPOSITORY https://github.com/Fields2Cover/spline.git
-  GIT_TAG 1b5d4bad29082997076b264de84ca6d46c2ae6ab
-)
 FetchContent_Declare(matplot FETCHCONTENT_UPDATES_DISCONNECTED
   GIT_REPOSITORY https://github.com/alandefreitas/matplotplusplus
 )
@@ -98,7 +94,6 @@ FetchContent_Declare(json FETCHCONTENT_UPDATES_DISCONNECTED
 
 FetchContent_MakeAvailable(
   steering_functions
-  spline
   matplot
   json
 )
@@ -271,7 +266,6 @@ target_link_libraries(Fields2Cover
     nlohmann_json::nlohmann_json
     tinyxml2::tinyxml2
     steering_functions
-    spline
     matplot
 )
 
