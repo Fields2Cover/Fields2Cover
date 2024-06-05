@@ -141,20 +141,8 @@ if(USE_ORTOOLS_RELEASE)
   # and then install with IMPORTED_RUNTIME_ARTIFACTS
   # Just brute force install the contents of the directories for now.
   install(
-    DIRECTORY "${ortools_SOURCE_DIR}/share/"
-    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}"
-  )
-  install(
-    DIRECTORY "${ortools_SOURCE_DIR}/include/"
-    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-  )
-  install(
-    DIRECTORY "${ortools_SOURCE_DIR}/lib/"
-    DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-  )
-  install(
-    DIRECTORY "${ortools_SOURCE_DIR}/bin/"
-    DESTINATION "${CMAKE_INSTALL_BINDIR}"
+    DIRECTORY "${ortools_SOURCE_DIR}/"
+    DESTINATION opt/f2c_ortools/
   )
 elseif(USE_ORTOOLS_FETCH_SRC)
   message(STATUS "or-tools -- Downloading and building from source")
