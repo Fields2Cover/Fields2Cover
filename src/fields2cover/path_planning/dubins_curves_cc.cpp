@@ -30,7 +30,7 @@ F2CPath DubinsCurvesCC::createSimpleTurn(const F2CRobot& robot,
   while (true) {
     CC00_Dubins_State_Space ss(
         robot.getMaxCurv() / (1+0.05*n),
-        robot.getMaxDiffCurv() / (1+0.2*n),
+        robot.getMaxDiffCurv() * (1+0.2*n),
         discretization,
         true);
     if (loop_detected(ss.get_controls(start, end)) && n <= 20.) {
