@@ -39,5 +39,7 @@ cmake-build-f2c-debug/
 docs/api
 
 
-authorized_keys 
+authorized_keys
 cmake_install.cmake
+
+*.swp
