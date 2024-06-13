@@ -32,7 +32,7 @@ jobs:
             {
               "test": {
                 "packages-select": [
-                    "fields2cover",
+                    "fields2cover"
                 ]
               }
             }
