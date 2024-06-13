@@ -1,38 +1,37 @@
-name: Build ROS Deb
-run-name: ${{ github.actor }} is testing out building Debs from ROS package
+---
+name: Build for Ros2
 on:
-  workflow_dispatch:
+  pull_request:
   push:
-jobs:
-  jammy-humble-amd64:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: ros-tooling/setup-ros@v0.7
-        with:
-          use-ros2-testing: true
-      #- uses: jspricke/ros-deb-builder-action@main
-      # Use forked version of action that allows network
-      # access by patching sbuild after its installed but
-      # before it is built.
-      # See https://github.com/jspricke/ros-deb-builder-action/issues/38
-      - uses: aosmw/ros-deb-builder-action@feature/mw/enable_network
-        with:
-          DEB_DISTRO: jammy
-          DEB_ARCH: amd64
-          ROS_DISTRO: humble
-          #SBUILD_CONF: ENABLE_NETWORK
-          REPOS_FILE: .github/ros_sources.repos
+    branches:
+      - main
 
-  noble-jazzy-amd64:
+jobs:
+  noble_rolling:
     runs-on: ubuntu-24.04
+    env:
+      ROS_DISTRO: ${{ matrix.ros_distro }}
+    container:
+      image: rostooling/setup-ros-docker:ubuntu-noble-ros-rolling-ros-base-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ros_distro: [rolling]
     steps:
-      - uses: ros-tooling/setup-ros@v0.7
+      - name: checkout source
+        uses: actions/checkout@v4
+      - name: Build and run tests
+        id: action-ros-ci
+        uses: ros-tooling/action-ros-ci@v0.3
         with:
-          use-ros2-testing: true
-      - uses: jspricke/ros-deb-builder-action@main
-        with:
-          DEB_DISTRO: noble
-          DEB_ARCH: amd64
-          ROS_DISTRO: jazzy
-          SBUILD_CONF: $enable_network = 1;
-          REPOS_FILE: .github/ros_sources.repos
+          package-name: "fields2cover"
+          target-ros2-distro: ${{ matrix.ros_distro }}
+          vcs-repo-file-url: "${{ github.workspace }}/.github/deps.repos"
+          colcon-defaults: |
+            {
+              "test": {
+                "packages-select": [
+                    "fields2cover",
+                ]
+              }
+            }
