@@ -110,6 +110,7 @@ jobs:
             -DBUILD_TESTS=ON   \
             -DBUILD_DOC=OFF \
             -DBUILD_SHARED_LIBS={{ matrix.shared }} \
+            -DUSE_ORTOOLS_RELEASE=ON \
             ..
 
       - name: Build

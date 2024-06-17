@@ -1,0 +1,38 @@
+---
+name: Build for Ros2
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  noble_rolling:
+    runs-on: ubuntu-24.04
+    env:
+      ROS_DISTRO: ${{ matrix.ros_distro }}
+    container:
+      image: rostooling/setup-ros-docker:ubuntu-noble-ros-rolling-ros-base-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ros_distro: [rolling]
+    steps:
+      - name: checkout source
+        uses: actions/checkout@v4
+      - name: Build and run tests
+        id: action-ros-ci
+        uses: ros-tooling/action-ros-ci@v0.3
+        with:
+          package-name: "fields2cover"
+          target-ros2-distro: ${{ matrix.ros_distro }}
+          vcs-repo-file-url: "${{ github.workspace }}/.github/deps.repos"
+          colcon-defaults: |
+            {
+              "test": {
+                "packages-select": [
+                    "fields2cover"
+                ]
+              }
+            }

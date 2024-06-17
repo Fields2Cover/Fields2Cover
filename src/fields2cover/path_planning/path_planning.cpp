@@ -4,7 +4,7 @@
 //                        BSD-3 License
 //=============================================================================
 
-#include <spline.h>
+#include <spline/spline.h>
 #include <steering_functions/utilities/utilities.hpp>
 #include "fields2cover/path_planning/path_planning.h"
 

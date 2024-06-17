@@ -25,9 +25,9 @@ option(BUILD_TESTS "Build tests" ON)
 option(BUILD_PYTHON "Build Python SWIG module" ON)
 option(BUILD_DOC "Build Documentation" OFF)
 option(BUILD_SHARED_LIBS "Build shared library(.so)" ON)
-option(USE_ORTOOLS_RELEASE "Get or-tools from release tarball" ON)
+option(USE_ORTOOLS_RELEASE "Get or-tools from release tarball" OFF)
 option(USE_ORTOOLS_FETCH_SRC "Get or-tools from source" OFF)
-option(USE_ORTOOLS_VENDOR "Get or-tools from ortools_vendor" OFF)
+option(USE_ORTOOLS_VENDOR "Get or-tools from ortools_vendor" ON)
 
 if (BUILD_PYTHON)
   cmake_minimum_required(VERSION 3.12.4)
@@ -66,8 +66,6 @@ endif(WIN32)
 
 include(GNUInstallDirs)
 
-set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
-
 list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 
 include(FetchContent)
@@ -86,10 +84,6 @@ FetchContent_Declare(steering_functions FETCHCONTENT_UPDATES_DISCONNECTED
   GIT_REPOSITORY https://github.com/Fields2Cover/steering_functions.git
   GIT_TAG 13e3f5658144b3832fb1eb31a0e2f5a3cbf57db9
 )
-FetchContent_Declare(spline FETCHCONTENT_UPDATES_DISCONNECTED
-  GIT_REPOSITORY https://github.com/Fields2Cover/spline.git
-  GIT_TAG 1b5d4bad29082997076b264de84ca6d46c2ae6ab
-)
 FetchContent_Declare(matplot FETCHCONTENT_UPDATES_DISCONNECTED
   GIT_REPOSITORY https://github.com/alandefreitas/matplotplusplus
 )
@@ -100,7 +94,6 @@ FetchContent_Declare(json FETCHCONTENT_UPDATES_DISCONNECTED
 
 FetchContent_MakeAvailable(
   steering_functions
-  spline
   matplot
   json
 )
@@ -148,20 +141,8 @@ if(USE_ORTOOLS_RELEASE)
   # and then install with IMPORTED_RUNTIME_ARTIFACTS
   # Just brute force install the contents of the directories for now.
   install(
-    DIRECTORY "${ortools_SOURCE_DIR}/share/"
-    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}"
-  )
-  install(
-    DIRECTORY "${ortools_SOURCE_DIR}/include/"
-    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-  )
-  install(
-    DIRECTORY "${ortools_SOURCE_DIR}/lib/"
-    DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-  )
-  install(
-    DIRECTORY "${ortools_SOURCE_DIR}/bin/"
-    DESTINATION "${CMAKE_INSTALL_BINDIR}"
+    DIRECTORY "${ortools_SOURCE_DIR}/"
+    DESTINATION opt/f2c_ortools/
   )
 elseif(USE_ORTOOLS_FETCH_SRC)
   message(STATUS "or-tools -- Downloading and building from source")
@@ -184,7 +165,7 @@ elseif(USE_ORTOOLS_FETCH_SRC)
   include(CTest)
   set(ORTOOLS_TARGET "ortools")
 elseif(USE_ORTOOLS_VENDOR)
-  find_package(ortools_vendor CONFIG REQUIRED)
+  find_package(ortools_vendor REQUIRED)
 else()
   find_package(ortools CONFIG REQUIRED)
 endif()
@@ -273,7 +254,6 @@ target_link_libraries(Fields2Cover
     nlohmann_json::nlohmann_json
     tinyxml2::tinyxml2
     steering_functions
-    spline
     matplot
 )
 

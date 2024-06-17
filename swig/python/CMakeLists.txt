@@ -24,10 +24,6 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/../../include/
   ${Python_INCLUDE_DIRS}
 )
-file(
-  GLOB_RECURSE Swig_SRC
-  "${CMAKE_CURRENT_SOURCE_DIR}/../../include/fields2cover.h"
-)
 
 # Add swig module
 SWIG_ADD_LIBRARY(fields2cover_python
@@ -41,13 +37,11 @@ SWIG_LINK_LIBRARIES(fields2cover_python
   ${GDAL_LIBRARIES}
 )
 
-file(MAKE_DIRECTORY ${LIBRARY_OUTPUT_PATH})
-
 # Files to install with Python
 set(
   PYTHON_INSTALL_FILES
   ${CMAKE_CURRENT_BINARY_DIR}/fields2cover.py
-  ${LIBRARY_OUTPUT_PATH}/_fields2cover_python.so
+  ${CMAKE_CURRENT_BINARY_DIR}/_fields2cover_python.so
 )
 
 # Configure setup.py and copy to output directory

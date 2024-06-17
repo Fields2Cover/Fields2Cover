@@ -25,8 +25,8 @@
   <depend>python3</depend>
   <depend>python3-dev</depend>
   <depend>tinyxml2</depend>
-  <depend>protobuf-dev</depend>
   <depend>swig</depend>
+  <depend>ortools_vendor</depend>
   <exec_depend>python3-matplotlib</exec_depend>
   <exec_depend>python3-tk</exec_depend>
   <test_depend>gtest</test_depend>
