@@ -4,7 +4,6 @@
 //                        BSD-3 License
 //=============================================================================
 
-#include <spline/spline.h>
 #include <steering_functions/utilities/utilities.hpp>
 #include "fields2cover/path_planning/path_planning.h"
 
@@ -133,7 +132,7 @@ std::vector<std::pair<F2CPoint, double>> PathPlanning::simplifyConnection(
   for (int i = 1; i < vp.size() - 1; ++i) {
     double dist_in  = vp[i].distance(vp[i-1]);
     double dist_out  = vp[i].distance(vp[i+1]);
-    if (dist_in == 0.0 || dist_out == 0.0){
+    if (dist_in == 0.0 || dist_out == 0.0) {
       continue;
     }
     double d_in  = min(0.5 * dist_in,  safe_dist);

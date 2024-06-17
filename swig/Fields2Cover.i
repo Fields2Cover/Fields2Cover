@@ -178,6 +178,7 @@ typedef long unsigned int size_t;
 %template(VectorPathSectionType) std::vector<f2c::types::PathSectionType>;
 
 %include "fields2cover/utils/random.h"
+%include "fields2cover/utils/spline.h"
 %include "fields2cover/utils/parser.h"
 %include "fields2cover/utils/visualizer.h"
 

@@ -4,9 +4,9 @@
 //                        BSD-3 License
 //=============================================================================
 
-#include <spline/spline.h>
 #include <numeric>
 #include <steering_functions/utilities/utilities.hpp>
+#include "fields2cover/utils/spline.h"
 #include "fields2cover/types/Path.h"
 
 namespace f2c::types {
@@ -372,9 +372,9 @@ Path& Path::populate(int number_points) {
   std::vector<double> t(len.size());
   std::partial_sum(len.begin(), len.end() - 1, t.begin() + 1);
 
-  tk::spline s_x(t, x);
-  tk::spline s_y(t, y);
-  tk::spline s_ang(t, ang);
+  CubicSpline s_x(t, x);
+  CubicSpline s_y(t, y);
+  CubicSpline s_ang(t, ang);
 
   this->states_.clear();
 
