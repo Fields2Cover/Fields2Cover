@@ -12,6 +12,7 @@
 
 
 #include "fields2cover/utils/random.h"
+#include "fields2cover/utils/spline.h"
 #include "fields2cover/utils/transformation.h"
 #include "fields2cover/utils/parser.h"
 #include "fields2cover/utils/visualizer.h"
