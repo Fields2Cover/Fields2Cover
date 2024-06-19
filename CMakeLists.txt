@@ -27,7 +27,7 @@ option(BUILD_DOC "Build Documentation" OFF)
 option(BUILD_SHARED_LIBS "Build shared library(.so)" ON)
 option(USE_ORTOOLS_RELEASE "Get or-tools from release tarball" OFF)
 option(USE_ORTOOLS_FETCH_SRC "Get or-tools from source" OFF)
-option(USE_ORTOOLS_VENDOR "Get or-tools from ortools_vendor" ON)
+option(USE_ORTOOLS_VENDOR "Get or-tools from ortools_vendor" OFF)
 
 if (BUILD_PYTHON)
   cmake_minimum_required(VERSION 3.12.4)
@@ -107,7 +107,35 @@ find_package(Eigen3 REQUIRED)
 find_library(MATH_LIBRARY m)
 
 set(ORTOOLS_TARGET "")
-if(USE_ORTOOLS_RELEASE)
+
+if(USE_ORTOOLS_FETCH_SRC)
+  message(STATUS "or-tools -- Downloading and building from source")
+  set(BUILD_DEPS ON)
+  set(BUILD_SAMPLES OFF)
+  set(BUILD_EXAMPLES OFF)
+
+  FetchContent_Declare(ortools FETCHCONTENT_UPDATES_DISCONNECTED
+    GIT_REPOSITORY https://github.com/google/or-tools.git
+    GIT_TAG v9.9
+    CMAKE_ARGS
+      "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}"
+      -DBUILD_DEPS:BOOL=ON
+      -DBUILD_SAMPLES:BOOL=OFF
+      -DBUILD_EXAMPLES:BOOL=OFF
+  )
+  FetchContent_MakeAvailable(ortools)
+
+  set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
+  include(CTest)
+  set(ORTOOLS_TARGET "ortools")
+elseif(USE_ORTOOLS_VENDOR)
+  find_package(ortools_vendor REQUIRED)
+elseif(NOT USE_ORTOOLS_RELEASE)
+  find_package(ortools_vendor QUIET)
+  find_package(ortools CONFIG QUIET)
+endif()
+
+if(USE_ORTOOLS_RELEASE OR (NOT ortools_FOUND))
   message(STATUS "or-tools -- Downloading and installing from release tarball")
   if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
     message(STATUS "Target architecture is AMD64")
@@ -144,31 +172,7 @@ if(USE_ORTOOLS_RELEASE)
     DIRECTORY "${ortools_SOURCE_DIR}/"
     DESTINATION opt/f2c_ortools/
   )
-elseif(USE_ORTOOLS_FETCH_SRC)
-  message(STATUS "or-tools -- Downloading and building from source")
-  set(BUILD_DEPS ON)
-  set(BUILD_SAMPLES OFF)
-  set(BUILD_EXAMPLES OFF)
-
-  FetchContent_Declare(ortools FETCHCONTENT_UPDATES_DISCONNECTED
-    GIT_REPOSITORY https://github.com/google/or-tools.git
-    GIT_TAG v9.9
-    CMAKE_ARGS
-      "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}"
-      -DBUILD_DEPS:BOOL=ON
-      -DBUILD_SAMPLES:BOOL=OFF
-      -DBUILD_EXAMPLES:BOOL=OFF
-  )
-  FetchContent_MakeAvailable(ortools)
-
-  set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
-  include(CTest)
-  set(ORTOOLS_TARGET "ortools")
-elseif(USE_ORTOOLS_VENDOR)
-  find_package(ortools_vendor REQUIRED)
-else()
-  find_package(ortools CONFIG REQUIRED)
-endif()
+endif(USE_ORTOOLS_RELEASE OR (NOT ortools_FOUND))
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
