@@ -50,16 +50,16 @@ F2CSwaths SwathGeneratorBase::generateSwaths(double angle,
 
   double curve_y {-0.5 * op_width};
   F2CMultiLineString paths;
-  while (field_height > curve_y) {
+  while (field_height > curve_y + (allow_overlap ? 1.5 * op_width : 0.5 * op_width)) {
     curve_y += op_width;
     paths.addGeometry(F2CPoint(0.0, 0.0).rotateFromPoint(angle,
         seed_curve + F2CPoint(0.0, curve_y)));
   }
  
   // Optionally, add swath to completely cover field with overlap
-  if (allow_overlap && field_height - curve_y < op_width / 2) {
-    paths.addGeometry(F2CPoint(0.0, 0.0).rotateFromPoint(angle,
-        seed_curve + F2CPoint(0.0, field_height - op_width / 2)));
+  if (allow_overlap && field_height - curve_y < 1.5 * op_width) {
+     paths.addGeometry(F2CPoint(0.0, 0.0).rotateFromPoint(angle,
+        seed_curve + F2CPoint(0.0, field_height - 0.5 * op_width)));
   }
 
   F2CSwaths swaths;
