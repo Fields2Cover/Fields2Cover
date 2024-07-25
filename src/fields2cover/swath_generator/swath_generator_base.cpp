@@ -48,7 +48,7 @@ F2CSwaths SwathGeneratorBase::generateSwaths(double angle,
   F2CPoint min_point(rot_poly.getDimMinX(), rot_poly.getDimMinY());
   auto seed_curve = rot_poly.createStraightLongLine(min_point, 0.0);
 
-  double curve_y {0.0};
+  double curve_y {-0.5 * op_width};
   F2CMultiLineString paths;
   while (field_height > curve_y + (allow_overlap ? 0.0 : 0.5 * op_width)) {
     curve_y += op_width;
