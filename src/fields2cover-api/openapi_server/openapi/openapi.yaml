@@ -1,0 +1,132 @@
+openapi: 3.0.0
+info:
+  description: API to generate paths based on field and working lanes data.
+  title: Path Generation API
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /generatePath:
+    post:
+      operationId: generate_path_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/_generatePath_post_request'
+        required: true
+        x-body-name: generate_path_post_request
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Path'
+          description: Path generated successfully
+        "400":
+          description: Invalid input
+        "500":
+          description: Internal server error
+      summary: Generate a path based on field data
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+components:
+  schemas:
+    Path:
+      example:
+        len: 0.0
+        angle: 0.0
+        point:
+          x: 0
+          "y": 0
+          z: 0
+      properties:
+        point:
+          $ref: '#/components/schemas/Point'
+        angle:
+          description: Angle of the path
+          example: 0.0
+          title: angle
+          type: number
+        len:
+          description: Length of the path (must be >= 0)
+          example: 0.0
+          minimum: 0
+          title: len
+          type: number
+      title: Path
+      type: object
+    Point:
+      example:
+        x: 0
+        "y": 0
+        z: 0
+      properties:
+        x:
+          description: X coordinate
+          example: 0
+          title: x
+          type: number
+        "y":
+          description: Y coordinate
+          example: 0
+          title: "y"
+          type: number
+        z:
+          description: Z coordinate
+          example: 0
+          title: z
+          type: number
+      title: Point
+      type: object
+    _generatePath_post_request_settings:
+      properties:
+        robotWidth:
+          description: Width of the robot
+          example: 2.0
+          title: robotWidth
+          type: number
+        robotLength:
+          description: Length of the robot
+          example: 2.0
+          title: robotLength
+          type: number
+        headlandWidth:
+          description: Width of the headland
+          example: 3.0
+          title: headlandWidth
+          type: number
+        sorterAlgorithm:
+          description: Algorithm to sort the swaths
+          enum:
+          - snake
+          - boustrophedon
+          example: snake
+          title: sorterAlgorithm
+          type: string
+      title: _generatePath_post_request_settings
+      type: object
+    _generatePath_post_request:
+      properties:
+        field:
+          description: GeoJSON data for the field
+          format: geojson
+          title: field
+          type: string
+        workingLanes:
+          description: Optional GeoJSON data for working lanes
+          format: geojson
+          title: workingLanes
+          type: string
+        transportLanes:
+          description: Optional GeoJSON data for transport lanes
+          format: geojson
+          title: transportLanes
+          type: string
+        startEndPoint:
+          $ref: '#/components/schemas/Point'
+        settings:
+          $ref: '#/components/schemas/_generatePath_post_request_settings'
+      required:
+      - field
+      title: _generatePath_post_request
+      type: object

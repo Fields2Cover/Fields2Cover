@@ -1,6 +1,0 @@
-{
-  "name": "Fields2Cover-devcontainer",
-  "build": { "dockerfile": "Dockerfile" },
-  "features": {
-  }
-}

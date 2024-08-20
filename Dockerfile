@@ -1,4 +1,17 @@
-FROM osgeo/gdal:ubuntu-full-3.6.3
+FROM osgeo/gdal:ubuntu-full-3.6.3 as base
+ARG USERNAME="root"
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+# Create the user
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+    #
+    # [Optional] Add sudo support. Omit if you don't need to install software after connecting.
+    && apt-get update --allow-insecure-repositories \
+    && apt-get install -y sudo \
+    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+    && chmod 0440 /etc/sudoers.d/$USERNAME
 
 LABEL NAME="fields2cover" \
       VERSION="2.0.0" \
@@ -38,7 +51,7 @@ RUN apt-get install -y --allow-unauthenticated --no-install-recommends \
                     build-essential \
                     ca-certificates \
                     doxygen \
-                    g++ \
+                    g++ \                    
                     git \
                     gnuplot \
                     lcov \
@@ -96,16 +109,29 @@ RUN wget https://github.com/google/or-tools/releases/download/v9.9/or-tools_amd6
     && cp -r /tmp/ortools/share/. /usr/share/ortools
 
 COPY . /workspace/fields2cover
+
+FROM base as dev
+RUN export XDG_RUNTIME_DIR=/tmp/runtime
+RUN apt-get install gdb -y
+
+WORKDIR /workspace/fields2cover/build
+
+FROM base as build
+
+WORKDIR /workspaces/Fields2Cover
+
 RUN rm -rf /workspace/fields2cover/build && mkdir /workspace/fields2cover/build
 WORKDIR /workspace/fields2cover/build
 
 RUN cmake -DBUILD_PYTHON=ON \
     -DBUILD_TUTORIALS=OFF \
-    -DBUILD_TESTS=ON \
-    -DBUILD_DOC=OFF \
+    -DBUILD_TESTS=OFF \
+    -DBUILD_DOC=ON \
     -DCMAKE_BUILD_TYPE=Release ..
 
-RUN make -j4 install
+RUN make -j$(nproc) install
+
+FROM build as api_dev
 
 
 
