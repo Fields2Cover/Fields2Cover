@@ -12,7 +12,7 @@ def main():
                 arguments={'title': 'Path Generation API'},
                 pythonic_params=True)
 
-    app.run(port=8080, debug=True)
+    app.run(port=8080)
 
 
 if __name__ == '__main__':
