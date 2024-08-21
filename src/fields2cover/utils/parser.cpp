@@ -123,7 +123,7 @@ namespace f2c
         return tmp_s;
     }
 
-    int importJsonData(const json &imported_field, F2CFields &fields)
+    int importJsonData(json imported_field, F2CFields &fields)
     {
         auto name = imported_field["properties"].contains("Name") ? imported_field["properties"]["Name"].get<std::string>() : "cell " + gen_random(3);
         for (auto &&imported_cell : imported_field["features"])

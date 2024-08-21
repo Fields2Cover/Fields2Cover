@@ -20,13 +20,10 @@ int main()
     f2c::Parser::importJson(std::string(DATA_PATH) + "transportlanes.geojson", transport_lanes_import);
     // convert fields to cell array
     F2CCells transport_lanes_cells;
-    for (auto& field : transport_lanes_import) {
+    for (auto &field : transport_lanes_import)
+    {
         transport_lanes_cells.addGeometry(field.getCellsAbsPosition().getGeometry(0));
     }
-
-    // F2CField orig_field = field.clone();
-    // Transform into UTM to work in meters
-    // f2c::Transform::transformToUTM(field);
 
     F2CRobot robot(2.0, 2.0, 3.14, 3.14);
     f2c::hg::ConstHL const_hl;
@@ -36,10 +33,10 @@ int main()
 
     // this is the route planner, it sorts the swaths, that is all.
     f2c::rp::SnakeOrder snake_sorter;
-    // auto swaths = snake_sorter.genSortedSwaths(imported_swaths);
+    auto swaths = snake_sorter.genSortedSwaths(imported_swaths);
 
     f2c::rp::BoustrophedonOrder boustrophedon_sorter;
-    auto swaths = boustrophedon_sorter.genSortedSwaths(imported_swaths);
+    swaths = boustrophedon_sorter.genSortedSwaths(imported_swaths);
 
     f2c::rp::RoutePlannerBase route_planner;
     auto swathsByCells = new f2c::types::SwathsByCells();
