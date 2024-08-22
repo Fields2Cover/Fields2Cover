@@ -1,6 +1,5 @@
 .dockerignore
 .gitignore
-.openapi-generator-ignore
 .travis.yml
 Dockerfile
 README.md
@@ -8,15 +7,16 @@ git_push.sh
 openapi_server/__init__.py
 openapi_server/__main__.py
 openapi_server/controllers/__init__.py
-openapi_server/controllers/default_controller.py
 openapi_server/controllers/security_controller.py
 openapi_server/encoder.py
 openapi_server/models/__init__.py
 openapi_server/models/base_model.py
 openapi_server/models/generate_path_post_request.py
 openapi_server/models/generate_path_post_request_settings.py
+openapi_server/models/generate_path_post_request_settings_sorter_settings.py
 openapi_server/models/path.py
 openapi_server/models/point.py
+openapi_server/models/robot_settings.py
 openapi_server/openapi/openapi.yaml
 openapi_server/test/__init__.py
 openapi_server/typing_utils.py

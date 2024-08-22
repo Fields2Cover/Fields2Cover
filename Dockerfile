@@ -1,17 +1,18 @@
-FROM osgeo/gdal:ubuntu-full-3.6.3 as base
-ARG USERNAME="root"
+FROM osgeo/gdal:ubuntu-full-3.6.3 AS base
+ARG USERNAME
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
-# Create the user
-RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
-    #
-    # [Optional] Add sudo support. Omit if you don't need to install software after connecting.
-    && apt-get update --allow-insecure-repositories \
-    && apt-get install -y sudo \
-    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-    && chmod 0440 /etc/sudoers.d/$USERNAME
+# Run only if username is set
+RUN if [ -n "$USERNAME" ]; then \
+    groupadd --gid $USER_GID $USERNAME && \
+    useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
+    apt-get update --allow-insecure-repositories && \
+    apt-get install -y sudo && \
+    echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME && \
+    chmod 0440 /etc/sudoers.d/$USERNAME; \
+    fi
+
 
 LABEL NAME="fields2cover" \
       VERSION="2.0.0" \
@@ -19,7 +20,7 @@ LABEL NAME="fields2cover" \
       MAINTAINER="Gonzalo Mier"
 
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /workspaces/
 RUN mkdir -p /usr/include/new_gdal && \
@@ -51,7 +52,8 @@ RUN apt-get install -y --allow-unauthenticated --no-install-recommends \
                     build-essential \
                     ca-certificates \
                     doxygen \
-                    g++ \                    
+                    g++ \      
+                    ninja-build \              
                     git \
                     gnuplot \
                     lcov \
@@ -108,30 +110,44 @@ RUN wget https://github.com/google/or-tools/releases/download/v9.9/or-tools_amd6
     && cp -r /tmp/ortools/lib/cmake/. /usr/share \
     && cp -r /tmp/ortools/share/. /usr/share/ortools
 
-COPY . /workspace/fields2cover
 
-FROM base as dev
-RUN export XDG_RUNTIME_DIR=/tmp/runtime
+FROM base AS dev
 RUN apt-get install gdb -y
+COPY ./tutorials /workspace/fields2cover/tutorials
 
-WORKDIR /workspace/fields2cover/build
+FROM base AS build
+COPY ./src/fields2cover /workspace/fields2cover/src/fields2cover
+COPY ./src/fields2cover.cpp /workspace/fields2cover/src/fields2cover.cpp
+COPY ./tests /workspace/fields2cover/tests
+COPY ./CMakeLists.txt /workspace/fields2cover/CMakeLists.txt
+COPY ./include /workspace/fields2cover/include
+COPY ./cmake /workspace/fields2cover/cmake
+COPY ./CMakeLists.txt /workspace/fields2cover/CMakeLists.txt
+COPY ./swig /workspace/fields2cover/swig
+COPY ./LICENSE /workspace/fields2cover/LICENSE
+COPY ./README.rst /workspace/fields2cover/README.rst
+COPY ./package.xml /workspace/fields2cover/package.xml
 
-FROM base as build
-
-WORKDIR /workspaces/Fields2Cover
-
-RUN rm -rf /workspace/fields2cover/build && mkdir /workspace/fields2cover/build
+RUN mkdir /workspace/fields2cover/build
 WORKDIR /workspace/fields2cover/build
 
 RUN cmake -DBUILD_PYTHON=ON \
     -DBUILD_TUTORIALS=OFF \
     -DBUILD_TESTS=OFF \
-    -DBUILD_DOC=ON \
+    -DBUILD_DOC=OFF \
     -DCMAKE_BUILD_TYPE=Release ..
 
 RUN make -j$(nproc) install
 
-FROM build as api_dev
+FROM build AS api_dev
+COPY ./src/fields2cover-api /workspace/fields2cover/src/fields2cover-api/
+WORKDIR /workspace/fields2cover/src/fields2cover-api
+RUN pip3 install -r requirements.txt
+
+FROM api_dev AS api
+RUN pip3 install waitress
+WORKDIR /workspace/fields2cover/src/fields2cover-api
+CMD ["python3", "api.py"]
 
 
 

@@ -6,7 +6,7 @@
 
 # As an example, the C# client generator defines ApiClient.cs.
 # You can make changes and tell OpenAPI Generator to ignore just this file by uncommenting the following line:
-default_controller.py
+#ApiClient.cs
 
 # You can match any string of characters against a directory, file or extension with a single asterisk (*):
 #foo/*/qux
@@ -21,3 +21,5 @@ default_controller.py
 #docs/*.md
 # Then explicitly reverse the ignore rule for a single file:
 #!docs/README.md
+
+openapi_server/controllers/default_controller.py

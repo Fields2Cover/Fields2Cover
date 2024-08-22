@@ -80,39 +80,23 @@ components:
       type: object
     _generatePath_post_request_settings:
       properties:
-        robotWidth:
-          description: Width of the robot
-          example: 2.0
-          title: robotWidth
-          type: number
-        robotLength:
-          description: Length of the robot
-          example: 2.0
-          title: robotLength
-          type: number
-        headlandWidth:
-          description: Width of the headland
-          example: 3.0
-          title: headlandWidth
-          type: number
-        sorterAlgorithm:
-          description: Algorithm to sort the swaths
+        robotSettings:
+          $ref: '#/components/schemas/Robot_Settings'
+        sorterSettings:
+          $ref: '#/components/schemas/_generatePath_post_request_settings_sorterSettings'
+        curvesAlgorithm:
+          description: Algorithm to generate curves
           enum:
-          - snake
-          - boustrophedon
-          - optimal
-          example: snake
-          title: sorterAlgorithm
+          - dubins
+          - dubins_cc
+          - reeds_shepp
+          example: dubins
+          title: curvesAlgorithm
           type: string
       title: _generatePath_post_request_settings
       type: object
     _generatePath_post_request:
       properties:
-        field:
-          description: GeoJSON data for the field
-          format: geojson
-          title: field
-          type: string
         workingLanes:
           description: Optional GeoJSON data for working lanes
           format: geojson
@@ -125,9 +109,73 @@ components:
           type: string
         startEndPoint:
           $ref: '#/components/schemas/Point'
-        settings:
-          $ref: '#/components/schemas/_generatePath_post_request_settings'
+        robotSettings:
+          $ref: '#/components/schemas/_generatePath_post_request_settings/properties/robotSettings'
+        sorterSettings:
+          $ref: '#/components/schemas/_generatePath_post_request_settings/properties/sorterSettings'
+        curvesAlgorithm:
+          $ref: '#/components/schemas/_generatePath_post_request_settings/properties/curvesAlgorithm'
       required:
-      - field
+      - curvesAlgorithm
+      - robotSettings
+      - sorterSettings
+      - startEndPoint
+      - transportLanes
+      - workingLanes
       title: _generatePath_post_request
       type: object
+    Robot_Settings:
+      properties:
+        width:
+          description: Width of the robot
+          example: 2.0
+          title: width
+          type: number
+        cov_width:
+          description: Width of the headland
+          example: 3.0
+          title: cov_width
+          type: number
+        max_curv:
+          description: Maximum curvature
+          example: 0.5
+          title: max_curv
+          type: number
+        max_diff_curv:
+          description: Maximum difference in curvature
+          example: 0.2
+          title: max_diff_curv
+          type: number
+        min_turning_radius:
+          description: Minimum turning radius
+          example: 2.0
+          title: min_turning_radius
+          type: number
+      title: Robot Settings
+      type: object
+    _generatePath_post_request_settings_sorterSettings:
+      properties:
+        algorithm:
+          description: Algorithm to sort the swaths
+          enum:
+          - snake
+          - boustrophedon
+          - spiral
+          - optimal
+          example: snake
+          title: sorterAlgorithm
+          type: string
+        variant:
+          description: Variant of the sorter algorithm (1..4)
+          example: 1
+          title: sorterVariant
+          type: integer
+          default: 1
+        spiralSize:
+          description: Size of the spiral
+          example: 10
+          title: spiralSize
+          type: integer
+      required:
+      - algorithm      
+      title: _generatePath_post_request_settings_sorterSettings
