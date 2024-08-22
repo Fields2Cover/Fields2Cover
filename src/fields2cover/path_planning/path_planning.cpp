@@ -10,20 +10,20 @@
 namespace f2c::pp
 {
 
-    F2CPath PathPlanning::planPath(const F2CRobot &robot, const F2CRoute &route, TurningBase &turn)
+    F2CPath PathPlanning::planPath(const F2CRobot &robot, const F2CRoute &route, TurningBase &turn, bool prevent_removing_connections)
     {
         F2CPath path;
         for (size_t i = 0; i < route.sizeVectorSwaths(); ++i)
         {
             auto prev_swaths = (i > 0) ? route.getSwaths(i - 1) : F2CSwaths();
 
-            path += planPathForConnection(robot, prev_swaths, route.getConnection(i), route.getSwaths(i), turn);
+            path += planPathForConnection(robot, prev_swaths, route.getConnection(i), route.getSwaths(i), turn, prevent_removing_connections);
 
             path += planPath(robot, route.getSwaths(i), turn);
         }
         if (route.sizeConnections() > route.sizeVectorSwaths())
         {
-            path += planPathForConnection(robot, route.getLastSwaths(), route.getLastConnection(), F2CSwaths(), turn);
+            path += planPathForConnection(robot, route.getLastSwaths(), route.getLastConnection(), F2CSwaths(), turn, prevent_removing_connections);
         }
         return path;
     }
@@ -47,7 +47,7 @@ namespace f2c::pp
         return path;
     }
 
-    F2CPath PathPlanning::planPathForConnection(const F2CRobot &robot, const F2CSwaths &s1, const F2CMultiPoint &mp, const F2CSwaths &s2, TurningBase &turn)
+    F2CPath PathPlanning::planPathForConnection(const F2CRobot &robot, const F2CSwaths &s1, const F2CMultiPoint &mp, const F2CSwaths &s2, TurningBase &turn, bool prevent_removing_connections)
     {
         F2CPoint p1, p2;
         double ang1, ang2;
@@ -80,13 +80,13 @@ namespace f2c::pp
         {
             return {};
         }
-        return planPathForConnection(robot, p1, ang1, mp, p2, ang2, turn);
+        return planPathForConnection(robot, p1, ang1, mp, p2, ang2, turn, prevent_removing_connections);
     }
 
     F2CPath PathPlanning::planPathForConnection(
-        const F2CRobot &robot, const F2CPoint &p1, double ang1, const F2CMultiPoint &mp, const F2CPoint &p2, double ang2, TurningBase &turn)
+        const F2CRobot &robot, const F2CPoint &p1, double ang1, const F2CMultiPoint &mp, const F2CPoint &p2, double ang2, TurningBase &turn, bool prevent_removing_connections)
     {
-        auto v_con = simplifyConnection(robot, p1, ang1, mp, p2, ang2);
+        auto v_con = simplifyConnection(robot, p1, ang1, mp, p2, ang2, prevent_removing_connections);
 
         F2CPath path;
         for (int i = 1; i < v_con.size(); ++i)
@@ -106,31 +106,41 @@ namespace f2c::pp
     }
 
     std::vector<std::pair<F2CPoint, double>> PathPlanning::simplifyConnection(
-        const F2CRobot &robot, const F2CPoint &p1, double ang1, const F2CMultiPoint &mp, const F2CPoint &p2, double ang2)
+        const F2CRobot &robot, const F2CPoint &p1, double ang1, const F2CMultiPoint &mp, const F2CPoint &p2, double ang2, bool prevent_removing_connections)
     {
         const double safe_dist = getSmoothTurningRadius(robot);
         std::vector<std::pair<F2CPoint, double>> path;
         path.emplace_back(p1, ang1);
 
-        // if (p1.distance(p2) < 6.0 * safe_dist || mp.size() < 2) {
-        //     path.emplace_back(p2, ang2);
-        //     return path;
-        // }
-
-        std::vector<F2CPoint> vp;
-        for (int i = 0; i < mp.size(); i++)
+        if (!prevent_removing_connections && ((p1.distance(p2) < 6.0 * safe_dist) || mp.size() < 2))
         {
-            // double ang_in = (mp[i] - mp[i - 1]).getAngleFromPoint();
-            // double ang_out = (mp[i + 1] - mp[i]).getAngleFromPoint();
-            // if (fabs(ang_in - ang_out) > 0.1) {
-            vp.emplace_back(mp[i]);
-            // }
+            path.emplace_back(p2, ang2);
+            return path;
         }
 
-        // if (vp.size() < 2) {
-        // path.emplace_back(p2, ang2);
-        // return path;
-        // }
+        std::vector<F2CPoint> vp;
+
+        for (int i = 0; i < mp.size(); i++)
+        {
+            if (prevent_removing_connections)
+            {
+                vp.emplace_back(mp[i]);
+                continue;
+            }
+
+            double ang_in = (mp[i] - mp[i - 1]).getAngleFromPoint();
+            double ang_out = (mp[i + 1] - mp[i]).getAngleFromPoint();
+            if (fabs(ang_in - ang_out) > 0.1)
+            {
+                vp.emplace_back(mp[i]);
+            }
+        }
+
+        if (!prevent_removing_connections && vp.size() < 2)
+        {
+            path.emplace_back(p2, ang2);
+            return path;
+        }
 
         for (int i = 1; i < vp.size() - 1; ++i)
         {
@@ -144,15 +154,18 @@ namespace f2c::pp
             double d_out = min(0.5 * dist_out, safe_dist);
             F2CPoint p_in = (vp[i - 1] - vp[i]) * (d_in / dist_in) + vp[i];
             F2CPoint p_out = (vp[i + 1] - vp[i]) * (d_out / dist_out) + vp[i];
-            // if (p_in.distance(path.back().first) > 3.0 * safe_dist && p_in.distance(p1) > 3.0 * safe_dist && p_in.distance(p2) > 3.0 * safe_dist) {
-            double ang_in = (vp[i] - vp[i - 1]).getAngleFromPoint();
-            path.emplace_back(p_in, ang_in);
-            // }
-            // if (p_out.distance(vp[i + 1]) > 3.0 * safe_dist && p_out.distance(p1) > 3.0 * safe_dist && p_out.distance(p2) > 3.0 * safe_dist &&
-            // p_out.distance(p_in) > 3.0 * safe_dist) {
-            double ang_out = (vp[i + 1] - vp[i]).getAngleFromPoint();
-            path.emplace_back(p_out, ang_out);
-            // }
+            if (prevent_removing_connections ||
+                (p_in.distance(path.back().first) > 3.0 * safe_dist && p_in.distance(p1) > 3.0 * safe_dist && p_in.distance(p2) > 3.0 * safe_dist))
+            {
+                double ang_in = (vp[i] - vp[i - 1]).getAngleFromPoint();
+                path.emplace_back(p_in, ang_in);
+            }
+            if (prevent_removing_connections ||
+                (p_out.distance(vp[i + 1]) > 3.0 * safe_dist && p_out.distance(p1) > 3.0 * safe_dist && p_out.distance(p2) > 3.0 * safe_dist && p_out.distance(p_in) > 3.0 * safe_dist))
+            {
+                double ang_out = (vp[i + 1] - vp[i]).getAngleFromPoint();
+                path.emplace_back(p_out, ang_out);
+            }
         }
         path.emplace_back(p2, ang2);
         return path;
