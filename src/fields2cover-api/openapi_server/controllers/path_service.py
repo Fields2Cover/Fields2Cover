@@ -84,7 +84,7 @@ def generate_path(workingLanes: str, transport_lanes: str, start_and_end_point: 
 
     curves = determine_curves(curvesAlgorithm)
         
-    path: f2c.Path = f2c.PP_PathPlanning().planPath(robot, route, curves)
+    path: f2c.Path = f2c.PP_PathPlanning().planPath(robot, route, curves, True)
     
     f2c.Visualizer.figure()
     f2c.Visualizer.plot(ordered_swaths)
