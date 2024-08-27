@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  description: API to generate paths based on field and working lanes data.
+  description: API to generate paths and routes based on field and working lanes data.
   title: Path Generation API
   version: 1.0.0
 servers:
@@ -98,15 +98,9 @@ components:
     _generatePath_post_request:
       properties:
         workingLanes:
-          description: Optional GeoJSON data for working lanes
-          format: geojson
-          title: workingLanes
-          type: string
+          $ref: '#/components/schemas/FeatureCollection'
         transportLanes:
-          description: Optional GeoJSON data for transport lanes
-          format: geojson
-          title: transportLanes
-          type: string
+          $ref: '#/components/schemas/FeatureCollection'
         startEndPoint:
           $ref: '#/components/schemas/Point'
         robotSettings:
@@ -127,15 +121,9 @@ components:
     _generateRoute_post_request:
       properties:
         workingLanes:
-          description: Optional GeoJSON data for working lanes
-          format: geojson
-          title: workingLanes
-          type: string
+          $ref: '#/components/schemas/FeatureCollection'
         transportLanes:
-          description: Optional GeoJSON data for transport lanes
-          format: geojson
-          title: transportLanes
-          type: string
+          $ref: '#/components/schemas/FeatureCollection'
         startEndPoint:
           $ref: '#/components/schemas/Point'
         sorterSettings:
@@ -199,7 +187,8 @@ components:
       title: _generatePath_post_request_settings_sorterSettings
     GeoJsonObject:
       description: |
-        GeoJSon object The coordinate reference system for all GeoJSON coordinates is a geographic coordinate reference system, using the World Geodetic System 1984 (WGS 84) datum, with longitude and latitude units of decimal degrees. This is equivalent to the coordinate reference system identified by the Open Geospatial Consortium (OGC) URN An OPTIONAL third-position element SHALL be the height in meters above or below the WGS 84 reference ellipsoid. In the absence of elevation values, applications sensitive to height or depth SHOULD interpret positions as being at local ground or sea level.
+        GeoJSon object
+        The coordinate reference system for all GeoJSON coordinates is a geographic coordinate reference system, using the World Geodetic System 1984 (WGS 84) datum, with longitude and latitude units of decimal degrees. This is equivalent to the coordinate reference system identified by the Open Geospatial Consortium (OGC) URN An OPTIONAL third-position element SHALL be the height in meters above or below the WGS 84 reference ellipsoid. In the absence of elevation values, applications sensitive to height or depth SHOULD interpret positions as being at local ground or sea level.
       discriminator:
         propertyName: type
       externalDocs:
@@ -308,9 +297,12 @@ components:
       description: GeoJSon 'FeatureCollection' object
       externalDocs:
         url: https://tools.ietf.org/html/rfc7946#section-3.3
+      title: FeatureCollection
     Position:
       description: |
-        GeoJSon fundamental geometry construct. A position is an array of numbers. There MUST be two or more elements. The first two elements are longitude and latitude, or easting and northing, precisely in that order and using decimal numbers. Altitude or elevation MAY be included as an optional third element. Implementations SHOULD NOT extend positions beyond three elements because the semantics of extra elements are unspecified and ambiguous. Historically, some implementations have used a fourth element to carry a linear referencing measure (sometimes denoted as "M") or a numerical timestamp, but in most situations a parser will not be able to properly interpret these values. The interpretation and meaning of additional elements is beyond the scope of this specification, and additional elements MAY be ignored by parsers.
+        GeoJSon fundamental geometry construct.
+        A position is an array of numbers. There MUST be two or more elements. The first two elements are longitude and latitude, or easting and northing, precisely in that order and using decimal numbers. Altitude or elevation MAY be included as an optional third element.
+        Implementations SHOULD NOT extend positions beyond three elements because the semantics of extra elements are unspecified and ambiguous. Historically, some implementations have used a fourth element to carry a linear referencing measure (sometimes denoted as "M") or a numerical timestamp, but in most situations a parser will not be able to properly interpret these values. The interpretation and meaning of additional elements is beyond the scope of this specification, and additional elements MAY be ignored by parsers.
       externalDocs:
         url: https://tools.ietf.org/html/rfc7946#section-3.1.1
       items:
@@ -331,7 +323,10 @@ components:
       type: array
     LinearRing:
       description: |
-        A linear ring is a closed LineString with four or more positions. The first and last positions are equivalent, and they MUST contain identical values; their representation SHOULD also be identical. A linear ring is the boundary of a surface or the boundary of a hole in a surface. A linear ring MUST follow the right-hand rule with respect to the area it bounds, i.e., exterior rings are counterclockwise, and holes are clockwise.
+        A linear ring is a closed LineString with four or more positions.
+        The first and last positions are equivalent, and they MUST contain identical values; their representation SHOULD also be identical.
+        A linear ring is the boundary of a surface or the boundary of a hole in a surface.
+        A linear ring MUST follow the right-hand rule with respect to the area it bounds, i.e., exterior rings are counterclockwise, and holes are clockwise.
       externalDocs:
         url: https://tools.ietf.org/html/rfc7946#section-3.1.6
       items:
@@ -453,7 +448,8 @@ components:
         - geometries
         type: object
       description: |
-        GeoJSon geometry collection GeometryCollections composed of a single part or a number of parts of a single type SHOULD be avoided when that single part or a single object of multipart type (MultiPoint, MultiLineString, or MultiPolygon) could be used instead.
+        GeoJSon geometry collection
+        GeometryCollections composed of a single part or a number of parts of a single type SHOULD be avoided when that single part or a single object of multipart type (MultiPoint, MultiLineString, or MultiPolygon) could be used instead.
       externalDocs:
         url: https://tools.ietf.org/html/rfc7946#section-3.1.8
       type: object

@@ -3,11 +3,13 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from openapi_server.models.base_model import Model
+from openapi_server.models.feature_collection import FeatureCollection
 from openapi_server.models.generate_path_post_request_settings_sorter_settings import GeneratePathPostRequestSettingsSorterSettings
 from openapi_server.models.point import Point
 from openapi_server.models.robot_settings import RobotSettings
 from openapi_server import util
 
+from openapi_server.models.feature_collection import FeatureCollection  # noqa: E501
 from openapi_server.models.generate_path_post_request_settings_sorter_settings import GeneratePathPostRequestSettingsSorterSettings  # noqa: E501
 from openapi_server.models.point import Point  # noqa: E501
 from openapi_server.models.robot_settings import RobotSettings  # noqa: E501
@@ -22,9 +24,9 @@ class GeneratePathPostRequest(Model):
         """GeneratePathPostRequest - a model defined in OpenAPI
 
         :param working_lanes: The working_lanes of this GeneratePathPostRequest.  # noqa: E501
-        :type working_lanes: str
+        :type working_lanes: FeatureCollection
         :param transport_lanes: The transport_lanes of this GeneratePathPostRequest.  # noqa: E501
-        :type transport_lanes: str
+        :type transport_lanes: FeatureCollection
         :param start_end_point: The start_end_point of this GeneratePathPostRequest.  # noqa: E501
         :type start_end_point: Point
         :param robot_settings: The robot_settings of this GeneratePathPostRequest.  # noqa: E501
@@ -35,8 +37,8 @@ class GeneratePathPostRequest(Model):
         :type curves_algorithm: str
         """
         self.openapi_types = {
-            'working_lanes': str,
-            'transport_lanes': str,
+            'working_lanes': FeatureCollection,
+            'transport_lanes': FeatureCollection,
             'start_end_point': Point,
             'robot_settings': RobotSettings,
             'sorter_settings': GeneratePathPostRequestSettingsSorterSettings,
@@ -71,24 +73,22 @@ class GeneratePathPostRequest(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def working_lanes(self) -> str:
+    def working_lanes(self) -> FeatureCollection:
         """Gets the working_lanes of this GeneratePathPostRequest.
 
-        Optional GeoJSON data for working lanes  # noqa: E501
 
         :return: The working_lanes of this GeneratePathPostRequest.
-        :rtype: str
+        :rtype: FeatureCollection
         """
         return self._working_lanes
 
     @working_lanes.setter
-    def working_lanes(self, working_lanes: str):
+    def working_lanes(self, working_lanes: FeatureCollection):
         """Sets the working_lanes of this GeneratePathPostRequest.
 
-        Optional GeoJSON data for working lanes  # noqa: E501
 
         :param working_lanes: The working_lanes of this GeneratePathPostRequest.
-        :type working_lanes: str
+        :type working_lanes: FeatureCollection
         """
         if working_lanes is None:
             raise ValueError("Invalid value for `working_lanes`, must not be `None`")  # noqa: E501
@@ -96,24 +96,22 @@ class GeneratePathPostRequest(Model):
         self._working_lanes = working_lanes
 
     @property
-    def transport_lanes(self) -> str:
+    def transport_lanes(self) -> FeatureCollection:
         """Gets the transport_lanes of this GeneratePathPostRequest.
 
-        Optional GeoJSON data for transport lanes  # noqa: E501
 
         :return: The transport_lanes of this GeneratePathPostRequest.
-        :rtype: str
+        :rtype: FeatureCollection
         """
         return self._transport_lanes
 
     @transport_lanes.setter
-    def transport_lanes(self, transport_lanes: str):
+    def transport_lanes(self, transport_lanes: FeatureCollection):
         """Sets the transport_lanes of this GeneratePathPostRequest.
 
-        Optional GeoJSON data for transport lanes  # noqa: E501
 
         :param transport_lanes: The transport_lanes of this GeneratePathPostRequest.
-        :type transport_lanes: str
+        :type transport_lanes: FeatureCollection
         """
         if transport_lanes is None:
             raise ValueError("Invalid value for `transport_lanes`, must not be `None`")  # noqa: E501

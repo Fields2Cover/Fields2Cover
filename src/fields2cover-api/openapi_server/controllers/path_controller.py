@@ -4,6 +4,8 @@ from openapi_server.models.generate_path_post_request import GeneratePathPostReq
 from openapi_server.models.path import Path  # noqa: E501
 from openapi_server.services.path_service import generate_path
 
+import json
+
 import fields2cover as f2c
 
 def path_to_json(path: f2c.Path) -> Path:
@@ -31,8 +33,9 @@ def generate_path_post(generate_path_post_request):  # noqa: E501
 
     :rtype: Union[Path, Tuple[Path, int], Tuple[Path, int, Dict[str, str]]
     """
-    if not connexion.request.is_json:
+    if not connexion.request.is_json:        
         return
-    req = GeneratePathPostRequest.from_dict(connexion.request.get_json())  # noqa: E501
-    path = generate_path(req.working_lanes, req.transport_lanes, req.start_end_point, req.robot_settings , req.sorter_settings, req.curves_algorithm)    
+    req_json = connexion.request.get_json()
+    req = GeneratePathPostRequest.from_dict(req_json)  # noqa: E501
+    path = generate_path(json.dumps(req_json["workingLanes"]), json.dumps(req_json["transportLanes"]), req.start_end_point, req.robot_settings , req.sorter_settings, req.curves_algorithm)    
     return path_to_json(path)

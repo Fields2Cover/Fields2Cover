@@ -27,6 +27,9 @@ def generate_route_post(generate_route_post_request):  # noqa: E501
     """
     if not connexion.request.is_json:
         return
-    req = GenerateRoutePostRequest.from_dict(connexion.request.get_json())  # noqa: E501
-    route = generate_route(req.working_lanes, req.transport_lanes, req.start_end_point, req.sorter_settings)    
+    req_json = connexion.request.get_json()
+    req = GenerateRoutePostRequest.from_dict(req_json)  # noqa: E501
+    
+        
+    route = generate_route(json.dumps(req_json["workingLanes"]), json.dumps(req_json["transportLanes"]), req.start_end_point, req.sorter_settings)    
     return route_to_json(route)

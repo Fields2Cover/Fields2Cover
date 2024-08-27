@@ -27,9 +27,9 @@ def generate_path(workingLanes: str, transport_lanes: str, start_and_end_point: 
         
     path: f2c.Path = f2c.PP_PathPlanning().planPath(robot, route, curves, True)
     
-    f2c.Visualizer.figure()
-    f2c.Visualizer.plot(path)
-    f2c.Visualizer.save("path.png");    
+    # f2c.Visualizer.figure()
+    # f2c.Visualizer.plot(path)
+    # f2c.Visualizer.save("path.png");    
 
     return path
 

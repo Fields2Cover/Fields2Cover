@@ -1,7 +1,5 @@
-import faulthandler
 import fields2cover as f2c
 from openapi_server.models.point import Point
-from openapi_server.dto.robot_settings import RobotSettings
 from openapi_server.dto.sorter_settings import SorterSettings
 from openapi_server.services.f2c_import import import_transport_lanes
 
@@ -44,6 +42,10 @@ def generate_route(workingLanes: str, transport_lanes: str, start_and_end_point:
 
     route_planner.setStartAndEndPoint(f2c.Point(start_and_end_point.coordinates[0], start_and_end_point.coordinates[1]))
     route = route_planner.genRoute(transport_lanes_cells, ordered_swaths)
+
+    # f2c.Visualizer.figure()
+    # f2c.Visualizer.plot(route)
+    # f2c.Visualizer.save("route.png");    
 
     return route
 
