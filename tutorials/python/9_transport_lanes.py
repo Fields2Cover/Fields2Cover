@@ -39,6 +39,7 @@ path: f2c.Path = f2c.PP_PathPlanning().planPath(robot, route, curves, True)
 
 f2c.Visualizer.figure()
 f2c.Visualizer.plot(swaths)
+f2c.Visualizer.plot(route)
 f2c.Visualizer.plot(transport_lanes_cells)
 f2c.Visualizer.plot(path)
 # f2c.Visualizer.show()
