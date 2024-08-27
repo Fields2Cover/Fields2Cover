@@ -84,6 +84,7 @@ More information
    self
    source/installation.rst
    source/tutorials.rst
+   source/web-api.rst
    source/migration_to_v2.rst
    source/faq.rst
    api/f2c_library.rst
