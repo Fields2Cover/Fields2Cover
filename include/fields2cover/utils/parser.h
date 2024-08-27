@@ -40,8 +40,6 @@ class Parser {
   static F2CSwaths importSwathsJsonFromString(const std::string& jsonString);
   static F2CStrips importStripsJson(const std::string& file);
   static F2CStrips importStripsJsonFromString(const std::string& jsonString);
-  static F2CStrips importStripsJsonFromString(
-      const std::string& jsonString, const double default_width);
 };
 
 }  // namespace f2c

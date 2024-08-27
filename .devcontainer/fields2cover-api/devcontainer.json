@@ -23,7 +23,6 @@
       "extensions": [
         "ms-python.python",
         "42Crunch.vscode-openapi",
-        "ms-vscode.cpptools-extension-pack",
         "ms-python.debugpy"
       ]
     }

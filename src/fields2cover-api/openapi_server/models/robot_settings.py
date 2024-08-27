@@ -12,7 +12,7 @@ class RobotSettings(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, width=None, cov_width=None, max_curv=None, max_diff_curv=None, min_turning_radius=None):  # noqa: E501
+    def __init__(self, width=None, cov_width=None, max_curv=None, max_diff_curv=None):  # noqa: E501
         """RobotSettings - a model defined in OpenAPI
 
         :param width: The width of this RobotSettings.  # noqa: E501
@@ -23,30 +23,25 @@ class RobotSettings(Model):
         :type max_curv: float
         :param max_diff_curv: The max_diff_curv of this RobotSettings.  # noqa: E501
         :type max_diff_curv: float
-        :param min_turning_radius: The min_turning_radius of this RobotSettings.  # noqa: E501
-        :type min_turning_radius: float
         """
         self.openapi_types = {
             'width': float,
             'cov_width': float,
             'max_curv': float,
-            'max_diff_curv': float,
-            'min_turning_radius': float
+            'max_diff_curv': float
         }
 
         self.attribute_map = {
             'width': 'width',
             'cov_width': 'cov_width',
             'max_curv': 'max_curv',
-            'max_diff_curv': 'max_diff_curv',
-            'min_turning_radius': 'min_turning_radius'
+            'max_diff_curv': 'max_diff_curv'
         }
 
         self._width = width
         self._cov_width = cov_width
         self._max_curv = max_curv
         self._max_diff_curv = max_diff_curv
-        self._min_turning_radius = min_turning_radius
 
     @classmethod
     def from_dict(cls, dikt) -> 'RobotSettings':
@@ -150,26 +145,3 @@ class RobotSettings(Model):
         """
 
         self._max_diff_curv = max_diff_curv
-
-    @property
-    def min_turning_radius(self) -> float:
-        """Gets the min_turning_radius of this RobotSettings.
-
-        Minimum turning radius  # noqa: E501
-
-        :return: The min_turning_radius of this RobotSettings.
-        :rtype: float
-        """
-        return self._min_turning_radius
-
-    @min_turning_radius.setter
-    def min_turning_radius(self, min_turning_radius: float):
-        """Sets the min_turning_radius of this RobotSettings.
-
-        Minimum turning radius  # noqa: E501
-
-        :param min_turning_radius: The min_turning_radius of this RobotSettings.
-        :type min_turning_radius: float
-        """
-
-        self._min_turning_radius = min_turning_radius

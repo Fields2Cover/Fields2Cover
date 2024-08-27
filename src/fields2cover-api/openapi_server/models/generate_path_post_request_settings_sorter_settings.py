@@ -12,7 +12,7 @@ class GeneratePathPostRequestSettingsSorterSettings(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, algorithm=None, variant=None, spiral_size=None):  # noqa: E501
+    def __init__(self, algorithm=None, variant=1, spiral_size=None):  # noqa: E501
         """GeneratePathPostRequestSettingsSorterSettings - a model defined in OpenAPI
 
         :param algorithm: The algorithm of this GeneratePathPostRequestSettingsSorterSettings.  # noqa: E501
