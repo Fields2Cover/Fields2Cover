@@ -18,40 +18,52 @@ namespace f2c::rp {
 
 namespace ortools = operations_research;
 
-F2CRoute RoutePlannerBase::genRoute(
-    const F2CCells& cells, const F2CSwathsByCells& swaths,
-    bool show_log, double d_tol, bool redirect_swaths) {
+F2CRoute RoutePlannerBase::genRoute(const F2CCells& cells, const F2CSwathsByCells& swaths, bool show_log, double d_tol, bool redirect_swaths) {
   F2CGraph2D shortest_graph = createShortestGraph(cells, swaths, d_tol);
 
-  F2CGraph2D cov_graph = createCoverageGraph(
-      cells, swaths, shortest_graph, d_tol, redirect_swaths);
+  F2CGraph2D cov_graph = createCoverageGraph(cells, swaths, shortest_graph, d_tol, redirect_swaths);
 
   std::vector<int64_t> v_route = computeBestRoute(cov_graph, show_log);
-  return transformSolutionToRoute(
-      v_route, swaths, cov_graph, shortest_graph);
+  return transformSolutionToRoute(v_route, swaths, cov_graph, shortest_graph);
+}
+
+F2CRoute RoutePlannerBase::genShortestPath(const F2CCells& cells, const F2CPoint& start, const F2CPoint& end) {
+  F2CGraph2D g;
+  for (auto&& cs : cells) {
+    for (auto&& s : cs) {
+      g.addEdge(s.startPoint(), s.endPoint());
+    }
+  }
+
+  F2CRoute route;
+  auto path = g.shortestPath(start, end);
+  
+  for (auto&& i : path) {
+    route.addConnection(i);
+  }
+
+  return route;
 }
 
 void RoutePlannerBase::setStartAndEndPoint(const F2CPoint& p) {
   this->r_start_end = p;
 }
 
-F2CGraph2D RoutePlannerBase::createShortestGraph(
-    const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells,
-    double d_tol) const {
+F2CGraph2D RoutePlannerBase::createShortestGraph(const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells, double d_tol) const {
   F2CGraph2D g;
   // Add points from swaths that touches border
   for (auto&& swaths : swaths_by_cells) {
     for (auto&& s : swaths) {
       g.addEdge(s.startPoint(), cells.closestPointOnBorderTo(s.startPoint()));
-      g.addEdge(s.endPoint(),   cells.closestPointOnBorderTo(s.endPoint()));
+      g.addEdge(s.endPoint(), cells.closestPointOnBorderTo(s.endPoint()));
     }
   }
 
   // Add points in the border
   for (auto&& cell : cells) {
     for (auto&& ring : cell) {
-      for (size_t i = 0; i < ring.size()-1; ++i) {
-        g.addEdge(ring.getGeometry(i), ring.getGeometry(i+1));
+      for (size_t i = 0; i < ring.size() - 1; ++i) {
+        g.addEdge(ring.getGeometry(i), ring.getGeometry(i + 1));
       }
     }
   }
@@ -71,7 +83,7 @@ F2CGraph2D RoutePlannerBase::createShortestGraph(
       for (auto&& e : edge.second) {
         size_t to = e.first;
 
-        F2CLineString border {g.indexToNode(from), g.indexToNode(to)};
+        F2CLineString border{g.indexToNode(from), g.indexToNode(to)};
         for (auto&& n : nodes) {
           if (n != border[0] && n != border[1] && n.distance(border) < d_tol) {
             g.addEdge(border[0], n);
@@ -85,15 +97,12 @@ F2CGraph2D RoutePlannerBase::createShortestGraph(
   return g;
 }
 
-
 F2CGraph2D RoutePlannerBase::createCoverageGraph(
-    const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells,
-    F2CGraph2D& shortest_graph,
-    double d_tol, bool redirect_swaths) const {
+    const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells, F2CGraph2D& shortest_graph, double d_tol, bool redirect_swaths) const {
   F2CGraph2D g;
   for (auto&& swaths : swaths_by_cells) {
     for (auto&& s : swaths) {
-      F2CPoint mid_p {(s.startPoint() + s.endPoint()) * 0.5};
+      F2CPoint mid_p{(s.startPoint() + s.endPoint()) * 0.5};
       if (redirect_swaths) {
         g.addEdge(s.startPoint(), mid_p, 0);
         g.addEdge(s.endPoint(), mid_p, 0);
@@ -144,33 +153,27 @@ F2CGraph2D RoutePlannerBase::createCoverageGraph(
   return g;
 }
 
-std::vector<int64_t> RoutePlannerBase::computeBestRoute(
-    const F2CGraph2D& cov_graph, bool show_log) const {
-  int depot_id = static_cast<int>(cov_graph.numNodes()-1);
+std::vector<int64_t> RoutePlannerBase::computeBestRoute(const F2CGraph2D& cov_graph, bool show_log) const {
+  int depot_id = static_cast<int>(cov_graph.numNodes() - 1);
   const ortools::RoutingIndexManager::NodeIndex depot{depot_id};
   ortools::RoutingIndexManager manager(cov_graph.numNodes(), 1, depot);
   ortools::RoutingModel routing(manager);
 
-  const int transit_callback_index = routing.RegisterTransitCallback(
-      [&cov_graph, &manager] (int64_t from, int64_t to) -> int64_t {
-        auto from_node = manager.IndexToNode(from).value();
-        auto to_node = manager.IndexToNode(to).value();
-        return cov_graph.getCostFromEdge(from_node, to_node);
-      });
+  const int transit_callback_index = routing.RegisterTransitCallback([&cov_graph, &manager](int64_t from, int64_t to) -> int64_t {
+    auto from_node = manager.IndexToNode(from).value();
+    auto to_node = manager.IndexToNode(to).value();
+    return cov_graph.getCostFromEdge(from_node, to_node);
+  });
   routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index);
-  ortools::RoutingSearchParameters searchParameters =
-    ortools::DefaultRoutingSearchParameters();
+  ortools::RoutingSearchParameters searchParameters = ortools::DefaultRoutingSearchParameters();
   searchParameters.set_use_full_propagation(false);
-  searchParameters.set_first_solution_strategy(
-    ortools::FirstSolutionStrategy::AUTOMATIC);
+  searchParameters.set_first_solution_strategy(ortools::FirstSolutionStrategy::AUTOMATIC);
   //  searchParameters.set_local_search_metaheuristic(
   //   ortools::LocalSearchMetaheuristic::GUIDED_LOCAL_SEARCH);
-  searchParameters.set_local_search_metaheuristic(
-    ortools::LocalSearchMetaheuristic::AUTOMATIC);
+  searchParameters.set_local_search_metaheuristic(ortools::LocalSearchMetaheuristic::AUTOMATIC);
   searchParameters.mutable_time_limit()->set_seconds(1);
   searchParameters.set_log_search(show_log);
-  const ortools::Assignment* solution =
-    routing.SolveWithParameters(searchParameters);
+  const ortools::Assignment* solution = routing.SolveWithParameters(searchParameters);
 
   int64_t index = routing.Start(0);
   std::vector<int64_t> v_id;
@@ -183,31 +186,26 @@ std::vector<int64_t> RoutePlannerBase::computeBestRoute(
   return v_id;
 }
 
-F2CRoute RoutePlannerBase::transformSolutionToRoute(
-    const std::vector<int64_t>& route_ids,
-    const F2CSwathsByCells& swaths_by_cells,
-    const F2CGraph2D& coverage_graph,
-    F2CGraph2D& shortest_graph) const {
+F2CRoute RoutePlannerBase::transformSolutionToRoute(const std::vector<int64_t>& route_ids, const F2CSwathsByCells& swaths_by_cells,
+    const F2CGraph2D& coverage_graph, F2CGraph2D& shortest_graph) const {
   F2CRoute route;
   F2CSwath swath;
   const size_t NS = swaths_by_cells.sizeTotal();
-  for (int i = 0; i < route_ids.size()-2; ++i) {
+  for (int i = 0; i < route_ids.size() - 2; ++i) {
     F2CPoint p_s = coverage_graph.indexToNode(route_ids[i]);
-    F2CPoint p_e = coverage_graph.indexToNode(route_ids[i+2]);
+    F2CPoint p_e = coverage_graph.indexToNode(route_ids[i + 2]);
     for (int j = 0; j < NS; ++j) {
       F2CSwath swath = swaths_by_cells.getSwath(j).clone();
       if (p_s == swath.startPoint() && p_e == swath.endPoint()) {
         if (route.isEmpty() && r_start_end) {
-          route.addConnection(shortest_graph.shortestPath(
-                *r_start_end, swath.startPoint()));
+          route.addConnection(shortest_graph.shortestPath(*r_start_end, swath.startPoint()));
         }
         route.addSwath(swath, shortest_graph);
         break;
       } else if (p_e == swath.startPoint() && p_s == swath.endPoint()) {
         swath.reverse();
         if (route.isEmpty() && r_start_end) {
-          route.addConnection(shortest_graph.shortestPath(
-                *r_start_end, swath.startPoint()));
+          route.addConnection(shortest_graph.shortestPath(*r_start_end, swath.startPoint()));
         }
         route.addSwath(swath, shortest_graph);
         break;
@@ -215,12 +213,9 @@ F2CRoute RoutePlannerBase::transformSolutionToRoute(
     }
   }
   if (r_start_end) {
-    route.addConnection(shortest_graph.shortestPath(
-          route.endPoint(), *r_start_end));
+    route.addConnection(shortest_graph.shortestPath(route.endPoint(), *r_start_end));
   }
   return route;
 }
 
 }  // namespace f2c::rp
-
-
