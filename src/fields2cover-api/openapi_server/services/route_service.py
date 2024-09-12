@@ -14,7 +14,7 @@ def sort_swaths(swaths, sorter_settings: SorterSettings) -> f2c.Swaths:
         boustrophedon_sorter = f2c.RP_Boustrophedon()
         swaths = boustrophedon_sorter.genSortedSwaths(swaths, variant)
     elif alg == "spiral":
-        spiral_sorter = f2c.RP_Spiral(sorter_settings.spiralSize)
+        spiral_sorter = f2c.RP_Spiral(sorter_settings.spiral_size)
         swaths = spiral_sorter.genSortedSwaths(swaths, variant)
     else:
         raise ValueError("Invalid sorter type")

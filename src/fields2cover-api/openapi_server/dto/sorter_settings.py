@@ -4,4 +4,4 @@ from dataclasses import dataclass
 class SorterSettings:
     algorithm: str
     variant: int
-    spiralSize: int
+    spiral_size: int

@@ -28,6 +28,7 @@ def generate_route_post(generate_route_post_request):  # noqa: E501
     if not connexion.request.is_json:
         return
     req_json = connexion.request.get_json()
+    print(req_json)    
     req = GenerateRoutePostRequest.from_dict(req_json)  # noqa: E501
     
         

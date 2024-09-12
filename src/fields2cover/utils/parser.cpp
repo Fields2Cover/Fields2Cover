@@ -162,9 +162,14 @@ F2CSwaths importSwathsJsonData(const json& data) {
     for (auto&& ps : imported_swath["geometry"]["coordinates"]) {
       line.addPoint(getPointFromJson(ps));
     }
+    if (!imported_swath["properties"].contains("width")) {
+      std::cout << "Warning: Width property is missing for imported swath, defaulting to 0.1"
+                << std::endl;
+    }
+
     auto width = imported_swath["properties"].contains("width")
                      ? imported_swath["properties"]["width"].get<double>()
-                     : 0;  // do not fail if the width is not present
+                     : 0.1;  // do not fail if the width is not present
     auto path_id = imported_swath["properties"].contains("path_id")
                        ? imported_swath["properties"]["path_id"].get<int>()
                        : i;

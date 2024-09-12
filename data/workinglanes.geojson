@@ -14,8 +14,7 @@
         "id": 2,
         "firstPoint": "A",
         "lastPoint": "B",
-        "path_id": 1,
-        "width": 0.3
+        "path_id": 1
       },
       "geometry": {
         "type": "LineString",

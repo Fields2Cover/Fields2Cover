@@ -39,7 +39,7 @@ int main()
 
     swathsByCells->emplace_back(swaths);
     route_planner.setStartAndEndPoint(F2CPoint(-25.433197685573184, -36.10820096737386));
-    F2CRoute route = route_planner.genRoute(transport_lanes_cells, *swathsByCells);
+    F2CRoute route = route_planner.genRoute(transport_lanes_cells, *swathsByCells, true);
 
     f2c::pp::PathPlanning path_planner;
     f2c::pp::DubinsCurves dubins;
@@ -47,11 +47,11 @@ int main()
     f2c::pp::ReedsSheppCurves reeds_shepp;
 
     robot.setMinTurningRadius(0.5); // m
-    F2CPath path = path_planner.planPath(robot, route, dubins, true);
+    // F2CPath path = path_planner.planPath(robot, route, dubins, true);
 
     f2c::Visualizer::figure();
-    f2c::Visualizer::plot(transport_lanes_cells);
-    f2c::Visualizer::plot(path);
+    // f2c::Visualizer::plot(transport_lanes_cells);
+    f2c::Visualizer::plot(route);
     f2c::Visualizer::show();
     f2c::Visualizer::save("Tutorial_9_1.png");
 

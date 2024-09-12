@@ -10,16 +10,18 @@ import fields2cover as f2c
 
 def path_to_json(path: f2c.Path) -> Path:
     states = path.getStates()
-    result = []
+    
+    poses = []
     state: f2c.PathState
     for state in states:
-        point: f2c.Point = {
-            'x': state.point.getX(),
-            'y': state.point.getY(),
+        point = {
+            "coordinates": [ state.point.getX(),state.point.getY()]
         }
         angle = state.angle
-        result.append({'point': point, 'angle': angle})
+        poses.append({'point': point, 'angle': angle})
 
+    result = {}
+    result['poses'] = poses
     return result
 
 

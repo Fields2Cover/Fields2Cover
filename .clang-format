@@ -7,7 +7,7 @@ AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: true
 AllowShortLoopsOnASingleLine: false
 BreakBeforeBraces: Attach
-ColumnLimit: 80
+ColumnLimit: 150
 DerivePointerAlignment: false
 PointerAlignment: Left
 SortIncludes: false
