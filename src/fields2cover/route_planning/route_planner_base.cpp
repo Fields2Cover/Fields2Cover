@@ -27,21 +27,12 @@ F2CRoute RoutePlannerBase::genRoute(const F2CCells& cells, const F2CSwathsByCell
   return transformSolutionToRoute(v_route, swaths, cov_graph, shortest_graph);
 }
 
-F2CRoute RoutePlannerBase::genShortestPath(const F2CCells& cells, const F2CPoint& start, const F2CPoint& end) {
-  F2CGraph2D g;
-  for (auto&& cs : cells) {
-    for (auto&& s : cs) {
-      g.addEdge(s.startPoint(), s.endPoint());
-    }
-  }
-
+F2CRoute RoutePlannerBase::genShortestRoute(const F2CCells& cells, const F2CSwathsByCells& swaths, const F2CPoint& start, const F2CPoint& end, double d_tol) {
   F2CRoute route;
-  auto path = g.shortestPath(start, end);
-  
-  for (auto&& i : path) {
-    route.addConnection(i);
-  }
-
+  f2c::rp::RoutePlannerBase route_planner;
+  auto g = route_planner.createShortestGraph(cells, swaths, d_tol);
+  auto h = g.shortestPath(start, end);
+  route.addConnection(h);
   return route;
 }
 

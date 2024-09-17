@@ -61,7 +61,7 @@ class RoutePlannerBase {
       double d_tol, bool redirect_swaths = true) const;
 
   /// Generate the shortest path between two points in cells.
-  virtual F2CRoute genShortestPath(const F2CCells& cells, const F2CPoint& start, const F2CPoint& end);
+  virtual F2CRoute genShortestRoute(const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells, const F2CPoint& start, const F2CPoint& end, double d_tol = 1e-4);
   virtual ~RoutePlannerBase() = default;
 
  protected:
@@ -78,7 +78,8 @@ class RoutePlannerBase {
       F2CGraph2D& shortest_graph) const;
 
  protected:
-  std::optional<F2CPoint> r_start_end;  
+  std::optional<F2CPoint> r_start_end;
+  
 };
 
 }  // namespace f2c::rp

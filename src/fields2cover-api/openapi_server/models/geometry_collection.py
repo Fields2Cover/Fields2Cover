@@ -4,10 +4,12 @@ from typing import List, Dict  # noqa: F401
 
 from openapi_server.models.base_model import Model
 from openapi_server.models.geometry import Geometry
+from openapi_server.models.geometry_all_of_coordinates import GeometryAllOfCoordinates
 from openapi_server.models.geometry_element import GeometryElement
 from openapi_server import util
 
 from openapi_server.models.geometry import Geometry  # noqa: E501
+from openapi_server.models.geometry_all_of_coordinates import GeometryAllOfCoordinates  # noqa: E501
 from openapi_server.models.geometry_element import GeometryElement  # noqa: E501
 
 class GeometryCollection(Model):
@@ -16,30 +18,35 @@ class GeometryCollection(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, type=None, bbox=None, geometries=None):  # noqa: E501
+    def __init__(self, type=None, bbox=None, coordinates=None, geometries=None):  # noqa: E501
         """GeometryCollection - a model defined in OpenAPI
 
         :param type: The type of this GeometryCollection.  # noqa: E501
         :type type: str
         :param bbox: The bbox of this GeometryCollection.  # noqa: E501
         :type bbox: List[float]
+        :param coordinates: The coordinates of this GeometryCollection.  # noqa: E501
+        :type coordinates: GeometryAllOfCoordinates
         :param geometries: The geometries of this GeometryCollection.  # noqa: E501
         :type geometries: List[GeometryElement]
         """
         self.openapi_types = {
             'type': str,
             'bbox': List[float],
+            'coordinates': GeometryAllOfCoordinates,
             'geometries': List[GeometryElement]
         }
 
         self.attribute_map = {
             'type': 'type',
             'bbox': 'bbox',
+            'coordinates': 'coordinates',
             'geometries': 'geometries'
         }
 
         self._type = type
         self._bbox = bbox
+        self._coordinates = coordinates
         self._geometries = geometries
 
     @classmethod
@@ -102,6 +109,27 @@ class GeometryCollection(Model):
         """
 
         self._bbox = bbox
+
+    @property
+    def coordinates(self) -> GeometryAllOfCoordinates:
+        """Gets the coordinates of this GeometryCollection.
+
+
+        :return: The coordinates of this GeometryCollection.
+        :rtype: GeometryAllOfCoordinates
+        """
+        return self._coordinates
+
+    @coordinates.setter
+    def coordinates(self, coordinates: GeometryAllOfCoordinates):
+        """Sets the coordinates of this GeometryCollection.
+
+
+        :param coordinates: The coordinates of this GeometryCollection.
+        :type coordinates: GeometryAllOfCoordinates
+        """
+
+        self._coordinates = coordinates
 
     @property
     def geometries(self) -> List[GeometryElement]:
