@@ -122,7 +122,7 @@ Cell Cell::convexHull() const {
 
 void Cell::addRing(const LinearRing& t) {
   auto r = t.clone();
-  this->data_->addRing(r.get());
+  this->data_->addRing(r.closeRing().get());
 }
 
 void Cell::addGeometry(const LinearRing& ring) {
