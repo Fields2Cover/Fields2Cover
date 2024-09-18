@@ -7,11 +7,22 @@ from openapi_server.services.route_service import generate_route, generate_short
 import fields2cover as f2c
 import json
 
+def removeduplicate(it):
+    prev = it[0]
+    for x in it:
+        if x != prev:
+            yield x
+        prev = x
+
 def route_to_json(route: f2c.Route) -> str:
     jString = route.asLineString().exportToJson()
-    print(jString)
     #parse json
     parsed_json = json.loads(jString)
+    
+    # sometimes points are there twice, remove them
+    parsed_json['coordinates'] = list(removeduplicate(parsed_json['coordinates']))
+    
+    # print(parsed_json)
     # continue with the parsed json data
     return parsed_json
 
