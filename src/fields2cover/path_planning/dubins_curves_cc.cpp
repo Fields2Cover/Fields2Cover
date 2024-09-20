@@ -5,7 +5,7 @@
 //=============================================================================
 
 #include <steering_functions/hc_cc_state_space/cc00_dubins_state_space.hpp>
-#include <steering_functions/hc_cc_state_space/ccpmpm_dubins_state_space.hpp>
+#include <steering_functions/hc_cc_state_space/cc_dubins_state_space.hpp>
 #include "fields2cover/path_planning/steer_to_path.hpp"
 #include "fields2cover/path_planning/dubins_curves_cc.h"
 
@@ -69,7 +69,7 @@ namespace f2c::pp
 
     while (true)
     {
-      CCpmpm_Dubins_State_Space ss(
+      CC_Dubins_State_Space ss(
           robot.getMaxCurv() / (1 + 0.05 * n),
           robot.getMaxDiffCurv() / (1 + 0.2 * n),
           discretization,
