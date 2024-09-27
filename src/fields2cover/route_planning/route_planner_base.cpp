@@ -42,7 +42,14 @@ F2CRoute RoutePlannerBase::genShortestRoute(const F2CCells& cells,
 }
 
 void RoutePlannerBase::setStartAndEndPoint(const F2CPoint& p) {
-  this->r_start_end = p;
+  this->r_start = p;
+  this->r_end = p;
+}
+
+void RoutePlannerBase::setStartAndEndPoint(
+    const F2CPoint& start, const F2CPoint& end) {
+  this->r_start = start;
+  this->r_end = end;
 }
 
 F2CGraph2D RoutePlannerBase::createShortestGraph(const F2CCells& cells,
@@ -66,8 +73,11 @@ F2CGraph2D RoutePlannerBase::createShortestGraph(const F2CCells& cells,
   }
 
   // Add start and end point if they exists
-  if (this->r_start_end) {
-    g.addEdge(*r_start_end, cells.closestPointOnBorderTo(*r_start_end));
+  if (this->r_start) {
+    g.addEdge(*r_start, cells.closestPointOnBorderTo(*r_start));
+  }
+  if (this->r_end) {
+    g.addEdge(*r_end, cells.closestPointOnBorderTo(*r_end));
   }
 
   std::vector<F2CPoint> nodes = g.getNodes();
@@ -132,19 +142,37 @@ F2CGraph2D RoutePlannerBase::createCoverageGraph(const F2CCells& cells,
     }
   }
 
-  F2CPoint deposit(-1e8, -1e8);  // Arbitrary point
-  if (this->r_start_end) {
-    deposit = *this->r_start_end;
+  // todo put in function
+  F2CPoint deposit_start(-1e8, -1e8);  // Arbitrary point
+  if (this->r_start) {
+    deposit_start = *this->r_start;
   }
 
   for (auto&& swaths : swaths_by_cells) {
     for (auto&& s : swaths) {
-      if (this->r_start_end) {
-        g.addEdge(s.startPoint(), deposit, shortest_graph);
-        g.addEdge(s.endPoint(), deposit, shortest_graph);
+      if (this->r_start) {
+        g.addEdge(s.startPoint(), deposit_start, shortest_graph);
+        g.addEdge(s.endPoint(), deposit_start, shortest_graph);
       } else {
-        g.addEdge(s.startPoint(), deposit, 0);
-        g.addEdge(s.endPoint(), deposit, 0);
+        g.addEdge(s.startPoint(), deposit_start, 0);
+        g.addEdge(s.endPoint(), deposit_start, 0);
+      }
+    }
+  }
+
+  F2CPoint deposit_end(-1e8, -1e8);  // Arbitrary point
+  if (this->r_end) {
+    deposit_end = *this->r_end;
+  }
+
+  for (auto&& swaths : swaths_by_cells) {
+    for (auto&& s : swaths) {
+      if (this->r_end) {
+        g.addEdge(s.startPoint(), deposit_end, shortest_graph);
+        g.addEdge(s.endPoint(), deposit_end, shortest_graph);
+      } else {
+        g.addEdge(s.startPoint(), deposit_end, 0);
+        g.addEdge(s.endPoint(), deposit_end, 0);
       }
     }
   }
@@ -155,6 +183,7 @@ std::vector<int64_t> RoutePlannerBase::computeBestRoute(
     const F2CGraph2D& cov_graph, bool show_log) const {
   int depot_id = static_cast<int>(cov_graph.numNodes() - 1);
   const ortools::RoutingIndexManager::NodeIndex depot{depot_id};
+
   ortools::RoutingIndexManager manager(cov_graph.numNodes(), 1, depot);
   ortools::RoutingModel routing(manager);
 
@@ -203,26 +232,25 @@ F2CRoute RoutePlannerBase::transformSolutionToRoute(
     for (int j = 0; j < NS; ++j) {
       F2CSwath swath = swaths_by_cells.getSwath(j).clone();
       if (p_s == swath.startPoint() && p_e == swath.endPoint()) {
-        if (route.isEmpty() && r_start_end) {
+        if (route.isEmpty() && r_start) {
           route.addConnection(
-              shortest_graph.shortestPath(*r_start_end, swath.startPoint()));
+              shortest_graph.shortestPath(*r_start, swath.startPoint()));
         }
         route.addSwath(swath, shortest_graph);
         break;
       } else if (p_e == swath.startPoint() && p_s == swath.endPoint()) {
         swath.reverse();
-        if (route.isEmpty() && r_start_end) {
+        if (route.isEmpty() && r_start) {
           route.addConnection(
-              shortest_graph.shortestPath(*r_start_end, swath.startPoint()));
+              shortest_graph.shortestPath(*r_start, swath.startPoint()));
         }
         route.addSwath(swath, shortest_graph);
         break;
       }
     }
   }
-  if (r_start_end) {
-    route.addConnection(
-        shortest_graph.shortestPath(route.endPoint(), *r_start_end));
+  if (r_end) {
+    route.addConnection(shortest_graph.shortestPath(route.endPoint(), *r_end));
   }
   return route;
 }
