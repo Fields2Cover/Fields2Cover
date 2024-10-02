@@ -24,14 +24,6 @@ target_compile_definitions(
 )
 target_link_libraries(8_complete_flow PUBLIC Fields2Cover)
 
-add_executable(9_transport_lanes 9_transport_lanes.cpp)
-target_compile_definitions(
-  9_transport_lanes
-  PRIVATE
-    DATA_PATH="${PROJECT_SOURCE_DIR}/data/"
-)
-target_link_libraries(9_transport_lanes PUBLIC Fields2Cover)
-
 add_executable(quick_start quick_start.cpp)
 target_compile_definitions(
   quick_start
