@@ -1,0 +1,33 @@
+{
+  "name": "Fields2Cover-devcontainer",
+  "build": {
+    "dockerfile": "../../Dockerfile",
+    "target": "dev",
+    "args": {
+      "USERNAME": "${localEnv:USER}"
+    }
+  },
+  //https://stackoverflow.com/questions/60733288/devcontainer-how-to-make-x-display-work-mount-graphics-inside-docker-in-visual
+  "containerEnv": {
+    "DISPLAY": "unix:0"
+  },
+  "mounts": [
+    "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached"
+  ],
+  "runArgs": [
+    "--privileged"
+  ],
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cmake-tools",
+        "ms-vscode.cpptools",
+        "ms-vscode.cpptools-extension-pack",
+        "donjayamanne.githistory"
+      ]
+    }
+  },
+  "containerUser": "${localEnv:USER}",
+  "remoteUser": "${localEnv:USER}"
+}
