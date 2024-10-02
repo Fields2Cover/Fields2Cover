@@ -139,5 +139,12 @@ RUN cmake -DBUILD_PYTHON=ON \
 
 RUN make -j$(nproc) install
 
+FROM build AS api_dev
+COPY ./fields2cover-api /workspace/fields2cover/fields2cover-api/
+WORKDIR /workspace/fields2cover/fields2cover-api
+RUN pip3 install -r requirements.txt
 
-
+FROM api_dev AS api
+RUN pip3 install waitress
+WORKDIR /workspace/fields2cover/fields2cover-api
+CMD ["python3", "api.py"]
