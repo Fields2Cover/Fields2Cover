@@ -12,4 +12,4 @@ DerivePointerAlignment: false
 PointerAlignment: Left
 SortIncludes: false
 SpaceAfterCStyleCast: true
-AccessModifierOffset: -3
+AccessModifierOffset: -1
