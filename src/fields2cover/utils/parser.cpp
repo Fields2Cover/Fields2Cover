@@ -12,6 +12,7 @@
 #include <nlohmann/json.hpp>
 
 #include "fields2cover/utils/transformation.h"
+#include <iostream>
 
 using json = nlohmann::json;
 
@@ -89,7 +90,7 @@ F2CPoint getPointFromJson(const json& ps) {
 }
 
 F2CCell getCellFromJson(const json& imported_cell) {
-  auto jsonToF2CRing = [] (const json& json_ring) {
+  auto jsonToF2CRing = [](const json& json_ring) {
     F2CLinearRing ring;
     for (auto&& ps : json_ring) {
       ring.addPoint(getPointFromJson(ps));
@@ -120,10 +121,10 @@ std::string gen_random(const int len) {
 }
 
 int importJsonData(json imported_field, F2CFields& fields) {
-  auto name = imported_field["properties"].contains("Name")
-                  ? imported_field["properties"]["Name"].get<std::string>()
-                  : "cell " + gen_random(3);
   for (auto&& imported_cell : imported_field["features"]) {
+    auto name = imported_cell["properties"].contains("Name")
+                    ? imported_cell["properties"]["Name"].get<std::string>()
+                    : "cell " + gen_random(3);
     fields.emplace_back(
         F2CField(F2CCells(getCellFromJson(imported_cell)), name));
   }
@@ -163,7 +164,8 @@ F2CSwaths importSwathsJsonData(const json& data) {
       line.addPoint(getPointFromJson(ps));
     }
     if (!imported_swath["properties"].contains("width")) {
-      std::cout << "Warning: Width property is missing for imported swath, defaulting to 0.1"
+      std::cout << "Warning: Width property is missing for imported swath, "
+                   "defaulting to 0.1"
                 << std::endl;
     }
 

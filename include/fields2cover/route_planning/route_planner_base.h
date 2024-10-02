@@ -21,7 +21,7 @@
 namespace f2c::rp {
 
 class RoutePlannerBase {
-  public:
+ public:
   /// Generate route to cover the swaths on a field.
   ///   If two consecutive swaths are far away,
   ///   the route connects both through the headland.
@@ -65,7 +65,7 @@ class RoutePlannerBase {
       const F2CPoint& end, double d_tol = 1e-4);
   virtual ~RoutePlannerBase() = default;
 
-  protected:
+ protected:
   /// Use the optimizer to generate the index of the points of the best
   ///   coverage route.
   virtual std::vector<int64_t> computeBestRoute(
@@ -77,7 +77,7 @@ class RoutePlannerBase {
       const F2CSwathsByCells& swaths_by_cells, const F2CGraph2D& coverage_graph,
       F2CGraph2D& shortest_graph) const;
 
-  protected:
+ protected:
   std::optional<F2CPoint> r_start;
   std::optional<F2CPoint> r_end;
 };
