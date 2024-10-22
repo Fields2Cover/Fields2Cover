@@ -62,7 +62,8 @@ class RoutePlannerBase {
   /// Generate the shortest path between two points in cells.
   virtual F2CRoute genShortestRoute(const F2CCells& cells,
       const F2CSwathsByCells& swaths_by_cells, const F2CPoint& start,
-      const F2CPoint& end, double d_tol = 1e-4);
+      const F2CPoint& end, double d_tol = 1e-4, bool use_swaths = false,
+      int swath_travel_cost = 10000);
   virtual ~RoutePlannerBase() = default;
 
  protected:

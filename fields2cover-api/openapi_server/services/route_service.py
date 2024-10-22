@@ -13,7 +13,7 @@ def sort_swaths(swaths, sorter_settings: SorterSettings) -> f2c.Swaths:
     if alg == "snake":
         snake_sorter = f2c.RP_Snake()
         swaths = snake_sorter.genSortedSwaths(swaths, variant)
-    elif alg == "boustrophedon":
+    elif alg == "boustrophedon":#
         boustrophedon_sorter = f2c.RP_Boustrophedon()
         swaths = boustrophedon_sorter.genSortedSwaths(swaths, variant)
     elif alg == "spiral":
@@ -41,13 +41,13 @@ def generate_route(workingLanes: str, transport_lanes: str, start_point: Point, 
     ordered_swaths = order_swaths(swaths, sorter_settings)
 
     rp.setStartAndEndPoint(to_point(start_point), to_point(end_point))
-    route = rp.genRoute(transport_lanes_cells, ordered_swaths, sorter_settings.algorithm == "optimal")
+    route = rp.genRoute(transport_lanes_cells, ordered_swaths, True, 0)
 
     f2c.Visualizer.figure()
     f2c.Visualizer.plot(route)
     # f2c.Visualizer.show()
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")
-    f2c.Visualizer.save(f"output/route_{timestamp}.png");   
+    f2c.Visualizer.save(f"output/route_r_{sorter_settings.algorithm}_{timestamp}.png");   
 
     return route
 
@@ -58,11 +58,18 @@ def generate_shortest_route(workingLanes: str, transport_lanes: str, start_point
     swathsByCells = f2c.SwathsByCells()
     swathsByCells.push_back(swaths)
     
-    route = rp.genShortestRoute(transport_lanes_cells, swathsByCells, to_point(start_point), to_point(end_point))
+    route = rp.genShortestRoute(transport_lanes_cells, swathsByCells, to_point(start_point), to_point(end_point), 0, True)
 
     f2c.Visualizer.figure()
     f2c.Visualizer.plot(route)
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")
-    f2c.Visualizer.save(f"output/shortestRoute_{timestamp}.png")
+    f2c.Visualizer.save(f"output/shortestRoute_r_{timestamp}.png")
+    
+    f2c.Visualizer.figure()
+    f2c.Visualizer.plot(swathsByCells)
+    f2c.Visualizer.plot(transport_lanes_cells)
+    timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")
+    f2c.Visualizer.save(f"output/shortestRoute_lanes_{timestamp}.png")
+
     return route
 

@@ -31,11 +31,19 @@ F2CRoute RoutePlannerBase::genRoute(const F2CCells& cells,
 }
 
 F2CRoute RoutePlannerBase::genShortestRoute(const F2CCells& cells,
-    const F2CSwathsByCells& swaths, const F2CPoint& start, const F2CPoint& end,
-    double d_tol) {
+    const F2CSwathsByCells& swaths_by_cells, const F2CPoint& start,
+    const F2CPoint& end, double d_tol, bool use_swaths, int swath_travel_cost) {
   F2CRoute route;
   f2c::rp::RoutePlannerBase route_planner;
-  auto g = route_planner.createShortestGraph(cells, swaths, d_tol);
+  auto g = route_planner.createShortestGraph(cells, swaths_by_cells, d_tol);
+
+  for (auto&& swaths : swaths_by_cells) {
+    for (auto&& s : swaths) {
+      g.addEdge(s.startPoint(), s.endPoint(), swath_travel_cost);
+      g.addEdge(s.endPoint(), s.endPoint(), swath_travel_cost);
+    }
+  }
+
   auto h = g.shortestPath(start, end);
   route.addConnection(h);
   return route;
@@ -110,8 +118,8 @@ F2CGraph2D addStartEndToGraph(const F2CCells& cells,
   for (auto&& swaths : swaths_by_cells) {
     for (auto&& s : swaths) {
       if (point_set) {
-        g.addDirectedEdge(s.startPoint(), deposit, shortest_graph);
-        g.addDirectedEdge(s.endPoint(), deposit, shortest_graph);
+        g.addEdge(s.startPoint(), deposit, shortest_graph);
+        g.addEdge(s.endPoint(), deposit, shortest_graph);
       } else {
         g.addEdge(s.startPoint(), deposit, 0);
         g.addEdge(s.endPoint(), deposit, 0);

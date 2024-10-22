@@ -22,7 +22,7 @@ def route_to_json(route: f2c.Route) -> str:
     # sometimes points are there twice, remove them
     parsed_json['coordinates'] = list(removeduplicate(parsed_json['coordinates']))
     
-    print(parsed_json)
+    # print(parsed_json)
     # continue with the parsed json data
     return parsed_json
 
@@ -45,8 +45,8 @@ def generate_route_post(generate_route_post_request):  # noqa: E501
 
         route = generate_route(json.dumps(req_json["workingLanes"]), json.dumps(req_json["transportLanes"]), req.start_point, req.end_point, req.sorter_settings)    
         return route_to_json(route)
-    except:
-        return {"error": f"An unexpected error occurred:"}, 400
+    except Exception as e:
+        return {"error": f"An unexpected error occurred: {str(e)}"}, 400
 
 def generate_shortest_route_post(generate_shortest_route_post_request):  # noqa: E501
     """Generate a route based on field data
