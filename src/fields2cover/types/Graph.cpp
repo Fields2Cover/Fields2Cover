@@ -5,6 +5,7 @@
 //=============================================================================
 
 #include <numeric>
+#include <algorithm>
 #include "fields2cover/types/Graph.h"
 
 namespace f2c::types {
