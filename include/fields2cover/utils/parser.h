@@ -18,25 +18,28 @@ namespace f2c {
 
 /// Class to parse files of the OGC Standards to our custom format
 class Parser {
- public:
-    /// Function to import file with gml extension.
-    /// @param file Path to the imported file.
-    /// @param fields Set of fields saved on _file.
-    static void importGml(const std::string& file, F2CFields& fields);
+  public:
+  /// Function to import file with gml extension.
+  /// @param file Path to the imported file.
+  /// @param fields Set of fields saved on _file.
+  static void importGml(const std::string& file, F2CFields& fields);
 
-    static F2CField importFieldGml(
-        const std::string& file, bool fail_silently = false);
+  static F2CField importFieldGml(
+      const std::string& file, bool fail_silently = false);
 
-    /// Function to import file with Json extension.
-    /// @param file Path to the imported file.
-    /// @param fields Set of fields saved on _file.
-    /// @return return 0 if the file was parsed correctly.
-    /// Otherwise, return a negative number.
-    static int importJson(const std::string& file, F2CFields& fields);
-
-    static F2CCell importCellJson(const std::string& file);
-    static F2CSwaths importSwathsJson(const std::string& file);
-    static F2CStrips importStripsJson(const std::string& file);
+  /// Function to import file with Json extension.
+  /// @param file Path to the imported file.
+  /// @param fields Set of fields saved on _file.
+  /// @return return 0 if the file was parsed correctly.
+  /// Otherwise, return a negative number.
+  static int importJson(const std::string& file, F2CFields& fields);
+  static int importJsonFromString(const std::string& data, F2CFields& fields);
+  static F2CCell importCellJson(const std::string& file);
+  static F2CCell importCellJsonFromString(const std::string& data);
+  static F2CSwaths importSwathsJson(const std::string& file);
+  static F2CSwaths importSwathsJsonFromString(const std::string& jsonString);
+  static F2CStrips importStripsJson(const std::string& file);
+  static F2CStrips importStripsJsonFromString(const std::string& jsonString);
 };
 
 }  // namespace f2c
