@@ -8,23 +8,24 @@
 #ifndef FIELDS2COVER_TYPES_GRAPH_H_
 #define FIELDS2COVER_TYPES_GRAPH_H_
 
-#include <vector>
+#include <cstdint>
 #include <functional>
-#include <utility>
 #include <unordered_map>
+#include <utility>
+#include <vector>
 
 namespace f2c::types {
 
 typedef std::unordered_map<size_t, std::unordered_map<size_t, int64_t>>
-  map_to_map_to_int;
+    map_to_map_to_int;
 typedef std::pair<std::vector<size_t>, int64_t> pair_vec_size__int;
 
 class Graph {
- public:
-  Graph& addDirectedEdge(size_t from, size_t to, int64_t cost);
-  Graph& addEdge(size_t i, size_t j, int64_t cost);
-  Graph& removeDirectedEdge(size_t from, size_t to);
-  Graph& removeEdge(size_t i, size_t j);
+public:
+  Graph &addDirectedEdge(size_t from, size_t to, int64_t cost);
+  Graph &addEdge(size_t i, size_t j, int64_t cost);
+  Graph &removeDirectedEdge(size_t from, size_t to);
+  Graph &removeEdge(size_t i, size_t j);
 
   size_t numNodes() const;
   size_t numEdges() const;
@@ -32,33 +33,27 @@ class Graph {
 
   std::vector<size_t> getEdgesFrom(size_t s) const;
 
-  int64_t getCostFromEdge(size_t from, size_t to,
-      int64_t INF = 1e15) const;
+  int64_t getCostFromEdge(size_t from, size_t to, int64_t INF = 1e15) const;
 
-  std::vector<std::vector<size_t>> allPathsBetween(
-      size_t from, size_t to) const;
+  std::vector<std::vector<size_t>> allPathsBetween(size_t from,
+                                                   size_t to) const;
 
   std::vector<std::vector<pair_vec_size__int>>
-    shortestPathsAndCosts(int64_t INF = 1e15);
+  shortestPathsAndCosts(int64_t INF = 1e15);
 
-  std::vector<size_t> shortestPath(size_t from, size_t to,
-        int64_t INF = 1e15);
+  std::vector<size_t> shortestPath(size_t from, size_t to, int64_t INF = 1e15);
 
-  int64_t shortestPathCost(size_t from, size_t to,
-        int64_t INF = 1e15);
+  int64_t shortestPathCost(size_t from, size_t to, int64_t INF = 1e15);
 
- protected:
-  void DFS(size_t from, size_t to,
-    std::vector<std::vector<size_t>>& routes,
-    std::vector<bool>& visited,
-    int& route_index) const;
+protected:
+  void DFS(size_t from, size_t to, std::vector<std::vector<size_t>> &routes,
+           std::vector<bool> &visited, int &route_index) const;
 
- protected:
+protected:
   map_to_map_to_int edges_;
   std::vector<std::vector<pair_vec_size__int>> shortest_paths_;
 };
 
-}  // namespace f2c::types
+} // namespace f2c::types
 
-#endif  // FIELDS2COVER_TYPES_GRAPH_H_
-
+#endif // FIELDS2COVER_TYPES_GRAPH_H_
