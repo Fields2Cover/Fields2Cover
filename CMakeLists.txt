@@ -25,6 +25,7 @@ option(BUILD_PYTHON "Build Python SWIG module" OFF)
 option(BUILD_DOC "Build Documentation" OFF)
 option(BUILD_SHARED_LIBS "Build shared library(.so)" ON)
 
+add_compile_options(-Wno-deprecated-declarations)
 
 
 if (BUILD_PYTHON)
