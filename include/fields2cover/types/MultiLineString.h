@@ -71,7 +71,7 @@ MultiLineString MultiLineString::Intersection(const Geometry<T, R>& g) const {
 template <class T, OGRwkbGeometryType R>
 MultiLineString MultiLineString::Intersection(
     const LineString& line, const Geometry<T, R>& g) {
-  auto inter = this->data_->Intersection(g.get());
+  auto inter = line->Intersection(g.get());
   f2c::types::MultiLineString lines(inter);
   OGRGeometryFactory::destroyGeometry(inter);
   return lines;
