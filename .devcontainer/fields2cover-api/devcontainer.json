@@ -1,0 +1,33 @@
+{
+    "name": "Fields2Cover-API-devcontainer",
+    "build": {
+        "dockerfile": "../../Dockerfile",
+        "target": "api_dev",
+        "args": {
+            "USERNAME": "${localEnv:USER}"
+        }
+    },
+    "containerEnv": {
+        "DISPLAY": "unix:0"
+    },
+    "mounts": [
+        "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached"
+    ],
+    "runArgs": [
+        "--privileged",
+        "--network=host"
+    ],
+    "features": {},
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "42Crunch.vscode-openapi",
+                "ms-python.debugpy"
+            ]
+        }
+    },
+    "remoteUser": "${localEnv:USER}",
+    "containerUser": "${localEnv:USER}",
+    "postCreateCommand": "pip3 install -r fields2cover-api/requirements.txt"
+}

@@ -31,12 +31,13 @@ class RoutePlannerBase {
   /// @param show_log Show log from the optimizer
   /// @param d_tol Tolerance distance to consider if two points are the same.
   /// @return Route that covers all the swaths
-  virtual F2CRoute genRoute(
-      const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells,
-      bool show_log = false, double d_tol = 1e-4, bool redirect_swaths = true);
+  virtual F2CRoute genRoute(const F2CCells& cells,
+      const F2CSwathsByCells& swaths_by_cells, bool show_log = false,
+      double d_tol = 1e-4, bool redirect_swaths = true);
 
   /// Set the start and the end of the route.
   void setStartAndEndPoint(const F2CPoint& p);
+  void setStartAndEndPoint(const F2CPoint& start, const F2CPoint& end);
 
   /// Create graph to compute the shortest path between two points
   ///   in the headlands.
@@ -44,9 +45,8 @@ class RoutePlannerBase {
   /// @param cells Headland swath rings used to travel through the headlands
   /// @param swaths_by_cells Swaths to be covered.
   /// @param d_tol Tolerance distance to consider if two points are the same.
-  virtual F2CGraph2D createShortestGraph(
-      const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells,
-      double d_tol) const;
+  virtual F2CGraph2D createShortestGraph(const F2CCells& cells,
+      const F2CSwathsByCells& swaths_by_cells, double d_tol) const;
 
   /// Create graph to compute the cost of covering the swaths in a given order.
   ///
@@ -55,12 +55,15 @@ class RoutePlannerBase {
   /// @param shortest_graph Graph to compute the shortest path
   ///          between two nodes.
   /// @param d_tol Tolerance distance to consider if two points are the same.
-  virtual F2CGraph2D createCoverageGraph(
-      const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells,
-      F2CGraph2D& shortest_graph,
+  virtual F2CGraph2D createCoverageGraph(const F2CCells& cells,
+      const F2CSwathsByCells& swaths_by_cells, F2CGraph2D& shortest_graph,
       double d_tol, bool redirect_swaths = true) const;
 
-
+  /// Generate the shortest path between two points in cells.
+  virtual F2CRoute genShortestRoute(const F2CCells& cells,
+      const F2CSwathsByCells& swaths_by_cells, const F2CPoint& start,
+      const F2CPoint& end, double d_tol = 1e-4, bool use_swaths = false,
+      int swath_travel_cost = 10000);
   virtual ~RoutePlannerBase() = default;
 
  protected:
@@ -72,17 +75,14 @@ class RoutePlannerBase {
   /// Tranform index of points to an actual Route.
   virtual F2CRoute transformSolutionToRoute(
       const std::vector<int64_t>& route_ids,
-      const F2CSwathsByCells& swaths_by_cells,
-      const F2CGraph2D& coverage_graph,
+      const F2CSwathsByCells& swaths_by_cells, const F2CGraph2D& coverage_graph,
       F2CGraph2D& shortest_graph) const;
 
  protected:
-  std::optional<F2CPoint> r_start_end;
+  std::optional<F2CPoint> r_start;
+  std::optional<F2CPoint> r_end;
 };
-
-
 
 }  // namespace f2c::rp
 
 #endif  // FIELDS2COVER_ROUTE_PLANNING_ROUTE_PLANNING_BASE_H_
-

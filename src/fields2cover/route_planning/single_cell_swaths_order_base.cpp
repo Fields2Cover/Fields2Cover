@@ -13,7 +13,7 @@ F2CSwaths SingleCellSwathsOrderBase::genSortedSwaths(
     const F2CSwaths& swaths, uint32_t variant) const {
   // Always sort swaths to work with them in the same direction.
   F2CSwaths new_swaths = swaths.clone();
-  if (new_swaths.size() > 0) {
+  if (new_swaths.size() > 1) {
     new_swaths.sort();
     this->changeStartPoint(new_swaths, variant);
     this->sortSwaths(new_swaths);
@@ -32,7 +32,4 @@ void SingleCellSwathsOrderBase::changeStartPoint(
   }
 }
 
-
-
 }  // namespace f2c::rp
-
