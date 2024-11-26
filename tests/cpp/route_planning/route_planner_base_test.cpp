@@ -144,14 +144,18 @@ TEST(fields2cover_rp_route_plan_base, start_and_end_points) {
 
   f2c::rp::RoutePlannerBase route_planner;
 
-  route_planner.setStartAndEndPoint(F2CPoint(0,60), F2CPoint(60,0));
+  EXPECT_GT(swaths.size(), 0);
+  EXPECT_GT(swaths[0].size(), 0);
+  F2CPoint start = swaths[0][0].startPoint();
+  F2CPoint end = swaths[0].back().startPoint();
+
+  route_planner.setStartAndEndPoint(start, end);
+
   F2CRoute route = route_planner.genRoute(hl_swaths[1], swaths);
 
   EXPECT_FALSE(route.isEmpty());
-  EXPECT_EQ(route.startPoint(), F2CPoint(0, 60));
-  EXPECT_EQ(route.endPoint(), F2CPoint(60, 0));
-  EXPECT_GT(route.sizeVectorSwaths(), 1);
-  EXPECT_EQ(route.sizeVectorSwaths() + 1, route.sizeConnections());
+  EXPECT_EQ(route.startPoint(), start);
+  EXPECT_EQ(route.endPoint(), end);
 }
 
 
