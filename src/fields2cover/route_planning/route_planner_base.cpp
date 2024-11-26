@@ -179,7 +179,9 @@ F2CGraph2D RoutePlannerBase::createCoverageGraph(const F2CCells& cells,
 
 std::vector<int64_t> RoutePlannerBase::computeBestRoute(
     const F2CGraph2D& cov_graph, bool show_log) const {
-  int depot_id = static_cast<int>(cov_graph.numNodes() - 1);
+  int depot_id_sub =
+      this->r_start != std::nullopt && this->r_end != std::nullopt ? 2 : 1;
+  int depot_id = static_cast<int>(cov_graph.numNodes() - depot_id_sub);
   const ortools::RoutingIndexManager::NodeIndex depot{depot_id};
 
   ortools::RoutingIndexManager manager(cov_graph.numNodes(), 1, depot);
