@@ -105,7 +105,7 @@ F2CCell getCellFromJson(const json& imported_cell) {
   return cell;
 }
 
-std::string gen_random(const int len) {
+std::string genRandom(const int len) {
   static const char alphanum[] =
       "0123456789"
       "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -124,7 +124,7 @@ int importJsonData(json imported_field, F2CFields& fields) {
   for (auto&& imported_cell : imported_field["features"]) {
     auto name = imported_cell["properties"].contains("Name")
                     ? imported_cell["properties"]["Name"].get<std::string>()
-                    : "cell " + gen_random(3);
+                    : "cell " + genRandom(3);
     fields.emplace_back(
         F2CField(F2CCells(getCellFromJson(imported_cell)), name));
   }
@@ -155,7 +155,8 @@ F2CCell Parser::importCellJsonFromString(const std::string& jsonString) {
   return getCellFromJson(imported_field["features"][0]);
 }
 
-F2CSwaths importSwathsJsonData(const json& data) {
+F2CSwaths importSwathsJsonData(
+    const json& data, bool fail_without_swath_width = false) {
   F2CSwaths swaths;
   int i = 0;
   for (auto&& imported_swath : data["features"]) {
@@ -164,14 +165,21 @@ F2CSwaths importSwathsJsonData(const json& data) {
       line.addPoint(getPointFromJson(ps));
     }
     if (!imported_swath["properties"].contains("width")) {
+      if (fail_without_swath_width) {
+        throw std::invalid_argument(
+            "Width property is missing for imported swath");
+      }
+
+#ifdef SHOW_IMPORT_WARNINGS
       std::cout << "Warning: Width property is missing for imported swath, "
                    "defaulting to 0.1"
                 << std::endl;
+#endif
     }
 
     auto width = imported_swath["properties"].contains("width")
                      ? imported_swath["properties"]["width"].get<double>()
-                     : 0.1;  // do not fail if the width is not present
+                     : 0.1;
     auto path_id = imported_swath["properties"].contains("path_id")
                        ? imported_swath["properties"]["path_id"].get<int>()
                        : i;

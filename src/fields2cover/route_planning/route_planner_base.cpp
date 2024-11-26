@@ -104,9 +104,9 @@ F2CGraph2D RoutePlannerBase::createShortestGraph(const F2CCells& cells,
   return g;
 }
 
-F2CGraph2D addStartEndToGraph(const F2CCells& cells,
+F2CGraph2D addStartEndToGraph(F2CGraph2D& g, const F2CCells& cells,
     const F2CSwathsByCells& swaths_by_cells, F2CGraph2D& shortest_graph,
-    F2CGraph2D g, F2CPoint deposit, bool point_set) {
+    F2CPoint deposit, bool point_set) {
   for (auto&& swaths : swaths_by_cells) {
     for (auto&& s : swaths) {
       if (point_set) {
@@ -164,14 +164,14 @@ F2CGraph2D RoutePlannerBase::createCoverageGraph(const F2CCells& cells,
     deposit_start = *this->r_start;
   }
 
-  g = addStartEndToGraph(cells, swaths_by_cells, shortest_graph, g,
+  g = addStartEndToGraph(g, cells, swaths_by_cells, shortest_graph,
       deposit_start, this->r_start != std::nullopt);
 
   F2CPoint deposit_end(-1e8, -1e8);  // Arbitrary point
   if (this->r_end) {
     deposit_end = *this->r_end;
   }
-  g = addStartEndToGraph(cells, swaths_by_cells, shortest_graph, g, deposit_end,
+  g = addStartEndToGraph(g, cells, swaths_by_cells, shortest_graph, deposit_end,
       this->r_end != std::nullopt);
 
   return g;
