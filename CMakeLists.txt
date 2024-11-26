@@ -11,6 +11,7 @@ project(Fields2Cover
 
 
 option(ALLOW_PARALLELIZATION "Allow parallel algorithms" ON)
+option(SHOW_IMPORT_WARNINGS "Show warnings on import" ON)
 option(BUILD_TUTORIALS "Build tutorials" ON)
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_PYTHON "Build Python SWIG module" ON)
