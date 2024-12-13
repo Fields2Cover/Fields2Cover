@@ -23,6 +23,9 @@ enum class SwathOverlapType {
 
 class SwathGeneratorBase {
  public:
+  bool getAllowOverlap() const;
+  void setAllowOverlap(bool);
+
   SwathOverlapType getOverlapType() const;
   void setOverlapType(SwathOverlapType);
 
