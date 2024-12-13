@@ -14,10 +14,18 @@
 
 namespace f2c::sg {
 
-enum class SwathOverlapType {NO_OVERLAP, END_OVERLAP, MIDDLE_OVERLAP, EVENLY_DISTRIBUTED_OVERLAP};
+enum class SwathOverlapType {
+    NO_OVERLAP = 0,
+    END_OVERLAP = 1,
+    MIDDLE_OVERLAP = 2,
+    EVENLY_DISTRIBUTED_OVERLAP= 3
+};
 
 class SwathGeneratorBase {
  public:
+  SwathOverlapType getOverlapType() const;
+  void setOverlapType(SwathOverlapType);
+
   SwathOverlapType getOverlapType() const;
   void setOverlapType(SwathOverlapType);
 

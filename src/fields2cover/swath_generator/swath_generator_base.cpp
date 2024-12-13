@@ -10,6 +10,21 @@
 
 namespace f2c::sg {
 
+bool SwathGeneratorBase::getAllowOverlap() const {
+  if (this->overlap_type == SwathOverlapType::NO_OVERLAP) {
+    return false;
+  }
+  return true;
+}
+
+void SwathGeneratorBase::setAllowOverlap(bool value) {
+  if (value) {
+    this->overlap_type = SwathOverlapType::EVENLY_DISTRIBUTED_OVERLAP;
+  } else {
+    this->overlap_type = SwathOverlapType::NO_OVERLAP;
+  }
+}
+
 SwathOverlapType SwathGeneratorBase::getOverlapType() const {
   return this->overlap_type;
 }
