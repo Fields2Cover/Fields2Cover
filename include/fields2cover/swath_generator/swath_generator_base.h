@@ -14,10 +14,12 @@
 
 namespace f2c::sg {
 
+enum class SwathOverlapType {NO_OVERLAP, END_OVERLAP, MIDDLE_OVERLAP, EVENLY_DISTRIBUTED_OVERLAP};
+
 class SwathGeneratorBase {
  public:
-  bool getAllowOverlap() const;
-  void setAllowOverlap(bool);
+  SwathOverlapType getOverlapType() const;
+  void setOverlapType(SwathOverlapType);
 
   virtual F2CSwaths generateBestSwaths(f2c::obj::SGObjective& obj,
       double op_width, const F2CCell& poly);
@@ -40,7 +42,7 @@ class SwathGeneratorBase {
   virtual ~SwathGeneratorBase() = default;
 
  protected:
-  bool allow_overlap {false};
+  SwathOverlapType overlap_type {SwathOverlapType::NO_OVERLAP};
 };
 
 }  // namespace f2c::sg

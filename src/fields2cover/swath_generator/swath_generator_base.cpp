@@ -5,15 +5,17 @@
 //=============================================================================
 
 #include "fields2cover/swath_generator/swath_generator_base.h"
+#include "fields2cover/utils/visualizer.h"
+#include <cmath>
 
 namespace f2c::sg {
 
-bool SwathGeneratorBase::getAllowOverlap() const {
-  return this->allow_overlap;
+SwathOverlapType SwathGeneratorBase::getOverlapType() const {
+  return this->overlap_type;
 }
 
-void SwathGeneratorBase::setAllowOverlap(bool value) {
-  this->allow_overlap = value;
+void SwathGeneratorBase::setOverlapType(SwathOverlapType type) {
+  this->overlap_type = type;
 }
 
 F2CSwaths SwathGeneratorBase::generateBestSwaths(
@@ -39,7 +41,6 @@ F2CSwathsByCells SwathGeneratorBase::generateSwaths(double angle,
   return swaths;
 }
 
-
 F2CSwaths SwathGeneratorBase::generateSwaths(double angle,
     double op_width, const F2CCell& poly) {
   auto rot_poly {F2CPoint(0.0, 0.0).rotateFromPoint(-angle, poly)};
@@ -48,12 +49,45 @@ F2CSwaths SwathGeneratorBase::generateSwaths(double angle,
   F2CPoint min_point(rot_poly.getDimMinX(), rot_poly.getDimMinY());
   auto seed_curve = rot_poly.createStraightLongLine(min_point, 0.0);
 
-  double curve_y {-0.5 * op_width};
   F2CMultiLineString paths;
-  while (field_height > curve_y + (allow_overlap ? 0.0 : 0.5 * op_width)) {
-    curve_y += op_width;
+
+  double increment = op_width;
+  int num_paths = std::floor(field_height / op_width);
+  double beginning_offset = 0.5 * op_width;
+  double end_offset = 0;
+
+  switch (overlap_type)
+  {
+  case SwathOverlapType::NO_OVERLAP:
+    break;
+  case SwathOverlapType::END_OVERLAP:
+    end_offset = field_height - (0.5 * op_width);
+    break;
+  case SwathOverlapType::MIDDLE_OVERLAP:
+    num_paths = std::floor(field_height / op_width);
+    end_offset = field_height - (0.5 * op_width);
+    op_width = (field_height - op_width) / num_paths;
+    increment = op_width;
+    break;
+  case SwathOverlapType::EVENLY_DISTRIBUTED_OVERLAP:
+    num_paths = std::floor(field_height / op_width);
+    op_width = (field_height - op_width) / num_paths;
+    end_offset = field_height - (0.5 * op_width);
+    increment = op_width;
+    break;
+  default:
+    break;
+  }
+
+  for (int i = 0; i < num_paths; i++) {
+    double path_y = beginning_offset + (i * increment);
     paths.addGeometry(F2CPoint(0.0, 0.0).rotateFromPoint(angle,
-        seed_curve + F2CPoint(0.0, curve_y)));
+        seed_curve + F2CPoint(0.0, path_y)));
+  }
+
+  if (end_offset != 0) {
+    paths.addGeometry(F2CPoint(0.0, 0.0).rotateFromPoint(angle,
+        seed_curve + F2CPoint(0.0, end_offset)));
   }
 
   F2CSwaths swaths;
