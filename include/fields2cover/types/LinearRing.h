@@ -46,6 +46,8 @@ struct LinearRing : public Geometries<LinearRing, OGRLinearRing, wkbLinearRing,
   const Point startPoint() const;
   const Point endPoint() const;
   bool isClockwise() const;
+  bool isClosed() const;
+  LinearRing& closeRing();
 
   Point closestPointTo(const Point& p) const;
 };

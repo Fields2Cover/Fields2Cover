@@ -88,17 +88,17 @@ F2CPoint getPointFromJson(const json& ps) {
 }
 
 F2CCell getCellFromJson(const json& imported_cell) {
-  F2CLinearRing outer_ring;
-  for (auto&& ps : imported_cell["geometry"]["coordinates"][0]) {
-    outer_ring.addPoint(getPointFromJson(ps));
-  }
-  F2CCell cell(outer_ring);
-  for (int i = 1; i < imported_cell["geometry"]["coordinates"].size(); ++i) {
-    F2CLinearRing inner_ring;
-    for (auto&& ps : imported_cell["geometry"]["coordinates"][i]) {
-      inner_ring.addPoint(getPointFromJson(ps));
+  auto jsonToF2CRing = [] (const json& json_ring) {
+    F2CLinearRing ring;
+    for (auto&& ps : json_ring) {
+      ring.addPoint(getPointFromJson(ps));
     }
-    cell.addRing(inner_ring);
+    return ring;
+  };
+  F2CCell cell;
+  auto json_rings = imported_cell["geometry"]["coordinates"];
+  for (int i = 0; i < json_rings.size(); ++i) {
+    cell.addRing(jsonToF2CRing(json_rings[i]));
   }
   return cell;
 }

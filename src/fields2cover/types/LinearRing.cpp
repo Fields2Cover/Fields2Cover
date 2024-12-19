@@ -122,6 +122,17 @@ bool LinearRing::isClockwise() const {
   return data_->isClockwise();
 }
 
+bool LinearRing::isClosed() const {
+  return data_->IsEmpty() || data_->get_IsClosed();
+}
+
+LinearRing& LinearRing::closeRing() {
+  if (!this->isClosed()) {
+    this->addPoint(this->startPoint());
+  }
+  return *this;
+}
+
 Point LinearRing::closestPointTo(const Point& p) const {
   std::vector<double> dist;
   std::vector<Point> ps;
