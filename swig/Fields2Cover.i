@@ -312,11 +312,17 @@ DEFINE_PP_COSTS(BaseObjective<f2c::obj::PPObjective>, computeCostWithMinimizingS
 %rename(RP_CustomOrder) f2c::rp::CustomOrder;
 %include "fields2cover/route_planning/custom_order.h"
 
+// Wrap std::vector<long> and let SWIG handle the destructor
+%feature("destructor", "delete") std::vector<long>;
+
+// Explicitly wrap the std::vector<long> type
+%template(LongVector) std::vector<long>;
+
 
 %ignore f2c::rp::RoutePlannerBase::createShortestGraph;
 %ignore f2c::rp::RoutePlannerBase::createCoverageGraph;
-%ignore f2c::rp::RoutePlannerBase::computeBestRoute;
-%ignore f2c::rp::RoutePlannerBase::transformSolutionToRoute;
+// %ignore f2c::rp::RoutePlannerBase::computeBestRoute;
+// %ignore f2c::rp::RoutePlannerBase::transformSolutionToRoute;
 %rename(RP_RoutePlannerBase) f2c::rp::RoutePlannerBase;
 %include "fields2cover/route_planning/route_planner_base.h"
 
