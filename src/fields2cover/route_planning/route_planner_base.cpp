@@ -26,7 +26,7 @@ F2CRoute RoutePlannerBase::genRoute(
   F2CGraph2D cov_graph = createCoverageGraph(
       cells, swaths, shortest_graph, d_tol, redirect_swaths);
 
-  std::vector<int64_t> v_route = computeBestRoute(cov_graph, show_log);
+  std::vector<long int> v_route = computeBestRoute(cov_graph, show_log);
   return transformSolutionToRoute(
       v_route, swaths, cov_graph, shortest_graph);
 }
@@ -144,7 +144,7 @@ F2CGraph2D RoutePlannerBase::createCoverageGraph(
   return g;
 }
 
-std::vector<int64_t> RoutePlannerBase::computeBestRoute(
+std::vector<long int> RoutePlannerBase::computeBestRoute(
     const F2CGraph2D& cov_graph, bool show_log) const {
   int depot_id = static_cast<int>(cov_graph.numNodes()-1);
   const ortools::RoutingIndexManager::NodeIndex depot{depot_id};
@@ -152,7 +152,7 @@ std::vector<int64_t> RoutePlannerBase::computeBestRoute(
   ortools::RoutingModel routing(manager);
 
   const int transit_callback_index = routing.RegisterTransitCallback(
-      [&cov_graph, &manager] (int64_t from, int64_t to) -> int64_t {
+      [&cov_graph, &manager] (long int from, long int to) -> long int {
         auto from_node = manager.IndexToNode(from).value();
         auto to_node = manager.IndexToNode(to).value();
         return cov_graph.getCostFromEdge(from_node, to_node);
@@ -167,13 +167,13 @@ std::vector<int64_t> RoutePlannerBase::computeBestRoute(
   //   ortools::LocalSearchMetaheuristic::GUIDED_LOCAL_SEARCH);
   searchParameters.set_local_search_metaheuristic(
     ortools::LocalSearchMetaheuristic::AUTOMATIC);
-  searchParameters.mutable_time_limit()->set_seconds(1);
+  searchParameters.mutable_time_limit()->set_seconds(30);
   searchParameters.set_log_search(show_log);
   const ortools::Assignment* solution =
     routing.SolveWithParameters(searchParameters);
 
-  int64_t index = routing.Start(0);
-  std::vector<int64_t> v_id;
+  long int index = routing.Start(0);
+  std::vector<long int> v_id;
 
   index = solution->Value(routing.NextVar(index));
   while (!routing.IsEnd(index)) {
@@ -184,7 +184,7 @@ std::vector<int64_t> RoutePlannerBase::computeBestRoute(
 }
 
 F2CRoute RoutePlannerBase::transformSolutionToRoute(
-    const std::vector<int64_t>& route_ids,
+    const std::vector<long int>& route_ids,
     const F2CSwathsByCells& swaths_by_cells,
     const F2CGraph2D& coverage_graph,
     F2CGraph2D& shortest_graph) const {
