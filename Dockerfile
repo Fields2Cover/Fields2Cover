@@ -101,7 +101,7 @@ WORKDIR /workspace/fields2cover/build
 
 RUN cmake -DBUILD_PYTHON=ON \
     -DBUILD_TUTORIALS=OFF \
-    -DBUILD_TESTS=ON \
+    -DBUILD_TESTING=ON \
     -DBUILD_DOC=OFF \
     -DCMAKE_BUILD_TYPE=Release ..
 
