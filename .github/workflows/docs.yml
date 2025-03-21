@@ -92,7 +92,7 @@ jobs:
             -DBUILD_PYTHON=OFF   \
             -DALLOW_PARALLELIZATION=ON  \
             -DBUILD_TUTORIALS=OFF \
-            -DBUILD_TESTS=ON   \
+            -DBUILD_TESTING=ON   \
             -DBUILD_DOC=ON
 
       - name: Build

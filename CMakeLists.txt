@@ -12,7 +12,6 @@ project(Fields2Cover
 
 option(ALLOW_PARALLELIZATION "Allow parallel algorithms" ON)
 option(BUILD_TUTORIALS "Build tutorials" ON)
-option(BUILD_TESTS "Build tests" ON)
 option(BUILD_PYTHON "Build Python SWIG module" ON)
 option(BUILD_DOC "Build Documentation" OFF)
 option(BUILD_SHARED_LIBS "Build shared library(.so)" ON)
@@ -166,7 +165,7 @@ endif(BUILD_PYTHON)
 ######################### test ######################
 #####################################################
 
-if(BUILD_TESTS AND GNUPLOT_FOUND)
+if(BUILD_TESTING AND GNUPLOT_FOUND)
   find_package(GTest REQUIRED)
   include(CTest)
   enable_testing()
@@ -174,7 +173,7 @@ if(BUILD_TESTS AND GNUPLOT_FOUND)
     GTEST_COLOR=1 ${CMAKE_CTEST_COMMAND} --verbose --test-dir tests/
   )
   add_subdirectory(tests)
-endif(BUILD_TESTS AND GNUPLOT_FOUND)
+endif(BUILD_TESTING AND GNUPLOT_FOUND)
 
 #####################################################
 ######################### docs ######################
