@@ -41,8 +41,8 @@ TEST(fields2cover_types_robot, init) {
   EXPECT_NEAR(robot.getTurnVel(),            5.0, 1e-5);
 
 
-  EXPECT_THROW( F2CRobot(0), std::out_of_range);
-  EXPECT_THROW( F2CRobot(-3), std::out_of_range);
+  EXPECT_THROW(F2CRobot(0), std::out_of_range);
+  EXPECT_THROW(F2CRobot(-3), std::out_of_range);
 
   F2CRobot r1 = robot;
   EXPECT_NEAR(r1.getWidth(), 5.0, 1e-5);
