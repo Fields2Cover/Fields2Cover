@@ -8,6 +8,7 @@
 #ifndef FIELDS2COVER_TYPES_GRAPH_H_
 #define FIELDS2COVER_TYPES_GRAPH_H_
 
+#include <cstdint>
 #include <vector>
 #include <functional>
 #include <utility>
@@ -61,4 +62,3 @@ class Graph {
 }  // namespace f2c::types
 
 #endif  // FIELDS2COVER_TYPES_GRAPH_H_
-
