@@ -139,7 +139,7 @@ Then, from the source code folder of the project:
 
    mkdir -p build;
    cd build;
-   cmake -DCMAKE_BUILD_TYPE=Release -DUSE_ORTOOLS_RELEASE=ON ..;
+   cmake ..;
    make -j$(nproc);
 
 Finally, you can install it as:
