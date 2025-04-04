@@ -1,5 +1,5 @@
 
-cmake_minimum_required(VERSION 3.12.4...3.22)
+cmake_minimum_required(VERSION 3.12.4)
 
 project(Fields2Cover
   VERSION 2.0.0
@@ -18,9 +18,6 @@ option(BUILD_SHARED_LIBS "Build shared library(.so)" ON)
 option(USE_ORTOOLS_RELEASE "Get or-tools from release tarball" OFF)
 option(USE_ORTOOLS_FETCH_SRC "Get or-tools from source" OFF)
 option(USE_ORTOOLS_VENDOR "Get or-tools from ortools_vendor" OFF)
-
-option(CMAKE_POLICY_VERSION_MINIMUM "" 3.5)
-
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
