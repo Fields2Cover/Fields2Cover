@@ -19,6 +19,8 @@ option(USE_ORTOOLS_RELEASE "Get or-tools from release tarball" OFF)
 option(USE_ORTOOLS_FETCH_SRC "Get or-tools from source" OFF)
 option(USE_ORTOOLS_VENDOR "Get or-tools from ortools_vendor" OFF)
 
+option(CMAKE_POLICY_VERSION_MINIMUM "" 3.5)
+
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
