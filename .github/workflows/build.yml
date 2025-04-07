@@ -99,12 +99,12 @@ jobs:
           mkdir instdir
           cd build
           cmake \
+            --trace-expand
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
             -G "${{matrix.generators}}" \
             -DCMAKE_C_COMPILER=gcc-${{ matrix.gcc }} \
             -DCMAKE_CXX_COMPILER=g++-${{ matrix.gcc }} \
             -DCMAKE_INSTALL_PREFIX:PATH=../instdir  \
-            -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
             -DBUILD_PYTHON=ON   \
             -DALLOW_PARALLELIZATION=ON  \
             -DBUILD_TUTORIALS=OFF \
