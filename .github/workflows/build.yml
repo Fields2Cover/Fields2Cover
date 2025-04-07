@@ -105,7 +105,6 @@ jobs:
           mkdir instdir
           cd build
           cmake \
-            --trace-expand
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
             -G "${{matrix.generators}}" \
             -DCMAKE_C_COMPILER=gcc-${{ matrix.gcc }} \
