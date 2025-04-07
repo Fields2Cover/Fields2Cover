@@ -77,7 +77,7 @@ function(f2c_declare_dependencies)
   )
 
   FetchContent_Declare(json FETCHCONTENT_UPDATES_DISCONNECTED
-    URL https://github.com/nlohmann/json.git
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
     GIT_TAG 4424a0fcc1c7fa640b5c87d26776d99150dacd10
   )
 
