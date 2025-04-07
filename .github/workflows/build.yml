@@ -58,10 +58,10 @@ jobs:
           cmake CMakeLists.txt
           make -j2
           make install
-          #cp *.a /usr/lib/ 2>\dev\null || :
-          #cp lib/*.a /usr/lib/ 2>\dev\null || :
-          #ln -s /usr/lib/libgtest.a /usr/local/lib/libgtest.a
-          #ln -s /usr/lib/libgtest_main.a /usr/local/lib/libgtest_main.a
+          cp *.a /usr/lib/ 2>\dev\null || :
+          cp lib/*.a /usr/lib/ 2>\dev\null || :
+          ln -s /usr/lib/libgtest.a /usr/local/lib/libgtest.a
+          ln -s /usr/lib/libgtest_main.a /usr/local/lib/libgtest_main.a
 
       - name: Install swig
         run: |  
