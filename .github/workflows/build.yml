@@ -52,7 +52,6 @@ jobs:
 
       - name: Install Gtest
         run: |          
-          #cd /usr/src/gtest
           git clone --depth 1 --branch v1.16.0 https://github.com/google/googletest.git
           cd googletest/
           cmake CMakeLists.txt
@@ -60,8 +59,6 @@ jobs:
           make install
           cp *.a /usr/lib/ 2>\dev\null || :
           cp lib/*.a /usr/lib/ 2>\dev\null || :
-          #ln -s /usr/lib/libgtest.a /usr/local/lib/libgtest.a
-          #ln -s /usr/lib/libgtest_main.a /usr/local/lib/libgtest_main.a
 
       - name: Install swig
         run: |  
