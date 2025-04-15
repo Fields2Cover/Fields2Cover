@@ -19,6 +19,9 @@ class DubinsCurvesCC : public TurningBase {
   F2CPath createSimpleTurn(const F2CRobot& robot,
       double dist_start_pos, double start_angle,
       double end_angle) override;
+  F2CPath createConstrainedTurn(const F2CRobot& robot,
+      const F2CPoint& start_pos, double start_angle, double start_curvature,
+      const F2CPoint& end_pos, double end_angle, double end_curvature, const bool fix_loops=false);
 };
 
 }  // namespace f2c::pp
