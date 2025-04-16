@@ -64,8 +64,8 @@ struct Path {
 
   void mirrorX();
   void mirrorY();
-  void turnImplementOff();
-  void turnImplementOn();
+  // void turnImplementOff();
+  // void turnImplementOn();
   void setBackwardDir();
   void setBackwardDir(int i);
   void setForwardDir();
