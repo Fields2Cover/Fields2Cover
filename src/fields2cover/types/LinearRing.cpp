@@ -131,6 +131,10 @@ bool LinearRing::isClockwise() const {
   return data_->isClockwise();
 }
 
+bool LinearRing::isClosed() const {
+  return this->size() > 2 && this->startPoint() == this->endPoint();
+}
+
 double LinearRing::minAltitude() const {
   double alt {std::numeric_limits<double>::max()};
   for (size_t i = 0; i < size() - 1; ++i) {
