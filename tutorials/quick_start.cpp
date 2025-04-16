@@ -9,6 +9,7 @@
 #include "fields2cover.h"
 
 int main() {
+  /*
   // Import field
   F2CField field = f2c::Parser::importFieldGml(std::string(DATA_PATH) + "test1.xml");
   F2CRobot robot (2.0, 6.0, 0.5, 0.2);
@@ -26,6 +27,7 @@ int main() {
   f2c::Visualizer::plot(cov_path);
   f2c::Visualizer::show();
   f2c::Visualizer::save("cov_path_quick_start.png");
+  */
 
   return 0;
 }

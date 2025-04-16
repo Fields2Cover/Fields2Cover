@@ -18,6 +18,13 @@ std::unique_ptr<OGRCoordinateTransformation,
 }
 
 void Transform::transform(F2CField& field, const std::string& coord_sys_to) {
+  auto reload_points = field.getReloadPoints();
+  for (auto&& pair_vp : reload_points) {
+    for (auto&& p : pair_vp.second) {
+      p = transform(p + field.getRefPoint(), field.getCRS(), coord_sys_to);
+    }
+  }
+
   if (!field.isEmpty()) {
     field.setField(field.getField() + field.getRefPoint());
     field.getField()->transform(
@@ -28,8 +35,16 @@ void Transform::transform(F2CField& field, const std::string& coord_sys_to) {
     field.setRefPoint( \
         transform(field.getRefPoint(), field.getCRS(), coord_sys_to));
   }
+  field.setReloadPoints(reload_points - field.getRefPoint());
+
   field.setPrevCRS(field.getCRS());
   field.setCRS(coord_sys_to);
+}
+
+void Transform::transform(F2CFields& fields, const std::string& coord_sys_to) {
+  for (auto&& f : fields) {
+    transform(f, coord_sys_to);
+  }
 }
 
 F2CRoute Transform::transformRouteWithFieldRef(const F2CRoute& route,
@@ -66,15 +81,18 @@ F2CPath Transform::transformPathWithFieldRef(const F2CPath& path,
   }
   for (size_t i = 0; i < new_path.size() - 1; ++i) {
     new_path[i].len = new_path[i].point.distance(new_path[i+1].point);
-    new_path[i].angle = (new_path[i+1].point - new_path[i].point).getAngleFromPoint();
+    new_path[i].angle =
+      (new_path[i+1].point - new_path[i].point).getAngleFromPoint();
   }
 
 
   return new_path;
 }
 
-F2CMultiPoint Transform::transformMultiPointWithFieldRef(const F2CMultiPoint& mp,
-      const F2CField& field, const std::string& coord_sys_to) {
+F2CMultiPoint Transform::transformMultiPointWithFieldRef(
+    const F2CMultiPoint& mp,
+      const F2CField& field,
+      const std::string& coord_sys_to) {
   F2CMultiPoint new_mp;
   auto coords = generateCoordTransf(field.getCRS(), coord_sys_to);
   for (auto&& p : mp) {
@@ -193,6 +211,11 @@ void Transform::transformToUTM(F2CField& field, bool is_etrs89_opt) {
   field.setPrevCRS(field_crs);
 }
 
+void Transform::transformToUTM(F2CFields& fields, bool is_etrs89_opt) {
+  for (auto&& f : fields) {
+    transformToUTM(f, is_etrs89_opt);
+  }
+}
 
 void Transform::transformToPrevCRS(F2CField& field) {
   if (field.getPrevCRS().empty()) {
@@ -200,6 +223,12 @@ void Transform::transformToPrevCRS(F2CField& field) {
         "Error in Transform::transformToUTM. No previous CRS recorded.");
   }
   transform(field, field.getPrevCRS());
+}
+
+void Transform::transformToPrevCRS(F2CFields& fields) {
+  for (auto&& f : fields) {
+    transformToPrevCRS(f);
+  }
 }
 
 F2CRoute Transform::transformToPrevCRS(

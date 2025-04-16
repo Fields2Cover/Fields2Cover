@@ -5,6 +5,7 @@
 //=============================================================================
 
 #include <tinyxml2.h>
+#include <filesystem>
 #include <boost/optional.hpp>
 #include <nlohmann/json.hpp>
 #include "fields2cover/utils/parser.h"
@@ -25,6 +26,19 @@ F2CField Parser::importFieldGml(
   // the issue.
   std::locale::global(std::locale::classic());
 
+  std::string file_type = "GAOS";
+  std::vector<std::string> tags {
+    "id",
+    "Field",
+    "",
+    "geometry",
+    "gml:Polygon",
+    "srsName",
+    "gml:outerBoundaryIs",
+    "gml:LinearRing",
+    "gml:coordinates",
+  };
+
   tinyxml2::XMLDocument doc;
   doc.LoadFile(file.c_str());
   auto* p_parcel = doc.RootElement();
@@ -33,46 +47,84 @@ F2CField Parser::importFieldGml(
     throw std::invalid_argument("File not found");
   }
 
+  if (std::string(p_parcel->Name()).compare("wfs:FeatureCollection") == 0) {
+    file_type = "wfs";
+    tags[0] = "gml:id";
+    tags[1] = "gml:featureMember";
+    tags[2] = "referentiepercelen:referentiepercelen";
+    tags[3] = "referentiepercelen:geom";
+    tags[6] = "gml:exterior";
+    tags[7] = "gml:LinearRing";
+    tags[8] = "gml:posList";
+  }
+
   std::string id {""};
 
-  auto e_result = p_parcel->Attribute("id");
+  auto e_result = p_parcel->Attribute(tags[0].c_str());
   if (e_result != nullptr) {
     id = e_result;
   }
 
-  auto* p_field = p_parcel->FirstChildElement("Field");
+  F2CCells cells;
 
-  auto* p_polygon = p_field\
-            ->FirstChildElement("geometry")\
-            ->FirstChildElement("gml:Polygon");
+  std::string coord_sys;
+  for (auto* p_field = p_parcel->FirstChildElement(tags[1].c_str());
+      p_field != nullptr;
+      p_field = p_field->NextSiblingElement(tags[1].c_str())) {
+    auto* p_field2 = p_field;
+    if (!tags[2].empty()) {
+      p_field2 = p_field->FirstChildElement(tags[2].c_str());
+    }
+    auto* p_polygon = p_field2->FirstChildElement(tags[3].c_str())
+                             ->FirstChildElement(tags[4].c_str());
+    coord_sys = p_polygon->Attribute(tags[5].c_str());
 
-  std::string coord_sys = p_polygon->Attribute("srsName");
+    auto* p_coords = p_polygon->FirstChildElement(tags[6].c_str())
+                              ->FirstChildElement(tags[7].c_str())
+                              ->FirstChildElement(tags[8].c_str());
+    std::string s_coords = std::string(p_coords->GetText());
+    auto findAndReplaceAll = [](
+        std::string& data, std::string toSearch, std::string replaceStr) {
+      size_t pos = data.find(toSearch);
+      while (pos != std::string::npos) {
+        data.replace(pos, toSearch.size(), replaceStr);
+        pos = data.find(toSearch, pos + replaceStr.size());
+      }
+      return;
+    };
+    auto replaceNthSpace = [] (std::string& data, int n) {
+      int s = 0;
+      for (size_t i = 0; i < data.length()-1; ++i) {
+        if (data[i] == ' ') {
+          ++s;
+          if (s % n == 0) {
+            data[i] = ',';
+          }
+        }
+      }
+      return;
+    };
+    if (file_type.compare("GAOS") == 0) {
+      findAndReplaceAll(s_coords, ",", ";");
+      findAndReplaceAll(s_coords, " ", ", ");
+      findAndReplaceAll(s_coords, ";", " ");
+    } else if (file_type.compare("wfs") == 0) {
+      replaceNthSpace(s_coords, 2);
+    }
+    s_coords = "POLYGON ((" + s_coords + "))";
 
-  std::string p_coords = std::string(
-            p_polygon->FirstChildElement("gml:outerBoundaryIs")\
-            ->FirstChildElement("gml:LinearRing")\
-            ->FirstChildElement("gml:coordinates")\
-            ->GetText());
-  auto findAndReplaceAll =
-      [](std::string& data, std::string toSearch, std::string replaceStr) {
-            size_t pos = data.find(toSearch);
-            while (pos != std::string::npos) {
-                data.replace(pos, toSearch.size(), replaceStr);
-                pos = data.find(toSearch, pos + replaceStr.size());
-            }
-            return;
-      };
-  findAndReplaceAll(p_coords, ",", ";");
-  findAndReplaceAll(p_coords, " ", ", ");
-  findAndReplaceAll(p_coords, ";", " ");
-  p_coords = "POLYGON ((" + p_coords + "))";
-  OGRGeometry* new_geom{};
-  auto spt_ref = Transform::createSptRef(coord_sys, coord_frame_fail_silently);
-  OGRGeometryFactory::createFromWkt(p_coords.c_str(), spt_ref.get(), &new_geom);
+    OGRGeometry* new_geom{};
+    auto spt_ref = Transform::createSptRef(
+        coord_sys, coord_frame_fail_silently);
+    OGRGeometryFactory::createFromWkt(
+        s_coords.c_str(), spt_ref.get(), &new_geom);
+    F2CCell cell(new_geom);
+    cells.addGeometry(cell.clone());
+    OGRGeometryFactory::destroyGeometry(new_geom);
+  }
 
-  F2CField field(F2CCells(new_geom), id);
+  F2CField field(cells, id);
   field.setCRS(coord_sys);
-  OGRGeometryFactory::destroyGeometry(new_geom);
 
   return field;
 }
@@ -88,17 +140,17 @@ F2CPoint getPointFromJson(const json& ps) {
 }
 
 F2CCell getCellFromJson(const json& imported_cell) {
-  auto jsonToF2CRing = [] (const json& json_ring) {
-    F2CLinearRing ring;
-    for (auto&& ps : json_ring) {
-      ring.addPoint(getPointFromJson(ps));
+  F2CLinearRing outer_ring;
+  for (auto&& ps : imported_cell["geometry"]["coordinates"][0]) {
+    outer_ring.addPoint(getPointFromJson(ps));
+  }
+  F2CCell cell(outer_ring);
+  for (int i = 1; i < imported_cell["geometry"]["coordinates"].size(); ++i) {
+    F2CLinearRing inner_ring;
+    for (auto&& ps : imported_cell["geometry"]["coordinates"][i]) {
+      inner_ring.addPoint(getPointFromJson(ps));
     }
-    return ring;
-  };
-  F2CCell cell;
-  auto json_rings = imported_cell["geometry"]["coordinates"];
-  for (int i = 0; i < json_rings.size(); ++i) {
-    cell.addRing(jsonToF2CRing(json_rings[i]));
+    cell.addRing(inner_ring);
   }
   return cell;
 }
@@ -109,9 +161,8 @@ int Parser::importJson(const std::string& file, F2CFields& fields) {
   json imported_field = json::parse(f);
 
   for (auto&& imported_cell : imported_field["features"]) {
-    fields.emplace_back(
-      F2CField(F2CCells(getCellFromJson(imported_cell)),
-        imported_cell["properties"]["Name"]));
+    fields.emplace_back(F2CCells(getCellFromJson(imported_cell)),
+        imported_cell["properties"]["Name"]);
   }
   return 0;
 }
@@ -150,5 +201,32 @@ F2CStrips Parser::importStripsJson(const std::string& file) {
   }
   return strips;
 }
+
+F2CCell Parser::importCellWkt(const std::string& file) {
+  std::ifstream f(file);
+  if (!f) {return {};}
+
+  std::ostringstream ss;
+  ss << f.rdbuf();
+  std::string data = ss.str();
+
+  F2CCell cell;
+  cell.importFromWkt(data);
+  return cell;
+}
+
+F2CFields Parser::importDatasetWkt(const std::string& folder) {
+  F2CFields fields;
+  for (const auto& file : std::filesystem::directory_iterator(folder)) {
+    if (file.is_regular_file() && file.path().extension() == ".wkt") {
+      std::string file_name = file.path().filename();
+      std::string file_dir = std::filesystem::absolute(file.path()).string();
+      fields.emplace_back(F2CCells(importCellWkt(file_dir)), file_name);
+      fields.back().setId(file_name.substr(0, file_name.size()-4));
+    }
+  }
+  return fields;
+}
+
 
 }  // namespace f2c

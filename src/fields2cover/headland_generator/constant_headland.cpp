@@ -10,17 +10,18 @@
 namespace f2c::hg {
 
 F2CCells ConstHL::generateHeadlands(
-    const F2CCells& field, double dist_headland) {
+    const F2CCells& field, double dist_headland) const {
   return field.buffer(-dist_headland);
 }
 
 F2CCells ConstHL::generateHeadlandArea(
-    const F2CCells& field, double swath_width, int n_swaths) {
+    const F2CCells& field, double swath_width, int n_swaths) const {
   return field.buffer(-swath_width * n_swaths);
 }
 
-std::vector<F2CCells> ConstHL::generateHeadlandSwaths(
-    const F2CCells& field, double swath_width, int n_swaths, bool dir_out2in) {
+std::vector<F2CMultiLineString> ConstHL::generateHeadlandSwaths(
+    const F2CCells& field, double swath_width,
+    int n_swaths, bool dir_out2in) const {
   std::vector<F2CCells> hl;
   if (dir_out2in) {
     for (int i = 0; i < n_swaths; ++i) {
@@ -32,7 +33,11 @@ std::vector<F2CCells> ConstHL::generateHeadlandSwaths(
       hl.emplace_back(hl.back().buffer(swath_width));
     }
   }
-  return hl;
+  std::vector<F2CMultiLineString> hl_tracks;
+  for (auto&& cells : hl) {
+    hl_tracks.emplace_back(cells.getLineSections());
+  }
+  return hl_tracks;
 }
 
 

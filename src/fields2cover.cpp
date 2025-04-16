@@ -31,7 +31,6 @@ std::unique_ptr<f2c::decomp::DecompositionBase> getDecompPtr(const Options& opt)
   }
   return ptr;
 }
-*/
 
 std::unique_ptr<obj::SGObjective> getSGObjPtr(const Options& opt) {
   std::unique_ptr<obj::SGObjective> ptr;
@@ -168,6 +167,7 @@ F2CPath planCovPath(const F2CRobot& robot, const F2CField& field,
   return local_crs ? path : f2c::Transform::transformToPrevCRS(path, field_c);
 }
 
+*/
 
 
 }  // namespace f2c

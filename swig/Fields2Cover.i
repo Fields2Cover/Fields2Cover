@@ -1,4 +1,4 @@
-
+/* File: fields2cover.i */
 
 #pragma SWIG nowarn=315,317,320,362,503,509
 
@@ -302,6 +302,8 @@ DEFINE_PP_COSTS(BaseObjective<f2c::obj::PPObjective>, computeCostWithMinimizingS
 %include "fields2cover/swath_generator/swath_generator_base.h"
 %rename(SG_BruteForce) f2c::sg::BruteForce;
 %include "fields2cover/swath_generator/brute_force.h"
+%rename(SG_OksanenHeuristic) f2c::sg::OksanenHeuristic;
+%include "fields2cover/swath_generator/oksanen_heuristic.h"
 
 
 %include "fields2cover/decomposition/decomposition_base.h"

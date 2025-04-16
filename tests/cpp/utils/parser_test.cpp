@@ -95,3 +95,4 @@ TEST(fields2cover_utils_parser, import_json_ring) {
   EXPECT_EQ(fields[0].area(), 10*10 - 8*8);
 }
 
+
