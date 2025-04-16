@@ -13,6 +13,7 @@
 
 #include "fields2cover/utils/random.h"
 #include "fields2cover/utils/spline.h"
+#include "fields2cover/utils/solver.h"
 #include "fields2cover/utils/transformation.h"
 #include "fields2cover/utils/parser.h"
 #include "fields2cover/utils/visualizer.h"
@@ -38,9 +39,12 @@
 #include "fields2cover/objectives/pp_obj/path_length.h"
 
 #include "fields2cover/objectives/decomp_obj/decomp_objective.h"
+#include "fields2cover/objectives/decomp_obj/min_sum_altitude.h"
+
 
 
 #include "fields2cover/decomposition/decomposition_base.h"
+#include "fields2cover/decomposition/no_decomp.h"
 #include "fields2cover/decomposition/trapezoidal_decomp.h"
 #include "fields2cover/decomposition/boustrophedon_decomp.h"
 
@@ -49,15 +53,20 @@
 
 #include "fields2cover/swath_generator/swath_generator_base.h"
 #include "fields2cover/swath_generator/brute_force.h"
+#include "fields2cover/swath_generator/oksanen_heuristic.h"
+#include "fields2cover/swath_generator/curved_swaths.h"
+#include "fields2cover/swath_generator/longest_edge.h"
 
 
 #include "fields2cover/route_planning/single_cell_swaths_order_base.h"
 #include "fields2cover/route_planning/boustrophedon_order.h"
 #include "fields2cover/route_planning/snake_order.h"
 #include "fields2cover/route_planning/spiral_order.h"
+#include "fields2cover/route_planning/rev_spiral_order.h"
 #include "fields2cover/route_planning/custom_order.h"
 
 #include "fields2cover/route_planning/route_planner_base.h"
+#include "fields2cover/route_planning/soil_comp_route_planner.h"
 
 #include "fields2cover/path_planning/turning_base.h"
 #include "fields2cover/path_planning/dubins_curves.h"
@@ -81,8 +90,9 @@ namespace obj {}
 namespace sg {}
 
 enum class SGAlg {
-  BRUTE_FORCE = 0,  //Default
+  BRUTE_FORCE = 0,  // Default
   GIVEN_ANGLE = 1,
+  OKSANEN_HEURISTIC = 2,
 };
 
 enum class SGObjFunc {
@@ -98,10 +108,10 @@ namespace rp {}
 
 enum class RPAlg {
   SHORTEST_ROUTE = 0,  // Default
-  //BOUSTROPHEDON = 1,
-  //SNAKE = 2,
-  //SPIRAL = 3,
-  //CUSTOM = 4,
+  // BOUSTROPHEDON = 1,
+  // SNAKE = 2,
+  // SPIRAL = 3,
+  // CUSTOM = 4,
 };
 
 /// Path planning algorithms' namespace

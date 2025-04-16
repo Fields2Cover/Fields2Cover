@@ -14,11 +14,11 @@ class SpiralOrder : public SingleCellSwathsOrderBase {
   void setSpiralSize(size_t sp_size);
 
  protected:
-  void sortSwaths(F2CSwaths& swaths) const override;
-
- private:
   size_t spiral_size;
-  void spiral(F2CSwaths& swaths, size_t offset, size_t size) const;
+
+ protected:
+  void sortSwaths(F2CSwaths& swaths) const override;
+  virtual void pattern(F2CSwaths& swaths, size_t offset, size_t size) const;
 };
 
 

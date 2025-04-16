@@ -5,8 +5,8 @@
 //=============================================================================
 
 #pragma once
-#ifndef FIELDS2COVER_SWATH_GENERATOR_BRUTE_FORCE_H_
-#define FIELDS2COVER_SWATH_GENERATOR_BRUTE_FORCE_H_
+#ifndef FIELDS2COVER_SWATH_GENERATOR_CURVED_SWATHS_H_
+#define FIELDS2COVER_SWATH_GENERATOR_CURVED_SWATHS_H_
 
 #include <limits>
 #include <utility>
@@ -17,15 +17,15 @@
 
 namespace f2c::sg {
 
-class BruteForce : public SwathGeneratorBase {
+class CurvedSwathsGen : public SwathGeneratorBase {
  public:
   using SwathGeneratorBase::generateBestSwaths;
   using SwathGeneratorBase::generateSwaths;
   using SwathGeneratorBase::computeBestAngle;
   using SwathGeneratorBase::computeBestAngles;
 
-  double getStepAngle() const;
-  void setStepAngle(double d);
+  double getThresholdAngle() const;
+  void setThresholdAngle(double ang);
 
   double computeBestAngle(const f2c::obj::SGObjective& obj,
       double op_width, const F2CCell& poly,
@@ -33,8 +33,19 @@ class BruteForce : public SwathGeneratorBase {
   double computeBestAngle(const f2c::obj::SGObjective& obj,
       const std::vector<double>& widths, const F2CCell& poly) const override;
 
+  F2CSwaths generateBestSwaths(const f2c::obj::SGObjective& obj,
+      double op_width, const F2CCell& poly,
+      SwathOverlapType dist) const override;
+
+  F2CSwaths generateSwaths(double angle,
+      double op_width, const F2CCell& poly,
+      SwathOverlapType dist) const override;
+
+
+
+
  private:
-  double step_angle {boost::math::constants::degree<double>()};  // radians
+  double threshold_angle {0.1};  // radians
 };
 
 
@@ -42,4 +53,4 @@ class BruteForce : public SwathGeneratorBase {
 
 
 
-#endif  // FIELDS2COVER_SWATH_GENERATOR_BRUTE_FORCE_H_
+#endif  // FIELDS2COVER_SWATH_GENERATOR_CURVED_SWATHS_H_

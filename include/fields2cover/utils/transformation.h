@@ -37,9 +37,12 @@ class Transform {
 
 
   static void transform(F2CField& field, const std::string& coord_sys_to);
+  static void transform(F2CFields& fields, const std::string& coord_sys_to);
 
   static void transformToUTM(F2CField& field, bool is_etrs89_opt = true);
+  static void transformToUTM(F2CFields& fields, bool is_etrs89_opt = true);
   static void transformToPrevCRS(F2CField& field);
+  static void transformToPrevCRS(F2CFields& fields);
 
   static F2CRoute transformToPrevCRS(const F2CRoute& p, const F2CField& field);
   static F2CPath transformToPrevCRS(const F2CPath& p, const F2CField& field);

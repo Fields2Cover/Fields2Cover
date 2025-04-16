@@ -89,4 +89,33 @@ inline testing::AssertionResult isSwathGenerationCorrect(
   return testing::AssertionSuccess();
 }
 
+inline testing::AssertionResult areSwathsCorrectlyGen(
+    const F2CSwaths& swaths, const std::vector<double>& swaths_x) {
+  if (swaths.size() != swaths_x.size()) {
+    return testing::AssertionFailure() <<
+      "Error 2005: swaths and swaths_x need to have equal size.";
+  }
+  std::string str_swaths {"("};
+  std::string str_ids {"("};
+  bool correct_order {true};
+  for (size_t i = 0; i < swaths.size(); ++i) {
+    str_swaths += std::to_string(int(swaths[i].startPoint().getX()));
+    str_ids += std::to_string(int(swaths_x[i]));
+    if (i + 1 != swaths.size()) {
+      str_swaths += ", ";
+      str_ids += ", ";
+    } else {
+      str_swaths += "), ";
+      str_ids += ")";
+    }
+    correct_order = int(swaths[i].startPoint().getX()) == int(swaths_x[i]) ? correct_order : false;
+  }
+
+  if (!correct_order) {
+    return testing::AssertionFailure() <<
+      "Error 2006: swaths sequence is: " << str_swaths << " but should be " << str_ids;
+  }
+  return testing::AssertionSuccess();
+}
+
 #endif  // SWATH_GENERATOR_CHECKER_HPP_

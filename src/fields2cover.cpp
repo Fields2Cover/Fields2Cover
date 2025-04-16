@@ -104,10 +104,15 @@ F2CRoute planCovRoute(const F2CRobot& robot, const F2CCells& cells,
   }
 
   f2c::sg::BruteForce bf;
+  f2c::sg::OksanenHeuristic oh;
   F2CSwathsByCells swaths;
   switch (opt.sg_alg) {
     case SGAlg::BRUTE_FORCE:
       swaths = bf.generateBestSwaths(
+          *getSGObjPtr(opt), robot.getCovWidth(), mainland);
+      break;
+    case SGAlg::OKSANEN_HEURISTIC:
+      swaths = oh.generateBestSwaths(
           *getSGObjPtr(opt), robot.getCovWidth(), mainland);
       break;
     case SGAlg::GIVEN_ANGLE:

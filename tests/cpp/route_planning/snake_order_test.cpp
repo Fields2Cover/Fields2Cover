@@ -8,44 +8,32 @@
 #include "fields2cover/types.h"
 #include "fields2cover/objectives/rp_obj/direct_dist_path_obj.h"
 #include "fields2cover/route_planning/snake_order.h"
+#include "../test_helpers/route_order_checker.hpp"
 
 TEST(fields2cover_route_snake, genSortedSwaths_even) {
   const int n = 11;
-  F2CSwaths swaths;
-  for (int i = 1; i < n; ++i) {
-    swaths.emplace_back(F2CLineString({F2CPoint(0, i), F2CPoint(1, i)}), i, i);
-  }
+  F2CSwaths swaths = genSwathsTest(n);
 
   f2c::rp::SnakeOrder swath_sorter;
-  f2c::obj::DirectDistPathObj objective;
-
   swaths = swath_sorter.genSortedSwaths(swaths);
 
-  EXPECT_EQ(swaths[0].getWidth(), 1);
-  EXPECT_EQ(swaths[1].getWidth(), 3);
-  EXPECT_EQ(swaths[2].getWidth(), 5);
-  EXPECT_EQ(swaths.back().getWidth(), 2);
+  EXPECT_TRUE(isRouteOrderCorrect(swaths, {1, 3, 5, 7, 9, 10, 8, 6, 4, 2}));
 
+  f2c::obj::DirectDistPathObj objective;
   EXPECT_EQ(objective.computeCost(swaths), 3*((n-1)-1));
 }
 
 
 TEST(fields2cover_route_snake, genSortedSwaths_odd) {
-  const int n = 100;
-  F2CSwaths swaths;
-  for (int i = 1; i < n; ++i) {
-    swaths.emplace_back(F2CLineString({F2CPoint(0, i), F2CPoint(1, i)}), i, i);
-  }
+  const int n = 10;
+  F2CSwaths swaths = genSwathsTest(n);
 
   f2c::rp::SnakeOrder swath_sorter;
-  f2c::obj::DirectDistPathObj objective;
-
   swaths = swath_sorter.genSortedSwaths(swaths);
 
-  EXPECT_EQ(swaths[0].getWidth(), 1);
-  EXPECT_EQ(swaths[1].getWidth(), 3);
-  EXPECT_EQ(swaths[2].getWidth(), 5);
-  EXPECT_EQ(swaths.back().getWidth(), 2);
+  EXPECT_TRUE(isRouteOrderCorrect(swaths, {1, 3, 5, 7, 9, 8, 6, 4, 2}));
+
+  f2c::obj::DirectDistPathObj objective;
   EXPECT_EQ(objective.computeCost(swaths), 3*((n-1)-1));
 }
 

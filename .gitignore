@@ -37,6 +37,7 @@ build/
 .clangd/
 cmake-build-f2c-debug/
 docs/api
+__pycache__
 
 
 authorized_keys

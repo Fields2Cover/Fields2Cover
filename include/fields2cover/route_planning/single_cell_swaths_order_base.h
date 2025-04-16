@@ -19,6 +19,30 @@ class SingleCellSwathsOrderBase {
 
   virtual ~SingleCellSwathsOrderBase() = default;
 
+  F2CRoute genRoute(
+      const F2CMultiLineString& transit_lanes,
+      const F2CSwathsByCells& swaths_by_cells,
+      double d_tol = 1e-4) const;
+
+  F2CRoute genRoute(
+      const std::vector<F2CMultiLineString>& transit_lanes,
+      const F2CSwathsByCells& swaths_by_cells,
+      double d_tol = 1e-4) const;
+
+  F2CRoute genRoute(
+      const std::vector<F2CMultiLineString>& transit_lanes,
+      const F2CCells& hl_area,
+      const F2CSwathsByCells& swaths_by_cells,
+      double d_tol = 1e-4) const;
+
+  F2CRoute genRoute(const F2CCells& cells, const F2CSwathsByCells& swaths,
+      double d_tol = 1e-4) const;
+
+  virtual F2CGraph2D createShortestGraph(
+      const F2CMultiLineString& transit_lines,
+      const F2CSwathsByCells& swaths_by_cells,
+      double d_tol = 1e-4) const;
+
  protected:
   virtual void changeStartPoint(F2CSwaths& swaths, uint32_t variant) const;
   virtual void sortSwaths(F2CSwaths& swaths) const = 0;

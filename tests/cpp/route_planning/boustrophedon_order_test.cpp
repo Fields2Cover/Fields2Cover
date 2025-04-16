@@ -9,13 +9,11 @@
 #include "fields2cover/types.h"
 #include "fields2cover/objectives/rp_obj/direct_dist_path_obj.h"
 #include "fields2cover/route_planning/boustrophedon_order.h"
+#include "../test_helpers/route_order_checker.hpp"
 
 TEST(fields2cover_route_boustrophedon, genSortedSwaths) {
   const int n = 5;
-  F2CSwaths swaths;
-  for (int i = 1; i < n; ++i) {
-    swaths.emplace_back(F2CLineString({F2CPoint(i, 0), F2CPoint(i, 1)}), i, i);
-  }
+  F2CSwaths swaths = genSwathsTest(n);
 
   auto rng = std::default_random_engine {};
   std::shuffle(swaths.begin(), swaths.end(), rng);
@@ -25,28 +23,23 @@ TEST(fields2cover_route_boustrophedon, genSortedSwaths) {
 
   swaths = swath_sorter.genSortedSwaths(swaths);
   EXPECT_EQ(swaths.size(), n - 1);
-  EXPECT_EQ(swaths[0].startPoint().getY(), 0);
-  for (int i = 1; i < n; ++i) {
-    EXPECT_EQ(swaths[i - 1].getWidth(), i);
-  }
+  EXPECT_EQ(swaths[0].startPoint().getX(), 0);
+  EXPECT_TRUE(isRouteOrderCorrect(swaths, {1, 2, 3, 4}));
+
   EXPECT_EQ(objective.computeCost(swaths), 2*(n-1)-1);
   swaths = swath_sorter.genSortedSwaths(swaths, 1);
-  EXPECT_EQ(swaths[0].startPoint().getY(), 0);
-  EXPECT_EQ(swaths[0].getWidth(), n-1);
-  EXPECT_EQ(swaths[1].getWidth(), n-2);
-  EXPECT_EQ(swaths[2].getWidth(), n-3);
+  EXPECT_EQ(swaths[0].startPoint().getX(), 0);
+  EXPECT_TRUE(isRouteOrderCorrect(swaths, {4, 3, 2, 1}));
+
   EXPECT_EQ(objective.computeCost(swaths), 2*(n-1)-1);
   swaths = swath_sorter.genSortedSwaths(swaths, 2);
-  EXPECT_EQ(swaths[0].startPoint().getY(), 1);
-  EXPECT_EQ(swaths[0].getWidth(), 1);
-  EXPECT_EQ(swaths[1].getWidth(), 2);
-  EXPECT_EQ(swaths[2].getWidth(), 3);
+  EXPECT_EQ(swaths[0].startPoint().getX(), 1);
+  EXPECT_TRUE(isRouteOrderCorrect(swaths, {1, 2, 3, 4}));
+
   EXPECT_EQ(objective.computeCost(swaths), 2*(n-1)-1);
   swaths = swath_sorter.genSortedSwaths(swaths, 3);
-  EXPECT_EQ(swaths[0].startPoint().getY(), 1);
-  EXPECT_EQ(swaths[0].getWidth(), n-1);
-  EXPECT_EQ(swaths[1].getWidth(), n-2);
-  EXPECT_EQ(swaths[2].getWidth(), n-3);
+  EXPECT_EQ(swaths[0].startPoint().getX(), 1);
+  EXPECT_TRUE(isRouteOrderCorrect(swaths, {4, 3, 2, 1}));
   EXPECT_EQ(objective.computeCost(swaths), 2*(n-1)-1);
 }
 

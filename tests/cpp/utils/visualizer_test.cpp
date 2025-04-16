@@ -104,6 +104,29 @@ TEST(fields2cover_utils_visualizer, save_Route_and_Path) {
   EXPECT_TRUE(checkIfFileExists("test_fig/path.png"));
 }
 
+TEST(fields2cover_utils_visualizer, save_route_with_reload) {
+  F2CRobot robot;
+  f2c::types::RobotCapacity cap1;
+  cap1.reload_points.emplace_back(5, 0);
+  robot.addCapacity(cap1);
+
+  F2CRoute route;
+  route.addConnection(F2CMultiPoint({F2CPoint(0, 0), F2CPoint(1, 0)}));
+  route.addSwath(F2CSwath(F2CLineString(F2CPoint(1, 0), F2CPoint(1, 1))));
+  route.addConnection(F2CMultiPoint({F2CPoint(1, 1), F2CPoint(2, 1)}));
+  route.addSwath(F2CSwath(F2CLineString(F2CPoint(2, 1), F2CPoint(2, 0))));
+  route.addConnection(F2CMultiPoint({F2CPoint(2, 0), F2CPoint(3, 0), F2CPoint(3, -1), F2CPoint(5, 0), F2CPoint(6, 0), F2CPoint(6, 1)}));
+  route.addSwath(F2CSwath(F2CLineString(F2CPoint(6, 1), F2CPoint(7, 1))));
+
+
+  f2c::Visualizer::figure();
+  f2c::Visualizer::plot(route, robot);
+  f2c::Visualizer::axis_equal();
+  f2c::Visualizer::save("test_fig/route_cap.png");
+  EXPECT_TRUE(checkIfFileExists("test_fig/route_cap.png"));
+  //f2c::Visualizer::show();
+}
+
 TEST(fields2cover_utils_visualizer, save_Cell) {
   F2CLinearRing ring1(std::vector<F2CPoint>(
         {F2CPoint(-3,-3), F2CPoint(4,-2), F2CPoint(4,8), F2CPoint(-3,-3)}));

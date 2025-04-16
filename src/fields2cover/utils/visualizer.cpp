@@ -122,6 +122,14 @@ void Visualizer::plot(
 }
 
 void Visualizer::plot(
+    const std::vector<F2CMultiLineString>& multilines,
+    const std::vector<double>& color) {
+  for (size_t i = 0; i < multilines.size(); ++i) {
+    plot(multilines[i], color);
+  }
+}
+
+void Visualizer::plot(
     const F2CLinearRing& ring, const std::vector<double>& color) {
   plot(F2CLineString(ring), color);
 }
@@ -150,10 +158,50 @@ void Visualizer::plot(const std::vector<F2CRoute>& route,
   }
   plot(swaths, color);
 }
+
 void Visualizer::plot(const F2CRoute& route,
     const std::vector<std::vector<double>>& color) {
   plot(route.asLineString());
   plot(F2CSwathsByCells(route.getVectorSwaths()), color);
+}
+
+void Visualizer::plotReloadPoints(const F2CRoute& route, const F2CRobot& robot) {
+  auto connections = route.getConnections();
+  auto reload_points = robot.getReloadPoints();
+
+  for (auto&& r : reload_points) {
+    plt::plot({r.getX()}, {r.getY()}, "b*");
+  }
+
+  for (auto&& connection : connections) {
+    for (auto&& p : connection) {
+      if (robot.isReloadPoint(p)) {
+        plt::plot({connection[0].getX()}, {connection[0].getY()}, "ro");
+        break;
+      }
+    }
+  }
+}
+
+void Visualizer::plot(const F2CRoute& route, const F2CRobot& robot,
+    const std::vector<std::vector<double>>& color) {
+  plot(route, color);
+  plotReloadPoints(route, robot);
+}
+
+
+void Visualizer::plot(
+    const F2CPathStateSimp& path_states,
+    const std::vector<std::vector<double>>& color) {
+  auto s = path_states.toPathStates(path_states.length()*0.01, 1.0);
+  F2CPath path;
+  path.setStates(s);
+  plot(path, color);
+}
+
+void Visualizer::plot(
+    const F2CPathSimp& path, const std::vector<std::vector<double>>& color) {
+  plot(path.toPath(), color);
 }
 
 void Visualizer::plot(
@@ -165,16 +213,19 @@ void Visualizer::plot(
   std::vector<std::vector<double>> X(1), Y(1);
   auto prev_state = path[0].type;
   auto prev_dir = path[0].dir;
+  auto prev_impl = path[0].using_implement;
   for (auto&& s : path) {
     X.back().emplace_back(s.point.getX());
     Y.back().emplace_back(s.point.getY());
     X.back().emplace_back(s.atEnd().getX());
     Y.back().emplace_back(s.atEnd().getY());
-    if (s.type != prev_state || s.dir != prev_dir) {
+    if (s.type != prev_state || s.dir != prev_dir ||
+        s.using_implement != prev_impl) {
       X.emplace_back();
       Y.emplace_back();
       prev_state = s.type;
       prev_dir = s.dir;
+      prev_impl = s.using_implement;
     }
   }
 
@@ -192,6 +243,86 @@ void Visualizer::plot(
     a->line_width(getLineWidth());
   }
 }
+
+void Visualizer::plot(
+    const F2CPath& path, const F2CRoute& route, const F2CRobot& robot) {
+  plot(path);
+  plotReloadPoints(route, robot);
+}
+
+void Visualizer::plot(const F2CRobot& robot,
+    const std::vector<double>& color_robot,
+    const std::vector<double>& color_impl,
+    const std::vector<double>& color_cov,
+    const std::vector<double>& color_wheel) {
+  F2CPathState empty_state;
+  empty_state.using_implement = true;
+  plot(robot, empty_state,
+      color_robot, color_impl, color_impl, color_cov, color_wheel);
+}
+
+void Visualizer::plot(const F2CRobot& robot, const F2CPathState& state,
+    const std::vector<double>& color_robot,
+    const std::vector<double>& color_impl_on,
+    const std::vector<double>& color_impl_off,
+    const std::vector<double>& color_cov,
+    const std::vector<double>& color_wheel) {
+  double r_x = state.point.getX();
+  double r_y = state.point.getY();
+  double r_ang = state.angle;
+  auto color_impl = state.using_implement ? color_impl_on : color_impl_off;
+
+  auto plot_poly = [r_x, r_y, r_ang] (
+      double c_x, double c_y, double w, double l,
+      const std::vector<double>& color) {
+    std::vector<double> b_x, b_y;
+    double cos_a {cos(r_ang)};
+    double sin_a {sin(r_ang)};
+    auto addPointToVector = [&b_x, &b_y, r_x, r_y, cos_a, sin_a, c_x, c_y, w, l]
+        (double sgn_l, double sgn_w) {
+      b_x.push_back(r_x
+          + (sgn_l * 0.5 * l + c_x)   * cos_a
+          - (sgn_w * 0.5 * w + c_y) * sin_a);
+      b_y.push_back(r_y
+          + (sgn_l * 0.5 * l + c_x) * sin_a
+          + (sgn_w * 0.5 * w + c_y) * cos_a);
+    };
+    addPointToVector(1.0, 1.0);
+    addPointToVector(1.0, -1.0);
+    addPointToVector(-1.0, -1.0);
+    addPointToVector(-1.0, 1.0);
+    addPointToVector(1.0, 1.0);
+
+    plt::polygon(b_x, b_y)->color(plt::to_array(color));
+    plt::plot(b_x, b_y, "k")->line_width(2);
+  };
+  F2CPoint c_impl = robot.getCenterImpl();
+  F2CPoint c_cov = robot.getCenterImplCov();
+  if (robot.getImpl()) {
+    double impl_x = robot.getImpl()->first.getX();
+    double impl_y = robot.getImpl()->first.getY();
+    plt::line(r_x, r_y,
+        r_x + impl_x * cos(r_ang) - impl_y * sin(r_ang),
+        r_y + impl_x * sin(r_ang) + impl_y * cos(r_ang))->line_width(4);
+    plt::line(
+        r_x + c_impl.getX() * cos(r_ang) - c_impl.getY() * sin(r_ang),
+        r_y + c_impl.getX() * sin(r_ang) + c_impl.getY() * cos(r_ang),
+        r_x + impl_x * cos(r_ang) - impl_y * sin(r_ang),
+        r_y + impl_x * sin(r_ang) + impl_y * cos(r_ang))->line_width(4);
+  }
+  plot_poly(0, 0, robot.getRobotWidth(), robot.getRobotLength(), color_robot);
+  plot_poly(c_impl.getX(), c_impl.getY(),
+      robot.getImplWidth(), robot.getImplLength(), color_impl);
+  if (state.using_implement) {
+    plot_poly(c_cov.getX(), c_cov.getY(),
+        robot.getImplCovWidth(), robot.getImplCovLength(), color_cov);
+  }
+
+  // for (auto&& wheel : robot.wheels) {
+
+  // }
+}
+
 
 void Visualizer::plot(const F2CField& field,
     const std::vector<double>& color) {
@@ -257,7 +388,9 @@ void Visualizer::figure() {
   axis_equal();
 }
 
-void Visualizer::figure_size(const unsigned int width, const unsigned int height) {
+void Visualizer::figure_size(
+    const unsigned int width,
+    const unsigned int height) {
   auto cf = plt::gcf(true);
   if (cf != nullptr) {
     cf->width(width);
@@ -267,6 +400,66 @@ void Visualizer::figure_size(const unsigned int width, const unsigned int height
 
 void Visualizer::show() {
   plt::show();
+}
+
+void Visualizer::animateRobotPath(const std::string& file_name,
+    const F2CRobot& robot, const F2CPath& path,
+    std::function<void(const F2CRobot&, const F2CPath&, double)> pre_plot,
+    std::function<void(const F2CRobot&, const F2CPath&, double)> post_plot,
+    double vel_animation) {
+  size_t img_n {0};
+
+  double safe_robot_dist = 0.5 * (robot.getRobotLength() +
+      robot.getImplLength() + robot.getRobotWidth() + robot.getImplWidth());
+
+  double plot_min_x = path.getDimMinX() - safe_robot_dist;
+  double plot_min_y = path.getDimMinY() - safe_robot_dist;
+  double plot_max_x = path.getDimMaxX() + safe_robot_dist;
+  double plot_max_y = path.getDimMaxY() + safe_robot_dist;
+  if (plot_max_x - plot_min_x > plot_max_y - plot_min_y) {
+    double c = (plot_max_y + plot_min_y) * 0.5;
+    double d = (plot_max_x - plot_min_x) * 0.5;
+    plot_max_y = c + d;
+    plot_min_y = c - d;
+  } else {
+    double c = (plot_max_x + plot_min_x) * 0.5;
+    double d = (plot_max_y - plot_min_y) * 0.5;
+    plot_max_x = c + d;
+    plot_min_x = c - d;
+  }
+
+  auto area_cov = robot.computeAreaCovered(path);
+
+  for (double i = 0.0; i<= path.length(); i+= vel_animation) {
+    std::ostringstream name_img;
+    name_img << file_name << "_";
+    name_img << std::setw(8) << std::setfill('0') << img_n;
+    name_img << ".jpg";
+    figure();
+    plt::hold(plt::on);
+    xlim(plot_min_x, plot_max_x);
+    ylim(plot_min_y, plot_max_y);
+    pre_plot(robot, path, i);
+    plotFilled(area_cov, {1, 0.85, 0.4});
+    plot(robot, path.at(i));
+    plot(path);
+    post_plot(robot, path, i);
+    axis_equal();
+    save(name_img.str());
+    // draw();
+    // show();
+    // save("/tmp/" + name_img);
+    ++img_n;
+  }
+
+  // System called to create the video
+  if (system(("ffmpeg -y -hide_banner -i " + file_name + "_%08d.jpg " +
+        file_name + ".mp4;").c_str())) {;}
+
+  // system(("ffmpeg -y -hide_banner -i " + file_name + "_%08d.jpg " +
+  //     file_name + ".mp4;" +
+  //     "rm " + file_name + "*.jpg").c_str());
+  // System called to create the video
 }
 
 void Visualizer::save(const std::string& file) {
@@ -304,6 +497,12 @@ std::vector<double> Visualizer::linspace(double min, double max, size_t N) {
   return x;
 }
 
+std::string Visualizer::color2hex(uint32_t r, uint32_t g, uint32_t b) {
+  char hex[16];
+  snprintf(hex, sizeof hex, "#%02x%02x%02x", r, g, b);
+  return std::string(hex);
+}
+
 std::vector<std::vector<double>> Visualizer::color_linspace(
     const std::vector<int>& min, const std::vector<int>& max,
     size_t N) {
@@ -316,6 +515,10 @@ std::vector<std::vector<double>> Visualizer::color_linspace(
         std::vector<double>({v_r[i]/255.0, v_g[i]/255.0, v_b[i]/255.0}));
   }
   return v;
+}
+
+void Visualizer::clear() {
+  plt::cla();
 }
 
 

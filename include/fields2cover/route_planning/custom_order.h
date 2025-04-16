@@ -24,7 +24,7 @@ class CustomOrder : public SingleCellSwathsOrderBase {
 
  private:
   std::vector<size_t> custom_order;
-  void check(const F2CSwaths& swaths) const;
+  static void check(const std::vector<size_t>& order);
 };
 
 
