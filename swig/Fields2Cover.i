@@ -169,6 +169,8 @@ EXTEND_OPERATOR(Cells)
 
 %template(VectorDouble) std::vector<double>;
 %template(VectorInt) std::vector<int>;
+%template(VectorLongInt) std::vector<long int>;
+%template(VectorLongLongInt) std::vector<long long int>;
 %inline %{
 typedef long unsigned int size_t;
 %}
@@ -325,6 +327,11 @@ DEFINE_PP_COSTS(BaseObjective<f2c::obj::PPObjective>, computeCostWithMinimizingS
 %include "fields2cover/route_planning/custom_order.h"
 
 
+%ignore f2c::rp::RoutePlannerBase::distMatrix;
+%ignore f2c::rp::RoutePlannerBase::distMatrix2;
+%ignore f2c::rp::RoutePlannerBase::computeBestRoute;
+%ignore f2c::rp::RoutePlannerBase::computeBestRoute2;
+%ignore f2c::rp::RoutePlannerBase::transformSolutionToRoute2;
 %ignore f2c::rp::RoutePlannerBase::createShortestGraph;
 %ignore f2c::rp::RoutePlannerBase::createCoverageGraph;
 %ignore f2c::rp::RoutePlannerBase::computeBestRoute;
