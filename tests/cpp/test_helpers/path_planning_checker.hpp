@@ -54,7 +54,7 @@ inline testing::AssertionResult isPathCorrect(const F2CPath& path) {
   return testing::AssertionSuccess();
 }
 
-inline testing::AssertionResult IsPathCorrect(
+inline testing::AssertionResult isPathCorrect(
     const F2CPath& path, F2CPoint start, double start_ang,
     F2CPoint end, double end_ang, bool check_y_lower_limit = true) {
   if (path.size() < 1) {

@@ -6,6 +6,7 @@ find_package(
     Development
 )
 
+set(CMAKE_SWIG_FLAGS "")
 if(Python_VERSION VERSION_GREATER_EQUAL 3)
   list(APPEND CMAKE_SWIG_FLAGS "-py3;-DPY3")
 endif()
@@ -14,10 +15,9 @@ if(BUILD_DOC)
   list(APPEND CMAKE_SWIG_FLAGS "-doxygen")
 endif()
 
-set(CMAKE_SWIG_FLAGS "")
 set_source_files_properties(
   ../${PROJECT_NAME}.i
-  PROPERTIES CPLUSPLUS ON
+  PROPERTIES CPLUSPLUS ON SWIG_FLAGS ""
 )
 
 include_directories(

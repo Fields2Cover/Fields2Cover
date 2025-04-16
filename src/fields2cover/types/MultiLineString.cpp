@@ -5,6 +5,7 @@
 //=============================================================================
 
 #include "fields2cover/types/MultiLineString.h"
+#include "fields2cover/types/Cells.h"
 
 namespace f2c::types {
 
@@ -66,6 +67,18 @@ void MultiLineString::append(const OGRGeometry* geom) {
       }
     }
   }
+}
+
+MultiLineString& MultiLineString::append(const LineString& line) {
+  this->addGeometry(line);
+  return *this;
+}
+
+MultiLineString& MultiLineString::append(const MultiLineString& lines) {
+  for (auto&& line : lines) {
+    this->append(line);
+  }
+  return *this;
 }
 
 void MultiLineString::getGeometry(size_t i, LineString& line) {
@@ -138,6 +151,38 @@ MultiLineString MultiLineString::getLineSegments(const LineString& line) {
 MultiLineString MultiLineString::getLineSegments(const LinearRing& line) {
   return getLineSegments(LineString(line));
 }
+
+Point MultiLineString::closestPointTo(const Point& p) const {
+  std::vector<double> dist;
+  std::vector<Point> ps;
+  for (auto&& line : *this) {
+    ps.emplace_back(line.closestPointTo(p));
+    dist.emplace_back(ps.back().distance(p));
+  }
+  return ps[std::min_element(dist.begin(), dist.end()) - dist.begin()];
+}
+
+MultiLineString MultiLineString::connectMultiLineStrings(
+    const std::vector<MultiLineString>& lines, const Cells& allowed_area) {
+  MultiLineString connected_lines;
+  for (size_t i = 0; i < lines.size(); ++i) {
+    connected_lines.append(lines[i]);
+    for (auto&& line_i : lines[i]) {
+      for (auto&& p : line_i) {
+        for (size_t j = 0; j < lines.size(); ++j) {
+          for (auto&& line_j : lines[i]) {
+            LineString new_line {p, line_j.closestPointTo(p)};
+            if (allowed_area.contains(new_line)) {
+              connected_lines.addGeometry(new_line);
+            }
+          }
+        }
+      }
+    }
+  }
+  return connected_lines;
+}
+
 
 }  // namespace f2c::types
 

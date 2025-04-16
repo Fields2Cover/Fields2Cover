@@ -190,10 +190,10 @@ TEST(fields2cover_types_cells, splitByLine) {
 
   F2CCells split_cells = cells.splitByLine(lines);
   EXPECT_NEAR(split_cells.size(), 4, 1e-7);
-  EXPECT_NEAR(split_cells.getGeometry(0).area(), 9, 1e-7);
-  EXPECT_NEAR(split_cells.getGeometry(1).area(), 3, 1e-7);
-  EXPECT_NEAR(split_cells.getGeometry(2).area(), 2, 1e-7);
-  EXPECT_NEAR(split_cells.getGeometry(3).area(), 6, 1e-7);
+  EXPECT_NEAR(split_cells.getGeometry(0).area(), 9, 1e-4);
+  EXPECT_NEAR(split_cells.getGeometry(1).area(), 6, 1e-4);
+  EXPECT_NEAR(split_cells.getGeometry(2).area(), 2, 1e-4);
+  EXPECT_NEAR(split_cells.getGeometry(3).area(), 3, 1e-4);
 }
 
 TEST(fields2cover_types_cells, isPointIn) {

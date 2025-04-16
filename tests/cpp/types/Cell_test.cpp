@@ -220,4 +220,3 @@ TEST(fields2cover_types_sstr, NumberStringConcat) {
 }
 
 
-

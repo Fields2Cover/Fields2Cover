@@ -91,6 +91,10 @@ struct Geometry {
   template <class T2, OGRwkbGeometryType R2>
   bool within(const Geometry<T2, R2>& geom) const;
 
+  /// Check if this geometry contains another geometry.
+  template <class T2, OGRwkbGeometryType R2>
+  bool contains(const Geometry<T2, R2>& geom) const;
+
   /// Check if this and another geometry intersects.
   template <class T2, OGRwkbGeometryType R2>
   bool intersects(const Geometry<T2, R2>& geom) const;

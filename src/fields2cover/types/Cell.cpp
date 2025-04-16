@@ -97,7 +97,13 @@ void Cell::operator*=(double b) {
 }
 
 Cell Cell::buffer(const Cell& geom, double width) {
-  return destroyResGeom<Cell>(geom.OGRBuffer(width));
+  Cells c = destroyResGeom<Cells>(geom.OGRBuffer(width));
+  // TODO: Check this issue
+  if (c.size() > 0) {
+    return c[0];
+  } else {
+    return {};
+  }
 }
 
 Cell Cell::buffer(const LineString& geom, double width) {
@@ -122,7 +128,7 @@ Cell Cell::convexHull() const {
 
 void Cell::addRing(const LinearRing& t) {
   auto r = t.clone();
-  this->data_->addRing(r.closeRing().get());
+  this->data_->addRing(r.get());
 }
 
 void Cell::addGeometry(const LinearRing& ring) {

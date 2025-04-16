@@ -10,6 +10,8 @@
 
 #include <string>
 #include <memory>
+#include <utility>
+#include <vector>
 #include "fields2cover/types/Point.h"
 #include "fields2cover/types/Cells.h"
 
@@ -19,6 +21,9 @@ struct Field {
  public:
   Field();
   explicit Field(const Cells& cells, const std::string& id = "");
+  explicit Field(const Cells& cells, const std::string& id,
+      const std::vector<std::pair<std::string,
+                                  std::vector<Point>>>& reload_points);
   ~Field();
   Field(const Field&);
   Field(Field&&);
@@ -37,6 +42,10 @@ struct Field {
   Cells& getField();
   const Cells& getField() const;
   void setField(const Cells& _field);
+  std::vector<std::pair<std::string, std::vector<Point>>>
+      getReloadPoints() const;
+  void setReloadPoints(const std::vector<std::pair<
+      std::string, std::vector<Point>>>& _reload_points);
 
   Field clone() const;
   double area() const;
@@ -63,6 +72,8 @@ struct Field {
   void setUTMCoordSystem(const std::string& utm);
   void setUTMCoordSystem(const std::string& utm, const std::string& datum);
   Cells getCellsAbsPosition() const;
+  std::vector<std::pair<std::string, std::vector<Point>>>
+      getReloadPointsAbsPosition() const;
 
  private:
   std::string id_ {""};
@@ -70,6 +81,9 @@ struct Field {
   std::string prev_coord_sys_ {""};
   Point ref_point_;
   Cells field_;
+
+  // First parameter is the name of the capacity
+  std::vector<std::pair<std::string, std::vector<Point>>> reload_points_;
 };
 
 }  // namespace f2c::types

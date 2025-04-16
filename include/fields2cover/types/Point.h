@@ -14,6 +14,7 @@
 #include <memory>
 #include <utility>
 #include <vector>
+#include <string>
 #include "fields2cover/types/Geometry.h"
 
 namespace f2c::types {
@@ -148,6 +149,18 @@ inline std::vector<T> operator-(
     res.emplace_back(p - dir);
   }
   return res;
+}
+
+template <class T>
+inline std::pair<std::string, T> operator-(
+    const std::pair<std::string, T>& t, const f2c::types::Point& dir) {
+  return std::make_pair(t.first, t.second - dir);
+}
+
+template <class T>
+inline std::pair<std::string, T> operator+(
+    const std::pair<std::string, T>& t, const f2c::types::Point& dir) {
+  return std::make_pair(t.first, t.second + dir);
 }
 
 template <class T>

@@ -43,16 +43,19 @@ class Graph {
     shortestPathsAndCosts(int64_t INF = 1e15);
 
   std::vector<size_t> shortestPath(size_t from, size_t to,
-        int64_t INF = 1e15);
+        int64_t INF = 1e15, bool using_dijkstra = true);
 
   int64_t shortestPathCost(size_t from, size_t to,
-        int64_t INF = 1e15);
+        int64_t INF = 1e15, bool using_dijkstra = true);
 
  protected:
   void DFS(size_t from, size_t to,
     std::vector<std::vector<size_t>>& routes,
     std::vector<bool>& visited,
     int& route_index) const;
+
+  std::pair<std::vector<size_t>, int64_t> shortestPathDijkstra(
+      size_t from, size_t to, int64_t INF = 1e15) const;
 
  protected:
   map_to_map_to_int edges_;

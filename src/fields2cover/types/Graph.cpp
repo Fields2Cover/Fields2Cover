@@ -4,8 +4,10 @@
 //                        BSD-3 License
 //=============================================================================
 
+
 #include <numeric>
-#include <algorithm>
+#include <limits>
+#include <queue>
 #include "fields2cover/types/Graph.h"
 
 namespace f2c::types {
@@ -151,19 +153,114 @@ std::vector<std::vector<pair_vec_size__int>>
   return this->shortest_paths_;
 }
 
-std::vector<size_t> Graph::shortestPath(size_t from, size_t to, int64_t INF) {
+std::vector<size_t> Graph::shortestPath(size_t from, size_t to, int64_t INF,
+    bool using_dijkstra) {
+  if (this->shortest_paths_.size() > from &&
+      this->shortest_paths_[from].size() > to &&
+      this->shortest_paths_[from][to].second < std::numeric_limits<int64_t>::max()) {
+    return this->shortest_paths_[from][to].first;
+  }
+  if (using_dijkstra) {
+    if (this->shortest_paths_.empty()) {
+      const size_t N = this->numNodes();
+      this->shortest_paths_ =
+          std::vector<std::vector<std::pair<std::vector<size_t>, int64_t>>>(
+              N, std::vector<std::pair<std::vector<size_t>, int64_t>>(
+                N, std::pair<std::vector<size_t>, int64_t>(
+                  {}, std::numeric_limits<int64_t>::max())));
+    }
+    auto path = shortestPathDijkstra(from, to, INF);
+    this->shortest_paths_[from][to] = path;
+    return path.first;
+  }
+
   if (this->numNodes() > 0 && this->shortest_paths_.size() == 0) {
     this->shortestPathsAndCosts(INF);
   }
   return this->shortest_paths_[from][to].first;
 }
 
-int64_t Graph::shortestPathCost(size_t from, size_t to, int64_t INF) {
+int64_t Graph::shortestPathCost(size_t from, size_t to, int64_t INF,
+    bool using_dijkstra) {
+  if (this->shortest_paths_.size() > from &&
+      this->shortest_paths_[from].size() > to &&
+      this->shortest_paths_[from][to].second < std::numeric_limits<int64_t>::max()) {
+    return this->shortest_paths_[from][to].second;
+  }
+  if (using_dijkstra) {
+    if (this->shortest_paths_.empty()) {
+      const size_t N = this->numNodes();
+      this->shortest_paths_ =
+          std::vector<std::vector<std::pair<std::vector<size_t>, int64_t>>>(
+              N, std::vector<std::pair<std::vector<size_t>, int64_t>>(
+                N, std::pair<std::vector<size_t>, int64_t>(
+                  {}, std::numeric_limits<int64_t>::max())));
+    }
+    auto path = shortestPathDijkstra(from, to, INF);
+    this->shortest_paths_[from][to] = path;
+    return path.second;
+  }
+
   if (this->numNodes() > 0 && this->shortest_paths_.size() == 0) {
     this->shortestPathsAndCosts(INF);
   }
   return this->shortest_paths_[from][to].second;
 }
+
+
+std::pair<std::vector<size_t>, int64_t> Graph::shortestPathDijkstra(
+    size_t from, size_t to, int64_t INF) const {
+  std::priority_queue<std::pair<int64_t, size_t>,
+      std::vector<std::pair<int64_t, size_t>>, std::greater<>> pq;
+  std::unordered_map<size_t, int64_t> dists;
+  std::unordered_map<size_t, size_t> prev_node;
+
+  for (const auto& pair : this->edges_) {
+    dists[pair.first] = std::numeric_limits<int64_t>::max();
+  }
+
+  dists[from] = 0;
+  pq.emplace(0, from);
+
+  while (!pq.empty()) {
+    auto [current_dist, current_node] = pq.top();
+    pq.pop();
+
+    if (current_node == to) {
+      break;
+    }
+
+    if (current_dist > dists[current_node]) {
+      continue;
+    }
+
+    for (const auto& [neighbor, cost] : edges_.at(current_node)) {
+      int64_t new_dist = current_dist + cost;
+      if (new_dist < dists[neighbor]) {
+        dists[neighbor] = new_dist;
+        prev_node[neighbor] = current_node;
+        pq.emplace(new_dist, neighbor);
+      }
+    }
+  }
+
+  std::vector<size_t> path;
+  if (dists[to] == std::numeric_limits<int64_t>::max()) {
+    return {path, INF};
+  }
+
+  for (size_t at = to; at != from; at = prev_node[at]) {
+    path.push_back(at);
+  }
+  path.push_back(from);
+
+  std::reverse(path.begin(), path.end());
+  return {path, dists[to]};
+}
+
+
+
+
 
 }  // namespace f2c::types
 

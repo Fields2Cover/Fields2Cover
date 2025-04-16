@@ -22,7 +22,7 @@ TEST(fields2cover_pp_dubins_cc, turn_dist) {
   const double pi_2 { boost::math::constants::half_pi<double>()};
   auto path = turn.createTurn(robot, start, pi_2, end, 3.0 * pi_2);
 
-  EXPECT_TRUE(IsPathCorrect(path, start, pi_2, end, 3.0 * pi_2));
+  EXPECT_TRUE(isPathCorrect(path, start, pi_2, end, 3.0 * pi_2));
 }
 
 TEST(fields2cover_pp_dubins_cc, random_points) {
@@ -39,7 +39,7 @@ TEST(fields2cover_pp_dubins_cc, random_points) {
     F2CPoint start(0.0, 0.0), end(4.0, 0.0);
     auto path = turn.createTurn(robot, start, ang,
       end, ang + boost::math::constants::pi<double>());
-    EXPECT_TRUE(IsPathCorrect(path, start, ang,
+    EXPECT_TRUE(isPathCorrect(path, start, ang,
       end, ang + boost::math::constants::pi<double>()));
   }
 }

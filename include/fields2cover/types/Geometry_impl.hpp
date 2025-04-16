@@ -166,6 +166,12 @@ bool Geometry<T, R>::within(const Geometry<T2, R2>& geom) const {
 
 template <class T, OGRwkbGeometryType R>
 template <class T2, OGRwkbGeometryType R2>
+bool Geometry<T, R>::contains(const Geometry<T2, R2>& geom) const {
+  return data_->Contains(geom.get());
+}
+
+template <class T, OGRwkbGeometryType R>
+template <class T2, OGRwkbGeometryType R2>
 bool Geometry<T, R>::intersects(const Geometry<T2, R2>& geom) const {
   return data_->Intersects(geom.get());
 }

@@ -52,6 +52,7 @@ struct Path {
 
   Path& operator+=(const Path& path);
   size_t size() const;
+  bool isEmpty() const;
 
   double getDimMinX() const;
   double getDimMinY() const;
@@ -63,6 +64,8 @@ struct Path {
 
   void mirrorX();
   void mirrorY();
+  void turnImplementOff();
+  void turnImplementOn();
   void setBackwardDir();
   void setBackwardDir(int i);
   void setForwardDir();
@@ -89,6 +92,9 @@ struct Path {
   Path& discretize(double step_size);
   Path& populate(int number_points = 100);
   Path& reduce(double min_dist_equal = 0.1);
+
+  std::vector<Path> getCovPaths() const;
+  std::vector<Path> splitPathByEqualTypeStates() const;
 
  private:
   std::vector<PathState> states_;

@@ -107,6 +107,10 @@ size_t Path::size() const {
   return states_.size();
 }
 
+bool Path::isEmpty() const {
+  return states_.empty();
+}
+
 double Path::getDimMinX() const {
   return std::min_element(this->begin(), this->end(),
       [](const PathState& s1, const PathState& s2) {
@@ -439,6 +443,44 @@ Path& Path::discretize(double step_size) {
   }
   return *this;
 }
+
+std::vector<Path> Path::getCovPaths() const {
+  Path new_path;
+  std::vector<Path> cov_paths;
+  for (size_t i = 0; i < size(); ++i) {
+    if (this->states_[i].using_implement) {
+      new_path.addState(this->states_[i]);
+    } else if (i > 0 && this->states_[i - 1].using_implement) {
+      cov_paths.emplace_back(new_path);
+      new_path = Path();
+    }
+  }
+  if (new_path.size() > 0) {
+    cov_paths.emplace_back(new_path);
+  }
+  return cov_paths;
+}
+
+std::vector<Path> Path::splitPathByEqualTypeStates() const {
+  Path new_path;
+  std::vector<Path> paths;
+  new_path.addState(this->states_[0]);
+
+  for (size_t i = 1; i < size(); ++i) {
+    if (this->states_[i].dir == this->states_[i - 1].dir) {
+      new_path.addState(this->states_[i]);
+    } else {
+      paths.emplace_back(new_path);
+      new_path = Path();
+      new_path.addState(this->states_[i]);
+    }
+  }
+  paths.emplace_back(new_path);
+  return paths;
+}
+
+
+
 
 }  // namespace f2c::types
 

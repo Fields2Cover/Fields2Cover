@@ -15,6 +15,8 @@
 
 namespace f2c::types {
 
+struct LineString;
+
 struct LinearRing : public Geometries<LinearRing, OGRLinearRing, wkbLinearRing,
   Point> {
  public:
@@ -32,6 +34,8 @@ struct LinearRing : public Geometries<LinearRing, OGRLinearRing, wkbLinearRing,
   void reversePoints();
   size_t size() const;
 
+  LineString toLineString() const;
+
   void getGeometry(size_t i, Point& point);
   void getGeometry(size_t i, Point& point) const;
   Point getGeometry(size_t i);
@@ -42,6 +46,7 @@ struct LinearRing : public Geometries<LinearRing, OGRLinearRing, wkbLinearRing,
   void addPoint(double x, double y, double z = 0);
   void addPoint(const Point& p);
   void addGeometry(const Point& p);
+  LinearRing& removePoint(size_t i);
 
   const Point startPoint() const;
   const Point endPoint() const;
@@ -49,7 +54,30 @@ struct LinearRing : public Geometries<LinearRing, OGRLinearRing, wkbLinearRing,
   bool isClosed() const;
   LinearRing& closeRing();
 
+  double minAltitude() const;
+
   Point closestPointTo(const Point& p) const;
+
+  LinearRing& bufferOutwards(const std::vector<double>& d);
+  LinearRing& bufferInwards(const std::vector<double>& d);
+
+  LineString getSegment(size_t i) const;
+  LineString getLastSegment() const;
+  double segmentLength(size_t i) const;
+  double segmentAng(size_t i) const;
+
+  // Get ids of points on the longest curved edge.
+  // ang is the threshold. If d=0, the longest straight edge is chosen.
+  std::vector<size_t> getLongestEdgeIds(double ang = 0) const;
+
+  LineString getLongestEdge(double ang = 0) const;
+  LinearRing& filterSelfIntersections();
+
+  // If d>0, the result is at the right side of the curve.
+  LinearRing getParallelLine(double d) const;
+
+  // Generate parallel curve with an offset d[i] for the i^th segment
+  LinearRing getParallelLine(const std::vector<double>& d) const;
 };
 
 

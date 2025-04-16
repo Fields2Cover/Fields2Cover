@@ -185,7 +185,9 @@ const CHILDRENTYPE Geometries<SAMETYPE, T, R, CHILDRENTYPE>::operator[](
 }
 template <class SAMETYPE, class T, OGRwkbGeometryType R, class CHILDRENTYPE>
 const CHILDRENTYPE Geometries<SAMETYPE, T, R, CHILDRENTYPE>::at(int i) const {
-  return static_cast<SAMETYPE const*>(this)->getGeometry(i);
+  size_t N = static_cast<SAMETYPE const*>(this)->size();
+  i = (i >= 0) ? (i % N) : (N - ((-i) % N));
+  return static_cast<SAMETYPE const*>(this)->getGeometry(i % N);
 }
 template <class SAMETYPE, class T, OGRwkbGeometryType R, class CHILDRENTYPE>
 const CHILDRENTYPE Geometries<SAMETYPE, T, R, CHILDRENTYPE>::back() const {

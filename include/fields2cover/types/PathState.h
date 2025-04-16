@@ -30,6 +30,7 @@ struct PathState {
   double len {0.0};  // >= 0
   PathDirection dir {PathDirection::FORWARD};
   PathSectionType type {PathSectionType::SWATH};
+  bool using_implement {true};
   double velocity {1.0};
 
  public:

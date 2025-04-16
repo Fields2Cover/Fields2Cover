@@ -127,6 +127,12 @@ void Cells::addGeometry(const Cell& c) {
   this->data_->addGeometry(c.get());
 }
 
+void Cells::append(const Cells& cs) {
+  for (auto&& c : cs) {
+    this->addGeometry(c);
+  }
+}
+
 void Cells::addRing(size_t i, const LinearRing& ring) {
   downCast<OGRPolygon*>(this->data_->getGeometryRef(i))->addRing(
       ring.clone().get());
@@ -178,17 +184,21 @@ Cells Cells::unionCascaded() const {
 }
 
 Cells Cells::splitByLine(const LineString& line) const {
-  Cells cells = this->difference(this->buffer(line, 1e-8));
+  Cells cells = this->difference(this->buffer(line, 1e-6));
   for (auto&& c : cells) {
-    c = Cell::buffer(c, 1e-8 * 0.5);
+    if (c.area() > 0) {
+      c = Cell::buffer(c, 1e-6 * 0.5);
+    }
   }
   return cells;
 }
 
 Cells Cells::splitByLine(const MultiLineString& lines) const {
-  Cells cells{*this};
-  for (auto&& line : lines) {
-    cells = cells.splitByLine(line);
+  Cells cells = this->difference(this->buffer(lines, 1e-6));
+  for (auto&& c : cells) {
+    if (c.area() > 0) {
+      c = Cell::buffer(c, 1e-6 * 0.5);
+    }
   }
   return cells;
 }
@@ -253,6 +263,19 @@ Point Cells::closestPointOnBorderTo(const Point& p) const {
   return ps[std::min_element(dist.begin(), dist.end()) - dist.begin()];
 }
 
+MultiLineString Cells::getLineSections() const {
+  MultiLineString mline;
+  for (size_t i = 0; i < this->size(); ++i) {
+    Cell cell =  this->getGeometry(i);
+    for (size_t j = 0; j < cell.size(); ++j) {
+      LinearRing ring =  cell.getGeometry(j);
+      for (size_t k = 0; k < ring.size()-1; ++k) {
+        mline.addGeometry(LineString(ring[k], ring[k+1]));
+      }
+    }
+  }
+  return mline;
+}
 
 }  // namespace f2c::types
 

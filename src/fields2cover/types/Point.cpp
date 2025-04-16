@@ -158,8 +158,8 @@ Point Point::intersectionOfLines(
     const Point& l1_s, const Point& l1_e,
     const Point& l2_s, const Point& l2_e) {
   double den = det(l1_e - l1_s, l2_e - l2_s);
-  if (den == 0) {
-    return l1_s;
+  if (fabs(den) <= 1e-12) {
+    return (l1_e + l2_s) * 0.5;
   }
   double det1 = det(l1_e, l1_s);
   double det2 = det(l2_e, l2_s);

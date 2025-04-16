@@ -5,7 +5,68 @@
 //=============================================================================
 
 #include <gtest/gtest.h>
+#include <optional>
 #include "fields2cover/types.h"
+
+int64_t INF = 1<<30;
+
+bool arePointsConnected(const F2CGraph2D& g,
+    const F2CPoint& from, const std::optional<F2CPoint>& to) {
+  if (!to) {
+    return false;
+  }
+  return INF > g.getCostFromEdge(from, to, INF);
+}
+
+bool arePointsConnected(const F2CGraph2D& g,
+    const std::optional<F2CPoint>& from, const F2CPoint& to) {
+  if (!from) {
+    return false;
+  }
+  return INF > g.getCostFromEdge(from, to, INF);
+}
+
+bool arePointsConnected(const F2CGraph2D& g, const F2CPoint& from, const F2CPoint& to) {
+  return INF > g.getCostFromEdge(from, to, INF);
+}
+
+TEST(fields2cover_types_graph2d, addEdge_points) {
+  F2CPoint p1 {1, -1}, p2 {2, -2}, p3 {-3, 3}, p4 {5, 5};
+  F2CGraph2D g;
+  EXPECT_FALSE(arePointsConnected(g, p1, p2));
+  g.addDirectedEdge(p1, p2, 1);
+  EXPECT_TRUE(arePointsConnected(g, p1, p2));
+  EXPECT_FALSE(arePointsConnected(g, p2, p1));
+
+  g.addEdge(p2, p3, 1);
+  EXPECT_TRUE(arePointsConnected(g, p2, p3));
+  EXPECT_TRUE(arePointsConnected(g, p3, p2));
+
+  g.setScale(10);
+  g.addDirectedEdge(p3, p4);
+  EXPECT_NEAR(g.getCostFromEdge(p3, p4), p3.distance(p4)*g.getScale(), 1);
+}
+
+TEST(fields2cover_types_graph2d, addEdge_opt_points) {
+  F2CPoint p1 {1, -1}, p2 {2, -2}, p3 {-3, 3}, p4 {5, 5};
+  std::optional<F2CPoint> op1 {F2CPoint(11, -11)}, op2 {F2CPoint(12, -12)}, op3 {F2CPoint(-13, 13)}, op4 {F2CPoint(15, 15)};
+  F2CGraph2D g;
+  EXPECT_FALSE(arePointsConnected(g, op1, p2));
+  EXPECT_FALSE(arePointsConnected(g, p1, op2));
+  g.addDirectedEdge(op1, p2, 1);
+  EXPECT_TRUE(arePointsConnected(g, op1, p2));
+  EXPECT_FALSE(arePointsConnected(g, p2, op1));
+  g.addDirectedEdge(p1, op2, 1);
+  EXPECT_TRUE(arePointsConnected(g, p1, op2));
+  EXPECT_FALSE(arePointsConnected(g, op2, p1));
+
+  g.addEdge(op2, p3, 1);
+  EXPECT_TRUE(arePointsConnected(g, op2, p3));
+  EXPECT_TRUE(arePointsConnected(g, p3, op2));
+  g.addEdge(p2, op3, 1);
+  EXPECT_TRUE(arePointsConnected(g, p2, op3));
+  EXPECT_TRUE(arePointsConnected(g, op3, p2));
+}
 
 TEST(fields2cover_types_graph2d, addEdges) {
   F2CPoint p1 {1, -1}, p2 {2, -2}, p3 {-3, 3}, p4 {5, 5};

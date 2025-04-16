@@ -17,6 +17,16 @@ Field::Field(const Cells& cells, const std::string& id_p) : id_(id_p) {
   this->field_ = cells - this->ref_point_;
 }
 
+Field::Field(const Cells& cells, const std::string& id_p,
+    const std::vector<std::pair<
+        std::string, std::vector<Point>>>& reload_points) : id_(id_p) {
+  if (!cells.isEmpty()) {
+    this->ref_point_ = cells.getCellBorder(0).startPoint();
+  }
+  this->field_ = cells - this->ref_point_;
+  this->reload_points_ = reload_points - this->ref_point_;
+}
+
 Field::~Field() = default;
 Field::Field(const Field&) = default;
 Field::Field(Field&&) = default;
@@ -73,8 +83,21 @@ void Field::setField(const Cells& _field) {
   this->field_ = _field;
 }
 
+std::vector<std::pair<std::string, std::vector<Point>>>
+    Field::getReloadPoints() const {
+  return reload_points_;
+}
+
+void Field::setReloadPoints(const std::vector<std::pair<
+    std::string, std::vector<Point>>>& _reload_points) {
+  this->reload_points_ = _reload_points;
+}
+
+
+
 Field Field::clone() const {
-  Field new_field {this->field_ + this->ref_point_, this->id_};
+  Field new_field {this->field_ + this->ref_point_, this->id_,
+                     this->reload_points_ + this->ref_point_};
   new_field.coord_sys_ = this->coord_sys_;
   return new_field;
 }
@@ -159,6 +182,11 @@ void Field::setUTMCoordSystem(
 
 Cells Field::getCellsAbsPosition() const {
   return this->field_ + this->ref_point_;
+}
+
+std::vector<std::pair<std::string, std::vector<Point>>>
+    Field::getReloadPointsAbsPosition() const {
+  return this->reload_points_ + this->ref_point_;
 }
 
 std::string Field::getUTMZone(const std::string& coord_sys) {

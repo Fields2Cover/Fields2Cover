@@ -1,4 +1,4 @@
-/* File: fields2cover.i */
+
 
 #pragma SWIG nowarn=315,317,320,362,503,509
 
@@ -12,7 +12,7 @@
  %include <exception.i>
  %include <std_pair.i>
 
-#define __version__ "2.0.0"
+#define __version__ "3.0.0"
 
 %inline %{
   #include "fields2cover.h"
@@ -134,6 +134,11 @@ EXTEND_OPERATOR(Cells)
 %ignore f2c::types::Graph::shortestPathsAndCosts;
 %include "fields2cover/types/Graph.h"
 %ignore f2c::types::Graph2D::allPathsBetween;
+%ignore f2c::types::Graph2D::addEdgesSwathExtremes;
+%ignore f2c::types::Graph2D::addEdge;
+%ignore f2c::types::Graph2D::addEdges;
+%ignore f2c::types::Graph2D::addDirectedEdge;
+%ignore f2c::types::Graph2D::addDirectedEdges;
 %include "fields2cover/types/Graph2D.h"
 
 %include "fields2cover/types/Swath.h"
@@ -151,6 +156,11 @@ EXTEND_OPERATOR(Cells)
 %include "fields2cover/types/PathState.h"
 %ignore f2c::types::Path::operator[];
 %include "fields2cover/types/Path.h"
+%include "fields2cover/types/PathStateSimp.h"
+%ignore f2c::types::PathSimp::operator[];
+%include "fields2cover/types/PathSimp.h"
+%include "fields2cover/types/RobotWheel.h"
+%include "fields2cover/types/GenericImplement.h"
 %include "fields2cover/types/Robot.h"
 %include "fields2cover/types.h"
 
@@ -163,8 +173,8 @@ EXTEND_OPERATOR(Cells)
 typedef long unsigned int size_t;
 %}
 %template(VectorSize) std::vector<size_t>;
-%template(VectorPoint) std::vector<F2CPoint>;
-%template(VectorMultiPoint) std::vector<F2CMultiPoint>;
+%template(VectorPoint) std::vector<f2c::types::Point>;
+%template(VectorMultiPoint) std::vector<f2c::types::MultiPoint>;
 %template(VectorSwath) std::vector<f2c::types::Swath>;
 %template(VectorSwaths) std::vector<f2c::types::Swaths>;
 %template(VectorLineString) std::vector<f2c::types::LineString>;
@@ -191,51 +201,51 @@ typedef long unsigned int size_t;
 
 %define DEFINE_HG_COSTS(class_name, alg)
   %extend f2c::obj::class_name {
-    %template(alg) alg<F2CCell, F2CCell>;
-    %template(alg) alg<F2CCells, F2CCell>;
-    %template(alg) alg<F2CCell, F2CCells>;
-    %template(alg) alg<F2CCells, F2CCells>;
+    %template(alg) alg<f2c::types::Cell, f2c::types::Cell>;
+    %template(alg) alg<f2c::types::Cells, f2c::types::Cell>;
+    %template(alg) alg<f2c::types::Cell, f2c::types::Cells>;
+    %template(alg) alg<f2c::types::Cells, f2c::types::Cells>;
   }
 %enddef
 
 %define DEFINE_SG_COSTS(class_name, alg)
   %extend f2c::obj::class_name {
-    %template(alg) alg<F2CSwath>;
-    %template(alg) alg<F2CSwaths>;
-    %template(alg) alg<F2CSwathsByCells>;
-    %template(alg) alg<F2CCell, F2CSwath>;
-    %template(alg) alg<F2CCell, F2CSwaths>;
-    %template(alg) alg<F2CCell, F2CSwathsByCells>;
-    %template(alg) alg<F2CCells, F2CSwath>;
-    %template(alg) alg<F2CCells, F2CSwaths>;
-    %template(alg) alg<F2CCells, F2CSwathsByCells>;
+    %template(alg) alg<f2c::types::Swath>;
+    %template(alg) alg<f2c::types::Swaths>;
+    %template(alg) alg<f2c::types::SwathsByCells>;
+    %template(alg) alg<f2c::types::Cell, f2c::types::Swath>;
+    %template(alg) alg<f2c::types::Cell, f2c::types::Swaths>;
+    %template(alg) alg<f2c::types::Cell, f2c::types::SwathsByCells>;
+    %template(alg) alg<f2c::types::Cells, f2c::types::Swath>;
+    %template(alg) alg<f2c::types::Cells, f2c::types::Swaths>;
+    %template(alg) alg<f2c::types::Cells, f2c::types::SwathsByCells>;
   }
 %enddef
 %define DEFINE_RP_COSTS(class_name, alg)
   %extend f2c::obj::class_name {
-    %template(alg) alg<F2CPoint, F2CPoint>;
-    %template(alg) alg<F2CPoint, double, F2CPoint>;
-    %template(alg) alg<F2CPoint, double, F2CPoint, double>;
-    %template(alg) alg<F2CPoint, F2CPoint, double>;
-    %template(alg) alg<F2CSwath, F2CPoint>;
-    %template(alg) alg<F2CSwath, F2CSwath>;
-    %template(alg) alg<F2CSwath, F2CPoint, double>;
-    %template(alg) alg<F2CPoint, F2CSwath>;
-    %template(alg) alg<F2CPoint, double, F2CSwath>;
-    %template(alg) alg<std::vector<F2CPoint>>;
-    %template(alg) alg<F2CMultiPoint>;
-    %template(alg) alg<F2CSwath, F2CMultiPoint>;
-    %template(alg) alg<F2CSwaths, F2CMultiPoint>;
-    %template(alg) alg<F2CMultiPoint, F2CSwath>;
-    %template(alg) alg<F2CMultiPoint, F2CSwaths>;
-    %template(alg) alg<F2CSwath>;
-    %template(alg) alg<F2CSwaths>;
-    %template(alg) alg<F2CRoute>;
+    %template(alg) alg<f2c::types::Point, f2c::types::Point>;
+    %template(alg) alg<f2c::types::Point, double, f2c::types::Point>;
+    %template(alg) alg<f2c::types::Point, double, f2c::types::Point, double>;
+    %template(alg) alg<f2c::types::Point, f2c::types::Point, double>;
+    %template(alg) alg<f2c::types::Swath, f2c::types::Point>;
+    %template(alg) alg<f2c::types::Swath, f2c::types::Swath>;
+    %template(alg) alg<f2c::types::Swath, f2c::types::Point, double>;
+    %template(alg) alg<f2c::types::Point, f2c::types::Swath>;
+    %template(alg) alg<f2c::types::Point, double, f2c::types::Swath>;
+    %template(alg) alg<std::vector<f2c::types::Point>>;
+    %template(alg) alg<f2c::types::MultiPoint>;
+    %template(alg) alg<f2c::types::Swath, f2c::types::MultiPoint>;
+    %template(alg) alg<f2c::types::Swaths, f2c::types::MultiPoint>;
+    %template(alg) alg<f2c::types::MultiPoint, f2c::types::Swath>;
+    %template(alg) alg<f2c::types::MultiPoint, f2c::types::Swaths>;
+    %template(alg) alg<f2c::types::Swath>;
+    %template(alg) alg<f2c::types::Swaths>;
+    %template(alg) alg<f2c::types::Route>;
   }
 %enddef
 %define DEFINE_PP_COSTS(class_name, alg)
   %extend f2c::obj::class_name {
-    %template(alg) alg<F2CPath>;
+    %template(alg) alg<f2c::types::Path>;
   }
 %enddef
 

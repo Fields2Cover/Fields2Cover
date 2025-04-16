@@ -10,10 +10,13 @@
 
 #include <gdal/ogr_geometry.h>
 #include <utility>
+#include <vector>
 #include "fields2cover/types/Geometries.h"
 #include "fields2cover/types/LineString.h"
 
 namespace f2c::types {
+
+struct Cells;
 
 struct MultiLineString :
     public Geometries<MultiLineString, OGRMultiLineString,
@@ -43,6 +46,8 @@ struct MultiLineString :
   void setGeometry(size_t i, const LineString& line);
 
   void append(const OGRGeometry* geom);
+  MultiLineString& append(const LineString& line);
+  MultiLineString& append(const MultiLineString& lines);
 
   void addGeometry(const LineString& line);
   void addGeometry(const MultiLineString& lines);
@@ -56,6 +61,10 @@ struct MultiLineString :
   template <class T, OGRwkbGeometryType R>
   static MultiLineString intersection(
       const LineString& line, const Geometry<T, R>& g);
+
+  Point closestPointTo(const Point& p) const;
+  static MultiLineString connectMultiLineStrings(
+      const std::vector<MultiLineString>& lines, const Cells& allowed_area);
 };
 
 

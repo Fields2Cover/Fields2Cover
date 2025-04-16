@@ -10,6 +10,7 @@
 
 #include <gdal/ogr_geometry.h>
 #include <vector>
+#include <typeinfo>
 
 
 #include "fields2cover/types/Point.h"
@@ -28,6 +29,7 @@
 #include "fields2cover/types/SwathsByCells.h"
 #include "fields2cover/types/Route.h"
 #include "fields2cover/types/Path.h"
+#include "fields2cover/types/PathSimp.h"
 #include "fields2cover/types/Robot.h"
 
 #include "fields2cover/types/Graph.h"
@@ -45,7 +47,9 @@ using F2CCells = f2c::types::Cells;
 using F2CStrip = f2c::types::Strip;
 using F2CField = f2c::types::Field;
 using F2CPath = f2c::types::Path;
+using F2CPathSimp = f2c::types::PathSimp;
 using F2CPathState = f2c::types::PathState;
+using F2CPathStateSimp = f2c::types::PathStateSimp;
 using F2CRoute = f2c::types::Route;
 using F2CSwath = f2c::types::Swath;
 using F2CSwaths = f2c::types::Swaths;

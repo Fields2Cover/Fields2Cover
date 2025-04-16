@@ -422,7 +422,7 @@ TEST(fields2cover_types_path, discretize_swath) {
   // Create swath connections using Dubins curves with Continuous curvature
   f2c::pp::DubinsCurvesCC dubins_cc;
   F2CPath path_dubins_cc = path_planner.planPath(robot, boustrophedon_swaths, dubins_cc);
-  EXPECT_TRUE(IsPathCorrect(path_dubins_cc,
+  EXPECT_TRUE(isPathCorrect(path_dubins_cc,
         path_dubins_cc[0].point, path_dubins_cc[0].angle,
         path_dubins_cc.atEnd(), path_dubins_cc.back().angle, false));
 
@@ -441,7 +441,7 @@ TEST(fields2cover_types_path, discretize_swath) {
                   discretize_step_size, 1e-6);
     }
   }
-  EXPECT_TRUE(IsPathCorrect(new_path,
+  EXPECT_TRUE(isPathCorrect(new_path,
         path_dubins_cc[0].point, path_dubins_cc[0].angle,
         path_dubins_cc.atEnd(), path_dubins_cc.back().angle, false));
 
@@ -457,7 +457,7 @@ TEST(fields2cover_types_path, discretize_swath) {
                     field_Y, 1e-6);
     }
   }
-  EXPECT_TRUE(IsPathCorrect(new_path_2,
+  EXPECT_TRUE(isPathCorrect(new_path_2,
         path_dubins_cc[0].point, path_dubins_cc[0].angle,
         path_dubins_cc.atEnd(), path_dubins_cc.back().angle, false));
 
@@ -491,7 +491,7 @@ TEST(fields2cover_types_path, discretize_swath) {
   EXPECT_NEAR(discretized_path[1].point.distance(discretized_path[2].point),
       approximated_step_size_4 , 1e-4);
 
-  EXPECT_TRUE(IsPathCorrect(discretized_path, state1.point,
+  EXPECT_TRUE(isPathCorrect(discretized_path, state1.point,
         0.5*boost::math::constants::half_pi<double>(),
       state2.point, 0.5 * boost::math::constants::half_pi<double>(), false));
 }
