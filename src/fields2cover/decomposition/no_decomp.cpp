@@ -4,14 +4,14 @@
 //                        BSD-3 License
 //=============================================================================
 
-#include "fields2cover/objectives/rp_obj/direct_dist_path_obj.h"
+#include "fields2cover/decomposition/no_decomp.h"
 
-namespace f2c::obj {
+namespace f2c::decomp {
 
-double DirectDistPathObj::computeCost(
-    const F2CPoint& p1, const F2CPoint& p2) const {
-  return p1.distance(p2);
+F2CMultiLineString NoDecomp::genSplitLines(
+    const F2CCells& cells, const obj::DecompObjective& obj) const {
+  return {};
 }
 
-}  // namespace f2c::obj
+}  // namespace f2c::decomp
 

@@ -9,21 +9,21 @@
 namespace f2c::obj {
 
 double HGObjective::computeCost(
-    const F2CCell& total_cell, const F2CCell& rem_cell) {
+    const F2CCell& total_cell, const F2CCell& rem_cell) const {
   return computeCost(
       static_cast<F2CCells>(total_cell), static_cast<F2CCells>(rem_cell));
 }
 double HGObjective::computeCost(
-    const F2CCell& total_cell, const F2CCells& rem_cell) {
+    const F2CCell& total_cell, const F2CCells& rem_cell) const {
   return computeCost(static_cast<F2CCells>(total_cell), rem_cell);
 }
 double HGObjective::computeCost(
-    const F2CCells& total_cell, const F2CCell& rem_cell) {
+    const F2CCells& total_cell, const F2CCell& rem_cell) const {
   return computeCost(total_cell, static_cast<F2CCells>(rem_cell));
 }
 double HGObjective::computeCost(
-    const F2CCells& total_cell, const F2CCells& rem_cell) {
-  return 1 - total_cell.difference(rem_cell).area() / total_cell.area();
+    const F2CCells& total_cell, const F2CCells& rem_cell) const {
+  return 1.0 - total_cell.difference(rem_cell).area() / total_cell.area();
 }
 
 }  // namespace f2c::obj

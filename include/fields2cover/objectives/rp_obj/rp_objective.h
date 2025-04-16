@@ -21,7 +21,7 @@ class RPObjective : public BaseObjective<RPObjective> {
   /// @param p1 Start point
   /// @param p2 End point
   /// @return Cost value
-  virtual double computeCost(const F2CPoint& p1, const F2CPoint& p2);
+  virtual double computeCost(const F2CPoint& p1, const F2CPoint& p2) const;
 
   /// Return the cost of going from point p1 to point p2
   /// @param p1 Start point
@@ -29,7 +29,7 @@ class RPObjective : public BaseObjective<RPObjective> {
   /// @param p2 End point
   /// @return Cost value
   virtual double computeCost(
-      const F2CPoint& p1, double ang1, const F2CPoint& p2);
+      const F2CPoint& p1, double ang1, const F2CPoint& p2) const;
 
   /// Return the cost of going from point p1 to point p2
   /// @param p1 Start point
@@ -38,7 +38,8 @@ class RPObjective : public BaseObjective<RPObjective> {
   /// @param ang2 Angle of the robot in p2
   /// @return Cost value
   virtual double computeCost(
-      const F2CPoint& p1, double ang1, const F2CPoint& p2, double ang2);  // = 0
+      const F2CPoint& p1, double ang1, const F2CPoint& p2,
+      double ang2) const;  // = 0
 
   /// Return the cost of going from point p1 to point p2
   /// @param p1 Start point
@@ -46,78 +47,80 @@ class RPObjective : public BaseObjective<RPObjective> {
   /// @param ang2 Angle of the robot in p2
   /// @return Cost value
   virtual double computeCost(
-      const F2CPoint& p1, const F2CPoint& p2, double ang2);
+      const F2CPoint& p1, const F2CPoint& p2, double ang2) const;
 
   /// Return the cost of going from swath s to point p
   /// @param s Start point (end of the swath)
   /// @param p End point
   /// @return Cost value
-  virtual double computeCost(const F2CSwath& s, const F2CPoint& p);
+  virtual double computeCost(const F2CSwath& s, const F2CPoint& p) const;
 
   /// Return the cost of going from swath s to point p
   /// @param s1 Start point (end of the swath)
   /// @param s2 End point (start of the swath)
   /// @return Cost value
-  virtual double computeCost(const F2CSwath& s1, const F2CSwath& s2);
+  virtual double computeCost(const F2CSwath& s1, const F2CSwath& s2) const;
 
   /// Return the cost of going from swath s to point p
   /// @param s Start point (end of the swath)
   /// @param p End point
   /// @param ang Angle of the robot in p
   /// @return Cost value
-  virtual double computeCost(const F2CSwath& s, const F2CPoint& p, double ang);
+  virtual double computeCost(const F2CSwath& s, const F2CPoint& p,
+      double ang) const;
 
   /// Return the cost of going from point p to swath s
   /// @param p Start point
   /// @param s End point (start of the swath)
   /// @return Cost value
-  virtual double computeCost(const F2CPoint& p, const F2CSwath& s);
+  virtual double computeCost(const F2CPoint& p, const F2CSwath& s) const;
 
   /// Return the cost of going from point p to swath s
   /// @param p Start point
   /// @param ang Angle of the robot in p
   /// @param s End point (start of the swath)
   /// @return Cost value
-  virtual double computeCost(const F2CPoint& p, double ang, const F2CSwath& s);
+  virtual double computeCost(const F2CPoint& p, double ang,
+      const F2CSwath& s) const;
 
   /// Return the cost of covering all the points of ps
   /// @param ps vector of points
   /// @return Cost value
-  virtual double computeCost(const std::vector<F2CPoint>& ps);
+  virtual double computeCost(const std::vector<F2CPoint>& ps) const;
 
   /// Return the cost of covering all the points of ps
   /// @param ps vector of points
   /// @return Cost value
-  virtual double computeCost(const F2CMultiPoint& ps);
+  virtual double computeCost(const F2CMultiPoint& ps) const;
 
   /// Return the cost of going from swath s to the first point of ps
   /// @param s Start point (end of the swath)
   /// @param ps vector of points
   /// @return Cost value
-  virtual double computeCost(const F2CSwath& s, const F2CMultiPoint& ps);
+  virtual double computeCost(const F2CSwath& s, const F2CMultiPoint& ps) const;
 
   /// Return the cost of going from the last swath of s to the first point of ps
   /// @param s Start point (end of the last swath)
   /// @param ps vector of points (first point)
   /// @return Cost value
-  virtual double computeCost(const F2CSwaths& s, const F2CMultiPoint& ps);
+  virtual double computeCost(const F2CSwaths& s, const F2CMultiPoint& ps) const;
 
   /// Return the cost of going from the last point of ps to the swath s
   /// @param ps vector of points (end point)
   /// @param s Start point (start of the swath)
   /// @return Cost value
-  virtual double computeCost(const F2CMultiPoint& ps, const F2CSwath& s);
+  virtual double computeCost(const F2CMultiPoint& ps, const F2CSwath& s) const;
 
   /// Return the cost of going from the last point of ps to the first swath of s
   /// @param ps vector of points (end point)
   /// @param s Start point (start of the first swath)
   /// @return Cost value
-  virtual double computeCost(const F2CMultiPoint& ps, const F2CSwaths& s);
+  virtual double computeCost(const F2CMultiPoint& ps, const F2CSwaths& s) const;
 
   /// Return the cost of covering a swath
   /// @param s Swath
   /// @return Cost value
-  virtual double computeCost(const F2CSwath& s);
+  virtual double computeCost(const F2CSwath& s) const;
 
   /// @brief Return the cost of covering a vector of swaths.
   ///
@@ -125,14 +128,14 @@ class RPObjective : public BaseObjective<RPObjective> {
   /// may affect the cost.
   /// @param s Swaths
   /// @return Cost value
-  virtual double computeCost(const F2CSwaths& swaths);
+  virtual double computeCost(const F2CSwaths& swaths) const;
 
   /// @brief Return the cost of covering a Route.
   ///
   /// Costs of each swath + Cost of going from one to another.
   /// @param r Route
   /// @return Cost value
-  virtual double computeCost(const F2CRoute& r);
+  virtual double computeCost(const F2CRoute& r) const;
 };
 
 

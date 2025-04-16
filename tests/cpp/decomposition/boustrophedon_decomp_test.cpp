@@ -18,9 +18,8 @@ TEST(fields2cover_decomp_boustrophedon, decompose) {
   F2CCells cells = non_convex_field.difference(convex_field);
 
   f2c::decomp::BoustrophedonDecomp decomp;
-  decomp.setSplitAngle(0.5*M_PI);
-  auto decomp_lines = decomp.genSplitLines(cells);
-  auto decomp_field = decomp.decompose(cells);
+  auto decomp_lines = decomp.genSplitLines(cells, 0.5*M_PI);
+  auto decomp_field = decomp.decompose(cells, 0.5*M_PI);
   EXPECT_EQ(decomp_field.size(), 4);
   EXPECT_NEAR(decomp_field.area(), cells.area(), 1e-3);
 }

@@ -18,11 +18,9 @@ TEST(fields2cover_decomp_trapezoidal, decompose) {
   F2CCells cells = non_convex_field.difference(convex_field);
 
   f2c::decomp::TrapezoidalDecomp decomp;
-  decomp.setSplitAngle(0.5*M_PI);
-  EXPECT_NEAR(decomp.getSplitAngle(), 0.5*M_PI, 1e-5);
 
-  auto decomp_lines = decomp.genSplitLines(cells);
-  auto decomp_field = decomp.decompose(cells);
+  auto decomp_lines = decomp.genSplitLines(cells, 0.5*M_PI);
+  auto decomp_field = decomp.decompose(cells, 0.5*M_PI);
   EXPECT_EQ(decomp_field.size(), 13);
   EXPECT_NEAR(decomp_field.area(), cells.area(), 1e-3);
 }

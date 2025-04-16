@@ -9,7 +9,7 @@
 namespace f2c::decomp {
 
 F2CMultiLineString BoustrophedonDecomp::genSplitLines(
-    const F2CCells& cells, const obj::DecompObjective& obj) {
+    const F2CCells& cells, double split_angle) const {
   F2CMultiLineString lines;
   for (auto&& cell : cells) {
     for (auto&& ring : cell) {

@@ -18,13 +18,13 @@ namespace f2c::obj {
 class HGObjective : public BaseObjective<HGObjective> {
  public:
   virtual double computeCost(
-      const F2CCell& total_cell, const F2CCell& rem_cell);
+      const F2CCell& total_cell, const F2CCell& rem_cell) const;
   virtual double computeCost(
-      const F2CCells& total_cell, const F2CCell& rem_cell);
+      const F2CCells& total_cell, const F2CCell& rem_cell) const;
   virtual double computeCost(
-      const F2CCell& total_cell, const F2CCells& rem_cell);
+      const F2CCell& total_cell, const F2CCells& rem_cell) const;
   virtual double computeCost(
-      const F2CCells& total_cell, const F2CCells& rem_cell);
+      const F2CCells& total_cell, const F2CCells& rem_cell) const;
 };
 
 

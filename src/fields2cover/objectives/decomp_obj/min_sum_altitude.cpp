@@ -4,13 +4,12 @@
 //                        BSD-3 License
 //=============================================================================
 
-#include "fields2cover/objectives/rp_obj/direct_dist_path_obj.h"
+#include "fields2cover/objectives/decomp_obj/min_sum_altitude.h"
 
 namespace f2c::obj {
 
-double DirectDistPathObj::computeCost(
-    const F2CPoint& p1, const F2CPoint& p2) const {
-  return p1.distance(p2);
+double MinSumAltitude::computeCost(const F2CLinearRing& ring) const {
+  return ring.minAltitude();
 }
 
 }  // namespace f2c::obj

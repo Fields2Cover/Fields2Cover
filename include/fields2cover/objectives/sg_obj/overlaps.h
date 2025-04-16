@@ -20,8 +20,10 @@ class Overlaps : public SGObjective {
  public:
   using SGObjective::computeCost;
 
-  double computeCost(const F2CCell& poly, const F2CSwaths& swaths) override;
-  double computeCost(const F2CCells& poly, const F2CSwaths& swaths) override;
+  double computeCost(const F2CCell& poly,
+      const F2CSwaths& swaths) const override;
+  double computeCost(const F2CCells& poly,
+      const F2CSwaths& swaths) const override;
 };
 
 }  // namespace f2c::obj

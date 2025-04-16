@@ -19,7 +19,7 @@ namespace f2c::pp {
 /// Cast steer::State type from steering_functions library to
 /// Path type
 inline types::Path steerStatesToPath(
-    const std::vector<steer::State>& curve, double const_vel) {
+    const std::vector<steer::State>& curve, double const_vel, bool using_impl) {
   types::Path path;
   auto compute_dist = [&curve](int i) {
     return ((i + 1 < curve.size()) ?
@@ -34,6 +34,7 @@ inline types::Path steerStatesToPath(
     state.len = compute_dist(i);
     state.dir = static_cast<types::PathDirection>(curve[i].d);
     state.type = types::PathSectionType::TURN;
+    state.using_implement = using_impl;
     path.addState(state);
   }
   return path;

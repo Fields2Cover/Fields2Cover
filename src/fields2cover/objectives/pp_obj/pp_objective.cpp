@@ -8,7 +8,7 @@
 
 namespace f2c::obj {
 
-double PPObjective::computeCost(const F2CPath& path) {
+double PPObjective::computeCost(const F2CPath& path) const {
   return path.length();
 }
 

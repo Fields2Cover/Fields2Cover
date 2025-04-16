@@ -21,7 +21,8 @@ class NSwathModified : public NSwath {
  public:
   using SGObjective::computeCost;
   bool isFastCompAvailable() const override {return true;}
-  double computeCost(double ang, double op_width, const F2CCell& cell) override;
+  double computeCost(double ang, double op_width,
+      const F2CCell& cell) const override;
 };
 
 }  // namespace f2c::obj

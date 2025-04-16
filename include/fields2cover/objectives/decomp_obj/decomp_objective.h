@@ -17,7 +17,9 @@ namespace f2c::obj {
 /// @brief Base class for objective functions of cell decomposition.
 class DecompObjective : public BaseObjective<DecompObjective> {
  public:
-  virtual double computeCost(const F2CCells& cells);
+  virtual double computeCost(const F2CLinearRing& ring) const;
+  virtual double computeCost(const F2CCell& cell) const;
+  virtual double computeCost(const F2CCells& cells) const;
 };
 
 

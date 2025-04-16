@@ -5,25 +5,23 @@
 //=============================================================================
 
 #pragma once
-#ifndef FIELDS2COVER_OBJECTIVES_N_SWATH_H_
-#define FIELDS2COVER_OBJECTIVES_N_SWATH_H_
+#ifndef FIELDS2COVER_OBJECTIVES_POLYGON_ALTITUDE_H_
+#define FIELDS2COVER_OBJECTIVES_POLYGON_ALTITUDE_H_
 
 #include "fields2cover/types.h"
 #include "fields2cover/objectives/sg_obj/sg_objective.h"
 
 namespace f2c::obj {
 
-/// @brief SG cost function as the number of swaths.
-///
-/// This cost function assumes that turn are slower than going through the
-/// swaths. Then, less swaths means less turns and faster paths.
-class NSwath : public SGObjective {
+/// @brief SG cost function as the height of the polygon + height of the holes.
+///    \cite huang2001optimal
+class PolygonAltitude : public SGObjective {
  public:
   using SGObjective::computeCost;
-  double computeCost(const F2CSwath& s) const override;
-  double computeCost(const F2CSwaths& swaths) const override;
+  bool isFastCompAvailable() const override {return true;}
+  double computeCost(double ang, double op_width, const F2CCell& cell) const override;
 };
 
 }  // namespace f2c::obj
 
-#endif  // FIELDS2COVER_OBJECTIVES_N_SWATH_H_
+#endif  //  FIELDS2COVER_OBJECTIVES_POLYGON_ALTITUDE_H_

@@ -26,7 +26,7 @@ class BoustrophedonDecomp : public TrapezoidalDecomp {
   /// @param cells Original cells
   /// @return Smaller cells that compound the field
   F2CMultiLineString genSplitLines(const F2CCells& cells,
-      const obj::DecompObjective& obj = obj::DecompObjective()) override;
+      double split_angle) const override;
 };
 
 }  // namespace f2c::decomp

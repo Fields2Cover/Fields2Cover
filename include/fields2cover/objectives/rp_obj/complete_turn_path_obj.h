@@ -41,7 +41,7 @@ class CompleteTurnPathObj : public RPObjective {
   /// p2 with angle ang2
   double computeCost(
       const F2CPoint& p1, double ang1,
-      const F2CPoint& p2, double ang2) override;
+      const F2CPoint& p2, double ang2) const override;
 
   void setRobot(const F2CRobot& robot);
   void setTurnPlanner(const T& turner);
@@ -78,7 +78,7 @@ void CompleteTurnPathObj<T, R>::setTurnPlanner(const T& turner) {
 template <class T, class R>
 double CompleteTurnPathObj<T, R>::computeCost(
     const F2CPoint& p1, double ang1,
-    const F2CPoint& p2, double ang2) {
+    const F2CPoint& p2, double ang2) const {
   return pp_objective.computeCost(
       this->turn_planner.createTurn(this->robot, p1, ang1, p2, ang2));
 }

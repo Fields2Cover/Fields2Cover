@@ -11,7 +11,8 @@
 namespace f2c::pp {
 
 F2CPath DubinsCurvesCC::createSimpleTurn(const F2CRobot& robot,
-    double dist_start_pos, double start_angle, double end_angle) {
+    double dist_start_pos, double start_angle, double end_angle,
+    bool using_impl, double max_headland_width) const {
   steer::State start, end;
 
   start.x = 0.0;
@@ -27,17 +28,18 @@ F2CPath DubinsCurvesCC::createSimpleTurn(const F2CRobot& robot,
   end.d = 0;
 
   double n = 0.0;
+
   while (true) {
     CC00_Dubins_State_Space ss(
-        robot.getMaxCurv() / (1+0.05*n),
-        robot.getMaxDiffCurv() / (1+0.2*n),
+        robot.getMaxCurv(using_impl) / (1 + 0.05 * n),
+        robot.getMaxDiffCurv(using_impl) / (1 + 0.2 * n),
         discretization,
         true);
     if (loop_detected(ss.get_controls(start, end)) && n <= 20.) {
       n += 1.0;
     } else {
       return steerStatesToPath(ss.get_path(start, end),
-          robot.getTurnVel());
+          robot.getTurnVel(using_impl), using_impl);
     }
   }
 }

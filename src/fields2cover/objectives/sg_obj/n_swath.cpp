@@ -8,11 +8,11 @@
 
 namespace f2c::obj {
 
-double NSwath::computeCost(const F2CSwath& s) {
+double NSwath::computeCost(const F2CSwath& s) const {
   return 1.0;
 }
 
-double NSwath::computeCost(const F2CSwaths& swaths) {
+double NSwath::computeCost(const F2CSwaths& swaths) const {
   return swaths.size();
 }
 

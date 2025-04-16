@@ -20,25 +20,25 @@ class PathPlanning {
  public:
   /// Compute the coverage path using a route as a reference.
   static F2CPath planPath(const F2CRobot& robot, const F2CRoute& route,
-      TurningBase& turn);
+      const TurningBase& turn);
 
   /// Compute path that covers the swaths in order,
   /// using a path planner to connect swaths.
   static F2CPath planPath(const F2CRobot& robot, const F2CSwaths& swaths,
-      TurningBase& turn);
+      const TurningBase& turn);
 
   /// Compute path that goes from the end of the last swath in a F2CSwaths
   /// to the beginning of the first one in another F2CSwaths.
   static F2CPath planPathForConnection(const F2CRobot& robot,
       const F2CSwaths& s1, const F2CMultiPoint& mp, const F2CSwaths& s2,
-      TurningBase& turn);
+      const TurningBase& turn);
 
   /// Compute path that connects two points with angles and visit middle points.
   static F2CPath planPathForConnection(const F2CRobot& robot,
       const F2CPoint& p1, double ang1,
       const F2CMultiPoint& mp,
       const F2CPoint& p2, double ang2,
-      TurningBase& turn);
+      const TurningBase& turn);
 
  private:
   static double getSmoothTurningRadius(const F2CRobot& robot);
@@ -47,6 +47,10 @@ class PathPlanning {
       const F2CPoint& p1, double ang1,
       const F2CMultiPoint& mp,
       const F2CPoint& p2, double ang2);
+
+  static std::vector<F2CMultiPoint> splitInReloadPoints(
+      const F2CRobot& robot,
+      const F2CMultiPoint& mp);
 };
 
 }  // namespace f2c::pp

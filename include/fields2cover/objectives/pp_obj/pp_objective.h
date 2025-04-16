@@ -18,7 +18,7 @@ namespace f2c::obj {
 class PPObjective : public BaseObjective<PPObjective> {
  public:
   /// @brief Return the cost of a path.
-  virtual double computeCost(const F2CPath& path);
+  virtual double computeCost(const F2CPath& path) const;
 };
 
 

@@ -4,25 +4,21 @@
 //                        BSD-3 License
 //=============================================================================
 
-#include "fields2cover/objectives/sg_obj/n_swath_modified.h"
+#include "fields2cover/objectives/sg_obj/polygon_altitude.h"
 
 namespace f2c::obj {
 
-double NSwathModified::computeCost(
+double PolygonAltitude::computeCost(
     double ang, double op_width, const F2CCell& cell) const {
-  if (cell.isEmpty() || op_width <= 0.0) {
+  if (cell.isEmpty()) {
     return 0.0;
   }
-  double n_turns {0.0};
-  for (auto&& ring : cell) {
-    for (size_t i = 1; i <= ring.size(); ++i) {
-      auto p = ring.at(i);
-      auto p_1 = ring.at(i - 1);
-      n_turns += p.distance(p_1) *
-        fabs(sin(ang - (p - p_1).getAngleFromPoint()));
-    }
+  auto rot_cell = F2CPoint(0.0, 0.0).rotateFromPoint(-ang, cell);
+  double height {rot_cell.getHeight()};
+  for (size_t i = 0; i < rot_cell.size() - 1; ++i) {
+    height += rot_cell.getInteriorRing(i).getHeight();
   }
-  return n_turns / (2.0 * op_width);
+  return height;
 }
 
 }  // namespace f2c::obj

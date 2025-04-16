@@ -8,7 +8,7 @@
 
 namespace f2c::obj {
 
-double SwathLength::computeCost(const F2CSwath& s) {
+double SwathLength::computeCost(const F2CSwath& s) const {
   return s.length();
 }
 

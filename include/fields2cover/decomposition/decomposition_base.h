@@ -8,6 +8,8 @@
 #ifndef FIELDS2COVER_DECOMPOSITION_DECOMPOSITION_BASE_H_
 #define FIELDS2COVER_DECOMPOSITION_DECOMPOSITION_BASE_H_
 
+#include <typeinfo>
+#include <vector>
 #include "fields2cover/types.h"
 #include "fields2cover/objectives/decomp_obj/decomp_objective.h"
 
@@ -26,29 +28,37 @@ class DecompositionBase {
   /// @param cells Complex-shape cells
   /// @return Same space as @p cells recoded into simpler cells
   virtual F2CCells decompose(const F2CCells& cells,
-      const obj::DecompObjective& obj = obj::DecompObjective());
+      const obj::DecompObjective& obj = obj::DecompObjective()) const;
+
+  virtual F2CCells decompose(const F2CCell& cell,
+      const obj::DecompObjective& obj = obj::DecompObjective()) const;
 
  public:
   /// Split the field into several cells that are easier to cover
   /// @param cells Original cells
   /// @return Smaller cells that compound the field
   virtual F2CCells split(const F2CCells& cells,
-      const obj::DecompObjective& obj);
+      const obj::DecompObjective& obj) const;
 
   /// Generate the lines used by f2c::decomp::split to split the cells into
   /// simpler cells
   /// @param cells Complex-shape cells
   /// @return Lines that split the complex-shape cells into simpler cells
   virtual F2CMultiLineString genSplitLines(const F2CCells& cells,
-      const obj::DecompObjective& obj) = 0;
+      const obj::DecompObjective& obj) const = 0;
 
   /// Apply a merge strategy to reduce the number of simpler cells
   /// @param cells Simple cells
   /// @return Merged cells.
   virtual F2CCells merge(const F2CCells& cells,
-      const obj::DecompObjective& obj);
+      const obj::DecompObjective& obj) const;
+
+  virtual std::vector<double> getCovAngles() const;
 
   virtual ~DecompositionBase() = default;
+
+ protected:
+  mutable std::vector<double> cov_angles;
 };
 
 }  // namespace f2c::decomp

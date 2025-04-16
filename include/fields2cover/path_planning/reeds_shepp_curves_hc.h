@@ -17,7 +17,9 @@ namespace f2c::pp {
 class ReedsSheppCurvesHC : public TurningBase {
  public:
   F2CPath createSimpleTurn(const F2CRobot& robot,
-      double dist_start_pos, double start_angle, double end_angle) override;
+      double dist_start_pos, double start_angle,
+      double end_angle, bool using_impl = false,
+      double max_headland_width = 1e5) const override;
 };
 
 }  // namespace f2c::pp

@@ -10,7 +10,7 @@
 namespace f2c::pp {
 
 F2CPath PathPlanning::planPath(const F2CRobot& robot,
-    const F2CRoute& route, TurningBase& turn) {
+    const F2CRoute& route, const TurningBase& turn) {
   F2CPath path;
   for (size_t i = 0; i < route.sizeVectorSwaths(); ++i) {
     auto prev_swaths = (i >0) ? route.getSwaths(i-1) : F2CSwaths();
@@ -26,7 +26,7 @@ F2CPath PathPlanning::planPath(const F2CRobot& robot,
 }
 
 F2CPath PathPlanning::planPath(const F2CRobot& robot,
-    const F2CSwaths& swaths, TurningBase& turn) {
+    const F2CSwaths& swaths, const TurningBase& turn) {
   F2CPath path;
   if (swaths.size() > 1) {
     for (size_t i = 0; i < swaths.size()-1; ++i) {
@@ -47,36 +47,44 @@ F2CPath PathPlanning::planPathForConnection(const F2CRobot& robot,
     const F2CSwaths& s1,
     const F2CMultiPoint& mp,
     const F2CSwaths& s2,
-    TurningBase& turn) {
-  F2CPoint p1, p2;
-  double ang1, ang2;
+    const TurningBase& turn) {
+  if ((s1.size() == 0 || s2.size() == 0) && mp.size() == 0) {
+    return {};
+  }
+  F2CPath path;
 
-  if (s1.size() > 0) {
-    p1 = s1.back().endPoint();
-    ang1 = s1.back().getOutAngle();
-  } else if (mp.size() > 0) {
-    p1 = mp[0];
-    ang1 = mp.getOutAngle(0);
-  } else {
-    return {};
+  auto v_mp = splitInReloadPoints(robot, mp);
+
+  for (size_t i = 0; i < v_mp.size(); ++i) {
+    F2CPoint p1;
+    double ang1;
+    if (i == 0 && s1.size() > 0) {
+      p1 = s1.back().endPoint();
+      ang1 = s1.back().getOutAngle();
+    } else {
+      p1 = v_mp[i][0];
+      ang1 = v_mp[i].getOutAngle(0);
+    }
+
+    F2CPoint p2;
+    double ang2;
+    if (i + 1 == v_mp.size() && s2.size() > 0) {
+      p2 = s2[0].startPoint();
+      ang2 = s2[0].getInAngle();
+    } else {
+      p2 = v_mp[i].getLastPoint();
+      ang2 = v_mp[i].getInAngle(v_mp[i].size()-1);
+    }
+    path += planPathForConnection(robot, p1, ang1, v_mp[i], p2, ang2, turn);
   }
-  if (s2.size() > 0) {
-    p2 = s2[0].startPoint();
-    ang2 = s2[0].getInAngle();
-  } else if (mp.size() > 0) {
-    p2 = mp.getLastPoint();
-    ang2 = mp.getInAngle(mp.size()-1);
-  } else {
-    return {};
-  }
-  return planPathForConnection(robot, p1, ang1, mp, p2, ang2, turn);
+  return path;
 }
 
 F2CPath PathPlanning::planPathForConnection(const F2CRobot& robot,
     const F2CPoint& p1, double ang1,
     const F2CMultiPoint& mp,
     const F2CPoint& p2, double ang2,
-    TurningBase& turn) {
+    const TurningBase& turn) {
   auto v_con = simplifyConnection(robot,
       p1, ang1, mp, p2, ang2);
 
@@ -116,15 +124,21 @@ std::vector<std::pair<F2CPoint, double>> PathPlanning::simplifyConnection(
   }
 
   std::vector<F2CPoint> vp;
-  for (int i = 1; i < mp.size() - 1; ++i) {
+  vp.emplace_back(mp[0]);
+  for (int i = 1; i < mp.size() - 2; ++i) {
     double ang_in  = (mp[i] - mp[i-1]).getAngleFromPoint();
     double ang_out = (mp[i+1] - mp[i]).getAngleFromPoint();
     if (fabs(ang_in - ang_out) > 0.1) {
       vp.emplace_back(mp[i]);
     }
   }
+  vp.emplace_back(mp.back());
 
-  if (vp.size() < 2) {
+  if (vp.size() == 2) {
+    path.emplace_back(vp[0], (vp[0] - p1).getAngleFromPoint());
+    path.emplace_back(vp[1], (p2 - vp[1]).getAngleFromPoint());
+  }
+  if (vp.size() <= 2) {
     path.emplace_back(p2, ang2);
     return path;
   }
@@ -156,6 +170,26 @@ std::vector<std::pair<F2CPoint, double>> PathPlanning::simplifyConnection(
   path.emplace_back(p2, ang2);
   return path;
 }
+
+std::vector<F2CMultiPoint> PathPlanning::splitInReloadPoints(
+    const F2CRobot& robot,
+    const F2CMultiPoint& mp) {
+  std::vector<F2CMultiPoint> v_mp;
+  F2CMultiPoint new_mp;
+  for (auto&& p : mp) {
+    new_mp.addPoint(p);
+    if (robot.isReloadPoint(p)) {
+      v_mp.emplace_back(new_mp);
+      new_mp = F2CMultiPoint({p});
+    }
+  }
+  if (new_mp.size() > 1) {
+    v_mp.emplace_back(new_mp);
+  }
+  return v_mp;
+}
+
+
 
 }  // namespace f2c::pp
 

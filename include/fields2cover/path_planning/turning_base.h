@@ -32,7 +32,8 @@ class TurningBase {
   /// @return Path with the computed turn
   F2CPath createTurn(const F2CRobot& robot,
       const F2CPoint& start_pos, double start_angle,
-      const F2CPoint& end_pos, double end_angle);
+      const F2CPoint& end_pos, double end_angle,
+      bool using_impl = false, double max_headland_width = 1e5) const;
 
   /// @brief Generate a turn if it has not been computed before.
   /// @param dist_start_pos Distance between start and end point
@@ -40,7 +41,8 @@ class TurningBase {
   /// (0 deg is the angle of the headland)
   /// @param end_angle Angle when going out of the headland
   F2CPath createTurnIfNotCached(const F2CRobot& robot, double dist_start_pos,
-      double start_angle, double end_angle);
+      double start_angle, double end_angle,
+      bool using_impl = false, double max_headland_width = 1e5) const;
 
   /// @brief Create a turn.
   /// @param dist_start_pos Distance between start and end point
@@ -48,7 +50,8 @@ class TurningBase {
   /// (0 deg is the angle of the headland)
   /// @param end_angle Angle when going out of the headland
   virtual F2CPath createSimpleTurn(const F2CRobot& robot, double dist_start_pos,
-      double start_angle, double end_angle) = 0;
+      double start_angle, double end_angle,
+      bool using_impl = false, double max_headland_width = 1e5) const = 0;
 
   /// @brief Transform the turn parameters representation from two points with
   /// two angles to one distance and two angles.
@@ -88,7 +91,7 @@ class TurningBase {
  protected:
   // To prevent memory consumption and comparative errors because of doubles
   // ints are used multiplied by 1000.
-  std::map<std::vector<int>, F2CPath> path_cache_;
+  mutable std::map<std::vector<int>, F2CPath> path_cache_;
   double discretization {0.01};
   bool using_cache {true};
 };

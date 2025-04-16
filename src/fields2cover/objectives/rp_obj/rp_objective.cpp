@@ -9,50 +9,50 @@
 namespace f2c::obj {
 
 double RPObjective::computeCost(
-    const F2CPoint& p1, const F2CPoint& p2) {
+    const F2CPoint& p1, const F2CPoint& p2) const {
   return p1.distance(p2);
 }
 
 double RPObjective::computeCost(
-    const F2CPoint& p1, double ang1, const F2CPoint& p2) {
+    const F2CPoint& p1, double ang1, const F2CPoint& p2) const {
   return computeCost(p1, p2);
 }
 
 
 double RPObjective::computeCost(
-    const F2CPoint& p1, const F2CPoint& p2, double ang2) {
+    const F2CPoint& p1, const F2CPoint& p2, double ang2) const {
   return computeCost(p1, p2);
 }
 
 double RPObjective::computeCost(
-    const F2CPoint& p1, double ang1, const F2CPoint& p2, double ang2) {
+    const F2CPoint& p1, double ang1, const F2CPoint& p2, double ang2) const {
   return computeCost(p1, p2);
 }
 
-double RPObjective::computeCost(const F2CSwath& s, const F2CPoint& p) {
+double RPObjective::computeCost(const F2CSwath& s, const F2CPoint& p) const {
   return computeCost(s.endPoint(), s.getOutAngle(), p);
 }
 
-double RPObjective::computeCost(const F2CSwath& s1, const F2CSwath& s2) {
+double RPObjective::computeCost(const F2CSwath& s1, const F2CSwath& s2) const {
   return this->computeCost(
       s1.endPoint(), s1.getOutAngle(), s2.startPoint(), s2.getInAngle());
 }
 
 double RPObjective::computeCost(
-    const F2CSwath& s, const F2CPoint& p, double ang) {
+    const F2CSwath& s, const F2CPoint& p, double ang) const {
   return computeCost(s.endPoint(), s.getOutAngle(), p, ang);
 }
 
-double RPObjective::computeCost(const F2CPoint& p, const F2CSwath& s) {
+double RPObjective::computeCost(const F2CPoint& p, const F2CSwath& s) const {
   return computeCost(p, s.startPoint(), s.getInAngle());
 }
 
 double RPObjective::computeCost(
-    const F2CPoint& p, double ang, const F2CSwath& s) {
+    const F2CPoint& p, double ang, const F2CSwath& s) const {
   return computeCost(p, ang, s.startPoint(), s.getInAngle());
 }
 
-double RPObjective::computeCost(const std::vector<F2CPoint>& ps) {
+double RPObjective::computeCost(const std::vector<F2CPoint>& ps) const {
   auto dist {0.0};
   for (size_t i = 1; i < ps.size(); ++i) {
     dist += computeCost(ps[i-1], ps[i]);
@@ -60,7 +60,7 @@ double RPObjective::computeCost(const std::vector<F2CPoint>& ps) {
   return dist;
 }
 
-double RPObjective::computeCost(const F2CMultiPoint& ps) {
+double RPObjective::computeCost(const F2CMultiPoint& ps) const {
   if (ps.isEmpty()) {
     return 0.0;
   }
@@ -71,21 +71,24 @@ double RPObjective::computeCost(const F2CMultiPoint& ps) {
   return dist;
 }
 
-double RPObjective::computeCost(const F2CSwath& s, const F2CMultiPoint& ps) {
+double RPObjective::computeCost(
+    const F2CSwath& s, const F2CMultiPoint& ps) const {
   if (ps.isEmpty()) {
     return 0.0;
   }
   return computeCost(s.endPoint(), s.getOutAngle(), ps.getGeometry(0));
 }
 
-double RPObjective::computeCost(const F2CSwaths& s, const F2CMultiPoint& ps) {
+double RPObjective::computeCost(
+    const F2CSwaths& s, const F2CMultiPoint& ps) const {
   if (ps.isEmpty()) {
     return 0.0;
   }
   return computeCost(s.back(), ps);
 }
 
-double RPObjective::computeCost(const F2CMultiPoint& ps, const F2CSwath& s) {
+double RPObjective::computeCost(
+    const F2CMultiPoint& ps, const F2CSwath& s) const {
   if (ps->IsEmpty()) {
     return 0.0;
   }
@@ -93,11 +96,12 @@ double RPObjective::computeCost(const F2CMultiPoint& ps, const F2CSwath& s) {
       s.startPoint(), s.getInAngle());
 }
 
-double RPObjective::computeCost(const F2CMultiPoint& ps, const F2CSwaths& s) {
+double RPObjective::computeCost(
+    const F2CMultiPoint& ps, const F2CSwaths& s) const {
   return computeCost(ps, s[0]);
 }
 
-double RPObjective::computeCost(const F2CSwath& s) {
+double RPObjective::computeCost(const F2CSwath& s) const {
   double dist {0.0};
   for (size_t i = 1; i < s.numPoints(); ++i) {
     dist += computeCost(s.getPoint(i-1), s.getPoint(i));
@@ -105,7 +109,7 @@ double RPObjective::computeCost(const F2CSwath& s) {
   return dist;
 }
 
-double RPObjective::computeCost(const F2CSwaths& swaths) {
+double RPObjective::computeCost(const F2CSwaths& swaths) const {
   double dist {0.0};
   for (auto&& s : swaths) {
     dist += computeCost(s);
@@ -117,7 +121,7 @@ double RPObjective::computeCost(const F2CSwaths& swaths) {
   return dist;
 }
 
-double RPObjective::computeCost(const F2CRoute& r) {
+double RPObjective::computeCost(const F2CRoute& r) const {
   double dist {0.0};
   for (auto&& s : r.getVectorSwaths()) {
     dist += computeCost(s);

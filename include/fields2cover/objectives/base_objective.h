@@ -23,26 +23,26 @@ class BaseObjective {
   /// If the objective is to maximize the cost function, the cost is
   /// multiplied by -1.
   template <typename T1>
-  double computeCostWithMinimizingSign(const T1& t1) {
-    return (static_cast<T*>(this)->isMinimizing() ? 1.0 : -1.0) *
-      static_cast<T*>(this)->computeCost(t1);
+  double computeCostWithMinimizingSign(const T1& t1) const {
+    return (static_cast<const T*>(this)->isMinimizing() ? 1.0 : -1.0) *
+      static_cast<const T*>(this)->computeCost(t1);
   }
   template <typename T1, typename T2>
-  double computeCostWithMinimizingSign(const T1& t1, const T2& t2) {
-    return (static_cast<T*>(this)->isMinimizing() ? 1.0 : -1.0) *
-      static_cast<T*>(this)->computeCost(t1, t2);
+  double computeCostWithMinimizingSign(const T1& t1, const T2& t2) const {
+    return (static_cast<const T*>(this)->isMinimizing() ? 1.0 : -1.0) *
+      static_cast<const T*>(this)->computeCost(t1, t2);
   }
   template <typename T1, typename T2, typename T3>
   double computeCostWithMinimizingSign(
-      const T1& t1, const T2& t2, const T3& t3) {
-    return (static_cast<T*>(this)->isMinimizing() ? 1.0 : -1.0) *
-      static_cast<T*>(this)->computeCost(t1, t2, t3);
+      const T1& t1, const T2& t2, const T3& t3) const {
+    return (static_cast<const T*>(this)->isMinimizing() ? 1.0 : -1.0) *
+      static_cast<const T*>(this)->computeCost(t1, t2, t3);
   }
   template <typename T1, typename T2, typename T3, typename T4>
   double computeCostWithMinimizingSign(
-      const T1& t1, const T2& t2, const T3& t3, const T4& t4) {
-    return (static_cast<T*>(this)->isMinimizing() ? 1.0 : -1.0) *
-      static_cast<T*>(this)->computeCost(t1, t2, t3, t4);
+      const T1& t1, const T2& t2, const T3& t3, const T4& t4) const {
+    return (static_cast<const T*>(this)->isMinimizing() ? 1.0 : -1.0) *
+      static_cast<const T*>(this)->computeCost(t1, t2, t3, t4);
   }
 
  public:

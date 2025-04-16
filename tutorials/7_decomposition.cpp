@@ -38,8 +38,7 @@ int main() {
   std::cout << "Without decomposition >> " << obj.computeCost(swaths_wo_decomp) << std::endl;
 
   f2c::decomp::TrapezoidalDecomp decomp;
-  decomp.setSplitAngle(0.5*M_PI);
-  F2CCells decomp_cell = decomp.decompose(cells);
+  F2CCells decomp_cell = decomp.decompose(cells, 0.5*M_PI);
 
   F2CCells no_hl_decomp = const_hl.generateHeadlands(decomp_cell, 3.0 * r_w);
   F2CSwathsByCells swaths_decomp = bf.generateBestSwaths(obj, r_w, no_hl_decomp);

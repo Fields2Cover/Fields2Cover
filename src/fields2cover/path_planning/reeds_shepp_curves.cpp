@@ -11,7 +11,8 @@
 namespace f2c::pp {
 
 F2CPath ReedsSheppCurves::createSimpleTurn(const F2CRobot& robot,
-    double dist_start_pos, double start_angle, double end_angle) {
+    double dist_start_pos, double start_angle, double end_angle,
+    bool using_impl, double max_headland_width) const {
   steer::State start, end;
 
   start.x = 0.0;
@@ -27,10 +28,10 @@ F2CPath ReedsSheppCurves::createSimpleTurn(const F2CRobot& robot,
   end.d = 0;
 
   Reeds_Shepp_State_Space ss(
-      robot.getMaxCurv(),
+      robot.getMaxCurv(using_impl),
       discretization);
   return steerStatesToPath(ss.get_path(start, end),
-      robot.getTurnVel());
+      robot.getTurnVel(using_impl), using_impl);
 }
 
 }  // namespace f2c::pp

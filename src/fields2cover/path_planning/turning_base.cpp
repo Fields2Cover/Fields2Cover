@@ -29,7 +29,8 @@ std::vector<double> TurningBase::transformToNormalTurn(
 
 F2CPath TurningBase::createTurn(const F2CRobot& robot,
     const F2CPoint& start_pos, double start_angle,
-    const F2CPoint& end_pos, double end_angle) {
+    const F2CPoint& end_pos, double end_angle,
+    bool using_impl, double max_headland_width) const {
   auto turn_values =
     transformToNormalTurn(start_pos, start_angle, end_pos, end_angle);
   double dist_start_end = turn_values[0];
@@ -41,10 +42,12 @@ F2CPath TurningBase::createTurn(const F2CRobot& robot,
   F2CPath path;
   if (using_cache) {
     path = createTurnIfNotCached(robot,
-        dist_start_end, start_angle_t, end_angle_t);
+        dist_start_end, start_angle_t, end_angle_t,
+        using_impl, max_headland_width);
   } else {
     path = createSimpleTurn(robot,
-        dist_start_end, start_angle_t, end_angle_t);
+        dist_start_end, start_angle_t, end_angle_t,
+        using_impl, max_headland_width);
   }
   if (path.size() <= 1) {return F2CPath();}
 
@@ -79,10 +82,12 @@ void TurningBase::correctPath(F2CPath& path, const F2CPoint& start_pos,
 
 
 F2CPath TurningBase::createTurnIfNotCached(const F2CRobot& robot,
-    double dist_start_end, double start_angle, double end_angle) {
+    double dist_start_end, double start_angle, double end_angle,
+    bool using_impl, double max_headland_width) const {
   std::vector<int> v_turn {
-        static_cast<int>(1e3 * robot.getMaxCurv()),
-        static_cast<int>(1e3 * robot.getMaxDiffCurv()),
+        static_cast<int>(1e3 * robot.getRobotWidth()),
+        static_cast<int>(1e3 * robot.getMaxCurv(using_impl)),
+        static_cast<int>(1e3 * robot.getMaxDiffCurv(using_impl)),
         static_cast<int>(1e3 * dist_start_end),
         static_cast<int>(1e3 * start_angle),
         static_cast<int>(1e3 * end_angle)
@@ -91,7 +96,8 @@ F2CPath TurningBase::createTurnIfNotCached(const F2CRobot& robot,
   if (it != path_cache_.end()) {
     return it->second;
   }
-  auto path = createSimpleTurn(robot, dist_start_end, start_angle, end_angle);
+  auto path = createSimpleTurn(robot, dist_start_end, start_angle, end_angle,
+      using_impl, max_headland_width);
   path_cache_.insert({v_turn, path});
   return path;
 }
