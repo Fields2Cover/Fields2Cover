@@ -160,6 +160,7 @@ struct Options {
   PPAlg pp_alg {PPAlg::DUBINS};
 };
 
+/*
 F2CRoute planCovRoute(const F2CRobot& robot, const F2CCell& cell,
     const Options& opt = Options());
 F2CRoute planCovRoute(const F2CRobot& robot, const F2CCells& cells,
@@ -176,6 +177,7 @@ F2CPath planCovPath(const F2CRobot& robot, const F2CField& field,
     bool local_crs);
 F2CPath planCovPath(const F2CRobot& robot, const F2CField& field,
     const Options& opt = Options(), bool local_crs = true);
+*/
 
 }  // namespace f2c
 
