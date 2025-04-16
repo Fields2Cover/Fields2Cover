@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.12.4...3.22)
 
 project(Fields2Cover
-  VERSION 2.0.0
+  VERSION 3.0.0
   DESCRIPTION "Fields2Cover is a complete coverage path planning package for autonomous robots"
   HOMEPAGE_URL "http://fields2cover.github.io"
   LANGUAGES CXX
