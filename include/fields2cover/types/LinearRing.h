@@ -52,7 +52,7 @@ struct LinearRing : public Geometries<LinearRing, OGRLinearRing, wkbLinearRing,
   const Point endPoint() const;
   bool isClockwise() const;
   bool isClosed() const;
-  LinearRing& closeRing();
+  // LinearRing& closeRing();
 
   double minAltitude() const;
 
