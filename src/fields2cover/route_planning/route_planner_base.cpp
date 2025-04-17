@@ -26,7 +26,7 @@ F2CRoute RoutePlannerBase::genRoute(
   F2CGraph2D cov_graph = createCoverageGraph(
       cells, swaths, shortest_graph, d_tol, redirect_swaths);
 
-  std::vector<long int> v_route = computeBestRoute(cov_graph, show_log);
+  std::vector<long int> v_route = computeBestRoute(cov_graph, show_log, 30);
   return transformSolutionToRoute(
       v_route, swaths, cov_graph, shortest_graph);
 }
@@ -145,7 +145,7 @@ F2CGraph2D RoutePlannerBase::createCoverageGraph(
 }
 
 std::vector<long int> RoutePlannerBase::computeBestRoute(
-    const F2CGraph2D& cov_graph, bool show_log) const {
+    const F2CGraph2D& cov_graph, bool show_log, long int time_limit_seconds) const {
   int depot_id = static_cast<int>(cov_graph.numNodes()-1);
   const ortools::RoutingIndexManager::NodeIndex depot{depot_id};
   ortools::RoutingIndexManager manager(cov_graph.numNodes(), 1, depot);
@@ -163,11 +163,11 @@ std::vector<long int> RoutePlannerBase::computeBestRoute(
   searchParameters.set_use_full_propagation(false);
   searchParameters.set_first_solution_strategy(
     ortools::FirstSolutionStrategy::AUTOMATIC);
-  //  searchParameters.set_local_search_metaheuristic(
-  //   ortools::LocalSearchMetaheuristic::GUIDED_LOCAL_SEARCH);
   searchParameters.set_local_search_metaheuristic(
-    ortools::LocalSearchMetaheuristic::AUTOMATIC);
-  searchParameters.mutable_time_limit()->set_seconds(30);
+    ortools::LocalSearchMetaheuristic::GUIDED_LOCAL_SEARCH);
+  // searchParameters.set_local_search_metaheuristic(
+  //   ortools::LocalSearchMetaheuristic::AUTOMATIC);
+  searchParameters.mutable_time_limit()->set_seconds(time_limit_seconds);
   searchParameters.set_log_search(show_log);
   const ortools::Assignment* solution =
     routing.SolveWithParameters(searchParameters);
@@ -176,6 +176,7 @@ std::vector<long int> RoutePlannerBase::computeBestRoute(
   std::vector<long int> v_id;
 
   index = solution->Value(routing.NextVar(index));
+
   while (!routing.IsEnd(index)) {
     v_id.emplace_back(manager.IndexToNode(index).value());
     index = solution->Value(routing.NextVar(index));
