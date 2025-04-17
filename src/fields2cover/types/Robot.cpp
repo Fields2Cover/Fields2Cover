@@ -166,6 +166,9 @@ RobotCapacity Robot::getCapacity(size_t i) {
 double Robot::getRobotWidth() const {
   return width_;
 }
+void Robot::setRobotLength(double length) {
+  this->length_ = length;
+}
 double Robot::getRobotLength() const {
   return length_;
 }

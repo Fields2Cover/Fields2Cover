@@ -70,6 +70,8 @@ struct Robot {
   double getLength() const;
   double getRobotWidth() const;
   double getRobotLength() const;
+  void setRobotLength(double length);
+
   double getImplWidth() const;
   double getImplLength() const;
   double getImplCovWidth() const;
