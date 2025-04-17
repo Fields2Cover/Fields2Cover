@@ -237,11 +237,6 @@ std::vector<double> HeadlandGeneratorBase::getTransAngleOnConcaveTurn(
   return f2c::Solver::exhaustive_solve(
       {0, 0}, {0.5*M_PI, 0.5*M_PI},
       [&] (const std::vector<double>& ang_t) {
-        auto offsets = computeConcaveOffset(ang_t[0], ang_t[1], robot,
-            kurv, sigma, buff_cloth_pos);
-        if (offsets.first > offset_start || offsets.second > offset_end) {
-          return 1e10;
-        }
         F2CPathSimp path = concaveTurn(ang, ang_t[0], ang_t[1],
             kurv, sigma, buff_cloth_pos, buff_cloth_neg);
         if (checkConcaveTurnPathCrossBorder(
@@ -249,7 +244,7 @@ std::vector<double> HeadlandGeneratorBase::getTransAngleOnConcaveTurn(
           return 1e10;
         }
         return path.length();
-      }, {0.0125*M_PI, 0.0125*M_PI});
+      }, {0.035*M_PI, 0.035*M_PI});
 }
 
 F2CPathSimp HeadlandGeneratorBase::concaveTurn(
@@ -275,8 +270,9 @@ F2CPathSimp HeadlandGeneratorBase::contConcaveTurn(
   auto ang_trans = getTransAngleOnConcaveTurn(
       ang, robot, max_kurv, max_sigma,
       offset_start, offset_end, buff_cloth_pos, buff_cloth_neg);
-  return concaveTurn(ang, ang_trans[0], ang_trans[1],
+  F2CPathSimp path = concaveTurn(ang, ang_trans[0], ang_trans[1],
       max_kurv, max_sigma, buff_cloth_pos, buff_cloth_neg);
+  return path;
 }
 
 

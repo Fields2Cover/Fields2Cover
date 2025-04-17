@@ -32,6 +32,7 @@ struct LinearRing : public Geometries<LinearRing, OGRLinearRing, wkbLinearRing,
   double getZ(size_t i) const;
   double length() const;
   void reversePoints();
+  LinearRing& changeStartPoint(int id_new_start);
   size_t size() const;
 
   LineString toLineString() const;

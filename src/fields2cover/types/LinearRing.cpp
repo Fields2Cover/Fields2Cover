@@ -52,6 +52,17 @@ void LinearRing::reversePoints() {
   this->data_->reversePoints();
 }
 
+LinearRing& LinearRing::changeStartPoint(int id_new_start) {
+  LinearRing new_ring;
+  size_t N = this->size() - this->isClosed();
+  for (size_t i = 0; i < N; ++i) {
+    new_ring.addPoint(this->getGeometry((i + id_new_start) % N));
+  }
+  new_ring.addPoint(new_ring.startPoint());
+  *this = new_ring;
+  return *this;
+}
+
 size_t LinearRing::size() const {
   return isEmpty() ? 0 : this->data_->getNumPoints();
 }
