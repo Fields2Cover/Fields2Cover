@@ -66,7 +66,7 @@ class RoutePlannerBase {
   /// Use the optimizer to generate the index of the points of the best
   ///   coverage route.
   virtual std::vector<long int> computeBestRoute(
-      const F2CGraph2D& cov_graph, bool show_log) const;
+      const F2CGraph2D& cov_graph, bool show_log, long int time_limit_seconds) const;
 
   /// Tranform index of points to an actual Route.
   virtual F2CRoute transformSolutionToRoute(
