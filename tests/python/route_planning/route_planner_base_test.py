@@ -34,8 +34,7 @@ def test_fields2cover_route_planner_base_simple_example():
   hl_swaths = const_hl.generateHeadlandSwaths(cells, robot.getCovWidth(), 3, False);
 
   decomp = f2c.DECOMP_Boustrophedon();
-  decomp.setSplitAngle(0.0);
-  #no_hl = decomp.decompose(no_hl);
+  #no_hl = decomp.decompose(no_hl, 0.0);
 
   bf = f2c.SG_BruteForce();
   swaths = bf.generateSwaths(3.1416, robot.getCovWidth(), no_hl);
