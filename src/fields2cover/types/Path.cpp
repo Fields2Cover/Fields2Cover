@@ -165,6 +165,18 @@ void Path::mirrorY() {
   }
 }
 
+void Path::turnImplementOff() {
+  for (auto&& s : *this) {
+    s.using_implement = false;
+  }
+}
+
+void Path::turnImplementOn() {
+  for (auto&& s : *this) {
+    s.using_implement = true;
+  }
+}
+
 void Path::setBackwardDir() {
   for (size_t i = 0; i < this->size(); ++i) {
     this->setBackwardDir(i);
@@ -427,6 +439,9 @@ Path& Path::reduce(double min_dist_equal) {
 }
 
 LineString Path::toLineString() const {
+  if (this->size() == 0) {
+    return {};
+  }
   LineString line;
   for (auto&& s : this->states_) {
     line.addPoint(s.point);

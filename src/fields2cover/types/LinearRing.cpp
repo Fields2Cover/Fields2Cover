@@ -54,9 +54,15 @@ void LinearRing::reversePoints() {
 
 LinearRing& LinearRing::changeStartPoint(int id_new_start) {
   LinearRing new_ring;
-  size_t N = this->size() - this->isClosed();
+  int N = static_cast<int>(this->size()) - (this->isClosed() ? 1 : 0);
+  int start = id_new_start % N;
+  if (start < 0) start += N;
   for (size_t i = 0; i < N; ++i) {
-    new_ring.addPoint(this->getGeometry((i + id_new_start) % N));
+    int idx = start + i;
+    if (idx >= N) {
+      idx -= N;
+    }
+    new_ring.addPoint(this->getGeometry(idx));
   }
   new_ring.addPoint(new_ring.startPoint());
   *this = new_ring;

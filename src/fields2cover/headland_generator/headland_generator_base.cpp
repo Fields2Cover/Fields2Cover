@@ -244,7 +244,7 @@ std::vector<double> HeadlandGeneratorBase::getTransAngleOnConcaveTurn(
           return 1e10;
         }
         return path.length();
-      }, {0.035*M_PI, 0.035*M_PI});
+      }, {0.0125*M_PI, 0.0125*M_PI});
 }
 
 F2CPathSimp HeadlandGeneratorBase::concaveTurn(

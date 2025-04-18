@@ -418,6 +418,9 @@ std::vector<Point> Robot::getCornersRIC() const {
 
 
 Cells Robot::computeAreaCovered(const Path& path) const {
+  if (path.size() == 0) {
+    return {};
+  }
   Point p_bi = getBackImplCov();
   Point p_fi = getFrontImplCov();
   Point p_ubi = p_bi + Point(0, 0.5 * getImplCovWidth());
@@ -446,6 +449,9 @@ Cells Robot::computeAreaCovered(const Path& path) const {
 
 
 Cells Robot::computeAreaTravelled(const Path& path) const {
+  if (path.size() == 0) {
+    return {};
+  }
   auto p_rob = getCornersRIC();
 
   auto v_path = path.splitPathByEqualTypeStates();
