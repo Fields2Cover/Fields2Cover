@@ -83,8 +83,8 @@ target_link_libraries(Fields2Cover
     ${CMAKE_THREAD_LIBS_INIT}
     -lgeos_c
     ${MATH_LIBRARY}
-  PRIVATE
     ortools::ortools
+  PRIVATE
     nlohmann_json::nlohmann_json
     tinyxml2::tinyxml2
     steering_functions
