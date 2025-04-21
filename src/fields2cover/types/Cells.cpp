@@ -277,5 +277,16 @@ MultiLineString Cells::getLineSections() const {
   return mline;
 }
 
+size_t Cells::numObstacles() const {
+  size_t n {0};
+  for (size_t i = 0; i < this->size(); ++i) {
+    int s = this->getGeometry(i).size();
+    n += (s > 0 ? s : 1) - 1;
+  }
+  return n;
+}
+
+
+
 }  // namespace f2c::types
 

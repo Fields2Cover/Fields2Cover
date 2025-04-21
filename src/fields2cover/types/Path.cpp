@@ -494,7 +494,23 @@ std::vector<Path> Path::splitPathByEqualTypeStates() const {
   return paths;
 }
 
-
+bool Path::isValid() const {
+  if (this->size() < 1) {
+    return true;
+  } else {
+    for (size_t i = 0; i < this->size() - 1; ++i) {
+      Point p2 = this->states_[i].atEnd();
+      if (p2.distance(this->states_[i + 1].point) > 5e-3) {
+		return false;
+      }
+      if (false && Point::getAngleDiffAbs(
+            this->states_[i + 1].angle, this->states_[i].angle) > M_PI / 8.0) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
 
 
 }  // namespace f2c::types

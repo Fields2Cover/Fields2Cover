@@ -78,6 +78,8 @@ class Visualizer {
       const std::vector<double>& color_cov = {0.95, 0.68, 0.45},
       const std::vector<double>& color_wheel = {0.95, 0.89, 0.58});
 
+  static void plot(const F2CGraph2D& graph);
+
 
 
   static void plotFilled(const F2CField& field,

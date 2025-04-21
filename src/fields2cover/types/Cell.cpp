@@ -223,6 +223,28 @@ Point Cell::closestPointOnBorderTo(const Point& p) const {
   return ps[std::min_element(dist.begin(), dist.end()) - dist.begin()];
 }
 
+LineString Cell::connectClosestObstacle() const {
+  if (this->size() <= 1) {
+    return {};
+  }
+  size_t closest_i {0};
+  double closest_dist {1e9};
+  for (size_t i = 1; i < this->size(); ++i) {
+    double dist = this->getGeometry(0).distance(this->getGeometry(i));
+    if (dist < closest_dist) {
+      closest_dist = dist;
+      closest_i = i;
+    }
+  }
+  Point p1 = this->getGeometry(0)[0];
+  Point p2 = this->getGeometry(closest_i)[0];
+  for (int i = 0; i < 5; ++i) {
+    p1 = this->getGeometry(0).closestPointTo(p2);
+    p2 = this->getGeometry(closest_i).closestPointTo(p1);
+  }
+  return LineString(p1, p2);
+}
+
 
 }  // namespace f2c::types
 

@@ -96,6 +96,8 @@ struct Path {
   std::vector<Path> getCovPaths() const;
   std::vector<Path> splitPathByEqualTypeStates() const;
 
+  bool isValid() const;
+
  private:
   std::vector<PathState> states_;
 };

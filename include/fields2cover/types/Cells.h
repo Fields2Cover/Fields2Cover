@@ -126,6 +126,8 @@ struct Cells : public Geometries<Cells, OGRMultiPolygon, wkbMultiPolygon,
   Point closestPointOnBorderTo(const Point& p) const;
 
   MultiLineString getLineSections() const;
+
+  size_t numObstacles() const;
 };
 
 

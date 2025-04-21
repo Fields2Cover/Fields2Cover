@@ -328,6 +328,20 @@ void Visualizer::plot(const F2CField& field,
     const std::vector<double>& color) {
   plot(field.getField(), color);
 }
+
+
+void Visualizer::plot(const F2CGraph2D& g) {
+  auto edges = g.getEdges();
+  for (auto&& n1 : edges) {
+    size_t node1 = n1.first;
+    for (auto&& n2 : n1.second) {
+      size_t node2 = n2.first;
+      plot(F2CLineString(g.indexToNode(node1), g.indexToNode(node2)));
+    }
+  }
+}
+
+
 void Visualizer::plotFilled(const F2CField& field,
     const std::vector<double>& color) {
   plot(field.getField(), color);
