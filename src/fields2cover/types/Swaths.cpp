@@ -153,6 +153,14 @@ void Swaths::moveTo(const Point& ref_pt) {
   }
 }
 
+Point Swaths::startPoint() const {
+  return this->at(0).startPoint();
+}
+
+Point Swaths::endPoint() const {
+  return this->back().endPoint();
+}
+
 
 }  // namespace f2c::types
 

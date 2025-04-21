@@ -68,6 +68,9 @@ struct Swaths {
   void moveTo(const Point& ref_pt);
 
   Swaths clone() const;
+  Point startPoint() const;
+  Point endPoint() const;
+
 
  private:
   std::vector<Swath> data_;
