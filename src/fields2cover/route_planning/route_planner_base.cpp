@@ -26,7 +26,7 @@ F2CRoute RoutePlannerBase::genRoute(
   F2CGraph2D cov_graph = createCoverageGraph(
       cells, swaths, shortest_graph, d_tol, redirect_swaths);
 
-  std::vector<long int> v_route = computeBestRoute(cov_graph, show_log, 30);
+  std::vector<long long int> v_route = computeBestRoute(cov_graph, show_log, 30);
   return transformSolutionToRoute(
       v_route, swaths, cov_graph, shortest_graph);
 }
@@ -144,7 +144,7 @@ F2CGraph2D RoutePlannerBase::createCoverageGraph(
   return g;
 }
 
-std::vector<long int> RoutePlannerBase::computeBestRoute(
+std::vector<long long int> RoutePlannerBase::computeBestRoute(
     const F2CGraph2D& cov_graph, bool show_log, long int time_limit_seconds) const {
   int depot_id = static_cast<int>(cov_graph.numNodes()-1);
   const ortools::RoutingIndexManager::NodeIndex depot{depot_id};
@@ -152,7 +152,7 @@ std::vector<long int> RoutePlannerBase::computeBestRoute(
   ortools::RoutingModel routing(manager);
 
   const int transit_callback_index = routing.RegisterTransitCallback(
-      [&cov_graph, &manager] (long int from, long int to) -> long int {
+      [&cov_graph, &manager] (long long int from, long long int to) -> long long int {
         auto from_node = manager.IndexToNode(from).value();
         auto to_node = manager.IndexToNode(to).value();
         return cov_graph.getCostFromEdge(from_node, to_node);
@@ -172,8 +172,8 @@ std::vector<long int> RoutePlannerBase::computeBestRoute(
   const ortools::Assignment* solution =
     routing.SolveWithParameters(searchParameters);
 
-  long int index = routing.Start(0);
-  std::vector<long int> v_id;
+  long long int index = routing.Start(0);
+  std::vector<long long int> v_id;
 
   index = solution->Value(routing.NextVar(index));
 
@@ -185,7 +185,7 @@ std::vector<long int> RoutePlannerBase::computeBestRoute(
 }
 
 F2CRoute RoutePlannerBase::transformSolutionToRoute(
-    const std::vector<long int>& route_ids,
+    const std::vector<long long int>& route_ids,
     const F2CSwathsByCells& swaths_by_cells,
     const F2CGraph2D& coverage_graph,
     F2CGraph2D& shortest_graph) const {
