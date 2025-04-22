@@ -20,13 +20,15 @@ namespace ortools = operations_research;
 
 F2CRoute RoutePlannerBase::genRoute(
     const F2CCells& cells, const F2CSwathsByCells& swaths,
-    bool show_log, double d_tol, bool redirect_swaths) {
+    bool show_log, double d_tol, bool redirect_swaths,
+    long int time_limit_seconds, bool search_for_optimum) {
   F2CGraph2D shortest_graph = createShortestGraph(cells, swaths, d_tol);
 
   F2CGraph2D cov_graph = createCoverageGraph(
       cells, swaths, shortest_graph, d_tol, redirect_swaths);
 
-  std::vector<long long int> v_route = computeBestRoute(cov_graph, show_log, 30);
+  std::vector<long long int> v_route = computeBestRoute(
+      cov_graph, show_log, time_limit_seconds, search_for_optimum);
   return transformSolutionToRoute(
       v_route, swaths, cov_graph, shortest_graph);
 }
@@ -145,7 +147,8 @@ F2CGraph2D RoutePlannerBase::createCoverageGraph(
 }
 
 std::vector<long long int> RoutePlannerBase::computeBestRoute(
-    const F2CGraph2D& cov_graph, bool show_log, long int time_limit_seconds) const {
+    const F2CGraph2D& cov_graph, bool show_log, long int time_limit_seconds,
+    bool use_guided_local_search) const {
   int depot_id = static_cast<int>(cov_graph.numNodes()-1);
   const ortools::RoutingIndexManager::NodeIndex depot{depot_id};
   ortools::RoutingIndexManager manager(cov_graph.numNodes(), 1, depot);
@@ -163,10 +166,13 @@ std::vector<long long int> RoutePlannerBase::computeBestRoute(
   searchParameters.set_use_full_propagation(false);
   searchParameters.set_first_solution_strategy(
     ortools::FirstSolutionStrategy::AUTOMATIC);
-  searchParameters.set_local_search_metaheuristic(
-    ortools::LocalSearchMetaheuristic::GUIDED_LOCAL_SEARCH);
-  // searchParameters.set_local_search_metaheuristic(
-  //   ortools::LocalSearchMetaheuristic::AUTOMATIC);
+  if (use_guided_local_search) {
+    searchParameters.set_local_search_metaheuristic(
+      ortools::LocalSearchMetaheuristic::GUIDED_LOCAL_SEARCH);
+  } else {
+    searchParameters.set_local_search_metaheuristic(
+      ortools::LocalSearchMetaheuristic::AUTOMATIC);
+  }
   searchParameters.mutable_time_limit()->set_seconds(time_limit_seconds);
   searchParameters.set_log_search(show_log);
   const ortools::Assignment* solution =
