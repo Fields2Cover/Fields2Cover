@@ -236,13 +236,7 @@ LineString Cell::connectClosestObstacle() const {
       closest_i = i;
     }
   }
-  Point p1 = this->getGeometry(0)[0];
-  Point p2 = this->getGeometry(closest_i)[0];
-  for (int i = 0; i < 5; ++i) {
-    p1 = this->getGeometry(0).closestPointTo(p2);
-    p2 = this->getGeometry(closest_i).closestPointTo(p1);
-  }
-  return LineString(p1, p2);
+  return this->getGeometry(0).connectLinearRing(this->getGeometry(closest_i));
 }
 
 

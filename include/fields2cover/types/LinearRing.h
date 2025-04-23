@@ -79,6 +79,8 @@ struct LinearRing : public Geometries<LinearRing, OGRLinearRing, wkbLinearRing,
 
   // Generate parallel curve with an offset d[i] for the i^th segment
   LinearRing getParallelLine(const std::vector<double>& d) const;
+
+  LineString connectLinearRing(const LinearRing& ring) const;
 };
 
 

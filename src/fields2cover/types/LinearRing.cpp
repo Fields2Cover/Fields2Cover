@@ -328,6 +328,19 @@ LinearRing LinearRing::getParallelLine(double d) const {
   return getParallelLine(std::vector<double>(this->size()-1, d));
 }
 
+LineString LinearRing::connectLinearRing(const LinearRing& ring) const {
+  if (this->size() <= 1) {
+    return {};
+  }
+  Point p1 = this->getGeometry(0);
+  Point p2 = ring[0];
+  for (int i = 0; i < 5; ++i) {
+    p1 = this->closestPointTo(p2);
+    p2 = ring.closestPointTo(p1);
+  }
+  return LineString(p1, p2);
+}
+
 
 }  // namespace f2c::types
 
