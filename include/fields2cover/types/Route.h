@@ -8,7 +8,7 @@
 #ifndef FIELDS2COVER_TYPES_ROUTE_H_
 #define FIELDS2COVER_TYPES_ROUTE_H_
 
-#include <gdal/ogr_geometry.h>
+#include <ogr_geometry.h>
 #include <vector>
 #include <numeric>
 #include <optional>

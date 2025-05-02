@@ -8,7 +8,7 @@
 #ifndef FIELDS2COVER_TYPES_ROBOT_H_
 #define FIELDS2COVER_TYPES_ROBOT_H_
 
-#include <gdal/ogr_geometry.h>
+#include <ogr_geometry.h>
 #include <utility>
 #include <string>
 #include <vector>
