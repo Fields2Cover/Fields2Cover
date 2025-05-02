@@ -8,8 +8,8 @@
 #ifndef FIELDS2COVER_TYPES_GEOMETRY_H_
 #define FIELDS2COVER_TYPES_GEOMETRY_H_
 
-#include <gdal/ogr_geometry.h>
-#include <gdal/ogr_core.h>
+#include <ogr_geometry.h>
+#include <ogr_core.h>
 #include <functional>
 #include <memory>
 #include <vector>
