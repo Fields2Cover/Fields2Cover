@@ -512,6 +512,15 @@ bool Path::isValid() const {
   return true;
 }
 
+Path& Path::setPath(const LineString& line) {
+  std::vector<PathState> states;
+  for (size_t i = 1; i < line.size(); ++i) {
+    states.emplace_back(PathState::toPathState(line[i-1], line[i]));
+  }
+  this->states_ = states;
+  return *this;
+}
+
 
 }  // namespace f2c::types
 

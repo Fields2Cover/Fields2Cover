@@ -12,5 +12,13 @@ Point PathState::atEnd() const {
   return point.getPointFromAngle(angle, len * static_cast<double>(dir));
 }
 
+PathState PathState::toPathState(const Point& start, const Point& end) {
+  PathState s;
+  s.point = start;
+  s.angle = (end - start).getAngleFromPoint();
+  s.len = start.distance(end);
+  return s;
+}
+
 }  // namespace f2c::types
 

@@ -139,8 +139,15 @@ bool LineString::operator!=(const LineString& o_line) const {
 void LineString::addPoint(double x, double y, double z) {
   data_->addPoint(x, y, z);
 }
+
 void LineString::addPoint(const Point& p) {
   data_->addPoint(p.getX(), p.getY(), p.getZ());
+}
+
+void LineString::concat(const LineString& line) {
+  for (auto&& p : line) {
+    this->addPoint(p);
+  }
 }
 
 const Point LineString::startPoint() const {

@@ -50,6 +50,7 @@ struct LineString : public Geometries<LineString, OGRLineString, wkbLineString,
   void addPoint(double x, double y, double z = 0);
   void addPoint(const Point& p);
   void addGeometry(const Point& p);
+  void concat(const LineString& line);
 
   /// Remove point on a LineString, reducing its size by 1.
   /// If point index >= size(), it does nothing.

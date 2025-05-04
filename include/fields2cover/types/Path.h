@@ -22,6 +22,7 @@ namespace f2c::types {
 
 struct Path {
  public:
+  Path& setPath(const LineString& line);
   PathState& getState(size_t i);
   const PathState& getState(size_t i) const;
   void setState(size_t i, const PathState& ps);

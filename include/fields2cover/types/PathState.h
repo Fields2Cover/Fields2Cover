@@ -35,6 +35,7 @@ struct PathState {
 
  public:
   Point atEnd() const;
+  static PathState toPathState(const Point& start, const Point& end);
 };
 
 
