@@ -192,7 +192,7 @@ std::vector<double> SwathGeneratorBase::computeBestAngles(
 
 std::vector<double> SwathGeneratorBase::getSwathsDistribution(
     SwathOverlapType type, double field_width, double cov_width) {
-  size_t n = static_cast<size_t>(std::ceil(fabs(field_width / cov_width)));
+  size_t n = static_cast<size_t>(fabs(field_width / cov_width));
   if (type == SwathOverlapType::MIDDLE_OVERLAP ||
       type == SwathOverlapType::EVENLY_DISTRIBUTED_OVERLAP) {
     ++n;
