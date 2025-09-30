@@ -319,8 +319,8 @@ DEFINE_PP_COSTS(BaseObjective<f2c::obj::PPObjective>, computeCostWithMinimizingS
 %template(LongLongVector) std::vector<long long int>;
 
 
-%ignore f2c::rp::RoutePlannerBase::createShortestGraph;
-%ignore f2c::rp::RoutePlannerBase::createCoverageGraph;
+// %ignore f2c::rp::RoutePlannerBase::createShortestGraph;
+// %ignore f2c::rp::RoutePlannerBase::createCoverageGraph;
 %rename(RP_RoutePlannerBase) f2c::rp::RoutePlannerBase;
 %include "fields2cover/route_planning/route_planner_base.h"
 
