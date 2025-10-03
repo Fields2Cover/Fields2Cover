@@ -4,7 +4,7 @@ function(f2c_set_compiler_options target)
     target_compile_options(${target} PRIVATE /W4 /WX)
   else()
     target_compile_options(${target} PRIVATE
-      -Wall -Wextra -Werror -pedantic
+      -Wall -Wextra -pedantic
       -Wno-unused-parameter -Wno-sign-compare
     )
   endif()

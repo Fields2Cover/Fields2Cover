@@ -8,7 +8,7 @@
 #ifndef FIELDS2COVER_UTILS_TRANSFORMATION_H_
 #define FIELDS2COVER_UTILS_TRANSFORMATION_H_
 
-#include <gdal/ogr_spatialref.h>
+#include <ogr_spatialref.h>
 #include <memory>
 #include <utility>
 #include <string>

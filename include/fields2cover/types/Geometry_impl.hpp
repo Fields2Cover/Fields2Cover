@@ -8,7 +8,7 @@
 #ifndef FIELDS2COVER_TYPES_GEOMETRY_IMPL_HPP_
 #define FIELDS2COVER_TYPES_GEOMETRY_IMPL_HPP_
 
-#include <gdal/cpl_conv.h>
+#include <cpl_conv.h>
 #include <geos_c.h>
 #include <memory>
 #include <vector>
@@ -54,12 +54,10 @@ template <class T, OGRwkbGeometryType R>
 Geometry<T, R>::Geometry(Geometry&& g) = default;
 
 template <class T, OGRwkbGeometryType R>
-typename Geometry<T, R>::Geometry& Geometry<T, R>::operator=(
-    Geometry&& g) = default;
+Geometry<T, R>& Geometry<T, R>::operator=(Geometry&& g) = default;
 
 template <class T, OGRwkbGeometryType R>
-typename Geometry<T, R>::Geometry& Geometry<T, R>::operator=(
-    const Geometry& g) = default;
+Geometry<T, R>& Geometry<T, R>::operator=(const Geometry& g) = default;
 
 template <class T, OGRwkbGeometryType R>
 std::shared_ptr<T> Geometry<T, R>::operator->() {return data_;}

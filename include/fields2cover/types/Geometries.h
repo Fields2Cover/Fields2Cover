@@ -8,7 +8,7 @@
 #ifndef FIELDS2COVER_TYPES_GEOMETRIES_H_
 #define FIELDS2COVER_TYPES_GEOMETRIES_H_
 
-#include <gdal/ogr_geometry.h>
+#include <ogr_geometry.h>
 #include <memory>
 #include <type_traits>
 #include <iterator>
