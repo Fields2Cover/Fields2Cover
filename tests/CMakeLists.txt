@@ -26,7 +26,8 @@ target_link_libraries(
   unittests
   PUBLIC
     Fields2Cover
-    gtest
+    #gtest
+    GTest::gtest GTest::gtest_main
 )
 
 add_test(
