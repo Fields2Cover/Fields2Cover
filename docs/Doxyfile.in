@@ -859,7 +859,7 @@ EXCLUDE                = @CMAKE_CURRENT_SOURCE_DIR@/../src      \
 # from the input.
 # The default value is: NO.
 
-EXCLUDE_SYMLINKS       = NO
+EXCLUDE_SYMLINKS       = YES
 
 # If the value of the INPUT tag contains directories, you can use the
 # EXCLUDE_PATTERNS tag to specify one or more wildcard patterns to exclude
