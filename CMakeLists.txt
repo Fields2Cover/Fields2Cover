@@ -52,6 +52,7 @@ find_package(Gnuplot)
 find_package(GDAL 3.0 REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_library(MATH_LIBRARY m)
+find_package(GEOS REQUIRED COMPONENTS C)
 
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -81,7 +82,7 @@ target_link_libraries(Fields2Cover
   PUBLIC
     GDAL::GDAL
     ${CMAKE_THREAD_LIBS_INIT}
-    -lgeos_c
+    GEOS::geos_c
     ${MATH_LIBRARY}
   PRIVATE
     ortools::ortools
@@ -92,8 +93,8 @@ target_link_libraries(Fields2Cover
 )
 
 if(ALLOW_PARALLELIZATION)
-  target_link_libraries(Fields2Cover PRIVATE tbb)
-endif(ALLOW_PARALLELIZATION)
+  find_package(TBB REQUIRED)
+endif()
 
 
 

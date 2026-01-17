@@ -34,7 +34,7 @@ function(f2c_declare_dependencies)
           URL https://github.com/google/or-tools/releases/download/v9.9/or-tools_amd64_ubuntu-22.04_cpp_v9.9.3963.tar.gz
           URL_HASH SHA256=a611133f4e9b75661c637347ebadff79539807cf8966eb9c176c2c560aad0a84
         )
-      elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
+      elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "(aarch64|arm64)")
         message(STATUS "Target architecture is ARM64")
         FetchContent_Declare(ortools FETCHCONTENT_UPDATES_DISCONNECTED
           URL https://github.com/google/or-tools/releases/download/v9.9/or-tools_arm64_debian-11_cpp_v9.9.3963.tar.gz

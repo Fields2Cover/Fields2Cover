@@ -8,7 +8,7 @@
 #ifndef FIELDS2COVER_TYPES_MULTILINESTRING_H_
 #define FIELDS2COVER_TYPES_MULTILINESTRING_H_
 
-#include <gdal/ogr_geometry.h>
+#include <ogr_geometry.h>
 #include <utility>
 #include "fields2cover/types/Geometries.h"
 #include "fields2cover/types/LineString.h"
