@@ -1,1 +1,15 @@
- 
+from .fields2cover_core import *
+
+# Fix module names for clean public API
+import sys as _sys
+
+_this_module = _sys.modules[__name__]
+
+for _name, _obj in list(vars(_this_module).items()):
+    if hasattr(_obj, "__module__") and _obj.__module__ == "fields2cover.fields2cover_core":
+        try:
+            _obj.__module__ = __name__
+        except Exception:
+            pass
+
+del _sys, _this_module, _name, _obj

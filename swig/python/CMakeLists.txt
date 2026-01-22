@@ -6,10 +6,17 @@ find_package(
     Development
 )
 
+set(CMAKE_SWIG_OUTDIR ${CMAKE_CURRENT_BINARY_DIR}/fields2cover)
+file(MAKE_DIRECTORY ${CMAKE_SWIG_OUTDIR})
+
 set(CMAKE_SWIG_FLAGS "")
 if(Python_VERSION VERSION_GREATER_EQUAL 3)
   list(APPEND CMAKE_SWIG_FLAGS "-py3;-DPY3")
 endif()
+
+set(CMAKE_SWIG_FLAGS
+    -I${PROJECT_SOURCE_DIR}/include
+)
 
 if(BUILD_DOC)
   list(APPEND CMAKE_SWIG_FLAGS "-doxygen")
@@ -26,22 +33,34 @@ include_directories(
 )
 
 # Add swig module
-SWIG_ADD_LIBRARY(fields2cover_python
+SWIG_ADD_LIBRARY(fields2cover
+  TYPE MODULE
   LANGUAGE python
-  SOURCES ../${PROJECT_NAME}.i
+  SOURCES ../Fields2Cover.i
 )
-SWIG_LINK_LIBRARIES(fields2cover_python
+
+target_include_directories(fields2cover PRIVATE
+    ${Python3_INCLUDE_DIRS}
+    ${PROJECT_SOURCE_DIR}/include
+)
+
+set_target_properties(fields2cover PROPERTIES
+  OUTPUT_NAME "fields2cover_core"
+  LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SWIG_OUTDIR}
+)
+
+target_link_libraries(fields2cover
+  PRIVATE
   Fields2Cover
-  ${Python_LIBRARIES}
-  ${PROJ_LIBRARY}
-  ${GDAL_LIBRARIES}
+  Python::Python
 )
+
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/fields2cover")
 
 # Files to install with Python
 set(
   PYTHON_INSTALL_FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/fields2cover.py
-  ${CMAKE_CURRENT_BINARY_DIR}/_fields2cover_python.so
+  ${CMAKE_CURRENT_BINARY_DIR}/fields2cover/_fields2cover_core.so
 )
 
 # Configure setup.py and copy to output directory
@@ -60,6 +79,7 @@ configure_file(
   ${MANIFEST_OUT}
   COPYONLY
 )
+
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/../../LICENSE
   ${CMAKE_CURRENT_BINARY_DIR}/LICENSE
@@ -72,42 +92,38 @@ configure_file(
 )
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/__init__.py.in
-  ${CMAKE_CURRENT_BINARY_DIR}/__init__.py
-  COPYONLY
-)
-configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/__init__.py.in
   ${CMAKE_CURRENT_BINARY_DIR}/fields2cover/__init__.py
   COPYONLY
 )
 
-file(
-  COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../src
-  DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/fields2cover
-)
-file(
-  COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../include
-  DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/fields2cover
+execute_process(
+  COMMAND ${Python_EXECUTABLE} -c
+    "import sysconfig; print(sysconfig.get_path('purelib'))"
+  OUTPUT_VARIABLE PYTHON_SITE_PACKAGES
+  OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
 
-# Install target to call setup.py
-if(Python_VERSION VERSION_GREATER_EQUAL 3)
-  add_custom_target(install-python
-    DEPENDS _fields2cover_python
-    COMMAND python3 ${SETUP_PY_OUT} install --prefix=${CMAKE_INSTALL_PREFIX}
-  )
-  install(CODE "execute_process(COMMAND python3 ${SETUP_PY_OUT} install --prefix=${CMAKE_INSTALL_PREFIX})")
-elseif(Python_VERSION VERSION_GREATER_EQUAL 2)
-  add_custom_target(
-    install-python
-    DEPENDS
-      _fields2cover_python
-    COMMAND
-      python ${SETUP_PY_OUT} install
-  )
-  install(CODE "execute_process(COMMAND python ${SETUP_PY_OUT} install)")
-endif()
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/fields2cover/fields2cover_core.py
+    DESTINATION ${PYTHON_SITE_PACKAGES}/fields2cover
+)
+
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/fields2cover/__init__.py
+    DESTINATION ${PYTHON_SITE_PACKAGES}/fields2cover
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/fields2cover/_fields2cover_core.so
+    DESTINATION ${PYTHON_SITE_PACKAGES}/fields2cover
+)
+
+#install(FILES ${CMAKE_CURRENT_BINARY_DIR}/../../libFields2Cover.so
+#    DESTINATION ${PYTHON_SITE_PACKAGES}/fields2cover
+#)
+
+
 
 
 
