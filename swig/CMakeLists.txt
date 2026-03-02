@@ -31,8 +31,15 @@ if(POLICY CMP0086)
   cmake_policy(SET CMP0086 NEW)
 endif()
 
-
 include(${SWIG_USE_FILE})
+
+set(CMAKE_SWIG_FLAGS "")
+
+set(CMAKE_SWIG_FLAGS -I${PROJECT_SOURCE_DIR}/include)
+
+if(BUILD_DOC)
+  list(APPEND CMAKE_SWIG_FLAGS "-doxygen")
+endif()
 
 # Add subdirectories for each language if desired
 if(BUILD_PYTHON)

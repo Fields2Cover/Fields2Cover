@@ -30,5 +30,16 @@ TEST(fields2cover_types_pathState, atEnd) {
   EXPECT_NEAR(ps.atEnd().getY(),  5, 1e-7);
 }
 
+TEST(fields2cover_types_pathState, toPathState) {
+  F2CPoint p_start(10.0, -10.0);
+  F2CPoint p_end(20.0, 0.0);
+
+  F2CPathState ps1 = F2CPathState::toPathState(p_start, p_end);
+
+  EXPECT_EQ(ps1.point, p_start);
+  EXPECT_EQ(ps1.atEnd(), p_end);
+  EXPECT_NEAR(ps1.len, p_start.distance(p_end), 1e-7);
+  EXPECT_NEAR(ps1.angle, M_PI/4, 1e-7);
+}
 
 

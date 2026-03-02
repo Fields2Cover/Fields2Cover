@@ -26,6 +26,8 @@ enum class CornerPlanners {
 /// Base class to generate the headlands.
 class HeadlandGeneratorBase {
  public:
+  virtual ~HeadlandGeneratorBase() = default;
+
   virtual F2CCells generateHeadlands(
     const F2CCell& field, const F2CRobot& robot, double track_ang) const;
   virtual F2CCells generateHeadlands(
@@ -64,8 +66,8 @@ class HeadlandGeneratorBase {
   /// @return Vector of size \a n_swaths for each headland swath.
   ///   Each F2CLinearRing on it is a headland swath ring.
   virtual std::vector<F2CMultiLineString> generateHeadlandSwaths(
-    const F2CCells& field, double swath_width, int n_swaths,
-    bool dir_out2in = true) const = 0;
+      const F2CCells& field, double swath_width, int n_swaths,
+      bool dir_out2in = true) const = 0;
 
   /*
   /// Return the headlands rings on the headlands as F2CCells.
@@ -74,14 +76,12 @@ class HeadlandGeneratorBase {
     bool dir_out2in = true) = 0;
   */
 
-  virtual ~HeadlandGeneratorBase() = default;
-
-F2CLinearRing generateHeadlandExtBorder(
-    const F2CLinearRing& border, std::vector<double> offsets) const;
+  F2CLinearRing generateHeadlandExtBorder(
+      const F2CLinearRing& border, std::vector<double> offsets) const;
 
   std::vector<F2CLinearRing> generateHeadlandBorders(
-    const F2CLinearRing& border, std::vector<double> offsets,
-    size_t n_headlands, double width_headland) const;
+      const F2CLinearRing& border, std::vector<double> offsets,
+      size_t n_headlands, double width_headland) const;
 
   F2CLineString generateHeadlandBorderRoute(
       const std::vector<F2CLinearRing>& borders, bool inside_out = false) const;
@@ -154,7 +154,7 @@ F2CLinearRing generateHeadlandExtBorder(
       const std::vector<std::pair<double, double>>& pair_offsets,
       double w_robot, bool inside_out = false);
 
-  static std::pair<double, double> computeConcaveOffset(
+ static std::pair<double, double> computeConcaveOffset(
       double ang_t1, double ang_t2, const F2CRobot& robot,
       double kurv, double sigma, double buff_cloth_pos);
 

@@ -18,7 +18,10 @@
 
 namespace f2c::types {
 
-enum class SwathType {MAINLAND = 0, HEADLAND = 1};
+enum class SwathType {
+  MAINLAND = 0,
+  HEADLAND = 1
+};
 
 struct Swath {
  public:

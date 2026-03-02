@@ -30,6 +30,11 @@ Graph& Graph::removeDirectedEdge(size_t from, size_t to) {
     return *this;
   }
   this->edges_.at(from).erase(to);
+
+  if (this->shortest_paths_.size() > 0) {
+    this->shortest_paths_.clear();
+  }
+
   return *this;
 }
 Graph& Graph::removeEdge(size_t i, size_t j) {
@@ -37,7 +42,18 @@ Graph& Graph::removeEdge(size_t i, size_t j) {
 }
 
 size_t Graph::numNodes() const {
-  return this->edges_.size();
+  return this->getNodes().size();
+}
+
+std::unordered_set<size_t> Graph::getNodes() const {
+  std::unordered_set<size_t> nodes;
+  for (const auto& from_pair : this->edges_) {
+    nodes.insert(from_pair.first);
+    for (const auto& to_pair : from_pair.second) {
+      nodes.insert(to_pair.first);
+    }
+  }
+  return nodes;
 }
 
 size_t Graph::numEdges() const {
@@ -69,7 +85,7 @@ int64_t Graph::getCostFromEdge(size_t from, size_t to, int64_t INF) const {
 
 std::vector<std::vector<size_t>> Graph::allPathsBetween(
     size_t from, size_t to) const {
-  std::vector<bool> visited(this->numNodes(), false);
+  std::unordered_map<int, bool> visited;
   std::vector<std::vector<size_t>> routes(1);
   int route_index = 0;
   this->DFS(from, to, routes, visited, route_index);
@@ -83,7 +99,7 @@ std::vector<std::vector<size_t>> Graph::allPathsBetween(
 void Graph::DFS(
     size_t from, size_t to,
     std::vector<std::vector<size_t>>& routes,
-    std::vector<bool>& visited,
+    std::unordered_map<int, bool>& visited,
     int& route_index) const {
   routes.emplace_back(routes[route_index]);
   routes.back().emplace_back(from);
@@ -99,20 +115,35 @@ void Graph::DFS(
   }
 }
 
-std::vector<std::vector<pair_vec_size__int>>
+map_to_map_to_pair_vec_size__int
     Graph::shortestPathsAndCosts(int64_t INF) {
   const size_t N = this->numNodes();
   std::vector<std::vector<int64_t>> dist(N, std::vector<int64_t>(N, INF));
   std::vector<std::vector<int64_t>> next(N, std::vector<int64_t>(N, -1));
 
+  auto nodes = this->getNodes();
+  std::unordered_map<size_t, size_t> toIndex;
+  std::unordered_map<size_t, size_t> fromIndex;
+  size_t index = 0;
+  for (const auto& node : nodes) {
+    toIndex[node] = index;
+    fromIndex[index] = node;
+    index++;
+  }
+
+
 
   // Initialize distances and paths for direct connections
   for (const auto& src : this->edges_) {
+    auto src_index = toIndex[src.first];
     for (const auto& dest : src.second) {
-      dist[src.first][dest.first] = dest.second;
-      next[src.first][dest.first] = dest.first;
+      auto dest_index = toIndex[dest.first];
+      auto cost = dest.second;
+
+      dist[src_index][dest_index] = cost;
+      next[src_index][dest_index] = dest_index;
     }
-    dist[src.first][src.first] = 0;
+    dist[src_index][src_index] = 0;
   }
 
 
@@ -130,85 +161,72 @@ std::vector<std::vector<pair_vec_size__int>>
     }
   }
 
-
   // Reconstruct paths
-  std::vector<std::vector<pair_vec_size__int>>
-      paths(N, std::vector<pair_vec_size__int>(N));
+  map_to_map_to_pair_vec_size__int paths;
   for (size_t i = 0; i < N; ++i) {
+    size_t ni = fromIndex[i];
     for (size_t j = 0; j < N; ++j) {
+      size_t nj = fromIndex[j];
       if (i != j && next[i][j] != -1) {
-        std::vector<size_t> path = {i};
+        std::vector<size_t> path = {ni};
         size_t current = i;
         while (current != j) {
           current = next[current][j];
-          path.push_back(current);
+          path.push_back(fromIndex[current]);
         }
-        paths[i][j] = std::make_pair(path, dist[i][j]);
+        paths[ni][nj] = std::make_pair(path, dist[i][j]);
       } else if (i != j && next[i][j] == -1) {
-        paths[i][j].second = INF;
+        paths[ni][nj] = std::make_pair(std::vector<size_t>{}, INF);
       }
     }
   }
-  this->shortest_paths_ = std::move(paths);
+  this->shortest_paths_ = paths;
   return this->shortest_paths_;
 }
 
 std::vector<size_t> Graph::shortestPath(size_t from, size_t to, int64_t INF,
     bool using_dijkstra) {
-  if (this->shortest_paths_.size() > from &&
-      this->shortest_paths_[from].size() > to &&
-      this->shortest_paths_[from][to].second < std::numeric_limits<int64_t>::max()) {
-    return this->shortest_paths_[from][to].first;
-  }
-  if (using_dijkstra) {
-    if (this->shortest_paths_.empty()) {
-      const size_t N = this->numNodes();
-      this->shortest_paths_ =
-          std::vector<std::vector<std::pair<std::vector<size_t>, int64_t>>>(
-              N, std::vector<std::pair<std::vector<size_t>, int64_t>>(
-                N, std::pair<std::vector<size_t>, int64_t>(
-                  {}, std::numeric_limits<int64_t>::max())));
-    }
-    auto path = shortestPathDijkstra(from, to, INF);
-    this->shortest_paths_[from][to] = path;
-    return path.first;
+  if (this->shortest_paths_.count(from) > 0 &&
+      this->shortest_paths_.at(from).count(to) > 0 &&
+      this->shortest_paths_.at(from).at(to).second < std::numeric_limits<int64_t>::max()) {
+    return this->shortest_paths_.at(from).at(to).first;
   }
 
-  if (this->numNodes() > 0 && this->shortest_paths_.size() == 0) {
+  if (using_dijkstra) {
+    this->shortest_paths_[from][to] = shortestPathDijkstra(from, to, INF);
+  } else if (shortest_paths_.empty()) {
     this->shortestPathsAndCosts(INF);
   }
-  return this->shortest_paths_[from][to].first;
+
+  if (this->shortest_paths_.count(from) == 0 ||
+      this->shortest_paths_.at(from).count(to) == 0 ||
+      this->shortest_paths_.at(from).at(to).second >= std::numeric_limits<int64_t>::max()) {
+    return {};
+  }
+  return this->shortest_paths_.at(from).at(to).first;
 }
 
 int64_t Graph::shortestPathCost(size_t from, size_t to, int64_t INF,
     bool using_dijkstra) {
-  if (this->shortest_paths_.size() > from &&
-      this->shortest_paths_[from].size() > to &&
-      this->shortest_paths_[from][to].second < std::numeric_limits<int64_t>::max()) {
-    return this->shortest_paths_[from][to].second;
-  }
-  if (using_dijkstra) {
-    if (this->shortest_paths_.empty()) {
-      const size_t N = this->numNodes();
-      this->shortest_paths_ =
-          std::vector<std::vector<std::pair<std::vector<size_t>, int64_t>>>(
-              N, std::vector<std::pair<std::vector<size_t>, int64_t>>(
-                N, std::pair<std::vector<size_t>, int64_t>(
-                  {}, std::numeric_limits<int64_t>::max())));
-    }
-    auto path = shortestPathDijkstra(from, to, INF);
-    this->shortest_paths_[from][to] = path;
-    return path.second;
-  }
-
-  if (this->numNodes() > 0 && this->shortest_paths_.size() == 0) {
+  if (this->shortest_paths_.count(from) > 0 &&
+      this->shortest_paths_.at(from).count(to) > 0 &&
+      this->shortest_paths_.at(from).at(to).second < std::numeric_limits<int64_t>::max()) {
+    // Already computed and stored in cache
+  } else if (using_dijkstra) {
+    this->shortest_paths_[from][to] = shortestPathDijkstra(from, to, INF);
+  } else if (shortest_paths_.empty()) {
     this->shortestPathsAndCosts(INF);
   }
-  return this->shortest_paths_[from][to].second;
+  if (this->shortest_paths_.count(from) == 0 ||
+      this->shortest_paths_.at(from).count(to) == 0 ||
+      this->shortest_paths_.at(from).at(to).second >= std::numeric_limits<int64_t>::max()) {
+    return INF;
+  }
+  return this->shortest_paths_.at(from).at(to).second;
 }
 
 
-std::pair<std::vector<size_t>, int64_t> Graph::shortestPathDijkstra(
+pair_vec_size__int Graph::shortestPathDijkstra(
     size_t from, size_t to, int64_t INF) const {
   std::priority_queue<std::pair<int64_t, size_t>,
       std::vector<std::pair<int64_t, size_t>>, std::greater<>> pq;

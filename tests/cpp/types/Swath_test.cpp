@@ -158,3 +158,16 @@ TEST(fields2cover_types_swath, start_and_end_points) {
   EXPECT_NEAR(swath1.endPoint().getY(), -34.2, 1e-5);
 }
 
+TEST(fields2cover_types_swath, set_type) {
+  F2CSwath swath(1.0);
+  swath.setType(f2c::types::SwathType::MAINLAND);
+  EXPECT_EQ(swath.getType(), f2c::types::SwathType::MAINLAND);
+  EXPECT_NE(swath.getType(), f2c::types::SwathType::HEADLAND);
+
+  F2CSwath swath1 = swath.clone();
+  swath1.setType(f2c::types::SwathType::HEADLAND);
+  EXPECT_EQ(swath1.getType(), f2c::types::SwathType::HEADLAND);
+  EXPECT_NE(swath1.getType(), f2c::types::SwathType::MAINLAND);
+  EXPECT_EQ(swath.getType(), f2c::types::SwathType::MAINLAND);
+  EXPECT_NE(swath.getType(), f2c::types::SwathType::HEADLAND);
+}

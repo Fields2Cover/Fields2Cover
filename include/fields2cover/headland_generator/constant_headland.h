@@ -48,7 +48,7 @@ class ConstHL : public HeadlandGeneratorBase {
   ///   Each F2CLinearRing on it is a headland swath ring.
   std::vector<F2CMultiLineString> generateHeadlandSwaths(
     const F2CCells& field, double swath_width, int n_swaths,
-    bool dir_out2in = true) const override;
+    bool dir_out2in) const override;
 };
 
 }  // namespace f2c::hg

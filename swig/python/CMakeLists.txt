@@ -9,22 +9,14 @@ find_package(
 set(CMAKE_SWIG_OUTDIR ${CMAKE_CURRENT_BINARY_DIR}/fields2cover)
 file(MAKE_DIRECTORY ${CMAKE_SWIG_OUTDIR})
 
-set(CMAKE_SWIG_FLAGS "")
 if(Python_VERSION VERSION_GREATER_EQUAL 3)
   list(APPEND CMAKE_SWIG_FLAGS "-py3;-DPY3")
-endif()
-
-set(CMAKE_SWIG_FLAGS
-    -I${PROJECT_SOURCE_DIR}/include
-)
-
-if(BUILD_DOC)
-  list(APPEND CMAKE_SWIG_FLAGS "-doxygen")
 endif()
 
 set_source_files_properties(
   ../${PROJECT_NAME}.i
   PROPERTIES CPLUSPLUS ON SWIG_FLAGS ""
+  #PROPERTIES CPLUSPLUS ON SWIG_FLAGS "-Wextra;-Werror;-Wall"
 )
 
 include_directories(

@@ -43,7 +43,7 @@ TEST(fields2cover_hg_const_gen, border_swaths) {
   f2c::hg::ConstHL hl_gen;
 
   F2CField field = rand.generateRandField(1e4, 5);
-  auto hl_swaths = hl_gen.generateHeadlandSwaths(field.getField(), 3.0, 10);
+  auto hl_swaths = hl_gen.generateHeadlandSwaths(field.getField(), 3.0, 10, true);
   F2CCells no_hl = hl_gen.generateHeadlandArea(field.getField(), 3.0, 10);
 
   EXPECT_NEAR(field.area(), 1e4, 1e-3);

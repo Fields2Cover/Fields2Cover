@@ -10,6 +10,10 @@
 
 int64_t INF = 1<<30;
 
+bool arePointsConnected(const F2CGraph2D& g, const F2CPoint& from, const F2CPoint& to) {
+  return INF > g.getCostFromEdge(from, to, INF);
+}
+
 bool arePointsConnected(const F2CGraph2D& g,
     const F2CPoint& from, const std::optional<F2CPoint>& to) {
   if (!to) {
@@ -26,9 +30,49 @@ bool arePointsConnected(const F2CGraph2D& g,
   return INF > g.getCostFromEdge(from, to, INF);
 }
 
-bool arePointsConnected(const F2CGraph2D& g, const F2CPoint& from, const F2CPoint& to) {
-  return INF > g.getCostFromEdge(from, to, INF);
+TEST(fields2cover_types_graph2d, constructor) {
+  F2CGraph2D g;
+  EXPECT_EQ(g.numNodes(), 0);
+  EXPECT_EQ(g.numEdges(), 0);
+  EXPECT_EQ(g.getScale(), 1000);
 }
+
+TEST(fields2cover_types_graph2d, setScale) {
+  F2CGraph2D g;
+  EXPECT_EQ(g.getScale(), 1000);
+  g.setScale(10);
+  EXPECT_EQ(g.getScale(), 10);
+  g.setScale(0.1);
+  EXPECT_EQ(g.getScale(), 0.1);
+}
+
+TEST(fields2cover_types_graph2d, addDirectedEdge_points) {
+  F2CPoint p1 {1, -1}, p2 {2, -2}, p3 {-3, 3}, p4 {5, 5};
+  F2CGraph2D g;
+  EXPECT_FALSE(arePointsConnected(g, p1, p2));
+  g.addDirectedEdge(p1, p2, 1);
+  EXPECT_TRUE(arePointsConnected(g, p1, p2));
+  EXPECT_FALSE(arePointsConnected(g, p2, p1));
+
+  g.setScale(10);
+  g.addDirectedEdge(p3, p4);
+  EXPECT_NEAR(g.getCostFromEdge(p3, p4), p3.distance(p4)*g.getScale(), 1);
+}
+
+TEST(fields2cover_types_graph2d, addDirectedEdge_opt_points) {
+  F2CPoint p1 {1, -1}, p2 {2, -2};
+  std::optional<F2CPoint> op1 {F2CPoint(11, -11)}, op2 {F2CPoint(12, -12)};
+  F2CGraph2D g;
+  EXPECT_FALSE(arePointsConnected(g, op1, p2));
+  EXPECT_FALSE(arePointsConnected(g, p1, op2));
+  g.addDirectedEdge(op1, p2, 1);
+  EXPECT_TRUE(arePointsConnected(g, op1, p2));
+  EXPECT_FALSE(arePointsConnected(g, p2, op1));
+  g.addDirectedEdge(p1, op2, 1);
+  EXPECT_TRUE(arePointsConnected(g, p1, op2));
+  EXPECT_FALSE(arePointsConnected(g, op2, p1));
+}
+
 
 TEST(fields2cover_types_graph2d, addEdge_points) {
   F2CPoint p1 {1, -1}, p2 {2, -2}, p3 {-3, 3}, p4 {5, 5};
@@ -124,15 +168,20 @@ TEST(fields2cover_types_graph2d, shortestPaths) {
 
   auto paths = g.shortestPathsAndCosts();
 
-  EXPECT_EQ(paths.size(), 4);
+  const int N = g.numNodes();
+  EXPECT_EQ(N, 4);
+  EXPECT_EQ(paths.size(), N);
   for (auto& path : paths) {
-    EXPECT_EQ(path.size(), 4);
+    EXPECT_EQ(path.second.size(), N-1);
   }
   EXPECT_EQ(paths[0][1].first.size(), 2);
   EXPECT_EQ(paths[0][1].second, 6);
   EXPECT_EQ(paths[0][3].first.size(), 3);
-
   EXPECT_EQ(paths[0][3].second, 3);
+  std::vector<uint64_t> path_3_2 = paths[3][2].first;
+  EXPECT_EQ(path_3_2.size(), 3);
+  EXPECT_EQ(path_3_2, (std::vector<uint64_t>{3,0,2}));
+  EXPECT_EQ(paths[3][2].second, 7);
 
   for (int i = 0; i < paths.size(); ++i) {
     EXPECT_EQ(paths[i][i].first.size(), 0);
@@ -151,9 +200,10 @@ TEST(fields2cover_types_graph2d, shortestPaths) {
   F2CPoint p_far1 {10, 10}, p_far2 {11, 12};
   g.addEdge(p_far1, p_far2);
   paths = g.shortestPathsAndCosts();
-  EXPECT_EQ(paths.size(), 6);
+  const int M = g.numNodes();
+  EXPECT_EQ(paths.size(), M);
   for (auto& path : paths) {
-    EXPECT_EQ(path.size(), 6);
+    EXPECT_EQ(path.second.size(), M-1);
   }
   EXPECT_EQ(paths[5][4].second, 2236);
   EXPECT_GT(paths[0][5].second, 1e5);

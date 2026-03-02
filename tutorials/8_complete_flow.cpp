@@ -15,7 +15,8 @@ int main() {
   // Transform into UTM to work in meters
   f2c::Transform::transformToUTM(field);
 
-  F2CRobot robot (2.0, 6.0);
+  F2CRobot robot (3.0);
+  robot.setMinTurningRadius(2);  // m
   f2c::hg::ConstHL const_hl;
   F2CCells no_hl = const_hl.generateHeadlands(field.getField(), 3.0 * robot.getWidth());
   f2c::sg::BruteForce bf;
@@ -23,7 +24,6 @@ int main() {
   f2c::rp::SnakeOrder snake_sorter;
   swaths = snake_sorter.genSortedSwaths(swaths);
   f2c::pp::PathPlanning path_planner;
-  robot.setMinTurningRadius(2);  // m
   f2c::pp::DubinsCurves dubins;
   F2CPath path = path_planner.planPath(robot, swaths, dubins);
 

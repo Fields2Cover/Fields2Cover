@@ -91,13 +91,20 @@ TEST(fields2cover_types_multipoint, getAngles) {
   F2CMultiPoint ps1{F2CPoint(1,1), F2CPoint(2,2), F2CPoint(0, 2), F2CPoint(1, 1)};
   EXPECT_EQ(ps1.size(), 4);
   EXPECT_NEAR(ps1.getOutAngle(0), M_PI / 4.0, 1e-7);
+  EXPECT_NEAR(ps1.getPointAngle(0), M_PI / 4.0, 1e-7);
   EXPECT_NEAR(ps1.getInAngle(1), M_PI / 4.0, 1e-7);
   EXPECT_NEAR(ps1.getOutAngle(1), M_PI, 1e-7);
+  EXPECT_NEAR(ps1.getPointAngle(1), 2.5 * M_PI / 4.0, 1e-7);
   EXPECT_NEAR(ps1.getInAngle(2), M_PI, 1e-7);
   EXPECT_NEAR(ps1.getOutAngle(2), 7.0 * M_PI / 4.0, 1e-7);
+  EXPECT_NEAR(ps1.getPointAngle(2), 5.5 * M_PI / 4.0, 1e-7);
   EXPECT_NEAR(ps1.getInAngle(3), 7.0 * M_PI / 4.0, 1e-7);
+  EXPECT_NEAR(ps1.getPointAngle(3), 7.0 * M_PI / 4.0, 1e-7);
   EXPECT_THROW(ps1.getInAngle(0), std::invalid_argument);
   EXPECT_THROW(ps1.getOutAngle(3), std::invalid_argument);
+
+  F2CMultiPoint ps2{F2CPoint(1,1)};
+  EXPECT_THROW(ps2.getPointAngle(0), std::invalid_argument);
 }
 
 

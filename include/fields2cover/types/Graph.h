@@ -10,6 +10,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <unordered_set>
 #include <functional>
 #include <utility>
 #include <unordered_map>
@@ -19,6 +20,8 @@ namespace f2c::types {
 typedef std::unordered_map<size_t, std::unordered_map<size_t, int64_t>>
   map_to_map_to_int;
 typedef std::pair<std::vector<size_t>, int64_t> pair_vec_size__int;
+typedef std::unordered_map<size_t, std::unordered_map<size_t, pair_vec_size__int>>
+  map_to_map_to_pair_vec_size__int;
 
 class Graph {
  public:
@@ -28,6 +31,8 @@ class Graph {
   Graph& removeEdge(size_t i, size_t j);
 
   size_t numNodes() const;
+  std::unordered_set<size_t> getNodes() const;
+
   size_t numEdges() const;
   map_to_map_to_int getEdges() const;
 
@@ -39,7 +44,7 @@ class Graph {
   std::vector<std::vector<size_t>> allPathsBetween(
       size_t from, size_t to) const;
 
-  std::vector<std::vector<pair_vec_size__int>>
+  map_to_map_to_pair_vec_size__int
     shortestPathsAndCosts(int64_t INF = 1e15);
 
   std::vector<size_t> shortestPath(size_t from, size_t to,
@@ -51,15 +56,15 @@ class Graph {
  protected:
   void DFS(size_t from, size_t to,
     std::vector<std::vector<size_t>>& routes,
-    std::vector<bool>& visited,
+    std::unordered_map<int, bool>& visited,
     int& route_index) const;
 
-  std::pair<std::vector<size_t>, int64_t> shortestPathDijkstra(
+  pair_vec_size__int shortestPathDijkstra(
       size_t from, size_t to, int64_t INF = 1e15) const;
 
  protected:
   map_to_map_to_int edges_;
-  std::vector<std::vector<pair_vec_size__int>> shortest_paths_;
+  map_to_map_to_pair_vec_size__int shortest_paths_;
 };
 
 }  // namespace f2c::types

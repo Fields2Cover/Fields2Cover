@@ -66,6 +66,9 @@ TEST(fields2cover_types_swaths, sort) {
   for (int i = 1; i < n; ++i) {
     EXPECT_EQ(swaths[i-1].getWidth(), i);
   }
+
+  EXPECT_EQ(swaths.startPoint(), F2CPoint(1, 1));
+  EXPECT_EQ(swaths.endPoint(), F2CPoint(4, 5));
 }
 
 
