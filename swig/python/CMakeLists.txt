@@ -9,6 +9,9 @@ find_package(
 if(Python_VERSION VERSION_GREATER_EQUAL 3)
   list(APPEND CMAKE_SWIG_FLAGS "-py3;-DPY3")
 endif()
+if(BUILD_VISUALIZER)
+  list(APPEND CMAKE_SWIG_FLAGS "-DFIELDS2COVER_BUILD_VISUALIZER")
+endif()
 
 if(BUILD_DOC)
   list(APPEND CMAKE_SWIG_FLAGS "-doxygen")
@@ -91,23 +94,12 @@ file(
 )
 
 
-# Install target to call setup.py
-if(Python_VERSION VERSION_GREATER_EQUAL 3)
-  add_custom_target(install-python
-    DEPENDS _fields2cover_python
-    COMMAND python3 ${SETUP_PY_OUT} install --prefix=${CMAKE_INSTALL_PREFIX}
-  )
-  install(CODE "execute_process(COMMAND python3 ${SETUP_PY_OUT} install --prefix=${CMAKE_INSTALL_PREFIX})")
-elseif(Python_VERSION VERSION_GREATER_EQUAL 2)
-  add_custom_target(
-    install-python
-    DEPENDS
-      _fields2cover_python
-    COMMAND
-      python ${SETUP_PY_OUT} install
-  )
-  install(CODE "execute_process(COMMAND python ${SETUP_PY_OUT} install)")
-endif()
+# Install Python files directly using CMake
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/fields2cover.py
+  $<TARGET_FILE:fields2cover_python>
+  DESTINATION lib/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/dist-packages
+)
 
 
 

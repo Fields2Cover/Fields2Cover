@@ -180,7 +180,9 @@ typedef long unsigned int size_t;
 %include "fields2cover/utils/random.h"
 %include "fields2cover/utils/spline.h"
 %include "fields2cover/utils/parser.h"
+#ifdef FIELDS2COVER_BUILD_VISUALIZER
 %include "fields2cover/utils/visualizer.h"
+#endif
 
 
 %ignore f2c::Transform::generateCoordTransf;

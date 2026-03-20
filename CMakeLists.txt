@@ -11,13 +11,14 @@ project(Fields2Cover
 
 
 option(ALLOW_PARALLELIZATION "Allow parallel algorithms" ON)
-option(BUILD_TUTORIALS "Build tutorials" ON)
+option(BUILD_TUTORIALS "Build tutorials" OFF)
 option(BUILD_PYTHON "Build Python SWIG module" ON)
 option(BUILD_DOC "Build Documentation" OFF)
 option(BUILD_SHARED_LIBS "Build shared library(.so)" ON)
 option(USE_ORTOOLS_RELEASE "Get or-tools from release tarball" OFF)
 option(USE_ORTOOLS_FETCH_SRC "Get or-tools from source" OFF)
 option(USE_ORTOOLS_VENDOR "Get or-tools from ortools_vendor" OFF)
+option(BUILD_VISUALIZER "Build visualization support (requires matplotplusplus)" OFF)
 
 
 # Set C++ standard
@@ -65,6 +66,9 @@ f2c_declare_dependencies()
 file(GLOB_RECURSE fields2cover_src
   "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
 )
+if(NOT BUILD_VISUALIZER)
+  list(FILTER fields2cover_src EXCLUDE REGEX ".*/utils/visualizer\\.cpp$")
+endif()
 
 add_library(Fields2Cover ${fields2cover_src})
 
@@ -88,8 +92,11 @@ target_link_libraries(Fields2Cover
     nlohmann_json::nlohmann_json
     tinyxml2::tinyxml2
     steering_functions
-    matplot
 )
+if(BUILD_VISUALIZER)
+  target_link_libraries(Fields2Cover PRIVATE matplot)
+  target_compile_definitions(Fields2Cover PUBLIC FIELDS2COVER_BUILD_VISUALIZER)
+endif()
 
 if(ALLOW_PARALLELIZATION)
   target_link_libraries(Fields2Cover PRIVATE tbb)
@@ -106,7 +113,12 @@ f2c_set_compiler_options(Fields2Cover)
 include(GNUInstallDirs)
 set(F2C_INSTALL_CMAKEDIR ${CMAKE_INSTALL_LIBDIR}/cmake/Fields2Cover)
 
-install(TARGETS Fields2Cover steering_functions matplot
+if(BUILD_VISUALIZER)
+  set(F2C_INSTALL_TARGETS Fields2Cover steering_functions matplot)
+else()
+  set(F2C_INSTALL_TARGETS Fields2Cover steering_functions)
+endif()
+install(TARGETS ${F2C_INSTALL_TARGETS}
   EXPORT Fields2CoverTargets
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

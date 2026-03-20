@@ -1,5 +1,5 @@
 import os
-from distutils.sysconfig import get_python_lib
+import sysconfig
 from setuptools import setup
 import setuptools.command.install
 from setuptools.extension import Extension
@@ -20,7 +20,7 @@ class CompiledLibInstall(setuptools.command.install.install):
         filenames = '${PYTHON_INSTALL_FILES}'.split(';')
 
         # Directory to install to
-        install_dir = get_python_lib(prefix=self.prefix)
+        install_dir = sysconfig.get_path('purelib', vars={'base': self.prefix, 'platbase': self.prefix})
         if not os.path.isdir(install_dir):
             os.makedirs(install_dir)
 

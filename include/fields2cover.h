@@ -15,7 +15,9 @@
 #include "fields2cover/utils/spline.h"
 #include "fields2cover/utils/transformation.h"
 #include "fields2cover/utils/parser.h"
+#ifdef FIELDS2COVER_BUILD_VISUALIZER
 #include "fields2cover/utils/visualizer.h"
+#endif
 
 
 #include "fields2cover/objectives/base_objective.h"
