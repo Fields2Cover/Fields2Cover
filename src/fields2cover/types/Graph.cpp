@@ -97,7 +97,7 @@ void Graph::DFS(
   }
 }
 
-std::vector<std::vector<pair_vec_size__int>>
+std::vector<std::vector<pair_vec_size__int>> &
     Graph::shortestPathsAndCosts(int64_t INF) {
   const size_t N = this->numNodes();
   std::vector<std::vector<int64_t>> dist(N, std::vector<int64_t>(N, INF));

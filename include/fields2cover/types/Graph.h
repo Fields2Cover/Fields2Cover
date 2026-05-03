@@ -39,7 +39,7 @@ class Graph {
   std::vector<std::vector<size_t>> allPathsBetween(
       size_t from, size_t to) const;
 
-  std::vector<std::vector<pair_vec_size__int>>
+  std::vector<std::vector<pair_vec_size__int>> &
     shortestPathsAndCosts(int64_t INF = 1e15);
 
   std::vector<size_t> shortestPath(size_t from, size_t to,
