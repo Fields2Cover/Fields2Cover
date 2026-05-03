@@ -44,8 +44,8 @@ F2CGraph2D RoutePlannerBase::createShortestGraph(
   // Add points from swaths that touches border
   for (auto&& swaths : swaths_by_cells) {
     for (auto&& s : swaths) {
-      g.addEdge(s.startPoint(), cells.closestPointOnBorderTo(s.startPoint()));
-      g.addEdge(s.endPoint(),   cells.closestPointOnBorderTo(s.endPoint()));
+      g.addSwathEdge(s.startPoint(), cells.closestPointOnBorderTo(s.startPoint()));
+      g.addSwathEdge(s.endPoint(),   cells.closestPointOnBorderTo(s.endPoint()));
     }
   }
 

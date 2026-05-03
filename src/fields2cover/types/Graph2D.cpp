@@ -11,18 +11,11 @@ namespace f2c::types {
 
 Graph2D& Graph2D::addDirectedEdge(
     const Point& from, const Point& to, int64_t cost) {
-  size_t p_from = this->nodes_to_index_.insert(
-      std::make_pair(from, nodes_to_index_.size())).first->second;
-  size_t p_to   = this->nodes_to_index_.insert(
-      std::make_pair(to,   nodes_to_index_.size())).first->second;
-  this->index_to_nodes_.insert({{p_from, from}, {p_to, to}});
-  this->addDirectedEdge(p_from, p_to, cost);
-  return *this;
+  return addDirectedEdge_impl(from, to, cost, false);
 }
 
 Graph2D& Graph2D::addEdge(const Point& i, const Point& j, int64_t cost) {
-  this->addDirectedEdge(i, j, cost);
-  return this->addDirectedEdge(j, i, cost);
+  return addEdge_impl(i, j, cost, false);
 }
 
 Graph2D& Graph2D::addDirectedEdge(const Point& from, const Point& to) {
@@ -43,6 +36,54 @@ Graph2D& Graph2D::addEdge(
   addDirectedEdge(i, j, short_path_g.shortestPathCost(i, j));
   return addDirectedEdge(j, i, short_path_g.shortestPathCost(j, i));
 }
+
+Graph2D& Graph2D::addSwathDirectedEdge(const Point& from, const Point& to, int64_t cost)
+{
+  return addDirectedEdge_impl(from,to,cost,true);
+}
+
+
+Graph2D& Graph2D::addSwathEdge(const Point& from, const Point& to, int64_t cost)
+{
+  return addEdge_impl(from,to, cost,true);
+}
+
+Graph2D& Graph2D::addSwathDirectedEdge(const Point& from, const Point& to)
+{
+  return addSwathDirectedEdge(from, to, int64_t(scale_ * from.distance(to)));
+
+}
+
+Graph2D& Graph2D::addSwathEdge(const Point& i, const Point& j)
+{
+  return addSwathEdge(i, j, int64_t(scale_ * i.distance(j)));
+
+}
+
+Graph2D& Graph2D::addDirectedEdge_impl(
+  const Point& from, const Point& to, int64_t cost, bool is_swath)
+{
+  size_t p_from = this->nodes_to_index_.insert(
+      std::make_pair(from, nodes_to_index_.size())).first->second;
+  size_t p_to   = this->nodes_to_index_.insert(
+      std::make_pair(to,   nodes_to_index_.size())).first->second;
+  if (is_swath)
+  {
+    only_nodes_of_swaths_.push_back(p_from);
+    only_nodes_of_swaths_.push_back(p_to);
+  }
+  this->index_to_nodes_.insert({{p_from, from}, {p_to, to}});
+  this->addDirectedEdge(p_from, p_to, cost);
+  return *this;
+}
+
+Graph2D& Graph2D::addEdge_impl(
+  const Point& i, const Point& j, int64_t cost, bool is_swath)
+{
+  this->addDirectedEdge_impl(i, j, cost, is_swath);
+  return this->addDirectedEdge_impl(j, i, cost, is_swath);
+}
+
 
 
 Graph2D& Graph2D::removeDirectedEdge(const Point& from, const Point& to) {

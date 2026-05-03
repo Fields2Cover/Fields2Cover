@@ -48,6 +48,10 @@ class Graph {
   int64_t shortestPathCost(size_t from, size_t to,
         int64_t INF = 1e15);
 
+  void onlyPathsOfSwaths(bool flag);
+
+  std::vector<size_t> getOnlyNodesOfSwaths() const;
+
  protected:
   void DFS(size_t from, size_t to,
     std::vector<std::vector<size_t>>& routes,
@@ -57,6 +61,8 @@ class Graph {
  protected:
   map_to_map_to_int edges_;
   std::vector<std::vector<pair_vec_size__int>> shortest_paths_;
+  std::vector<size_t> only_nodes_of_swaths_;
+  bool only_nodes_of_swaths_flag_ = false;
 };
 
 }  // namespace f2c::types

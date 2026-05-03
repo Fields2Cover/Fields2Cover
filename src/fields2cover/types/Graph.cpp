@@ -132,8 +132,16 @@ std::vector<std::vector<pair_vec_size__int>>
   // Reconstruct paths
   std::vector<std::vector<pair_vec_size__int>>
       paths(N, std::vector<pair_vec_size__int>(N));
-  for (size_t i = 0; i < N; ++i) {
-    for (size_t j = 0; j < N; ++j) {
+
+  std::vector<size_t> range;
+  if (!only_nodes_of_swaths_flag_) {
+    range.resize(N);
+    std::iota(range.begin(), range.end(), 0);
+  }
+  std::vector<size_t>& chosen = !only_nodes_of_swaths_flag_ ? range : only_nodes_of_swaths_;
+
+  for (size_t i: chosen) {
+    for (size_t j: chosen) {
       if (i != j && next[i][j] != -1) {
         std::vector<size_t> path = {i};
         size_t current = i;
@@ -163,6 +171,16 @@ int64_t Graph::shortestPathCost(size_t from, size_t to, int64_t INF) {
     this->shortestPathsAndCosts(INF);
   }
   return this->shortest_paths_[from][to].second;
+}
+
+void Graph::onlyPathsOfSwaths(bool flag)
+{
+  this->only_nodes_of_swaths_flag_ = flag;
+}
+
+std::vector<size_t> Graph::getOnlyNodesOfSwaths() const
+{
+  return this->only_nodes_of_swaths_;
 }
 
 }  // namespace f2c::types

@@ -34,6 +34,15 @@ class Graph2D : public Graph {
   Graph2D& addEdge(
       const Point& i, const Point& j, Graph2D& short_path_g);
 
+  Graph2D& addSwathDirectedEdge(const Point& from, const Point& to, int64_t cost);
+  Graph2D& addSwathEdge(const Point& from, const Point& to, int64_t cost);
+  Graph2D& addSwathDirectedEdge(const Point& from, const Point& to);
+  Graph2D& addSwathEdge(const Point& i, const Point& j);
+
+  Graph2D& addDirectedEdge_impl(const Point& from, const Point& to, int64_t cost, bool is_swath);
+  Graph2D& addEdge_impl(const Point& i, const Point& j, int64_t cost, bool is_swath);
+
+
   Graph2D& removeDirectedEdge(const Point& from, const Point& to);
   Graph2D& removeEdge(const Point& i, const Point& j);
 
