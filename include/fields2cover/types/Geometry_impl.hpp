@@ -54,11 +54,11 @@ template <class T, OGRwkbGeometryType R>
 Geometry<T, R>::Geometry(Geometry&& g) = default;
 
 template <class T, OGRwkbGeometryType R>
-typename Geometry<T, R>::Geometry& Geometry<T, R>::operator=(
+Geometry<T, R>& Geometry<T, R>::operator=(
     Geometry&& g) = default;
 
 template <class T, OGRwkbGeometryType R>
-typename Geometry<T, R>::Geometry& Geometry<T, R>::operator=(
+Geometry<T, R>& Geometry<T, R>::operator=(
     const Geometry& g) = default;
 
 template <class T, OGRwkbGeometryType R>
