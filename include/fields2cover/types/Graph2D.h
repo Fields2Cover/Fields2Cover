@@ -37,7 +37,12 @@ class Graph2D : public Graph {
   Graph2D& addSwathDirectedEdge(const Point& from, const Point& to, int64_t cost);
   Graph2D& addSwathEdge(const Point& from, const Point& to, int64_t cost);
   Graph2D& addSwathDirectedEdge(const Point& from, const Point& to);
+  // i is an extremity of a swath, j is a generic point from the ring
   Graph2D& addSwathEdge(const Point& i, const Point& j);
+
+  // i and j are both extremities of the same swath
+  Graph2D& addSwath(const Point& i, const Point& j, int64_t cost);
+  Graph2D& addSwath(const Point& i, const Point& j);
 
   Graph2D& addDirectedEdge_impl(const Point& from, const Point& to, int64_t cost, bool is_swath);
   Graph2D& addEdge_impl(const Point& i, const Point& j, int64_t cost, bool is_swath);

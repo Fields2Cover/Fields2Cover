@@ -132,16 +132,11 @@ std::vector<std::vector<pair_vec_size__int>>
   // Reconstruct paths
   std::vector<std::vector<pair_vec_size__int>>
       paths(N, std::vector<pair_vec_size__int>(N));
-
-  std::vector<size_t> range;
-  if (!only_nodes_of_swaths_flag_) {
-    range.resize(N);
-    std::iota(range.begin(), range.end(), 0);
-  }
-  std::vector<size_t>& chosen = !only_nodes_of_swaths_flag_ ? range : only_nodes_of_swaths_;
-
-  for (size_t i: chosen) {
-    for (size_t j: chosen) {
+  size_t M = only_nodes_of_swaths_flag_ ? only_nodes_of_swaths_.size() : N;
+  for (size_t idx = 0; idx < M; ++idx) {
+    const size_t i = only_nodes_of_swaths_flag_ ? only_nodes_of_swaths_.at(idx) : idx;
+    for (size_t jdx = 0; jdx < M; ++jdx) {
+      const size_t j = only_nodes_of_swaths_flag_ ? only_nodes_of_swaths_.at(jdx) : jdx;
       if (i != j && next[i][j] != -1) {
         std::vector<size_t> path = {i};
         size_t current = i;

@@ -103,7 +103,7 @@ TEST(fields2cover_types_graph2d, shortestPaths) {
 
 TEST(fields2cover_types_graph2d, shortestPaths_only_swaths) {
   F2CPoint a {2,4}, b {1,3}, c {1,2}, d {2,1},
-      e {3,2}, f{3,3},ai {2, 3.5},  bs {1.5,3},
+      e {3,2}, f{3,3}, ai {2, 3.5},  bs {1.5,3},
       cs {1.5, 2}, di {2, 1.5}, es {2.5, 2},
       fs {2.5,3}, is1{1.75, 2.5}, is2 {2.25, 2.5};
 
@@ -126,7 +126,7 @@ TEST(fields2cover_types_graph2d, shortestPaths_only_swaths) {
 
   // add swaths
   g.addSwathEdge(b, bs, 10'000);  // #1 #7
-  g.addSwathEdge(es, e, 20'000); // #10 #4
+  g.addSwath(es, e, 20'000); // 10 #4
 
   // add unreachable edge
   g.addEdge(is1, is2, 8'000); // #12 #13
@@ -184,4 +184,6 @@ TEST(fields2cover_types_graph2d, shortestPaths_only_swaths) {
   EXPECT_EQ(paths_only_swaths[13][12].first.size(), 0); //is2 <-> is1
 
 
+  // check if all the swaths' extremities were added
+  EXPECT_EQ(g.getOnlyNodesOfSwaths().size(), 3);
 }

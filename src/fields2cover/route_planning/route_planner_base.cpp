@@ -21,8 +21,9 @@ namespace ortools = operations_research;
 F2CRoute RoutePlannerBase::genRoute(
     const F2CCells& cells, const F2CSwathsByCells& swaths,
     bool show_log, double d_tol, bool redirect_swaths,
-    long int time_limit_seconds, bool search_for_optimum) {
-  F2CGraph2D shortest_graph = createShortestGraph(cells, swaths, d_tol);
+    long int time_limit_seconds, bool search_for_optimum,
+    bool graph_only_swaths) {
+  F2CGraph2D shortest_graph = createShortestGraph(cells, swaths, d_tol, graph_only_swaths);
 
   F2CGraph2D cov_graph = createCoverageGraph(
       cells, swaths, shortest_graph, d_tol, redirect_swaths);
@@ -39,8 +40,9 @@ void RoutePlannerBase::setStartAndEndPoint(const F2CPoint& p) {
 
 F2CGraph2D RoutePlannerBase::createShortestGraph(
     const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells,
-    double d_tol) const {
+    double d_tol, bool graph_only_swaths) const {
   F2CGraph2D g;
+  g.onlyPathsOfSwaths(graph_only_swaths);
   // Add points from swaths that touches border
   for (auto&& swaths : swaths_by_cells) {
     for (auto&& s : swaths) {
@@ -84,6 +86,7 @@ F2CGraph2D RoutePlannerBase::createShortestGraph(
       }
     }
   }
+  g.shortestPathsAndCosts();
   return g;
 }
 
@@ -196,7 +199,7 @@ F2CRoute RoutePlannerBase::transformSolutionToRoute(
     const F2CGraph2D& coverage_graph,
     F2CGraph2D& shortest_graph) const {
   F2CRoute route;
-  F2CSwath swath;
+  // F2CSwath swath;
   const size_t NS = swaths_by_cells.sizeTotal();
   for (int i = 0; i < route_ids.size()-2; ++i) {
     F2CPoint p_s = coverage_graph.indexToNode(route_ids[i]);
