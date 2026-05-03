@@ -71,10 +71,5 @@ double SwathGeneratorBase::computeCostOfAngle(f2c::obj::SGObjective& obj,
       generateSwaths(ang, op_width, poly));
 }
 
-double SwathGeneratorBase::computeBestAngle(f2c::obj::SGObjective& obj,
-    double width, const F2CCell& poly) {
-  return computeBestAngle(obj, width, poly);
-}
-
 }  // namespace f2c::sg
 
