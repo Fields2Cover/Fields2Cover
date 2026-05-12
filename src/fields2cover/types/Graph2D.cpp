@@ -140,6 +140,8 @@ std::vector<std::vector<Point>> Graph2D::allPathsBetween(
 std::vector<Point> Graph2D::shortestPath(
     const Point& from, const Point& to, int64_t INF) {
   auto i_path = this->shortestPath(nodeToIndex(from), nodeToIndex(to), INF);
+  std::cout << i_path.size() << std::endl;
+
   std::vector<Point> path;
   for (auto&& i : i_path) {
     path.emplace_back(indexToNode(i));

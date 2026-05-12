@@ -8,6 +8,9 @@
 #include <algorithm>
 #include "fields2cover/types/Graph.h"
 
+#include <iostream>
+#include <ostream>
+
 namespace f2c::types {
 
 Graph& Graph::addDirectedEdge(size_t from, size_t to, int64_t cost) {
@@ -97,12 +100,56 @@ void Graph::DFS(
   }
 }
 
-std::vector<std::vector<pair_vec_size__int>> &
-    Graph::shortestPathsAndCosts(int64_t INF) {
+void Graph::shortestPathsAndCosts(int64_t INF) {
+  const bool single_pass = !two_pass_flag_;
+
+  const bool fist_pass = (two_pass_flag_ &&  pass_counter_ == 1);
+  const bool second_pass = (two_pass_flag_ &&  pass_counter_ == 2);
+
+  if ((single_pass && pass_counter_ > 1)|| (two_pass_flag_ && pass_counter_ > 2)) {
+    std::cout << "enough passes" << std::endl;
+    return;
+  }
+
+
   const size_t N = this->numNodes();
-  std::vector<std::vector<int64_t>> dist(N, std::vector<int64_t>(N, INF));
+  std::vector<std::vector<int64_t>> dist; //(N, std::vector<int64_t>(N, INF));
   std::vector<std::vector<int64_t>> next(N, std::vector<int64_t>(N, -1));
 
+  if (single_pass && pass_counter_ ==1) {
+    std::cout << "first and only pass"  << std::endl;
+
+    this->costs_sp_.assign(N, std::vector<int64_t>(N, INF));
+    this->shortest_paths_.assign(N,std::vector<std::vector<size_t>>(N));
+    this->initializeWeights(costs_sp_, next, INF);
+    this->reconstructPaths(next,this->shortest_paths_, INF);
+    return;
+  }
+
+  if (two_pass_flag_) {
+    if (fist_pass) {
+      std::cout << "first/two pass"  << std::endl;
+
+      costs_sp_.assign(N, std::vector<int64_t>(N, INF));
+      this->initializeWeights(costs_sp_, next, INF);
+      return;
+    } else if (second_pass) {
+      std::cout << "second/two pass"  << std::endl;
+
+      this->initializeNext(next, INF);
+      this->shortest_paths_.assign(N,std::vector<std::vector<size_t>>(N));
+      this->reconstructPaths(next, this->shortest_paths_, INF);
+      return;
+    }
+  }
+}
+
+
+void Graph::initializeWeights(std::vector<std::vector<int64_t>>& dist,
+    std::vector<std::vector<int64_t>>& next,
+    int64_t INF) {
+
+  const size_t N = this->numNodes();
 
   // Initialize distances and paths for direct connections
   for (const auto& src : this->edges_) {
@@ -121,17 +168,61 @@ std::vector<std::vector<pair_vec_size__int>> &
         if (dist[i][k] < INF && \
             dist[k][j] < INF && \
             dist[i][j] > dist[i][k] + dist[k][j]) {
+            dist[i][j] = dist[i][k] + dist[k][j];
+            next[i][j] = next[i][k];
+        }
+      }
+    }
+  }
+}
+
+void Graph::initializeNext(std::vector<std::vector<int64_t>>& next, int64_t INF) {
+  const size_t N = this->numNodes();
+
+  std::vector<std::vector<int64_t>> dist(N, std::vector<int64_t>(N, INF));
+
+  for (const auto& src : this->edges_) {
+    for (const auto& dest : src.second) {
+      dist[src.first][dest.first] = dest.second;
+      next[src.first][dest.first] = dest.first;
+    }
+    dist[src.first][src.first] = 0;
+  }
+
+  for (size_t k = 0; k < N; ++k) {
+    for (size_t i = 0; i < N; ++i) {
+      for (size_t j = 0; j < N; ++j) {
+        if (dist[i][k] < INF && \
+            dist[k][j] < INF && \
+            dist[i][j] > dist[i][k] + dist[k][j]) {
           dist[i][j] = dist[i][k] + dist[k][j];
           next[i][j] = next[i][k];
+            }
+      }
+    }
+  }
+
+  // // Floyd-Warshall
+  for (size_t k = 0; k < N; ++k) {
+    for (size_t i = 0; i < N; ++i) {
+      for (size_t j = 0; j < N; ++j) {
+        if (dist[i][k] < INF && \
+            dist[k][j] < INF && \
+            dist[i][j] > dist[i][k] + dist[k][j]) {
+            dist[i][j] = dist[i][k] + dist[k][j];
+            next[i][j] = next[i][k];
         }
       }
     }
   }
 
+}
 
-  // Reconstruct paths
-  std::vector<std::vector<pair_vec_size__int>>
-      paths(N, std::vector<pair_vec_size__int>(N));
+void Graph::reconstructPaths(std::vector<std::vector<int64_t>>& next,
+  short_path_container_t& paths,
+  int64_t INF) {
+  const size_t N = this->numNodes();
+
   size_t M = only_nodes_of_swaths_flag_ ? only_nodes_of_swaths_.size() : N;
   for (size_t idx = 0; idx < M; ++idx) {
     const size_t i = only_nodes_of_swaths_flag_ ? only_nodes_of_swaths_.at(idx) : idx;
@@ -144,13 +235,19 @@ std::vector<std::vector<pair_vec_size__int>> &
           current = next[current][j];
           path.push_back(current);
         }
-        paths[i][j] = std::make_pair(path, dist[i][j]);
+        paths[i][j] = path;
       } else if (i != j && next[i][j] == -1) {
-        paths[i][j].second = INF;
+        costs_sp_[i][j] = INF;
       }
     }
   }
-  this->shortest_paths_ = std::move(paths);
+
+}
+std::vector<std::vector<int64_t>>& Graph::getCosts() {
+  return this->costs_sp_;
+}
+
+short_path_container_t& Graph::getPaths() {
   return this->shortest_paths_;
 }
 
@@ -158,14 +255,44 @@ std::vector<size_t> Graph::shortestPath(size_t from, size_t to, int64_t INF) {
   if (this->numNodes() > 0 && this->shortest_paths_.size() == 0) {
     this->shortestPathsAndCosts(INF);
   }
-  return this->shortest_paths_[from][to].first;
+
+  if (this->two_pass_flag_ && this->pass_counter_ >= 1) {
+
+     if (this->next_.size() == 0) {
+       std::cout << "next not initialized!" << std::endl;
+       size_t N = this->numNodes();
+       this->next_.assign(N, std::vector<int64_t>(N, -1));
+       this->initializeNext(this->next_, INF);
+       std::cout << "next initialized succ" << std::endl;
+
+     }
+    std::cout << "reconstructing single path" << std::endl;
+
+    return this->reconstructPath(from, to, next_);
+  }
+  return this->shortest_paths_[from][to];
+}
+
+std::vector<size_t> Graph::reconstructPath(size_t from,
+    size_t to, std::vector<std::vector<int64_t>>& next) const {
+  if (from != to && next[from][to] != -1) {
+    std::vector<size_t> path = {from};
+    size_t current = from;
+    while (current != to) {
+      current = next[current][to];
+      path.push_back(current);
+    }
+    return path;
+  } else {
+    return {};
+  }
 }
 
 int64_t Graph::shortestPathCost(size_t from, size_t to, int64_t INF) {
-  if (this->numNodes() > 0 && this->shortest_paths_.size() == 0) {
+  if (this->numNodes() > 0 && this->costs_sp_.size() == 0) {
     this->shortestPathsAndCosts(INF);
   }
-  return this->shortest_paths_[from][to].second;
+  return this->costs_sp_[from][to];
 }
 
 void Graph::onlyPathsOfSwaths(bool flag)
@@ -176,6 +303,17 @@ void Graph::onlyPathsOfSwaths(bool flag)
 std::vector<size_t> Graph::getOnlyNodesOfSwaths() const
 {
   return this->only_nodes_of_swaths_;
+}
+
+void Graph::useTwoPass(bool flag) {
+  this->two_pass_flag_ = flag;
+}
+
+bool Graph::getTwoPassFlag() const {
+  return this->two_pass_flag_;
+}
+void Graph::incrementPassCounter() {
+  this->pass_counter_++;
 }
 
 }  // namespace f2c::types

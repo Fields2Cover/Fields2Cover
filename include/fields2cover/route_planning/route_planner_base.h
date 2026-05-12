@@ -38,12 +38,20 @@ class RoutePlannerBase {
   /// @param graph_only_swaths If true, it only calculates the optimal path between swaths'
   ///        extremities. This saves memory and speeds up calculation for fields with really dense
   ///        rings.
+  /// @param two_pass Enables memory/CPU tradeoff: when true it calculates paths' cost and optimal
+  ///       path between swaths in one pass, with the tradeoff of memorizing paths that are never
+  ///       used (legacy implementation). If false it first calculates only the paths' costs, then
+  ///       it calculates the optimal paths only for the necessary swath connections.
   /// @return Route that covers all the swaths
-  virtual F2CRoute genRoute(
-      const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells,
-      bool show_log = false, double d_tol = 1e-4, bool redirect_swaths = true,
-      long int time_limit_seconds = 1, bool search_for_optimum = false,
-      bool graph_only_swaths = false);
+  virtual F2CRoute genRoute(const F2CCells& cells,
+       const F2CSwathsByCells& swaths_by_cells,
+       bool show_log = false,
+       double d_tol = 1e-4,
+       bool redirect_swaths = true,
+       long int time_limit_seconds = 1,
+       bool search_for_optimum = false,
+       bool graph_only_swaths = false,
+       bool two_pass = false);
 
   /// Set the start and the end of the route.
   void setStartAndEndPoint(const F2CPoint& p);

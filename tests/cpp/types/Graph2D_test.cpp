@@ -61,44 +61,48 @@ TEST(fields2cover_types_graph2d, shortestPaths) {
   g.addEdge(p3, p2, 20);
   g.addEdge(p4, p1, 5);
 
-  auto paths = g.shortestPathsAndCosts();
+  g.shortestPathsAndCosts();
+  auto paths = g.getPaths();
+  auto costs = g.getCosts();
 
   EXPECT_EQ(paths.size(), 4);
   for (auto& path : paths) {
     EXPECT_EQ(path.size(), 4);
   }
-  EXPECT_EQ(paths[0][1].first.size(), 2);
-  EXPECT_EQ(paths[0][1].second, 6);
-  EXPECT_EQ(paths[0][3].first.size(), 3);
+  EXPECT_EQ(paths[0][1].size(), 2);
+  EXPECT_EQ(costs[0][1], 6);
+  EXPECT_EQ(paths[0][3].size(), 3);
 
-  EXPECT_EQ(paths[0][3].second, 3);
+  EXPECT_EQ(costs[0][3], 3);
 
   for (int i = 0; i < paths.size(); ++i) {
-    EXPECT_EQ(paths[i][i].first.size(), 0);
-    EXPECT_EQ(paths[i][i].second, 0);
+    EXPECT_EQ(paths[i][i].size(), 0);
+    EXPECT_EQ(costs[i][i], 0);
   }
   for (int i = 0; i < paths.size(); ++i) {
     for (int j = 0; j < paths[i].size(); ++j) {
       if (i != j) {
-        EXPECT_GT(paths[i][j].first.size(), 0);
-        EXPECT_EQ(paths[i][j].first[0], i);
-        EXPECT_EQ(paths[i][j].first.back(), j);
+        EXPECT_GT(paths[i][j].size(), 0);
+        EXPECT_EQ(paths[i][j][0], i);
+        EXPECT_EQ(paths[i][j].back(), j);
       }
     }
   }
 
   F2CPoint p_far1 {10, 10}, p_far2 {11, 12};
   g.addEdge(p_far1, p_far2);
-  paths = g.shortestPathsAndCosts();
+  g.shortestPathsAndCosts();
+  paths = g.getPaths();
+  costs = g.getCosts();
   EXPECT_EQ(paths.size(), 6);
   for (auto& path : paths) {
     EXPECT_EQ(path.size(), 6);
   }
-  EXPECT_EQ(paths[5][4].second, 2236);
-  EXPECT_GT(paths[0][5].second, 1e5);
-  EXPECT_GT(paths[5][0].second, 1e5);
-  EXPECT_GT(paths[0][4].second, 1e5);
-  EXPECT_GT(paths[4][0].second, 1e5);
+  EXPECT_EQ(costs[5][4], 2236);
+  EXPECT_GT(costs[0][5], 1e5);
+  EXPECT_GT(costs[5][0], 1e5);
+  EXPECT_GT(costs[0][4], 1e5);
+  EXPECT_GT(costs[4][0], 1e5);
 }
 
 TEST(fields2cover_types_graph2d, shortestPaths_only_swaths) {
@@ -132,10 +136,14 @@ TEST(fields2cover_types_graph2d, shortestPaths_only_swaths) {
   g.addEdge(is1, is2, 8'000); // #12 #13
 
   g.onlyPathsOfSwaths(false);
-  auto paths_all = g.shortestPathsAndCosts();
+  g.shortestPathsAndCosts();
+  auto paths_all = g.getPaths();
+  auto costs_all = g.getCosts();
 
   g.onlyPathsOfSwaths(true);
-  auto paths_only_swaths = g.shortestPathsAndCosts();
+  g.shortestPathsAndCosts();
+  auto paths_only_swaths = g.getPaths();
+  auto costs_only_swaths = g.getCosts();
 
 
   EXPECT_EQ(paths_only_swaths.size(), 14);
@@ -147,11 +155,11 @@ TEST(fields2cover_types_graph2d, shortestPaths_only_swaths) {
   for (int i = 0; i < paths_only_swaths.size(); ++i) {
     for (int j = 0; j < paths_only_swaths.size(); ++j) {
       if (i==j) {
-        EXPECT_EQ(paths_only_swaths[i][i].second,0);
-        EXPECT_EQ(paths_only_swaths[i][i].first.size(),0);
+        EXPECT_EQ(costs_only_swaths[i][i],0);
+        EXPECT_EQ(paths_only_swaths[i][i].size(),0);
       }
-      size_t full = paths_all[i][j].first.size();
-      size_t osw = paths_only_swaths[i][j].first.size();
+      size_t full = paths_all[i][j].size();
+      size_t osw = paths_only_swaths[i][j].size();
       memory_of_paths += full;
       memory_of_only_swaths += osw;
       // looping through all the paths we expect sometimes to find
@@ -162,7 +170,7 @@ TEST(fields2cover_types_graph2d, shortestPaths_only_swaths) {
         EXPECT_EQ(osw, 0);
       } else { // else we expect to find the same nodes list
         for (int m = 0; m < full; ++m) {
-          EXPECT_EQ(paths_all[i][j].first[m], paths_only_swaths[i][j].first[m]);
+          EXPECT_EQ(paths_all[i][j][m], paths_only_swaths[i][j][m]);
         }
       }
     }
@@ -171,17 +179,17 @@ TEST(fields2cover_types_graph2d, shortestPaths_only_swaths) {
   EXPECT_LT(memory_of_only_swaths,memory_of_paths);
 
   // check paths of swaths extremities
-  EXPECT_EQ(paths_only_swaths[1][4].second, 2+4+8); // b -> e
-  EXPECT_EQ(paths_only_swaths[1][4].second, paths_all[1][4].second); // b -> e
+  EXPECT_EQ(costs_only_swaths[1][4], 2+4+8); // b -> e
+  EXPECT_EQ(costs_only_swaths[1][4], costs_all[1][4]); // b -> e
 
-  EXPECT_EQ(paths_only_swaths[1][10].second, 10'000+9+27+81); // b -> es
-  EXPECT_EQ(paths_only_swaths[1][10].second, paths_all[1][10].second); // b -> es
+  EXPECT_EQ(costs_only_swaths[1][10], 10'000+9+27+81); // b -> es
+  EXPECT_EQ(costs_only_swaths[1][10], costs_all[1][10]); // b -> es
   EXPECT_EQ(paths_only_swaths[1][10], paths_all[1][10]); // b -> es
 
 
   // never calculated -> can't check the cost, only the path length
-  EXPECT_EQ(paths_only_swaths[13][1].first.size(), 0); // a <-> is2
-  EXPECT_EQ(paths_only_swaths[13][12].first.size(), 0); //is2 <-> is1
+  EXPECT_EQ(paths_only_swaths[13][1].size(), 0); // a <-> is2
+  EXPECT_EQ(paths_only_swaths[13][12].size(), 0); //is2 <-> is1
 
 
   // check if all the swaths' extremities were added

@@ -9,6 +9,7 @@
 #define FIELDS2COVER_TYPES_GRAPH_H_
 
 #include <cstdint>
+#include <stdexcept>
 #include <vector>
 #include <functional>
 #include <utility>
@@ -18,7 +19,7 @@ namespace f2c::types {
 
 typedef std::unordered_map<size_t, std::unordered_map<size_t, int64_t>>
   map_to_map_to_int;
-typedef std::pair<std::vector<size_t>, int64_t> pair_vec_size__int;
+typedef std::vector<std::vector<std::vector<size_t>>>  short_path_container_t;
 
 class Graph {
  public:
@@ -39,11 +40,28 @@ class Graph {
   std::vector<std::vector<size_t>> allPathsBetween(
       size_t from, size_t to) const;
 
-  std::vector<std::vector<pair_vec_size__int>> &
-    shortestPathsAndCosts(int64_t INF = 1e15);
+  void shortestPathsAndCosts(int64_t INF = 1e15);
+
+  void initializeWeights(std::vector<std::vector<int64_t>>& cost_dest,
+      std::vector<std::vector<int64_t>>& next_dest,
+      int64_t INF = 1e15);
+
+  void initializeNext(std::vector<std::vector<int64_t>>& next_dest, int64_t INF = 1e15);
+
+  void reconstructPaths(std::vector<std::vector<int64_t>>& next_src,
+  short_path_container_t& paths_dest,
+    int64_t INF);
+
+  std::vector<std::vector<int64_t>>& getCosts();
+
+  short_path_container_t& getPaths();
 
   std::vector<size_t> shortestPath(size_t from, size_t to,
         int64_t INF = 1e15);
+
+  std::vector<size_t> reconstructPath(size_t from,
+      size_t to,
+      std::vector<std::vector<int64_t>>& next) const;
 
   int64_t shortestPathCost(size_t from, size_t to,
         int64_t INF = 1e15);
@@ -51,6 +69,12 @@ class Graph {
   void onlyPathsOfSwaths(bool flag);
 
   std::vector<size_t> getOnlyNodesOfSwaths() const;
+
+  void useTwoPass(bool flag);
+
+  bool getTwoPassFlag() const;
+
+  void incrementPassCounter();
 
  protected:
   void DFS(size_t from, size_t to,
@@ -60,9 +84,14 @@ class Graph {
 
  protected:
   map_to_map_to_int edges_;
-  std::vector<std::vector<pair_vec_size__int>> shortest_paths_;
+  short_path_container_t shortest_paths_;       // sequence of nodes
+  std::vector<std::vector<int64_t>> costs_sp_;  // costs of shortest paths
   std::vector<size_t> only_nodes_of_swaths_;
   bool only_nodes_of_swaths_flag_ = false;
+  bool two_pass_flag_ = false;
+  uint8_t pass_counter_ = 1;
+  bool selective_path_reconstruct_flag_ = false;
+  std::vector<std::vector<int64_t>> next_;      // only saved when selective_path_reconstruct
 };
 
 }  // namespace f2c::types

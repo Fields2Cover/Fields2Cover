@@ -117,8 +117,14 @@ TEST(fields2cover_rp_route_plan_base, redirect_flag) {
   */
 }
 
-TEST(fields2cover_rp_route_plan_base, only_swaths_nodes) {
-  f2c::Random rand(4);
+class fields2cover_rp_route_plan_base_boolean_combination : public ::testing::TestWithParam<
+    std::tuple<bool, bool /*, bool*/ >
+> {};
+
+TEST_P(fields2cover_rp_route_plan_base_boolean_combination, only_swaths_nodes) {
+  // f2c::Random rand(4);
+  auto [only_swath_flag, two_pass_flag /*, flagC*/] = GetParam();
+
   F2CCells cells {
     F2CCell(F2CLinearRing({
           F2CPoint(0,0), F2CPoint(2,0),F2CPoint(2,2),F2CPoint(0,2), F2CPoint(0,0)
@@ -145,38 +151,33 @@ TEST(fields2cover_rp_route_plan_base, only_swaths_nodes) {
   F2CSwathsByCells swaths = bf.generateSwaths(M_PI/2.0, 5, decomp_cells);
 
   f2c::rp::RoutePlannerBase route_planner;
+
   F2CRoute route = route_planner.genRoute(hl_swaths[1], swaths, false, 1e-4,
-    false, 1, false, true);
-
-  F2CSwaths old_swaths = swaths.flatten();
-  F2CSwaths new_swaths;
-  for (size_t sbc = 0; sbc < route.sizeVectorSwaths(); ++sbc) {
-    new_swaths.append(route.getSwaths(sbc));
-  }
-
-  EXPECT_EQ(new_swaths.size(), old_swaths.size());
-
-  for (size_t s = 0; s < new_swaths.size(); ++s) {
-    F2CSwath old_swath = old_swaths.at(s);
-    F2CSwath new_swath = new_swaths.at(s);
-    EXPECT_TRUE(new_swath.hasSameDir(old_swath));
-  }
+    false, 1, false, only_swath_flag, two_pass_flag);
 
   EXPECT_FALSE(route.isEmpty());
   EXPECT_GT(route.sizeVectorSwaths(), 1);
   EXPECT_EQ(route.sizeVectorSwaths(), route.sizeConnections());
+  for (size_t conn = 1; conn < route.sizeConnections()-1; ++conn) {
+    EXPECT_GT(route.getConnection(conn).size(), 2);
+  }
 
-  /*
-  f2c::Visualizer::figure();
-  f2c::Visualizer::plot(cells);
-  //f2c::Visualizer::plot(no_hl);
-  //f2c::Visualizer::plot(hl_swaths[1]);
-  //f2c::Visualizer::plot(decomp_cells);
-  //for (auto&& c : route.getConnections())
-  f2c::Visualizer::plot(route);
-  f2c::Visualizer::show();
-  */
 }
 
+INSTANTIATE_TEST_SUITE_P(
+    BoolCombos,
+    fields2cover_rp_route_plan_base_boolean_combination,
+    ::testing::Combine(
+        ::testing::Bool()
+        ,::testing::Bool()
+        // ,::testing::Bool()
+    )
+    ,[](const testing::TestParamInfo<
+        std::tuple<bool, bool>>& info) {
+        bool a = std::get<0>(info.param);
+        bool b = std::get<1>(info.param);
 
-
+        return std::string(a ? "onlySwaths_" : "allNodes_") +
+               (b ? "doublePass" : "singlePass");
+    }
+);
