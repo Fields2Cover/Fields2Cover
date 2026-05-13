@@ -17,8 +17,11 @@
 
 namespace f2c::types {
 
+// map.at(from).at(to) = cost(from->to)
 typedef std::unordered_map<size_t, std::unordered_map<size_t, int64_t>>
   map_to_map_to_int;
+
+// shortest_path[from][to] = {(size_t) node_from, node_1, node_2 ,...,node_to}
 typedef std::vector<std::vector<std::vector<size_t>>>  short_path_container_t;
 
 class Graph {
@@ -92,6 +95,7 @@ class Graph {
   uint8_t pass_counter_ = 1;
   bool selective_path_reconstruct_flag_ = false;
   std::vector<std::vector<int64_t>> next_;      // only saved when selective_path_reconstruct
+  bool memory_opt_flag_ = false; //  enables memory/cpu tradeoff for large scale scenarios
 };
 
 }  // namespace f2c::types

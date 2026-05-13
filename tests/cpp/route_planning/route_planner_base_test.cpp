@@ -152,8 +152,7 @@ TEST_P(fields2cover_rp_route_plan_base_boolean_combination, only_swaths_nodes) {
 
   f2c::rp::RoutePlannerBase route_planner;
 
-  F2CRoute route = route_planner.genRoute(hl_swaths[1], swaths, false, 1e-4,
-    false, 1, false, only_swath_flag, two_pass_flag);
+  F2CRoute route = route_planner.genRoute(hl_swaths[1], swaths, false, 1e-4, false, 1, false, two_pass_flag);
 
   EXPECT_FALSE(route.isEmpty());
   EXPECT_GT(route.sizeVectorSwaths(), 1);

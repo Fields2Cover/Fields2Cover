@@ -136,9 +136,9 @@ void Graph::shortestPathsAndCosts(int64_t INF) {
     } else if (second_pass) {
       std::cout << "second/two pass"  << std::endl;
 
-      this->initializeNext(next, INF);
-      this->shortest_paths_.assign(N,std::vector<std::vector<size_t>>(N));
-      this->reconstructPaths(next, this->shortest_paths_, INF);
+      // this->initializeNext(next, INF);
+      // this->shortest_paths_.assign(N,std::vector<std::vector<size_t>>(N));
+      // this->reconstructPaths(next, this->shortest_paths_, INF);
       return;
     }
   }
@@ -179,42 +179,36 @@ void Graph::initializeWeights(std::vector<std::vector<int64_t>>& dist,
 void Graph::initializeNext(std::vector<std::vector<int64_t>>& next, int64_t INF) {
   const size_t N = this->numNodes();
 
-  std::vector<std::vector<int64_t>> dist(N, std::vector<int64_t>(N, INF));
+  // this->costs_sp_.assign(N, std::vector<int64_t>(N, INF));
+  for (auto r: this->costs_sp_) {
+    for (int i=0; i<r.size(); ++i) {
+      r[i] =INF;
+    }
+  }
+
 
   for (const auto& src : this->edges_) {
     for (const auto& dest : src.second) {
-      dist[src.first][dest.first] = dest.second;
+      costs_sp_[src.first][dest.first] = dest.second;
       next[src.first][dest.first] = dest.first;
     }
-    dist[src.first][src.first] = 0;
+    costs_sp_[src.first][src.first] = 0;
   }
 
   for (size_t k = 0; k < N; ++k) {
     for (size_t i = 0; i < N; ++i) {
       for (size_t j = 0; j < N; ++j) {
-        if (dist[i][k] < INF && \
-            dist[k][j] < INF && \
-            dist[i][j] > dist[i][k] + dist[k][j]) {
-          dist[i][j] = dist[i][k] + dist[k][j];
+        if (costs_sp_[i][k] < INF && \
+            costs_sp_[k][j] < INF && \
+            costs_sp_[i][j] > costs_sp_[i][k] + costs_sp_[k][j]) {
+          costs_sp_[i][j] = costs_sp_[i][k] + costs_sp_[k][j];
           next[i][j] = next[i][k];
             }
       }
     }
   }
 
-  // // Floyd-Warshall
-  for (size_t k = 0; k < N; ++k) {
-    for (size_t i = 0; i < N; ++i) {
-      for (size_t j = 0; j < N; ++j) {
-        if (dist[i][k] < INF && \
-            dist[k][j] < INF && \
-            dist[i][j] > dist[i][k] + dist[k][j]) {
-            dist[i][j] = dist[i][k] + dist[k][j];
-            next[i][j] = next[i][k];
-        }
-      }
-    }
-  }
+
 
 }
 
@@ -252,7 +246,7 @@ short_path_container_t& Graph::getPaths() {
 }
 
 std::vector<size_t> Graph::shortestPath(size_t from, size_t to, int64_t INF) {
-  if (this->numNodes() > 0 && this->shortest_paths_.size() == 0) {
+  if (!this->two_pass_flag_ && this->numNodes() > 0 && this->shortest_paths_.size() == 0) {
     this->shortestPathsAndCosts(INF);
   }
 

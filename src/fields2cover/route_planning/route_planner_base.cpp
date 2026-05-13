@@ -50,7 +50,7 @@ F2CRoute RoutePlannerBase::genRoute(const F2CCells& cells,
   shortest_graph.incrementPassCounter();
   std::cout << "second shortestPathsAndCosts " << std::endl;
 
-  shortest_graph.shortestPathsAndCosts();
+  // shortest_graph.shortestPathsAndCosts();
 
   std::cout << "transformSolutionToRoute " << std::endl;
 
