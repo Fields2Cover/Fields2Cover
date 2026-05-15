@@ -25,34 +25,14 @@ F2CRoute RoutePlannerBase::genRoute(const F2CCells& cells,
     bool redirect_swaths,
     long int time_limit_seconds,
     bool search_for_optimum,
-    bool graph_only_swaths,
     bool two_pass) {
-  std::cout << "create shortest graph" << std::endl;
-  F2CGraph2D shortest_graph = createShortestGraph(cells, swaths, d_tol, graph_only_swaths);
-  shortest_graph.useTwoPass(two_pass);
-  // // in the (optional) first pass this only calculates the paths cost
-  // shortest_graph.incrementPassCounter();
-
-  std::cout << "first shortestPathsAndCosts " << std::endl;
-
-  shortest_graph.shortestPathsAndCosts();
-
-  std::cout << "createCoverageGraph " << std::endl;
-
+  F2CGraph2D shortest_graph = createShortestGraph(cells, swaths, d_tol);
 
   F2CGraph2D cov_graph = createCoverageGraph(
       cells, swaths, shortest_graph, d_tol, redirect_swaths);
 
   std::vector<long long int> v_route = computeBestRoute(
       cov_graph, show_log, time_limit_seconds, search_for_optimum);
-
-  // in the (optional) second pass this only calculates the paths
-  shortest_graph.incrementPassCounter();
-  std::cout << "second shortestPathsAndCosts " << std::endl;
-
-  // shortest_graph.shortestPathsAndCosts();
-
-  std::cout << "transformSolutionToRoute " << std::endl;
 
   return transformSolutionToRoute(
       v_route, swaths, cov_graph, shortest_graph);
@@ -66,12 +46,11 @@ F2CGraph2D RoutePlannerBase::createShortestGraph(
     const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells,
     double d_tol, bool graph_only_swaths) const {
   F2CGraph2D g;
-  g.onlyPathsOfSwaths(graph_only_swaths);
   // Add points from swaths that touches border
   for (auto&& swaths : swaths_by_cells) {
     for (auto&& s : swaths) {
-      g.addSwathEdge(s.startPoint(), cells.closestPointOnBorderTo(s.startPoint()));
-      g.addSwathEdge(s.endPoint(),   cells.closestPointOnBorderTo(s.endPoint()));
+      g.addEdge(s.startPoint(), cells.closestPointOnBorderTo(s.startPoint()));
+      g.addEdge(s.endPoint(),   cells.closestPointOnBorderTo(s.endPoint()));
     }
   }
 
