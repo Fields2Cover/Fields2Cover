@@ -86,7 +86,7 @@ function(f2c_declare_dependencies)
   )
   FetchContent_Declare(matplot FETCHCONTENT_UPDATES_DISCONNECTED
     GIT_REPOSITORY https://github.com/alandefreitas/matplotplusplus.git
-    GIT_TAG 5d01eb3695b07634a2b6642fd423740dea9b026c
+    GIT_TAG 2ccbb7ff86295bb4d3aca2938dce09ca3accb1ef
   )
 
   FetchContent_Declare(json FETCHCONTENT_UPDATES_DISCONNECTED

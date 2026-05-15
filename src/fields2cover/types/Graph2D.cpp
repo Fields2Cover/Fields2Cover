@@ -9,6 +9,7 @@
 
 namespace f2c::types {
 
+
 Graph2D& Graph2D::addDirectedEdge(
     const Point& from, const Point& to, int64_t cost) {
   size_t p_from = this->nodes_to_index_.insert(
