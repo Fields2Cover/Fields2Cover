@@ -61,7 +61,7 @@ TEST(fields2cover_types_graph, shortestPaths) {
   g.addEdge(p3, p2, 20);
   g.addEdge(p4, p1, 5);
 
-  g.shortestPathsAndCosts();
+  // g.shortestPathsAndCosts();
 
   auto paths = g.getPaths();
   auto costs = g.getCosts();

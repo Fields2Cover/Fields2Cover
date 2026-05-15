@@ -9,7 +9,6 @@
 #define FIELDS2COVER_TYPES_GRAPH_H_
 
 #include <cstdint>
-#include <stdexcept>
 #include <vector>
 #include <functional>
 #include <utility>
@@ -45,15 +44,9 @@ class Graph {
 
   void shortestPathsAndCosts(int64_t INF = 1e15);
 
-  void initializeWeights(std::vector<std::vector<int64_t>>& cost_dest,
+  void initializeMatrices(std::vector<std::vector<int64_t>>& cost_dest,
       std::vector<std::vector<int64_t>>& next_dest,
       int64_t INF = 1e15);
-
-  void initializeNext(std::vector<std::vector<int64_t>>& next_dest, int64_t INF = 1e15);
-
-  void reconstructPaths(std::vector<std::vector<int64_t>>& next_src,
-  short_path_container_t& paths_dest,
-    int64_t INF);
 
   std::vector<std::vector<int64_t>>& getCosts();
 
@@ -69,16 +62,6 @@ class Graph {
   int64_t shortestPathCost(size_t from, size_t to,
         int64_t INF = 1e15);
 
-  void onlyPathsOfSwaths(bool flag);
-
-  std::vector<size_t> getOnlyNodesOfSwaths() const;
-
-  void useTwoPass(bool flag);
-
-  bool getTwoPassFlag() const;
-
-  void incrementPassCounter();
-
  protected:
   void DFS(size_t from, size_t to,
     std::vector<std::vector<size_t>>& routes,
@@ -88,14 +71,8 @@ class Graph {
  protected:
   map_to_map_to_int edges_;
   short_path_container_t shortest_paths_;       // sequence of nodes
-  std::vector<std::vector<int64_t>> costs_sp_;  // costs of shortest paths
-  std::vector<size_t> only_nodes_of_swaths_;
-  bool only_nodes_of_swaths_flag_ = false;
-  bool two_pass_flag_ = false;
-  uint8_t pass_counter_ = 1;
-  bool selective_path_reconstruct_flag_ = false;
-  std::vector<std::vector<int64_t>> next_;      // only saved when selective_path_reconstruct
-  bool memory_opt_flag_ = false; //  enables memory/cpu tradeoff for large scale scenarios
+  std::vector<std::vector<int64_t>> distance_;  // costs of shortest paths
+  std::vector<std::vector<int64_t>> next_;
 };
 
 }  // namespace f2c::types
