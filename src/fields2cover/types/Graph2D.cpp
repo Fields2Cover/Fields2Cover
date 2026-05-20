@@ -9,7 +9,6 @@
 
 namespace f2c::types {
 
-
 Graph2D& Graph2D::addDirectedEdge(
     const Point& from, const Point& to, int64_t cost) {
   size_t p_from = this->nodes_to_index_.insert(
@@ -103,7 +102,6 @@ int64_t Graph2D::shortestPathCost(
     const Point& from, const Point& to, int64_t INF) {
   return this->shortestPathCost(nodeToIndex(from), nodeToIndex(to), INF);
 }
-
 
 
 }  // namespace f2c::types

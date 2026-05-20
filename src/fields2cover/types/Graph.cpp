@@ -137,7 +137,7 @@ void Graph::initializeMatrices(std::vector<std::vector<int64_t>>& dist,
     }
   }
 
-  // Reconstruct unfeasible paths
+  // Reconstruct paths
   for (size_t i = 0; i < N; ++i) {
     for (size_t j = 0; j < N; ++j) {
       if (i != j && next[i][j] != -1) {
