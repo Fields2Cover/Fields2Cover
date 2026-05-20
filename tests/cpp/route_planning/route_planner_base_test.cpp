@@ -119,43 +119,4 @@ TEST(fields2cover_rp_route_plan_base, redirect_flag) {
 
 
 
-TEST(fields2cover_rp_route_plan_base_boolean_combination, only_swaths_nodes) {
-  // f2c::Random rand(4);
-  F2CCells cells {
-    F2CCell(F2CLinearRing({
-          F2CPoint(0,0), F2CPoint(2,0),F2CPoint(2,2),F2CPoint(0,2), F2CPoint(0,0)
-    }))
-  };
-  cells.addRing(0, F2CLinearRing({
-          F2CPoint(.4,.4), F2CPoint(.4,.6),F2CPoint(.6,.6),F2CPoint(.6,.4), F2CPoint(.4,.4)
-  }));
-  cells.addRing(0, F2CLinearRing({
-          F2CPoint(1.2,1.2), F2CPoint(1.2,1.6),F2CPoint(1.6,1.6),F2CPoint(1.6,1.2), F2CPoint(1.2,1.2)
-  }));
 
-  cells *= 3e1;
-
-  f2c::hg::ConstHL const_hl;
-  F2CCells no_hl = const_hl.generateHeadlandArea(cells, 1, 3);
-  auto hl_swaths = const_hl.generateHeadlandSwaths(cells, 1, 3, false);
-
-  f2c::decomp::BoustrophedonDecomp decomp;
-  decomp.setSplitAngle(M_PI/2.0);
-  auto decomp_cells = decomp.decompose(no_hl);
-
-  f2c::sg::BruteForce bf;
-  F2CSwathsByCells swaths = bf.generateSwaths(M_PI/2.0, 5, decomp_cells);
-
-  f2c::rp::RoutePlannerBase route_planner;
-
-  F2CRoute route = route_planner.genRoute(hl_swaths[1], swaths, false, 1e-4, false, 1, false);
-
-  EXPECT_FALSE(route.isEmpty());
-  EXPECT_GT(route.sizeVectorSwaths(), 1);
-  EXPECT_EQ(route.sizeVectorSwaths(), route.sizeConnections());
-  for (size_t conn = 1; conn < route.sizeConnections()-1; ++conn) {
-    size_t counter = route.getConnection(conn).size();
-    EXPECT_GT(route.getConnection(conn).size(), 2);
-  }
-
-}

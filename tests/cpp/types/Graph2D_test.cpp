@@ -104,3 +104,5 @@ TEST(fields2cover_types_graph2d, shortestPaths) {
   EXPECT_GT(costs[0][4], 1e5);
   EXPECT_GT(costs[4][0], 1e5);
 }
+
+
