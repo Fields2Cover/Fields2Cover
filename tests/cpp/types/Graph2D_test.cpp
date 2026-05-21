@@ -61,44 +61,48 @@ TEST(fields2cover_types_graph2d, shortestPaths) {
   g.addEdge(p3, p2, 20);
   g.addEdge(p4, p1, 5);
 
-  auto paths = g.shortestPathsAndCosts();
+  g.shortestPathsAndCosts();
+  auto paths = g.getPaths();
+  auto costs = g.getCosts();
 
   EXPECT_EQ(paths.size(), 4);
   for (auto& path : paths) {
     EXPECT_EQ(path.size(), 4);
   }
-  EXPECT_EQ(paths[0][1].first.size(), 2);
-  EXPECT_EQ(paths[0][1].second, 6);
-  EXPECT_EQ(paths[0][3].first.size(), 3);
+  EXPECT_EQ(paths[0][1].size(), 2);
+  EXPECT_EQ(costs[0][1], 6);
+  EXPECT_EQ(paths[0][3].size(), 3);
 
-  EXPECT_EQ(paths[0][3].second, 3);
+  EXPECT_EQ(costs[0][3], 3);
 
   for (int i = 0; i < paths.size(); ++i) {
-    EXPECT_EQ(paths[i][i].first.size(), 0);
-    EXPECT_EQ(paths[i][i].second, 0);
+    EXPECT_EQ(paths[i][i].size(), 0);
+    EXPECT_EQ(costs[i][i], 0);
   }
   for (int i = 0; i < paths.size(); ++i) {
     for (int j = 0; j < paths[i].size(); ++j) {
       if (i != j) {
-        EXPECT_GT(paths[i][j].first.size(), 0);
-        EXPECT_EQ(paths[i][j].first[0], i);
-        EXPECT_EQ(paths[i][j].first.back(), j);
+        EXPECT_GT(paths[i][j].size(), 0);
+        EXPECT_EQ(paths[i][j][0], i);
+        EXPECT_EQ(paths[i][j].back(), j);
       }
     }
   }
 
   F2CPoint p_far1 {10, 10}, p_far2 {11, 12};
   g.addEdge(p_far1, p_far2);
-  paths = g.shortestPathsAndCosts();
+  g.shortestPathsAndCosts();
+  paths = g.getPaths();
+  costs = g.getCosts();
   EXPECT_EQ(paths.size(), 6);
   for (auto& path : paths) {
     EXPECT_EQ(path.size(), 6);
   }
-  EXPECT_EQ(paths[5][4].second, 2236);
-  EXPECT_GT(paths[0][5].second, 1e5);
-  EXPECT_GT(paths[5][0].second, 1e5);
-  EXPECT_GT(paths[0][4].second, 1e5);
-  EXPECT_GT(paths[4][0].second, 1e5);
+  EXPECT_EQ(costs[5][4], 2236);
+  EXPECT_GT(costs[0][5], 1e5);
+  EXPECT_GT(costs[5][0], 1e5);
+  EXPECT_GT(costs[0][4], 1e5);
+  EXPECT_GT(costs[4][0], 1e5);
 }
 
 

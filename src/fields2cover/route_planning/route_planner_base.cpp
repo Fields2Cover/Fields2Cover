@@ -196,7 +196,6 @@ F2CRoute RoutePlannerBase::transformSolutionToRoute(
     const F2CGraph2D& coverage_graph,
     F2CGraph2D& shortest_graph) const {
   F2CRoute route;
-  F2CSwath swath;
   const size_t NS = swaths_by_cells.sizeTotal();
   for (int i = 0; i < route_ids.size()-2; ++i) {
     F2CPoint p_s = coverage_graph.indexToNode(route_ids[i]);

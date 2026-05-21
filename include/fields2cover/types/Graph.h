@@ -16,9 +16,12 @@
 
 namespace f2c::types {
 
+// map.at(from).at(to) = cost(from->to)
 typedef std::unordered_map<size_t, std::unordered_map<size_t, int64_t>>
   map_to_map_to_int;
-typedef std::pair<std::vector<size_t>, int64_t> pair_vec_size__int;
+
+// shortest_path[from][to] = {(size_t) node_from, node_1, node_2 ,...,node_to}
+typedef std::vector<std::vector<std::vector<size_t>>>  short_path_container_t;
 
 class Graph {
  public:
@@ -39,11 +42,22 @@ class Graph {
   std::vector<std::vector<size_t>> allPathsBetween(
       size_t from, size_t to) const;
 
-  std::vector<std::vector<pair_vec_size__int>>
-    shortestPathsAndCosts(int64_t INF = 1e15);
+  void shortestPathsAndCosts(int64_t INF = 1e15);
+
+  void initializeMatrices(std::vector<std::vector<int64_t>>& cost_dest,
+      std::vector<std::vector<int64_t>>& next_dest,
+      int64_t INF = 1e15);
+
+  std::vector<std::vector<int64_t>>& getCosts();
+
+  short_path_container_t& getPaths();
 
   std::vector<size_t> shortestPath(size_t from, size_t to,
         int64_t INF = 1e15);
+
+  std::vector<size_t> reconstructPath(size_t from,
+      size_t to,
+      std::vector<std::vector<int64_t>>& next) const;
 
   int64_t shortestPathCost(size_t from, size_t to,
         int64_t INF = 1e15);
@@ -56,7 +70,9 @@ class Graph {
 
  protected:
   map_to_map_to_int edges_;
-  std::vector<std::vector<pair_vec_size__int>> shortest_paths_;
+  short_path_container_t shortest_paths_;       // sequence of nodes
+  std::vector<std::vector<int64_t>> distance_;  // costs of shortest paths
+  std::vector<std::vector<int64_t>> next_;
 };
 
 }  // namespace f2c::types
