@@ -129,6 +129,32 @@ Some packages are needed before compiling the package:
 Also, `OR-tools <https://developers.google.com/optimization>`__ for C++ is needed. Follow its installation process.
 
 
+Requirements on macOS (Apple Silicon)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+All dependencies are available from `Homebrew <https://brew.sh>`__:
+
+.. code-block:: console
+
+   brew install cmake swig gdal geos or-tools tinyxml2 eigen tbb boost gnuplot
+
+or-tools must come from Homebrew: there are no official macOS release
+tarballs, so the automatic download used on Linux is not available.
+Configure with the Homebrew prefix so CMake finds the dependencies:
+
+.. code-block:: console
+
+   cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON=ON -DCMAKE_PREFIX_PATH="$(brew --prefix)"
+   cmake --build build -j
+
+The Python module is not linked against a specific libpython, so it works
+with any CPython installation of the version it was built for: copy
+``build/swig/python/fields2cover.py``, ``build/swig/python/_fields2cover_python.so``
+and ``build/libFields2Cover.dylib`` into one folder, run
+``install_name_tool -add_rpath @loader_path <folder>/_fields2cover_python.so``
+and put the folder on ``PYTHONPATH``.
+
+
 Compilation
 ^^^^^^^^^^^
 
