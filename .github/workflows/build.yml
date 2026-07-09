@@ -136,6 +136,40 @@ jobs:
         working-directory: ${{github.workspace}}
         run: PYTHONPATH=${PYTHONPATH}:instdir/lib/python$(python3 -c 'import sys; print("%i.%i" % (sys.version_info.major, sys.version_info.minor))')/site-packages pytest-3 tests/python/
 
+  build-macos:
+    name: "macOS arm64, AppleClang, Release"
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Homebrew dependencies
+        run: |
+          brew install swig gdal geos or-tools tinyxml2 eigen tbb boost gnuplot googletest
+
+      - name: Configure
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_PYTHON=ON \
+            -DBUILD_TESTING=ON \
+            -DCMAKE_PREFIX_PATH="$(brew --prefix)" \
+            -DPython_EXECUTABLE="$(command -v python3)"
+
+      - name: Build
+        run: cmake --build build -j3
+
+      - name: Run C++ tests
+        run: ctest --test-dir build/tests --output-on-failure
+
+      - name: Run Python tests
+        run: |
+          python3 -m pip install --break-system-packages pytest numpy
+          mkdir -p pymod
+          cp build/swig/python/fields2cover.py build/swig/python/_fields2cover_python.so \
+             build/libFields2Cover.dylib pymod/
+          install_name_tool -add_rpath @loader_path pymod/_fields2cover_python.so
+          PYTHONPATH=$PWD/pymod python3 -m pytest tests/python/
+
 
 
 
