@@ -8,6 +8,11 @@ include(CMakeFindDependencyMacro)
 find_dependency(GDAL 3.0 REQUIRED)
 find_dependency(Threads REQUIRED)
 find_dependency(Eigen3 REQUIRED)
+if(@F2C_GEOS_FROM_CONFIG@)
+  # the exported target links GEOS::geos_c (only when GEOS' CMake config was
+  # found at build time; otherwise the plain -lgeos_c flag needs no package)
+  find_dependency(GEOS CONFIG REQUIRED)
+endif()
 
 # Optional dependencies
 if(@F2C_ALLOW_PARALLELIZATION@)
