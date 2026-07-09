@@ -99,7 +99,7 @@ std::string Field::getUTMCoordSystem(
     const std::string& coord_sys, const std::string& if_not_found) {
   std::smatch match;
   if (std::regex_search(coord_sys, match,
-        std::regex("UTM[^0-9A-Za-z]*(\\d++\\w)[^\\w]*"))) {
+        std::regex("UTM[^0-9A-Za-z]*(\\d+\\w)[^\\w]*"))) {
     return match.str(1);
   }
   return if_not_found;
