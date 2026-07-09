@@ -30,12 +30,18 @@ SWIG_ADD_LIBRARY(fields2cover_python
   LANGUAGE python
   SOURCES ../${PROJECT_NAME}.i
 )
+# Don't link libpython on macOS: resolve Python symbols at load time so the
+# module works with any CPython 3.13, not just the one it was built against.
 SWIG_LINK_LIBRARIES(fields2cover_python
   Fields2Cover
-  ${Python_LIBRARIES}
   ${PROJ_LIBRARY}
   ${GDAL_LIBRARIES}
 )
+if(APPLE)
+  set_target_properties(fields2cover_python PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
+else()
+  SWIG_LINK_LIBRARIES(fields2cover_python ${Python_LIBRARIES})
+endif()
 
 # Files to install with Python
 set(
