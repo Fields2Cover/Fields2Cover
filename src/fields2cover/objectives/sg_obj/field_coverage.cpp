@@ -15,6 +15,10 @@ double FieldCoverage::computeCost(
 
 double FieldCoverage::computeCost(
     const F2CCells& poly, const F2CSwaths& swaths) {
+  if (swaths.size() == 0) {
+    return 0.0;
+  }
+
   F2CMultiLineString lines;
   for (const auto& s : swaths) {
     lines.addGeometry(s.getPath());

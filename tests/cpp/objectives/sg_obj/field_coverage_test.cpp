@@ -79,6 +79,24 @@ TEST(fields2cover_obj_field_coverage, computeCost_cost) {
   EXPECT_EQ(coverage.computeCostWithMinimizingSign(fields, swaths_half), -0.5);
 }
 
+TEST(fields2cover_obj_field_coverage, empty_swaths) {
+  F2CCell field;
+  F2CLinearRing line;
+  line.addPoint(0, 0);
+  line.addPoint(4, 0);
+  line.addPoint(4, 4);
+  line.addPoint(0, 4);
+  line.addPoint(0, 0);
+  field.addRing(line);
+  F2CCells fields{field};
+
+  F2CSwaths swaths;
+
+  f2c::obj::FieldCoverage obj;
+  EXPECT_EQ(obj.computeCost(field, swaths), 0.0);
+  EXPECT_EQ(obj.computeCost(fields, swaths), 0.0);
+}
+
 TEST(fields2cover_obj_field_coverage, params_check) {
   f2c::obj::FieldCoverage objective;
   EXPECT_TRUE(objective.isMaximizing());
