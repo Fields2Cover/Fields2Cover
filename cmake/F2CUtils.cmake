@@ -27,7 +27,6 @@ function(f2c_declare_dependencies)
     find_package(ortools_vendor QUIET)
     find_package(ortools CONFIG QUIET)
     if(NOT ortools_FOUND)
-      message(STATUS "or-tools -- Downloading and installing from release tarball")
       if(NOT CMAKE_SYSTEM_NAME STREQUAL "Linux")
         message(FATAL_ERROR
           "or-tools was not found and the release tarballs below are Linux-only "
@@ -36,12 +35,14 @@ function(f2c_declare_dependencies)
           "on macOS) and pass -DCMAKE_PREFIX_PATH so find_package can locate it, "
           "or build it from source with -DUSE_ORTOOLS_FETCH_SRC=ON.")
       elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
+        message(STATUS "or-tools -- Downloading and installing from release tarball")
         message(STATUS "Target architecture is AMD64")
         FetchContent_Declare(ortools FETCHCONTENT_UPDATES_DISCONNECTED
           URL https://github.com/google/or-tools/releases/download/v9.9/or-tools_amd64_ubuntu-22.04_cpp_v9.9.3963.tar.gz
           URL_HASH SHA256=a611133f4e9b75661c637347ebadff79539807cf8966eb9c176c2c560aad0a84
         )
       elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
+        message(STATUS "or-tools -- Downloading and installing from release tarball")
         message(STATUS "Target architecture is ARM64")
         FetchContent_Declare(ortools FETCHCONTENT_UPDATES_DISCONNECTED
           URL https://github.com/google/or-tools/releases/download/v9.9/or-tools_arm64_debian-11_cpp_v9.9.3963.tar.gz
