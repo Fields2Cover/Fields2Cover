@@ -31,7 +31,8 @@ SWIG_ADD_LIBRARY(fields2cover_python
   SOURCES ../${PROJECT_NAME}.i
 )
 # Don't link libpython on macOS: resolve Python symbols at load time so the
-# module works with any CPython 3.13, not just the one it was built against.
+# module isn't pinned to the exact libpython it was built against (it stays
+# ABI-bound to that Python minor version).
 SWIG_LINK_LIBRARIES(fields2cover_python
   Fields2Cover
   ${PROJ_LIBRARY}
