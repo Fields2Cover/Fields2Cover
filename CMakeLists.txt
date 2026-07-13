@@ -105,6 +105,7 @@ if(ALLOW_PARALLELIZATION)
   # Prefer the imported target from oneTBB's CMake config; fall back to the
   # bare library name for distros that don't ship the config.
   find_package(TBB CONFIG QUIET)
+  set(F2C_TBB_FROM_CONFIG ${TBB_FOUND})  # consumed by Fields2CoverConfig.cmake.in
   if(TBB_FOUND)
     target_link_libraries(Fields2Cover PRIVATE TBB::tbb)
   else()
