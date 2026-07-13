@@ -128,31 +128,7 @@ Some packages are needed before compiling the package:
 
 Also, `OR-tools <https://developers.google.com/optimization>`__ for C++ is needed. Follow its installation process.
 
-
-Requirements on macOS (Apple Silicon)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-All dependencies are available from `Homebrew <https://brew.sh>`__:
-
-.. code-block:: console
-
-   brew install cmake swig gdal geos or-tools tinyxml2 eigen tbb boost gnuplot
-
-or-tools must come from Homebrew: there are no official macOS release
-tarballs, so the automatic download used on Linux is not available.
-Configure with the Homebrew prefix so CMake finds the dependencies:
-
-.. code-block:: console
-
-   cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON=ON -DCMAKE_PREFIX_PATH="$(brew --prefix)"
-   cmake --build build -j
-
-The Python module is not linked against a specific libpython, so it works
-with any CPython installation of the version it was built for: copy
-``build/swig/python/fields2cover.py``, ``build/swig/python/_fields2cover_python.so``
-and ``build/libFields2Cover.dylib`` into one folder, run
-``install_name_tool -add_rpath @loader_path <folder>/_fields2cover_python.so``
-and put the folder on ``PYTHONPATH``.
+*(For macOS, see the "Installation on macOS" section below.)*
 
 
 Compilation
@@ -218,6 +194,49 @@ Or run on the main folder:
 .. code-block:: console
 
   pytest-3 tests/python/
+
+
+Installation on macOS (Apple Silicon)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Tested on macOS 14+. All dependencies come from `Homebrew <https://brew.sh>`__.
+or-tools must come from Homebrew — there are no official macOS release tarballs,
+so the automatic download used on Linux is not available.
+
+.. code-block:: console
+
+   brew install cmake swig gdal geos or-tools tinyxml2 eigen tbb boost gnuplot
+
+Point CMake at the Homebrew prefix so it finds GDAL, GEOS, or-tools and TBB, and
+pin the interpreter (``find_package(Python)`` otherwise picks the newest CPython
+on the system, which may not be the one you import from):
+
+.. code-block:: console
+
+   cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON=ON \
+         -DCMAKE_PREFIX_PATH="$(brew --prefix)" -DPython_EXECUTABLE="$(which python3)"
+   cmake --build build -j$(sysctl -n hw.ncpu)
+
+The module links its dependency as ``@rpath/libFields2Cover.dylib``, so use it
+from a folder that carries all three files with an rpath, rather than importing
+straight from ``build/swig/python/`` (which also has a ``fields2cover/`` package
+directory that shadows the generated ``fields2cover.py``):
+
+.. code-block:: console
+
+   mkdir -p pymod
+   cp build/swig/python/fields2cover.py build/swig/python/_fields2cover_python.so build/libFields2Cover.dylib pymod/
+   install_name_tool -add_rpath @loader_path pymod/_fields2cover_python.so
+   PYTHONPATH=$PWD/pymod python3 -c "import fields2cover"
+
+To run the tests, configure additionally with ``-DBUILD_TESTING=ON`` (needs
+``brew install googletest``), then ``ctest --test-dir build/tests`` for C++ and
+``PYTHONPATH=$PWD/pymod python3 -m pytest tests/python/`` for Python.
+
+  ``📝`` The module is ABI-bound to the CPython **minor** version it was built
+  against. Because it is not linked to a specific libpython, a mismatch is not
+  caught at import time but crashes on first use — check the version in the
+  CMake output (``Found Python: ... found version "3.X.Y"``).
 
 
 Stability
