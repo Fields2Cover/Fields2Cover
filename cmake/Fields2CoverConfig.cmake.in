@@ -8,10 +8,17 @@ include(CMakeFindDependencyMacro)
 find_dependency(GDAL 3.0 REQUIRED)
 find_dependency(Threads REQUIRED)
 find_dependency(Eigen3 REQUIRED)
+if(@F2C_GEOS_FROM_CONFIG@)
+  # the exported target links GEOS::geos_c (only when GEOS' CMake config was
+  # found at build time; otherwise the plain -lgeos_c flag needs no package)
+  find_dependency(GEOS CONFIG REQUIRED)
+endif()
 
 # Optional dependencies
-if(@F2C_ALLOW_PARALLELIZATION@)
-  find_dependency(TBB REQUIRED)
+if(@F2C_TBB_FROM_CONFIG@)
+  # the exported target links TBB::tbb (only when oneTBB's CMake config was
+  # found at build time; otherwise the plain -ltbb flag needs no package)
+  find_dependency(TBB CONFIG REQUIRED)
 endif()
 
 set_and_check(Fields2Cover_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")

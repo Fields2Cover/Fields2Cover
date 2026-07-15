@@ -53,6 +53,16 @@ find_package(GDAL 3.0 REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_library(MATH_LIBRARY m)
 
+# Prefer the imported target from GEOS' CMake config (available since GEOS 3.8);
+# fall back to the bare linker flag for distros that don't ship the config.
+find_package(GEOS CONFIG QUIET)
+set(F2C_GEOS_FROM_CONFIG ${GEOS_FOUND})  # consumed by Fields2CoverConfig.cmake.in
+if(GEOS_FOUND)
+  set(F2C_GEOS_C_LIBRARY GEOS::geos_c)
+else()
+  set(F2C_GEOS_C_LIBRARY -lgeos_c)
+endif()
+
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -81,7 +91,7 @@ target_link_libraries(Fields2Cover
   PUBLIC
     GDAL::GDAL
     ${CMAKE_THREAD_LIBS_INIT}
-    -lgeos_c
+    ${F2C_GEOS_C_LIBRARY}
     ${MATH_LIBRARY}
   PRIVATE
     ortools::ortools
@@ -92,7 +102,15 @@ target_link_libraries(Fields2Cover
 )
 
 if(ALLOW_PARALLELIZATION)
-  target_link_libraries(Fields2Cover PRIVATE tbb)
+  # Prefer the imported target from oneTBB's CMake config; fall back to the
+  # bare library name for distros that don't ship the config.
+  find_package(TBB CONFIG QUIET)
+  set(F2C_TBB_FROM_CONFIG ${TBB_FOUND})  # consumed by Fields2CoverConfig.cmake.in
+  if(TBB_FOUND)
+    target_link_libraries(Fields2Cover PRIVATE TBB::tbb)
+  else()
+    target_link_libraries(Fields2Cover PRIVATE tbb)
+  endif()
 endif(ALLOW_PARALLELIZATION)
 
 
