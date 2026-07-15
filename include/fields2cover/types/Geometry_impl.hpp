@@ -8,7 +8,7 @@
 #ifndef FIELDS2COVER_TYPES_GEOMETRY_IMPL_HPP_
 #define FIELDS2COVER_TYPES_GEOMETRY_IMPL_HPP_
 
-#include <gdal/cpl_conv.h>
+#include <cpl_conv.h>
 #include <geos_c.h>
 #include <memory>
 #include <vector>

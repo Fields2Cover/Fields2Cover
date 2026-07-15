@@ -9,11 +9,6 @@ LABEL NAME="fields2cover" \
 ENV DEBIAN_FRONTEND noninteractive
 
 WORKDIR /workspaces/
-RUN mkdir -p /usr/include/new_gdal && \
-    cp -r /usr/include/gdal* /usr/include/new_gdal/ && \
-    cp /usr/include/ogr* /usr/include/new_gdal/ && \
-    cp /usr/include/cpl* /usr/include/new_gdal/ && \
-    mv /usr/include/new_gdal/ /usr/include/gdal/
 
 RUN apt-get update --allow-insecure-repositories -y && \
     apt-get install -y --allow-unauthenticated --no-install-recommends ca-certificates

@@ -8,7 +8,7 @@
 #ifndef FIELDS2COVER_TYPES_CELL_H_
 #define FIELDS2COVER_TYPES_CELL_H_
 
-#include <gdal/ogr_geometry.h>
+#include <ogr_geometry.h>
 #include <string>
 #include <boost/math/constants/constants.hpp>
 #include "fields2cover/types/Geometries.h"

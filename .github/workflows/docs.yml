@@ -55,15 +55,6 @@ jobs:
           cp *.a /usr/lib/ 2>\dev\null || :
           cp lib/*.a /usr/lib/ 2>\dev\null || :
 
-      - name: Configure GDAL
-        shell: bash
-        run: |
-          mkdir -p /usr/include/new_gdal
-          cp -r /usr/include/gdal* /usr/include/new_gdal/
-          cp /usr/include/ogr* /usr/include/new_gdal/
-          cp /usr/include/cpl* /usr/include/new_gdal/
-          mv /usr/include/new_gdal/ /usr/include/gdal/
-
       - name: Configure Or-tools
         shell: bash
         run: |
