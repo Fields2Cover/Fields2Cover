@@ -26,7 +26,7 @@ double FieldCoverage::computeCost(
 
   double area_covered {poly.getCellsInside(
       F2CCells::buffer(lines, swaths[0].getWidth() / 2.0)).area()};
-  return area_covered / poly.area();
+  return area_covered / (poly.area() + 1e-7);
 }
 
 bool FieldCoverage::isMinimizing() const {
