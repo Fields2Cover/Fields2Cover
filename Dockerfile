@@ -24,7 +24,6 @@ RUN apt-get install -y --allow-unauthenticated --no-install-recommends \
                     doxygen \
                     g++ \
                     git \
-                    gnuplot \
                     lcov \
                     libboost-dev \
                     libgeos-dev \
@@ -38,7 +37,6 @@ RUN apt-get install -y --allow-unauthenticated --no-install-recommends \
                     python3-pytest \
                     python3-tk \
                     ranger \
-                    vim \
                     libtinyxml2-dev \
                     nlohmann-json3-dev
 
@@ -105,6 +103,8 @@ RUN apt-get update --allow-insecure-repositories -y && \
         libtinyxml2-dev \
         libtbb-dev \
         libboost-dev \
+        gnuplot \
+        vim \
     && rm -rf /var/lib/apt/lists/*
 
 RUN python3 -c "import matplotlib" && \
