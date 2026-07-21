@@ -1,4 +1,4 @@
-FROM osgeo/gdal:ubuntu-full-3.6.3
+FROM ghcr.io/osgeo/gdal:ubuntu-small-3.13.1
 
 LABEL NAME="fields2cover" \
       VERSION="2.0.0" \
@@ -6,7 +6,7 @@ LABEL NAME="fields2cover" \
       MAINTAINER="Gonzalo Mier"
 
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /workspaces/
 
@@ -15,9 +15,8 @@ RUN apt-get update --allow-insecure-repositories -y && \
 
 
 RUN if gdalinfo --version | grep -o " 3\.[0-2]\."; then \
-      apt-get install wget && \
-      wget https://github.com/Kitware/CMake/releases/download/v3.17.2/cmake-3.17.2-Linux-x86_64.sh \
-      -q -O /tmp/cmake-install.sh \
+      curl https://github.com/Kitware/CMake/releases/download/v3.17.2/cmake-3.17.2-Linux-x86_64.sh \
+      -o /tmp/cmake-install.sh \
       && chmod u+x /tmp/cmake-install.sh \
       && mkdir /usr/bin/cmake \
       && /tmp/cmake-install.sh --skip-license --prefix=/usr/bin/cmake \
@@ -51,14 +50,15 @@ RUN apt-get install -y --allow-unauthenticated --no-install-recommends \
                     ranger \
                     vim \
                     libtinyxml2-dev \
-                    nlohmann-json3-dev
+                    nlohmann-json3-dev \
+                    curl
 #                    && \
 #                    apt-get autoclean && \
 #                    apt-get autoremove && \
 #                    apt-get clean && \
 #                    rm -rf /var/lib/apt/lists/*
 
-RUN python3 -m pip install gcovr setuptools
+RUN python3 -m pip install --break-system-packages gcovr setuptools
 RUN python3 -c "import matplotlib" && \
     echo "backend: Agg" > ~/.config/matplotlib/matplotlibrc
 
@@ -81,7 +81,7 @@ RUN if gdalinfo --version | grep -o " 3\.[0-2]\."; then \
       apt-get install -y --no-install-recommends  --allow-unauthenticated swig; \
     fi
 
-RUN wget https://github.com/google/or-tools/releases/download/v9.9/or-tools_amd64_ubuntu-22.04_cpp_v9.9.3963.tar.gz -q -O /tmp/ortools.tar.gz \
+RUN curl -L https://github.com/google/or-tools/releases/download/v9.9/or-tools_amd64_ubuntu-22.04_cpp_v9.9.3963.tar.gz -o /tmp/ortools.tar.gz \
     && mkdir -p /tmp/ortools \
     && tar -zxf /tmp/ortools.tar.gz -C /tmp/ortools --strip-components=1 \
     && cp -r /tmp/ortools/bin/. /usr/bin \
@@ -101,6 +101,3 @@ RUN cmake -DBUILD_PYTHON=ON \
     -DCMAKE_BUILD_TYPE=Release ..
 
 RUN make -j4 install
-
-
-
