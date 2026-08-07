@@ -152,10 +152,13 @@ jobs:
       - name: Run C++ tests
         run: ctest --test-dir build/tests --output-on-failure
 
+      - name: Install
+        run: sudo cmake --install build
+
       - name: Run Python tests
         run: |
           python3 -m pip install --break-system-packages pytest numpy
-          PYTHONPATH=$PWD/build/python python3 -m pytest tests/python/
+          python3 -m pytest tests/python/
 
 
 

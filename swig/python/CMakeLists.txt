@@ -44,18 +44,17 @@ else()
   SWIG_LINK_LIBRARIES(fields2cover_python ${Python_LIBRARIES})
 endif()
 
-# On macOS `make install` is not available for the python module (setup.py
-# needs setuptools, which Homebrew pythons no longer bundle), so stage a
-# ready-to-import copy of the module in <build>/python instead.
+# On macOS the setup.py route is not available (it needs setuptools, which
+# Homebrew pythons no longer bundle), so install the module straight into the
+# interpreter's site-packages. libFields2Cover.dylib is placed next to the
+# module and found through the @loader_path rpath, keeping it self-contained.
 if(APPLE)
   set_property(TARGET fields2cover_python APPEND PROPERTY BUILD_RPATH "@loader_path")
-  add_custom_command(TARGET fields2cover_python POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/python
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-      ${CMAKE_CURRENT_BINARY_DIR}/fields2cover.py
-      $<TARGET_FILE:fields2cover_python>
-      $<TARGET_FILE:Fields2Cover>
-      ${CMAKE_BINARY_DIR}/python
+  install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/fields2cover.py
+    $<TARGET_FILE:fields2cover_python>
+    $<TARGET_FILE:Fields2Cover>
+    DESTINATION ${Python_SITELIB}
   )
 endif()
 
@@ -113,8 +112,8 @@ file(
 )
 
 
-# Install target to call setup.py (not on macOS: setup.py needs setuptools,
-# which Homebrew pythons no longer bundle; use <build>/python instead)
+# Install target to call setup.py (not on macOS, which installs via the
+# install(FILES) rule above instead)
 if(NOT APPLE AND Python_VERSION VERSION_GREATER_EQUAL 3)
   add_custom_target(install-python
     DEPENDS _fields2cover_python

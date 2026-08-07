@@ -229,19 +229,19 @@ From the source code folder of the project, adjust the BUILD_PYTHON option of th
    cd build;
    cmake -DBUILD_PYTHON=ON -DPython_EXECUTABLE="$(which python3)" ..;
    make -j$(sysctl -n hw.ncpu);
+   sudo make install;
 
-The python module is placed in the ``build/python`` folder.
-To test if the compilation of the python interface is correct, run on the main folder:
-
-.. code-block:: console
-
-  PYTHONPATH=$PWD/build/python python3 -c "import fields2cover as f2c; print(f2c.Robot(2.0, 6.0).getWidth())"
-
-Or run the tests as:
+To test if the compilation and installation of the python interface is correct, run:
 
 .. code-block:: console
 
-  PYTHONPATH=$PWD/build/python python3 -m pytest tests/python/
+  python3 -c "import fields2cover as f2c; print(f2c.Robot(2.0, 6.0).getWidth())"
+
+Or run the tests on the main folder as:
+
+.. code-block:: console
+
+  python3 -m pytest tests/python/
 
 
 Add it to your projects
