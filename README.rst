@@ -173,13 +173,13 @@ Then, from the source code folder of the project, adjust the BUILD_PYTHON option
    make -j$(nproc);
    sudo make install;
 
-To test if the compilation and installation of the python interface is correct, run on python:
+To test if the compilation and installation of the python interface is correct, run:
 
-.. code-block:: python
+.. code-block:: console
 
-  import fields2cover
+  python3 -c "import fields2cover as f2c; print(f2c.__version__)"
 
-Or run on the main folder:
+Or run the tests on the main folder:
 
 .. code-block:: console
 
@@ -235,7 +235,7 @@ To test if the compilation and installation of the python interface is correct, 
 
 .. code-block:: console
 
-  python3 -c "import fields2cover as f2c; print(f2c.Robot(2.0, 6.0).getWidth())"
+  python3 -c "import fields2cover as f2c; print(f2c.__version__)"
 
 Or run the tests on the main folder as:
 
