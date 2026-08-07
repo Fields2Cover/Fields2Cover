@@ -106,8 +106,11 @@ The Fields2Cover package has only been tested on Ubuntu 18.04, 20.04 and 22.04, 
 If you are able to run it in other operative systems, open an issue/PR and it will be added to this guide
 
 
-Requirements on Linux
-^^^^^^^^^^^^^^^^^^^^^
+Linux
+^^^^^
+
+Requirements
+~~~~~~~~~~~~
 
 Some packages are needed before compiling the package:
 
@@ -130,7 +133,7 @@ Also, `OR-tools <https://developers.google.com/optimization>`__ for C++ is neede
 
 
 Compilation
-^^^^^^^^^^^
+~~~~~~~~~~~
 
 First, clone this repository.
 Then, from the source code folder of the project:
@@ -149,21 +152,10 @@ Finally, you can install it as:
    sudo make install;
 
 
-Add it to your projects
-^^^^^^^^^^^^^^^^^^^^^^^
-
-To add Fields2Cover into your CMakeLists.txt, it is as easy as:
-
-.. code-block:: console
-
-   find_package(Fields2Cover REQUIRED)
-   target_link_libraries(<<<your_package>>> Fields2Cover)
-
-
 Compilation with python interface
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Assuming you have satisfied the "Requirements on Linux" and completed the initial "Compilation" step.
+Assuming you have satisfied the "Requirements" and completed the initial "Compilation" step.
 
 Install the packages required as:
 
@@ -194,12 +186,11 @@ Or run on the main folder:
   pytest-3 tests/python/
 
 
-Installation on macOS (Apple Silicon)
--------------------------------------
-
-
-Requirements on macOS
+macOS (Apple Silicon)
 ^^^^^^^^^^^^^^^^^^^^^
+
+Requirements
+~~~~~~~~~~~~
 
 Some packages are needed before compiling the package:
 
@@ -209,7 +200,7 @@ Some packages are needed before compiling the package:
 
 
 Compilation
-^^^^^^^^^^^
+~~~~~~~~~~~
 
 First, clone this repository.
 Then, from the source code folder of the project:
@@ -229,7 +220,7 @@ Finally, you can install it as:
 
 
 Compilation with python interface
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 From the source code folder of the project, adjust the BUILD_PYTHON option of the existing build:
 
@@ -251,6 +242,17 @@ Or run the tests as:
 .. code-block:: console
 
   PYTHONPATH=$PWD/build/python python3 -m pytest tests/python/
+
+
+Add it to your projects
+^^^^^^^^^^^^^^^^^^^^^^^
+
+To add Fields2Cover into your CMakeLists.txt, it is as easy as:
+
+.. code-block:: console
+
+   find_package(Fields2Cover REQUIRED)
+   target_link_libraries(<<<your_package>>> Fields2Cover)
 
 
 Stability
