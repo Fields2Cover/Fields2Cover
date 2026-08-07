@@ -173,11 +173,11 @@ Then, from the source code folder of the project, adjust the BUILD_PYTHON option
    make -j$(nproc);
    sudo make install;
 
-To test if the compilation and installation of the python interface is correct, run:
+To test if the compilation and installation of the python interface is correct, run on python:
 
-.. code-block:: console
+.. code-block:: python
 
-  python3 -c "import fields2cover as f2c; print(f2c.__version__)"
+  import fields2cover as f2c
 
 Or run the tests on the main folder:
 
@@ -231,11 +231,11 @@ From the source code folder of the project, adjust the BUILD_PYTHON option of th
    make -j$(sysctl -n hw.ncpu);
    sudo make install;
 
-To test if the compilation and installation of the python interface is correct, run:
+To test if the compilation and installation of the python interface is correct, run on python:
 
-.. code-block:: console
+.. code-block:: python
 
-  python3 -c "import fields2cover as f2c; print(f2c.__version__)"
+  import fields2cover as f2c
 
 Or run the tests on the main folder as:
 
