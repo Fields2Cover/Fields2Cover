@@ -155,11 +155,7 @@ jobs:
       - name: Run Python tests
         run: |
           python3 -m pip install --break-system-packages pytest numpy
-          mkdir -p pymod
-          cp build/swig/python/fields2cover.py build/swig/python/_fields2cover_python.so \
-             build/libFields2Cover.dylib pymod/
-          install_name_tool -add_rpath @loader_path pymod/_fields2cover_python.so
-          PYTHONPATH=$PWD/pymod python3 -m pytest tests/python/
+          PYTHONPATH=$PWD/build/python python3 -m pytest tests/python/
 
 
 
