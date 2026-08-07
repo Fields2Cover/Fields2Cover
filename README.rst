@@ -235,7 +235,7 @@ To test if the compilation of the python interface is correct, run on the main f
 
 .. code-block:: console
 
-  PYTHONPATH=$PWD/build/python python3 -c "import fields2cover"
+  PYTHONPATH=$PWD/build/python python3 -c "import fields2cover as f2c; print(f2c.Robot(2.0, 6.0).getWidth())"
 
 Or run the tests as:
 
