@@ -50,6 +50,9 @@ class TurningBase {
   virtual F2CPath createSimpleTurn(const F2CRobot& robot, double dist_start_pos,
       double start_angle, double end_angle) = 0;
 
+  /// Check if the turns keep the curvature continuous.
+  virtual bool hasContinuousCurvature() const;
+
   /// @brief Transform the turn parameters representation from two points with
   /// two angles to one distance and two angles.
   /// @param start_pos Start point
