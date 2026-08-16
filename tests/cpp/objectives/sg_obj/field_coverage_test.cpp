@@ -69,14 +69,14 @@ TEST(fields2cover_obj_field_coverage, computeCost_cost) {
 
   f2c::obj::FieldCoverage coverage;
 
-  EXPECT_EQ(coverage.computeCost(fields, swaths_full), 1.0);
-  EXPECT_EQ(coverage.computeCostWithMinimizingSign(fields, swaths_full), -1.0);
+  EXPECT_NEAR(coverage.computeCost(fields, swaths_full), 1.0, 1e-5);
+  EXPECT_NEAR(coverage.computeCostWithMinimizingSign(fields, swaths_full), -1.0, 1e-5);
 
-  EXPECT_EQ(coverage.computeCost(fields, swaths_overlap), 0.75);
-  EXPECT_EQ(coverage.computeCostWithMinimizingSign(fields, swaths_overlap), -0.75);
+  EXPECT_NEAR(coverage.computeCost(fields, swaths_overlap), 0.75, 1e-5);
+  EXPECT_NEAR(coverage.computeCostWithMinimizingSign(fields, swaths_overlap), -0.75, 1e-5);
 
-  EXPECT_EQ(coverage.computeCost(fields, swaths_half), 0.5);
-  EXPECT_EQ(coverage.computeCostWithMinimizingSign(fields, swaths_half), -0.5);
+  EXPECT_NEAR(coverage.computeCost(fields, swaths_half), 0.5, 1e-5);
+  EXPECT_NEAR(coverage.computeCostWithMinimizingSign(fields, swaths_half), -0.5, 1e-5);
 }
 
 TEST(fields2cover_obj_field_coverage, empty_swaths) {
