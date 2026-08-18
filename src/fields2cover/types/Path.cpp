@@ -298,14 +298,16 @@ std::string Path::serializePath(size_t digit_precision) const {
 }
 
 /**
- * @brief Discretize the swath sections of the path and return a new path
+ * @brief Discretize the swath and headland-swath sections of the path and
+ *        return a new path
  * @param step_size Discretization step in [m]
- * @return New path with swath now discretized
+ * @return New path with swath and headland-swath sections now discretized
 */
 Path Path::discretizeSwath(double step_size) const {
   Path new_path;
   for (auto&& s : this->states_) {
-    if (s.type == PathSectionType::SWATH) {
+    if (s.type == PathSectionType::SWATH ||
+        s.type == PathSectionType::HL_SWATH) {
       double n_steps = max(1.0, std::round(fabs(s.len / step_size)));
       Point start2end = s.atEnd() - s.point;
       for (double j = 0.0; j < n_steps; j += 1.0) {

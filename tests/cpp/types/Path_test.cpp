@@ -496,3 +496,86 @@ TEST(fields2cover_types_path, discretize_swath) {
       state2.point, 0.5 * boost::math::constants::half_pi<double>(), false));
 }
 
+TEST(fields2cover_types_path, discretizeSwath_hl_swath) {
+  F2CPath path;
+  F2CPathState state;
+  state.point = F2CPoint(0, 0);
+  state.angle = 0.0;
+  state.len = 10.0;
+  state.type = f2c::types::PathSectionType::HL_SWATH;
+  path.addState(state);
+
+  double step_size = 2.0;
+  F2CPath discretized = path.discretizeSwath(step_size);
+
+  EXPECT_EQ(discretized.size(), 5);
+  for (auto&& s : discretized) {
+    EXPECT_EQ(static_cast<int>(s.type),
+        static_cast<int>(f2c::types::PathSectionType::HL_SWATH));
+    EXPECT_NEAR(s.len, step_size, 1e-6);
+  }
+  EXPECT_NEAR(discretized.length(), path.length(), 1e-6);
+}
+
+TEST(fields2cover_types_path, discretizeSwath_mixed_types) {
+  F2CPath path;
+  F2CPathState swath_state;
+  swath_state.point = F2CPoint(0, 0);
+  swath_state.angle = 0.0;
+  swath_state.len = 4.0;
+  swath_state.type = f2c::types::PathSectionType::SWATH;
+  path.addState(swath_state);
+
+  F2CPathState turn_state;
+  turn_state.point = F2CPoint(4, 0);
+  turn_state.angle = 0.5 * M_PI;
+  turn_state.len = 4.0;
+  turn_state.type = f2c::types::PathSectionType::TURN;
+  path.addState(turn_state);
+
+  F2CPathState hl_state;
+  hl_state.point = F2CPoint(4, 4);
+  hl_state.angle = M_PI;
+  hl_state.len = 4.0;
+  hl_state.type = f2c::types::PathSectionType::HL_SWATH;
+  path.addState(hl_state);
+
+  double step_size = 2.0;
+  F2CPath discretized = path.discretizeSwath(step_size);
+
+  int n_swath = 0, n_turn = 0, n_hl_swath = 0;
+  for (auto&& s : discretized) {
+    switch (s.type) {
+      case f2c::types::PathSectionType::SWATH: ++n_swath; break;
+      case f2c::types::PathSectionType::TURN: ++n_turn; break;
+      case f2c::types::PathSectionType::HL_SWATH: ++n_hl_swath; break;
+    }
+  }
+  EXPECT_EQ(n_swath, 2);
+  EXPECT_EQ(n_turn, 1);
+  EXPECT_EQ(n_hl_swath, 2);
+}
+
+TEST(fields2cover_types_path, serialize_load_preserves_hl_swath) {
+  F2CPath path;
+  F2CPathState state;
+  state.point = F2CPoint(1.0, 2.0);
+  state.angle = 0.25 * M_PI;
+  state.len = 3.0;
+  state.velocity = 1.5;
+  state.type = f2c::types::PathSectionType::HL_SWATH;
+  path.addState(state);
+
+  std::string tmp_file = "/tmp/f2c_hl_swath_roundtrip_test.txt";
+  path.saveToFile(tmp_file);
+
+  F2CPath loaded;
+  loaded.loadFile(tmp_file);
+
+  ASSERT_EQ(loaded.size(), 1);
+  EXPECT_EQ(static_cast<int>(loaded[0].type),
+      static_cast<int>(f2c::types::PathSectionType::HL_SWATH));
+  EXPECT_NEAR(loaded[0].point.getX(), 1.0, 1e-6);
+  EXPECT_NEAR(loaded[0].point.getY(), 2.0, 1e-6);
+}
+
