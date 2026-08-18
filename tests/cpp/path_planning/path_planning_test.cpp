@@ -11,7 +11,7 @@
 #include "../test_helpers/path_planning_checker.hpp"
 #include "../test_helpers/robot_data.hpp"
 
-TEST(DISABLED_fields2cover_pp_pp, planPathForConnection) {
+TEST(fields2cover_pp_pp, planPathForConnection) {
   F2CRobot robot = getSimpleRobot();
   f2c::pp::PathPlanning path_planner;
   f2c::pp::DubinsCurves dubins;
