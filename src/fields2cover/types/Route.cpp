@@ -180,6 +180,36 @@ bool Route::isEmpty() const {
   return v_swaths_.empty() && connections_.empty();
 }
 
+void Route::reverse() {
+  // Connections are stored before the swaths they lead into, and the last one
+  // is optional. Adding it keeps the connections paired with the right swaths
+  // once the order is flipped.
+  if (this->sizeConnections() == this->sizeVectorSwaths()) {
+    this->connections_.emplace_back();
+  }
+  std::reverse(this->connections_.begin(), this->connections_.end());
+  for (auto&& c : this->connections_) {
+    MultiPoint reversed;
+    for (size_t i = c.size(); i > 0; --i) {
+      reversed.addPoint(c.getGeometry(i - 1));
+    }
+    c = reversed;
+  }
+
+  if (this->sizeConnections() > this->sizeVectorSwaths() &&
+      this->connections_.back().isEmpty()) {
+    this->connections_.pop_back();
+  }
+
+  std::reverse(this->v_swaths_.begin(), this->v_swaths_.end());
+  for (auto&& s : this->v_swaths_) {
+    s.reverse();
+    for (auto&& swath : s) {
+      swath.reverse();
+    }
+  }
+}
+
 Route Route::clone() const {
   Route new_r;
   for (auto&& s : this->v_swaths_) {

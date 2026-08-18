@@ -35,5 +35,9 @@ F2CPath ReedsSheppCurvesHC::createSimpleTurn(const F2CRobot& robot,
       robot.getTurnVel());
 }
 
+bool ReedsSheppCurvesHC::hasContinuousCurvature() const {
+  return true;
+}
+
 }  // namespace f2c::pp
 

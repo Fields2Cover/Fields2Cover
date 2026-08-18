@@ -40,8 +40,11 @@ class PathPlanning {
       const F2CPoint& p2, double ang2,
       TurningBase& turn);
 
- private:
+  /// Radius swept by a turn with continuous curvature. Wider than the minimum
+  /// turning radius, as the clothoid ramps spend part of the deflection.
   static double getSmoothTurningRadius(const F2CRobot& robot);
+
+ private:
   static std::vector<std::pair<F2CPoint, double>> simplifyConnection(
       const F2CRobot& robot,
       const F2CPoint& p1, double ang1,

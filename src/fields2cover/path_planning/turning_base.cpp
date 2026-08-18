@@ -111,6 +111,10 @@ bool TurningBase::isTurnValid(const types::Path& path,
     (fabs(p_end.getY()) < max_dist);
 }
 
+bool TurningBase::hasContinuousCurvature() const {
+  return false;
+}
+
 double TurningBase::getDiscretization() const {
   return this->discretization;
 }
