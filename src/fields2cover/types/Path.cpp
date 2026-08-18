@@ -208,6 +208,11 @@ double Path::length() const {
 }
 
 void Path::appendSwath(const Swath& swath, double cruise_speed) {
+  this->appendSwath(swath, cruise_speed, PathSectionType::SWATH);
+}
+
+void Path::appendSwath(
+    const Swath& swath, double cruise_speed, PathSectionType type) {
   for (size_t i = 0; i < swath.numPoints() - 1; ++i) {
     PathState s;
     s.point = swath.getPoint(i);
@@ -216,7 +221,7 @@ void Path::appendSwath(const Swath& swath, double cruise_speed) {
     s.angle = p_ang.getAngleFromPoint();
     s.len = swath.getPoint(i + 1).distance(swath.getPoint(i));
     s.dir = PathDirection::FORWARD;
-    s.type = PathSectionType::SWATH;
+    s.type = type;
     s.velocity = cruise_speed;
     this->addState(s);
   }

@@ -75,6 +75,7 @@ struct Path {
   double length(void) const;
 
   void appendSwath(const Swath& swath, double cruise_speed);
+  void appendSwath(const Swath& swath, double cruise_speed, PathSectionType type);
 
   PathState at(double t) const;
   Point atStart() const;

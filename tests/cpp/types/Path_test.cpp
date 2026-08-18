@@ -556,6 +556,21 @@ TEST(fields2cover_types_path, discretizeSwath_mixed_types) {
   EXPECT_EQ(n_hl_swath, 2);
 }
 
+TEST(fields2cover_types_path, appendSwath_with_type) {
+  F2CLineString line(
+      {F2CPoint(0.0, 0.0), F2CPoint(1.0, 0.0), F2CPoint(1.0, 3.0)});
+  F2CSwath swath(line);
+  F2CPath path;
+  path.appendSwath(swath, 2.0, f2c::types::PathSectionType::HL_SWATH);
+
+  EXPECT_EQ(path.size(), 2);
+  for (auto&& s : path) {
+    EXPECT_EQ(static_cast<int>(s.type),
+        static_cast<int>(f2c::types::PathSectionType::HL_SWATH));
+  }
+  EXPECT_EQ(path[0].velocity, 2.0);
+}
+
 TEST(fields2cover_types_path, serialize_load_preserves_hl_swath) {
   F2CPath path;
   F2CPathState state;
