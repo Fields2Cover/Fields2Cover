@@ -15,6 +15,10 @@ double FieldCoverage::computeCost(
 
 double FieldCoverage::computeCost(
     const F2CCells& poly, const F2CSwaths& swaths) {
+  if (swaths.size() == 0) {
+    return 0.0;
+  }
+
   F2CMultiLineString lines;
   for (const auto& s : swaths) {
     lines.addGeometry(s.getPath());
@@ -22,7 +26,7 @@ double FieldCoverage::computeCost(
 
   double area_covered {poly.getCellsInside(
       F2CCells::buffer(lines, swaths[0].getWidth() / 2.0)).area()};
-  return area_covered / poly.area();
+  return area_covered / (poly.area() + 1e-7);
 }
 
 bool FieldCoverage::isMinimizing() const {
