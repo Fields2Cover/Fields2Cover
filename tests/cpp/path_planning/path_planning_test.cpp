@@ -183,10 +183,8 @@ TEST(fields2cover_pp_pp, curvedConnectionIsNotFlattened) {
 }
 
 TEST(fields2cover_pp_pp, unroundableCornerKeepsTheTrack) {
-  // With a turning circle far wider than the corridor, no maneuver fits
-  // through the corner. The corner then stays sharp on purpose: cutting it
-  // would put the vehicle off the planned track, which is worse than a step
-  // the controller has to absorb.
+  // There's room for the turn; at this radius it would just cut too much off
+  // the corner. So it stays square rather than driving off the planned track.
   F2CRobot robot = connectionTestRobot(8.0, 2.5);
   f2c::pp::PathPlanning path_planner;
   f2c::pp::DubinsCurvesCC dubins_cc;
