@@ -16,13 +16,6 @@ namespace f2c::pp {
 
 namespace {
 
-// A leg along the connection's own track is driven as a headland pass.
-void addStraight(F2CPath& path, const F2CRobot& robot,
-    const F2CPoint& a, const F2CPoint& b) {
-  path.appendStraight(a, b, robot.getCruiseVel(),
-      f2c::types::PathSectionType::HL_SWATH);
-}
-
 // Deflection at each corner of `poly`. The ends take the swath heading where
 // there is one: the track's own first/last leg is often a spur off the border
 // graph the robot never drives (see PR-4, B.3).
@@ -226,7 +219,8 @@ void appendRoundedTrack(
   size_t i = 0;
   while (i < n) {
     if (sweeps[i] < robot.getMinSweep()) {
-      addStraight(path, robot, cursor, poly[i]);
+      path.appendStraight(cursor, poly[i], robot.getCruiseVel(),
+          f2c::types::PathSectionType::HL_SWATH);
       cursor = poly[i];
       ++i;
       continue;
@@ -252,17 +246,20 @@ void appendRoundedTrack(
     }
 
     if (rounded) {
-      addStraight(path, robot, cursor, rounded->entry);
+      path.appendStraight(cursor, rounded->entry, robot.getCruiseVel(),
+          f2c::types::PathSectionType::HL_SWATH);
       path += rounded->arc;  // as returned, reverse legs included
       cursor = rounded->exit;
       i = last + 1;
     } else {
-      addStraight(path, robot, cursor, poly[i]);
+      path.appendStraight(cursor, poly[i], robot.getCruiseVel(),
+          f2c::types::PathSectionType::HL_SWATH);
       cursor = poly[i];
       ++i;
     }
   }
-  addStraight(path, robot, cursor, poly.back());
+  path.appendStraight(cursor, poly.back(), robot.getCruiseVel(),
+      f2c::types::PathSectionType::HL_SWATH);
 }
 
 }  // namespace
