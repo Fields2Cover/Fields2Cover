@@ -25,6 +25,9 @@ struct MultiPoint :
 
   size_t size() const;
 
+  /// Copy of the points, in order.
+  std::vector<Point> toVectorPoint() const;
+
   void getGeometry(size_t i, Point& point);
 
   void getGeometry(size_t i, Point& point) const;

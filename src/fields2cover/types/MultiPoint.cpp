@@ -31,6 +31,15 @@ size_t MultiPoint::size() const {
   return isEmpty() ? 0 : this->data_->getNumGeometries();
 }
 
+std::vector<Point> MultiPoint::toVectorPoint() const {
+  std::vector<Point> points;
+  points.reserve(this->size());
+  for (size_t i = 0; i < this->size(); ++i) {
+    points.emplace_back(this->getGeometry(i));
+  }
+  return points;
+}
+
 void MultiPoint::getGeometry(size_t i, Point& point) {
   if (i >= this->size()) {
     throw std::out_of_range(

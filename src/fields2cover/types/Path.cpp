@@ -4,6 +4,7 @@
 //                        BSD-3 License
 //=============================================================================
 
+#include <algorithm>
 #include <numeric>
 #include <steering_functions/utilities/utilities.hpp>
 #include "fields2cover/utils/spline.h"
@@ -225,6 +226,30 @@ void Path::appendSwath(
     s.velocity = cruise_speed;
     this->addState(s);
   }
+}
+
+void Path::appendStraight(const Point& start, const Point& end,
+    double cruise_speed, PathSectionType type) {
+  const double len = start.distance(end);
+  if (len < 1e-6) {
+    return;
+  }
+  PathState s;
+  s.point = start;
+  s.angle = (end - start).getAngleFromPoint();
+  s.len = len;
+  s.dir = PathDirection::FORWARD;
+  s.type = type;
+  s.velocity = cruise_speed;
+  this->addState(s);
+}
+
+double Path::maxDistanceTo(const LineString& line) const {
+  double worst = 0.0;
+  for (auto&& s : this->states_) {
+    worst = std::max(worst, s.point.distance(line));
+  }
+  return worst;
 }
 
 PathState Path::at(double len) const {
