@@ -20,7 +20,10 @@ namespace f2c::types {
 
 struct Point : public Geometry<OGRPoint, wkbPoint> {
  public:
+  // Hidden from SWIG, which would also wrap the base copy/move constructors.
+#ifndef SWIG
   using Geometry<OGRPoint, wkbPoint>::Geometry;
+#endif
   Point();
   Point(double x, double y, double z = 0);
   Point(const Point&);

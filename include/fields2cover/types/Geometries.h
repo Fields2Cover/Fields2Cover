@@ -20,7 +20,10 @@ namespace f2c::types {
 template <class SAMETYPE, class T, OGRwkbGeometryType R, class CHILDRENTYPE>
 struct Geometries : public Geometry<T, R> {
  public:
+  // Hidden from SWIG, which would also wrap the base copy/move constructors.
+#ifndef SWIG
   using Geometry<T, R>::Geometry;
+#endif
   /// Compute area of the geometry
   double area() const;
   SAMETYPE clone() const;
