@@ -61,4 +61,4 @@ BUILD_DOC = "OFF"
 [tool.scikit-build.metadata.version]
 provider = "scikit_build_core.metadata.regex"
 input = "CMakeLists.txt"
-regex = '(?m)^\s*VERSION\s+(?P<value>\d+\.\d+\.\d+)'
+regex = '(?m)^\s*VERSION\s+(?P<value>\d+\.\d+\.\d+)\s*$'
