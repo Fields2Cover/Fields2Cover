@@ -57,6 +57,19 @@ Compilation with python interface
 As without the interface, clone this repository.
 Then, from the main folder of the project:
 
+With the system dependencies from the previous section installed (plus
+``libgeos-dev``, ``libtbb-dev``, ``libtinyxml2-dev``, ``libeigen3-dev`` and
+or-tools discoverable through ``CMAKE_PREFIX_PATH``), the python module can be
+built and installed straight from the repository with pip:
+
+.. code-block:: console
+
+   pip install .
+
+This compiles the library and the SWIG bindings and installs a
+``fields2cover`` package into the active python environment. The manual cmake
+route below is still available.
+
 .. code-block:: console
 
    cd build;

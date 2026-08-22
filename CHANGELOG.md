@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Python module is built as a proper package with scikit-build-core (`pip install .`); version is taken from `CMakeLists.txt` and exposed as `fields2cover.__version__`.
+
+### Changed
+- `cmake --install` places the python module in the interpreter's site-packages instead of calling `setup.py install`.
+
 ## [2.0.0] - 07-02-2024
 
 - Route planner travelling through the headlands
