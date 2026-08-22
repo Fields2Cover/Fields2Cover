@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - `cmake --install` places the python module in the interpreter's site-packages instead of calling `setup.py install`.
+- Building the python module requires CMake >= 3.18 and Python >= 3.9.
 
 ## [2.0.0] - 07-02-2024
 

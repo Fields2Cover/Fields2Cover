@@ -121,7 +121,7 @@ Some packages are needed before compiling the package:
    sudo add-apt-repository ppa:ubuntugis/ppa
    sudo apt-get update
    sudo apt-get install --no-install-recommends build-essential ca-certificates cmake \
-        doxygen g++ git libeigen3-dev libgdal-dev libpython3-dev python3 python3-pip \
+        doxygen g++ git libboost-dev libeigen3-dev libgdal-dev libpython3-dev python3 python3-pip \
         python3-matplotlib python3-tk lcov libgtest-dev libtbb-dev swig libgeos-dev \
         gnuplot libtinyxml2-dev nlohmann-json3-dev
    python3 -m pip install gcovr
@@ -165,10 +165,13 @@ Compilation with python interface
 
 Assuming you have satisfied the "Requirements on Linux" and completed the initial "Compilation" step.
 
-With the system dependencies from the previous section installed (plus
-``libgeos-dev``, ``libtbb-dev``, ``libtinyxml2-dev``, ``libeigen3-dev`` and
-or-tools discoverable through ``CMAKE_PREFIX_PATH``), the python module can be
-built and installed straight from the repository with pip:
+The python module needs CMake >= 3.18 and Python >= 3.9.
+
+With the system dependencies from the previous section installed (or-tools
+must be discoverable through ``CMAKE_PREFIX_PATH``), the python module can be
+built and installed straight from the repository with pip — SWIG, CMake and
+Ninja are fetched into the isolated build environment, so no system SWIG is
+needed:
 
 .. code-block:: console
 
