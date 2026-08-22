@@ -44,8 +44,12 @@ else()
       "Where `cmake --install` puts the fields2cover python package (default: the interpreter's site-packages)")
   # Outside a wheel, Fields2Cover may be a shared library installed to
   # CMAKE_INSTALL_PREFIX/lib; let the extension find it there.
+  # CMAKE_INSTALL_PREFIX may be relative (CI passes ../instdir); a relative
+  # RPATH would be resolved against the process' cwd, so make it absolute.
+  get_filename_component(F2C_ABS_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}" ABSOLUTE
+                         BASE_DIR "${CMAKE_BINARY_DIR}")
   set_target_properties(fields2cover_python PROPERTIES
-    INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}"
+    INSTALL_RPATH "${F2C_ABS_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}"
   )
 endif()
 
