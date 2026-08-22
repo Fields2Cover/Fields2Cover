@@ -136,9 +136,8 @@ install(DIRECTORY include/
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-# Skip the CMake package config under scikit-build-core: only COMPONENT
-# python is installed there, and install(EXPORT) would need private static
-# deps (nlohmann_json, matplot internals) that aren't in the export set.
+# Wheels install only COMPONENT python, and with BUILD_SHARED_LIBS=OFF the
+# export set would miss Fields2Cover's private deps (nlohmann_json, matplot).
 if(NOT DEFINED SKBUILD)
   include(CMakePackageConfigHelpers)
   configure_package_config_file(

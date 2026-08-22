@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
-# Install the fields2cover python package on a bare Ubuntu (osgeo/gdal image)
-# against system dependencies and run the python tests. Used by CI and for
-# local verification in Docker:
-#
+# Install the fields2cover python package on the osgeo/gdal ubuntu image
+# against system dependencies and run tests/python. Used by CI and locally:
 #   docker run --rm -v "$PWD":/work -w /work osgeo/gdal:ubuntu-full-3.6.3 \
 #       bash ci/test_python_install_ubuntu.sh [target]
-#
-# target: "." (default) builds a wheel from the checkout and installs it;
-#         a path to an sdist (.tar.gz) or wheel (.whl) installs that file.
+# target: "." (default) builds and installs a wheel from the checkout;
+#         a path to an sdist or wheel installs that file.
 set -euo pipefail
 
 TARGET="${1:-.}"
@@ -20,7 +17,7 @@ apt-get install -y --allow-unauthenticated --no-install-recommends \
   libboost-dev libeigen3-dev libgeos-dev libtbb-dev libtinyxml2-dev nlohmann-json3-dev \
   python3 python3-dev python3-pip python3-venv
 
-# or-tools: prebuilt C++ release tarball (same as cmake/F2CUtils.cmake)
+# or-tools release tarball, same version as cmake/F2CUtils.cmake
 case "$ARCH" in
   x86_64)  ORTOOLS_URL=https://github.com/google/or-tools/releases/download/v9.9/or-tools_amd64_ubuntu-22.04_cpp_v9.9.3963.tar.gz ;;
   aarch64) ORTOOLS_URL=https://github.com/google/or-tools/releases/download/v9.9/or-tools_arm64_debian-11_cpp_v9.9.3963.tar.gz ;;
@@ -37,8 +34,7 @@ export LD_LIBRARY_PATH=/opt/ortools/lib
 VENV=/tmp/f2c-venv
 python3 -m venv "$VENV"
 "$VENV/bin/pip" install --upgrade pip
-# the image's cmake may be older than 3.18; scikit-build-core pulls a fresh one
-# from PyPI automatically when the system one is too old.
+# No system cmake needed: scikit-build-core fetches one from PyPI if it is missing or < 3.18.
 
 if [[ "$TARGET" == "." ]]; then
   "$VENV/bin/pip" install build
