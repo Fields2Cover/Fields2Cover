@@ -126,7 +126,7 @@ jobs:
       - name: Test Python
         working-directory: ${{github.workspace}}
         # the job installs into a throwaway prefix; libFields2Cover.so's own deps live there too
-        run: LD_LIBRARY_PATH=${{github.workspace}}/instdir/lib pytest-3 tests/python/
+        run: LD_LIBRARY_PATH=$GITHUB_WORKSPACE/instdir/lib pytest-3 tests/python/
 
   python-wheel:
     name: "pip install . (ubuntu, system deps)"
