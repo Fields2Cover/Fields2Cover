@@ -10,6 +10,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <unordered_set>
 #include <functional>
 #include <utility>
 #include <unordered_map>
@@ -30,7 +31,15 @@ class Graph {
   Graph& removeDirectedEdge(size_t from, size_t to);
   Graph& removeEdge(size_t i, size_t j);
 
+  /// Ids of every node, including nodes that only have incoming edges.
+  std::unordered_set<size_t> getNodes() const;
+
   size_t numNodes() const;
+
+  /// Size of the matrices returned by getCosts() and getPaths().
+  /// Nodes are indexed by their own id, so this is the largest id plus one.
+  size_t matrixSize() const;
+
   size_t numEdges() const;
   map_to_map_to_int getEdges() const;
 
