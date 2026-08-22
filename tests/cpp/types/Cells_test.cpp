@@ -145,6 +145,19 @@ TEST(fields2cover_types_cells, WherePoint) {
   EXPECT_EQ(cells.getCellWherePoint(F2CPoint(11, 11)).area(), 6);
 }
 
+TEST(fields2cover_types_cells, getCellWherePointWithTolerance) {
+  F2CCells cells {
+    F2CCell(F2CLinearRing({
+          F2CPoint(0,0), F2CPoint(2,0),F2CPoint(2,2),F2CPoint(0,2), F2CPoint(0,0)
+    }))
+  };
+  F2CPoint just_outside {2 + 1e-9, 1};
+
+  EXPECT_EQ(cells.getCellWherePoint(just_outside).area(), 0);
+  EXPECT_EQ(cells.getCellWherePoint(just_outside, 1e-6).area(), 4);
+  EXPECT_EQ(cells.getCellWherePoint(F2CPoint(5, 5), 1e-6).area(), 0);
+}
+
 TEST(fields2cover_types_cells, setGeometry) {
   F2CLinearRing line {
     F2CPoint(0,0), F2CPoint(2,0), F2CPoint(2,2), F2CPoint(0,2), F2CPoint(0,0)};
