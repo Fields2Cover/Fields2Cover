@@ -75,6 +75,15 @@ struct Path {
   double length(void) const;
 
   void appendSwath(const Swath& swath, double cruise_speed);
+  void appendSwath(const Swath& swath, double cruise_speed, PathSectionType type);
+
+  /// Append a straight leg from one point to another as a single state.
+  /// Legs shorter than 1e-6 are skipped, as they carry no direction.
+  void appendStraight(const Point& start, const Point& end,
+      double cruise_speed, PathSectionType type);
+
+  /// Furthest any state of this path lies from the given line.
+  double maxDistanceTo(const LineString& line) const;
 
   PathState at(double t) const;
   Point atStart() const;
