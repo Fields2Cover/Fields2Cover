@@ -51,7 +51,7 @@ cmake_install.cmake
 [._]sw[a-p]
 
 # Python packaging
-dist/
+/dist/
 *.egg-info/
 _skbuild/
 .venv/
