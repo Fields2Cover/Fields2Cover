@@ -20,7 +20,12 @@ namespace f2c::types {
 
 struct Point : public Geometry<OGRPoint, wkbPoint> {
  public:
+  // Hidden from SWIG: since 4.5.0 it inherits the base copy/move
+  // constructors through this declaration (C++ never does), which makes
+  // the generated wrapper fail to compile.
+#ifndef SWIG
   using Geometry<OGRPoint, wkbPoint>::Geometry;
+#endif
   Point();
   Point(double x, double y, double z = 0);
   Point(const Point&);

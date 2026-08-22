@@ -20,7 +20,12 @@ namespace f2c::types {
 template <class SAMETYPE, class T, OGRwkbGeometryType R, class CHILDRENTYPE>
 struct Geometries : public Geometry<T, R> {
  public:
+  // Hidden from SWIG: since 4.5.0 it inherits the base copy/move
+  // constructors through this declaration (C++ never does), which makes
+  // the generated wrapper fail to compile.
+#ifndef SWIG
   using Geometry<T, R>::Geometry;
+#endif
   /// Compute area of the geometry
   double area() const;
   SAMETYPE clone() const;
