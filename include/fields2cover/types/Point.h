@@ -20,7 +20,10 @@ namespace f2c::types {
 
 struct Point : public Geometry<OGRPoint, wkbPoint> {
  public:
+  // Hidden from SWIG, which would also wrap the base copy/move constructors.
+#ifndef SWIG
   using Geometry<OGRPoint, wkbPoint>::Geometry;
+#endif
   Point();
   Point(double x, double y, double z = 0);
   Point(const Point&);
@@ -73,6 +76,9 @@ struct Point : public Geometry<OGRPoint, wkbPoint> {
   static double getAngleFromPoints(
       const Point& p1, const Point& p2, const Point& p3);
   Point getPointFromAngle(double angle, double dist) const;
+  /// Point at a distance along the ray towards another point.
+  /// Returns this point if both coincide, as no direction is defined then.
+  Point getPointAlong(const Point& to, double dist) const;
 
   Point rotateFromPoint(double angle, const Point& p_r) const;
 

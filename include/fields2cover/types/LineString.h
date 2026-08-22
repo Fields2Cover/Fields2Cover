@@ -38,6 +38,9 @@ struct LineString : public Geometries<LineString, OGRLineString, wkbLineString,
   void reversePoints();
   size_t size() const;
 
+  /// Copy of the points, in order.
+  std::vector<Point> toVectorPoint() const;
+
   void getGeometry(size_t i, Point& point);
   void getGeometry(size_t i, Point& point) const;
   Point getGeometry(size_t i);

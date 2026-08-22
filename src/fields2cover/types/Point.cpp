@@ -146,6 +146,13 @@ Point Point::getPointFromAngle(double angle, double dist) const {
   return Point(X() + dist * cos(angle), Y() + dist * sin(angle));
 }
 
+Point Point::getPointAlong(const Point& to, double dist) const {
+  if (this->distance(to) < 1e-9) {
+    return *this;
+  }
+  return this->getPointFromAngle((to - *this).getAngleFromPoint(), dist);
+}
+
 double Point::signedDistance2Segment(
     const Point& start, const Point& end) const {
   Point this2start {start - *this};
