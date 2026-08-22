@@ -24,7 +24,7 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-test = ["pytest"]
+test = ["pytest", "numpy"]
 
 [project.urls]
 Homepage = "https://fields2cover.github.io"
