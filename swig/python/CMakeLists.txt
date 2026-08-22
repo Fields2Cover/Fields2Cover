@@ -40,7 +40,8 @@ set(F2C_PYTHON_PACKAGE_DIR fields2cover)
 if(DEFINED SKBUILD)
   set(F2C_PYTHON_INSTALL_DIR ${F2C_PYTHON_PACKAGE_DIR})
 else()
-  set(F2C_PYTHON_INSTALL_DIR ${Python_SITEARCH}/${F2C_PYTHON_PACKAGE_DIR})
+  set(F2C_PYTHON_INSTALL_DIR "${Python_SITEARCH}/${F2C_PYTHON_PACKAGE_DIR}" CACHE PATH
+      "Where `cmake --install` puts the fields2cover python package (default: the interpreter's site-packages)")
   # Outside a wheel, Fields2Cover may be a shared library installed to
   # CMAKE_INSTALL_PREFIX/lib; let the extension find it there.
   set_target_properties(fields2cover_python PROPERTIES
