@@ -41,11 +41,19 @@ F2CGraph2D RoutePlannerBase::createShortestGraph(
     const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells,
     double d_tol) const {
   F2CGraph2D g;
-  // Add points from swaths that touches border
+  // Connect each swath end to the border of the cell it belongs to. An end
+  // outside every cell is left out: a line to the nearest border would cross
+  // whatever lies between.
+  auto addBorderEdge = [&g, &cells, d_tol] (const F2CPoint& p) {
+    F2CCell cell = cells.getCellWherePoint(p, d_tol);
+    if (!cell.isEmpty()) {
+      g.addEdge(p, cell.closestPointOnBorderTo(p));
+    }
+  };
   for (auto&& swaths : swaths_by_cells) {
     for (auto&& s : swaths) {
-      g.addEdge(s.startPoint(), cells.closestPointOnBorderTo(s.startPoint()));
-      g.addEdge(s.endPoint(),   cells.closestPointOnBorderTo(s.endPoint()));
+      addBorderEdge(s.startPoint());
+      addBorderEdge(s.endPoint());
     }
   }
 
@@ -58,7 +66,8 @@ F2CGraph2D RoutePlannerBase::createShortestGraph(
     }
   }
 
-  // Add start and end point if they exists
+  // Add start and end point if they exists. Unlike a swath end, this point
+  // is allowed to sit outside the field, so it always gets its border edge.
   if (this->r_start_end) {
     g.addEdge(*r_start_end, cells.closestPointOnBorderTo(*r_start_end));
   }
