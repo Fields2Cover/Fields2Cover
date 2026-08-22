@@ -106,3 +106,14 @@ TEST(fields2cover_types_graph2d, shortestPaths) {
 }
 
 
+TEST(fields2cover_types_graph2d, shortestPathOnDirectedEdges) {
+  F2CPoint p1 {0, 0}, p2 {1, 0}, p3 {2, 0};
+  F2CGraph2D g;
+  g.addDirectedEdge(p1, p2, 1);
+  g.addDirectedEdge(p2, p3, 1);
+
+  auto path = g.shortestPath(p1, p3);
+
+  EXPECT_EQ(path.size(), 3);
+  EXPECT_EQ(g.shortestPathCost(p1, p3), 2);
+}

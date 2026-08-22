@@ -105,3 +105,18 @@ TEST(fields2cover_types_graph, shortestPaths) {
 }
 
 
+TEST(fields2cover_types_graph, numNodesCountsNodesWithoutOutgoingEdges) {
+  f2c::types::Graph g;
+  g.addDirectedEdge(0, 1, 1);
+
+  EXPECT_EQ(g.numNodes(), 2);
+}
+
+TEST(fields2cover_types_graph, shortestPathWithSparseNodeIds) {
+  f2c::types::Graph g;
+  g.addEdge(0, 5, 1);
+  g.addEdge(5, 9, 2);
+
+  EXPECT_EQ(g.shortestPath(0, 9), std::vector<size_t>({0, 5, 9}));
+  EXPECT_EQ(g.shortestPathCost(0, 9), 3);
+}
