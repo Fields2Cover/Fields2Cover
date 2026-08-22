@@ -1,120 +1,66 @@
-# Include python
-find_package(
-  Python REQUIRED
-  COMPONENTS
-    Interpreter
-    Development
-)
+# Python bindings (SWIG). Consumed two ways:
+#   * by scikit-build-core (pip/uv build) -- SKBUILD is defined, install
+#     destinations are relative to the wheel's platlib root;
+#   * by a plain `cmake --install` from a source checkout -- the module is
+#     installed straight into the interpreter's site-packages.
+# Only rules tagged COMPONENT python end up in the wheel.
 
-if(Python_VERSION VERSION_GREATER_EQUAL 3)
-  list(APPEND CMAKE_SWIG_FLAGS "-py3;-DPY3")
+if(CMAKE_VERSION VERSION_LESS 3.18)
+  message(FATAL_ERROR "BUILD_PYTHON requires CMake >= 3.18 (FindPython Development.Module)")
 endif()
+
+# Development.Module (not Development): don't require libpython, link the
+# extension module against Python::Module, which handles
+# "-undefined dynamic_lookup" on macOS and no libpython on Linux/manylinux.
+find_package(Python 3.9 REQUIRED COMPONENTS Interpreter Development.Module)
 
 if(BUILD_DOC)
   list(APPEND CMAKE_SWIG_FLAGS "-doxygen")
 endif()
 
-set(CMAKE_SWIG_FLAGS "")
-set_source_files_properties(
-  ../${PROJECT_NAME}.i
-  PROPERTIES CPLUSPLUS ON
-)
+set_source_files_properties(../${PROJECT_NAME}.i PROPERTIES CPLUSPLUS ON)
 
-include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../include/
-  ${Python_INCLUDE_DIRS}
-)
-
-# Add swig module
-SWIG_ADD_LIBRARY(fields2cover_python
+swig_add_library(fields2cover_python
   LANGUAGE python
+  OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}
   SOURCES ../${PROJECT_NAME}.i
 )
-# Don't link libpython on macOS: resolve Python symbols at load time so the
-# module isn't pinned to the exact libpython it was built against (it stays
-# ABI-bound to that Python minor version).
-SWIG_LINK_LIBRARIES(fields2cover_python
-  Fields2Cover
-  ${PROJ_LIBRARY}
-  ${GDAL_LIBRARIES}
+target_include_directories(fields2cover_python PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../include
 )
-if(APPLE)
-  set_target_properties(fields2cover_python PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
+# UseSWIG ignores target INCLUDE_DIRECTORIES for the swig -I flags unless
+# opted in; without this, swig fails to resolve the %include headers below.
+set_property(TARGET fields2cover_python PROPERTY SWIG_USE_TARGET_INCLUDE_DIRECTORIES TRUE)
+target_link_libraries(fields2cover_python PRIVATE
+  Fields2Cover
+  Python::Module
+)
+
+set(F2C_PYTHON_PACKAGE_DIR fields2cover)
+if(DEFINED SKBUILD)
+  set(F2C_PYTHON_INSTALL_DIR ${F2C_PYTHON_PACKAGE_DIR})
 else()
-  SWIG_LINK_LIBRARIES(fields2cover_python ${Python_LIBRARIES})
+  set(F2C_PYTHON_INSTALL_DIR ${Python_SITEARCH}/${F2C_PYTHON_PACKAGE_DIR})
+  # Outside a wheel, Fields2Cover may be a shared library installed to
+  # CMAKE_INSTALL_PREFIX/lib; let the extension find it there.
+  set_target_properties(fields2cover_python PROPERTIES
+    INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}"
+  )
 endif()
 
-# Files to install with Python
-set(
-  PYTHON_INSTALL_FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/fields2cover.py
-  ${CMAKE_CURRENT_BINARY_DIR}/_fields2cover_python.so
-)
-
-# Configure setup.py and copy to output directory
-set(SETUP_PY_IN ${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in)
-set(SETUP_PY_OUT ${CMAKE_CURRENT_BINARY_DIR}/setup.py)
-configure_file(${SETUP_PY_IN} ${SETUP_PY_OUT})
-
-set(PYPROJECT_IN ${CMAKE_CURRENT_SOURCE_DIR}/pyproject.toml)
-set(PYPROJECT_OUT ${CMAKE_CURRENT_BINARY_DIR}/pyproject.toml)
-configure_file(${PYPROJECT_IN} ${PYPROJECT_OUT} COPYONLY)
-
-set(MANIFEST_IN ${CMAKE_CURRENT_SOURCE_DIR}/MANIFEST.in)
-set(MANIFEST_OUT ${CMAKE_CURRENT_BINARY_DIR}/MANIFEST.in)
-configure_file(
-  ${MANIFEST_IN}
-  ${MANIFEST_OUT}
-  COPYONLY
-)
-configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../LICENSE
-  ${CMAKE_CURRENT_BINARY_DIR}/LICENSE
-  COPYONLY
-)
-configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../README.rst
-  ${CMAKE_CURRENT_BINARY_DIR}/README.rst
-  COPYONLY
-)
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/__init__.py.in
   ${CMAKE_CURRENT_BINARY_DIR}/__init__.py
-  COPYONLY
-)
-configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/__init__.py.in
-  ${CMAKE_CURRENT_BINARY_DIR}/fields2cover/__init__.py
-  COPYONLY
+  @ONLY
 )
 
-file(
-  COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../src
-  DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/fields2cover
+install(TARGETS fields2cover_python
+  LIBRARY DESTINATION ${F2C_PYTHON_INSTALL_DIR}
+  COMPONENT python
 )
-file(
-  COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../include
-  DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/fields2cover
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/__init__.py
+  ${CMAKE_CURRENT_BINARY_DIR}/fields2cover.py
+  DESTINATION ${F2C_PYTHON_INSTALL_DIR}
+  COMPONENT python
 )
-
-
-# Install target to call setup.py
-if(Python_VERSION VERSION_GREATER_EQUAL 3)
-  add_custom_target(install-python
-    DEPENDS _fields2cover_python
-    COMMAND python3 ${SETUP_PY_OUT} install --prefix=${CMAKE_INSTALL_PREFIX}
-  )
-  install(CODE "execute_process(COMMAND python3 ${SETUP_PY_OUT} install --prefix=${CMAKE_INSTALL_PREFIX})")
-elseif(Python_VERSION VERSION_GREATER_EQUAL 2)
-  add_custom_target(
-    install-python
-    DEPENDS
-      _fields2cover_python
-    COMMAND
-      python ${SETUP_PY_OUT} install
-  )
-  install(CODE "execute_process(COMMAND python ${SETUP_PY_OUT} install)")
-endif()
-
-
-

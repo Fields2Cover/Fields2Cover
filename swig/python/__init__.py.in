@@ -1,1 +1,5 @@
- 
+"""Fields2Cover: coverage path planning for autonomous agricultural vehicles."""
+
+__version__ = "@PROJECT_VERSION@"
+
+from .fields2cover import *  # noqa: F401,F403

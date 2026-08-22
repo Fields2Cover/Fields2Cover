@@ -136,31 +136,36 @@ install(DIRECTORY include/
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-include(CMakePackageConfigHelpers)
-configure_package_config_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Fields2CoverConfig.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfig.cmake
-  INSTALL_DESTINATION ${F2C_INSTALL_CMAKEDIR}
-  PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR
-)
+# Skip the CMake package config under scikit-build-core: only COMPONENT
+# python is installed there, and install(EXPORT) would need private static
+# deps (nlohmann_json, matplot internals) that aren't in the export set.
+if(NOT DEFINED SKBUILD)
+  include(CMakePackageConfigHelpers)
+  configure_package_config_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Fields2CoverConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfig.cmake
+    INSTALL_DESTINATION ${F2C_INSTALL_CMAKEDIR}
+    PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR
+  )
 
-write_basic_package_version_file(
-  ${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfigVersion.cmake
-  VERSION ${PROJECT_VERSION}
-  COMPATIBILITY SameMajorVersion
-)
+  write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfigVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
+  )
 
-install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfig.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfigVersion.cmake
-  DESTINATION ${F2C_INSTALL_CMAKEDIR}
-)
+  install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfig.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/Fields2CoverConfigVersion.cmake
+    DESTINATION ${F2C_INSTALL_CMAKEDIR}
+  )
 
-install(EXPORT Fields2CoverTargets
-  FILE Fields2CoverTargets.cmake
-  NAMESPACE Fields2Cover::
-  DESTINATION ${F2C_INSTALL_CMAKEDIR}
-)
+  install(EXPORT Fields2CoverTargets
+    FILE Fields2CoverTargets.cmake
+    NAMESPACE Fields2Cover::
+    DESTINATION ${F2C_INSTALL_CMAKEDIR}
+  )
+endif()
 
 
 #####################################################
