@@ -55,10 +55,31 @@ jobs:
           path: dist
       - run: bash ci/test_python_install_ubuntu.sh dist/*.tar.gz
 
+  test-sdist-macos:
+    name: Install sdist on macOS with brew deps
+    needs: sdist
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: sdist
+          path: dist
+      - name: Homebrew dependencies
+        run: brew install gdal geos or-tools tbb tinyxml2 eigen
+      - name: Install from sdist and test
+        run: |
+          python3 -m venv /tmp/venv
+          /tmp/venv/bin/pip install --upgrade pip
+          CMAKE_PREFIX_PATH="$(brew --prefix)" /tmp/venv/bin/pip install dist/*.tar.gz
+          /tmp/venv/bin/pip install pytest numpy
+          /tmp/venv/bin/python -c "import fields2cover as f2c; print(f2c.__version__)"
+          /tmp/venv/bin/python -m pytest tests/python -q
+
   publish-testpypi:
     name: Publish to TestPyPI
     if: github.event_name == 'workflow_dispatch' && inputs.target == 'testpypi'
-    needs: [sdist, test-sdist]
+    needs: [sdist, test-sdist, test-sdist-macos]
     runs-on: ubuntu-latest
     environment: testpypi
     permissions:
@@ -77,7 +98,7 @@ jobs:
   publish-pypi:
     name: Publish to PyPI
     if: github.event_name == 'release'
-    needs: [sdist, test-sdist]
+    needs: [sdist, test-sdist, test-sdist-macos]
     runs-on: ubuntu-latest
     environment: pypi
     permissions:
