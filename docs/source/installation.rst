@@ -18,7 +18,7 @@ Some packages are needed before compiling the package:
    sudo apt-get update
    sudo apt-get install --no-install-recommends software-properties-common
    sudo apt-get install --no-install-recommends build-essential ca-certificates cmake \
-        doxygen g++ git libeigen3-dev libgdal-dev libpython3-dev python3 python3-pip \
+        doxygen g++ git libboost-dev libeigen3-dev libgdal-dev libpython3-dev python3 python3-pip \
         python3-matplotlib python3-tk lcov libgtest-dev libtbb-dev swig libgeos-dev \
         gnuplot libtinyxml2-dev nlohmann-json3-dev
    python3 -m pip install gcovr
@@ -54,8 +54,23 @@ To add Fields2Cover into your CMakeLists.txt, it is as easy as:
 Compilation with python interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-As without the interface, clone this repository.
-Then, from the main folder of the project:
+The python module needs CMake >= 3.18 and Python >= 3.9.
+
+With the system dependencies from the previous section installed (or-tools
+must be discoverable through ``CMAKE_PREFIX_PATH``), the python module can be
+built and installed straight from the repository with pip — SWIG, CMake and
+Ninja are fetched into the isolated build environment, so no system SWIG is
+needed:
+
+.. code-block:: console
+
+   pip install .
+
+This compiles the library and the SWIG bindings and installs a
+``fields2cover`` package into the active python environment. The manual cmake
+route below is still available.
+
+Alternatively, clone this repository and, from the main folder of the project:
 
 .. code-block:: console
 

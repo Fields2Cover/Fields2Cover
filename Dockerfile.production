@@ -112,8 +112,6 @@ COPY --from=builder /usr/lib/libortools* /usr/lib/
 COPY --from=builder /usr/local/include/ /usr/local/include/
 COPY --from=builder /usr/local/lib/ /usr/local/lib/
 COPY --from=builder /usr/local/bin/ /usr/local/bin/
-COPY --from=builder /usr/lib/python3/dist-packages/fields2cover* /usr/lib/python3/dist-packages/
-COPY --from=builder /usr/lib/python3/dist-packages/_fields2cover* /usr/lib/python3/dist-packages/
 RUN ldconfig
 
 CMD ["python3"]
