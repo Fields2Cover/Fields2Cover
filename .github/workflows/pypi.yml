@@ -17,6 +17,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Check that the release tag matches the project version
+        if: github.event_name == 'release'
+        run: |
+          version="$(sed -nE 's/^[[:space:]]*VERSION[[:space:]]+([0-9]+\.[0-9]+\.[0-9]+)[[:space:]]*$/\1/p' CMakeLists.txt)"
+          tag="${GITHUB_REF_NAME#v}"
+          if [ "$tag" != "$version" ]; then
+            echo "::error::release tag v$tag does not match VERSION $version in CMakeLists.txt"
+            exit 1
+          fi
       - uses: astral-sh/setup-uv@v5
       - run: uv build --sdist
       - run: uvx twine check dist/*

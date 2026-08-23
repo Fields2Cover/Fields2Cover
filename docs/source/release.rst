@@ -21,4 +21,9 @@ Per release:
 2. Optional dry run: *Actions → PyPI → Run workflow → target: testpypi*, then
    ``pip install --index-url https://test.pypi.org/simple/ fields2cover``.
 3. Publish a GitHub release with tag ``vX.Y.Z``. The ``PyPI`` workflow builds
-   the sdist, installs it in a clean container, and uploads it.
+   the sdist, installs it in a clean container, and uploads it. The workflow
+   refuses to publish when the tag (``vX.Y.Z``) does not match ``VERSION``
+   in ``CMakeLists.txt``.
+4. A published PyPI release cannot be replaced or re-uploaded. If a release
+   turns out to be broken, bump the patch version in ``CMakeLists.txt`` and
+   publish a new release.
