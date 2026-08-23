@@ -181,6 +181,12 @@ This compiles the library and the SWIG bindings and installs a
 ``fields2cover`` package into the active python environment. The manual cmake
 route below is still available.
 
+Released versions are on PyPI; with the same system dependencies installed:
+
+.. code-block:: console
+
+   pip install fields2cover
+
 Install the packages required as:
 
 .. code-block:: console

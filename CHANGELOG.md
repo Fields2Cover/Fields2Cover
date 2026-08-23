@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Python module is built as a proper package with scikit-build-core (`pip install .`); version is taken from `CMakeLists.txt` and exposed as `fields2cover.__version__`.
+- Source distribution published to PyPI (`pip install fields2cover`).
 
 ### Changed
 - `cmake --install` places the python module in the interpreter's site-packages instead of calling `setup.py install`.

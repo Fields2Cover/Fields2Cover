@@ -83,6 +83,7 @@ More information
 
    self
    source/installation.rst
+   source/release.rst
    source/tutorials.rst
    source/migration_to_v2.rst
    source/faq.rst
