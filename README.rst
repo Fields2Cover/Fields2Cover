@@ -10,7 +10,7 @@ Fields2Cover
 |DOI| |build| |CODECOV| |license| |Language-C++| |Language-Python| |stars| |forks|
 
 
-.. image:: docs/figures/logo_fields2cover.jpeg
+.. image:: https://raw.githubusercontent.com/Fields2Cover/Fields2Cover/main/docs/figures/logo_fields2cover.jpeg
    :align: center
 
 
@@ -29,7 +29,7 @@ On the other hand, CPP in agriculture knows the area to cover, but the coverage 
 
 Fields2Cover library provides several algorithms to plan the coverage path on any kind of fields:
 
-.. image:: docs/figures/diagram-F2C.jpg
+.. image:: https://raw.githubusercontent.com/Fields2Cover/Fields2Cover/main/docs/figures/diagram-F2C.jpg
    :align: center
    :width: 500px
 
