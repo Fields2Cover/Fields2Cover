@@ -16,14 +16,20 @@ One-time setup (project owner):
 
 Per release:
 
-1. Bump ``VERSION`` in ``CMakeLists.txt`` (the single source of truth) and
-   update ``CHANGELOG.md``.
+1. Make sure ``CHANGELOG.md`` has an ``## [Unreleased]`` section describing
+   the release; it becomes the release notes.
 2. Optional dry run: *Actions → PyPI → Run workflow → target: testpypi*, then
    ``pip install --index-url https://test.pypi.org/simple/ fields2cover``.
-3. Publish a GitHub release with tag ``vX.Y.Z``. The ``PyPI`` workflow builds
-   the sdist, installs it in a clean container, and uploads it. The workflow
-   refuses to publish when the tag (``vX.Y.Z``) does not match ``VERSION``
-   in ``CMakeLists.txt``.
-4. A published PyPI release cannot be replaced or re-uploaded. If a release
-   turns out to be broken, bump the patch version in ``CMakeLists.txt`` and
-   publish a new release.
+3. From an up-to-date, clean ``main`` run ``scripts/release.sh X.Y.Z`` (needs
+   the GitHub CLI, ``gh auth login``). It bumps the version in
+   ``CMakeLists.txt`` and ``package.xml``, turns ``[Unreleased]`` into the
+   ``[X.Y.Z]`` section, shows the diff and -- after confirmation -- commits,
+   pushes and publishes the GitHub release ``vX.Y.Z``. The same steps can be
+   done by hand; publishing the release is what triggers the upload.
+4. The ``PyPI`` workflow builds the sdist, installs it in a clean container
+   and uploads it. If the ``pypi`` environment requires reviewers, approve the
+   deployment in the running workflow. The workflow refuses to publish when
+   ``package.xml`` and ``CMakeLists.txt`` disagree or when the tag does not
+   match ``VERSION`` in ``CMakeLists.txt``.
+5. A published PyPI release cannot be replaced or re-uploaded. If a release
+   turns out to be broken, release a patch version the same way.

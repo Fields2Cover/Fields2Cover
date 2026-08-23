@@ -17,6 +17,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Check that CMakeLists.txt and package.xml agree on the version
+        run: |
+          version="$(sed -nE 's/^[[:space:]]*VERSION[[:space:]]+([0-9]+\.[0-9]+\.[0-9]+)[[:space:]]*$/\1/p' CMakeLists.txt)"
+          pkg="$(sed -nE 's|^[[:space:]]*<version>([0-9]+\.[0-9]+\.[0-9]+)</version>.*$|\1|p' package.xml)"
+          if [ -z "$version" ] || [ "$version" != "$pkg" ]; then
+            echo "::error::VERSION in CMakeLists.txt ($version) and package.xml ($pkg) differ"
+            exit 1
+          fi
       - name: Check that the release tag matches the project version
         if: github.event_name == 'release'
         run: |
