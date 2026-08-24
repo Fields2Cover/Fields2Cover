@@ -34,7 +34,7 @@ jobs:
             echo "::error::release tag v$tag does not match VERSION $version in CMakeLists.txt"
             exit 1
           fi
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.0.1
       - run: uv build --sdist
       - run: uvx twine check dist/*
       - uses: actions/upload-artifact@v7
