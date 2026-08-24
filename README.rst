@@ -225,7 +225,7 @@ Then, from the source code folder of the project:
 
    mkdir -p build;
    cd build;
-   cmake -DCMAKE_PREFIX_PATH="$(brew --prefix)" ..;
+   cmake -DCMAKE_PREFIX_PATH="$(brew --prefix)" -DPython_EXECUTABLE="$(which python3)" ..;
    make -j$(sysctl -n hw.ncpu);
    sudo make install;
 
