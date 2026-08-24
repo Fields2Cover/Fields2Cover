@@ -105,13 +105,7 @@ Then, from the source code folder of the project:
    make -j$(sysctl -n hw.ncpu);
    sudo make install;
 
-For the python interface, either install with pip (or-tools must be discoverable through ``CMAKE_PREFIX_PATH``):
-
-.. code-block:: console
-
-   CMAKE_PREFIX_PATH="$(brew --prefix)" pip install .
-
-or use the manual cmake route, adjusting the BUILD_PYTHON option of the existing build:
+For the python interface, adjust the BUILD_PYTHON option of the existing build:
 
 .. code-block:: console
 
