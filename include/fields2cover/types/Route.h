@@ -9,6 +9,7 @@
 #define FIELDS2COVER_TYPES_ROUTE_H_
 
 #include <ogr_geometry.h>
+#include <algorithm>
 #include <vector>
 #include <numeric>
 #include <optional>
@@ -59,6 +60,10 @@ struct Route {
   LineString asLineString() const;
 
   bool isEmpty() const;
+
+  /// Reverse the route, so it is driven from the end point to the start point.
+  void reverse();
+
   Route clone() const;
 
  private:

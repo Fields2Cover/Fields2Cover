@@ -1,0 +1,64 @@
+[build-system]
+requires = ["scikit-build-core>=0.10", "swig>=4.1"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "fields2cover"
+dynamic = ["version"]
+description = "Robust and efficient coverage paths for autonomous agricultural vehicles. A modular and extensible Coverage Path Planning library"
+readme = { file = "README.rst", content-type = "text/x-rst" }
+license = { text = "BSD-3-Clause" }
+authors = [{ name = "Gonzalo Mier, Wageningen University", email = "gonzalo.miermunoz@wur.nl" }]
+requires-python = ">=3.9"
+keywords = ["agtech", "fields2cover", "coverage path planning", "path planning", "coverage", "agriculture", "tractor", "robotics"]
+classifiers = [
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: C++",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: GIS",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+]
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest", "numpy"]
+
+[project.urls]
+Homepage = "https://fields2cover.github.io"
+Repository = "https://github.com/Fields2Cover/Fields2Cover"
+Documentation = "https://fields2cover.github.io"
+Changelog = "https://github.com/Fields2Cover/Fields2Cover/blob/main/CHANGELOG.md"
+
+[tool.scikit-build]
+minimum-version = "build-system.requires"
+cmake.version = ">=3.18"
+cmake.build-type = "Release"
+install.components = ["python"]
+build.verbose = true
+logging.level = "INFO"
+sdist.exclude = [
+    "build/",
+    "docs/",
+    "tutorials/",
+    "tests/",
+    ".github/",
+    "Dockerfile",
+    "Dockerfile.arm64",
+    "blog_posts.md",
+    "package.xml",
+]
+
+[tool.scikit-build.cmake.define]
+BUILD_PYTHON = "ON"
+BUILD_SHARED_LIBS = "OFF"
+BUILD_TUTORIALS = "OFF"
+BUILD_TESTING = "OFF"
+BUILD_DOC = "OFF"
+
+[tool.scikit-build.metadata.version]
+provider = "scikit_build_core.metadata.regex"
+input = "CMakeLists.txt"
+regex = '(?m)^\s*VERSION\s+(?P<value>\d+\.\d+\.\d+)\s*$'

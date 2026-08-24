@@ -5,6 +5,8 @@
 //=============================================================================
 
 
+#include <algorithm>
+#include <steering_functions/utilities/utilities.hpp>
 #include "fields2cover/types/Robot.h"
 
 namespace f2c::types {
@@ -92,6 +94,133 @@ double Robot::getMaxDiffCurv() const {
 
 void Robot::setMaxDiffCurv(double dc) {
   this->linear_curv_change_ = fabs(dc);
+}
+
+double Robot::getSmoothTurningRadius() const {
+  double x, y, ang, k;
+  end_of_clothoid(0.0, 0.0, 0.0, 0.0, this->getMaxDiffCurv(), 1.0,
+      this->getMaxCurv() / this->getMaxDiffCurv(),
+      &x, &y, &ang, &k);
+  double xi = x - sin(ang) / this->getMaxCurv();
+  double yi = y + cos(ang) / this->getMaxCurv();
+  return sqrt(xi * xi + yi * yi);
+}
+
+double Robot::getTurnRadius(double sweep, bool continuous) const {
+  const double min_radius = this->getMinTurningRadius();
+  const double rate = this->getMaxDiffCurv();
+  if (!continuous || rate <= 0.0) {
+    return min_radius;
+  }
+  double radius = std::max(min_radius, this->getSmoothTurningRadius());
+  if (sweep > 0.0) {
+    radius = std::max(radius, 1.0 / sqrt(rate * sweep));
+  }
+  return radius;
+}
+
+double Robot::getMaxCornerCut() const {
+  if (this->max_corner_cut_) {
+    return *this->max_corner_cut_;
+  }
+  return std::max(
+      std::min(this->getMinTurningRadius(), this->cov_width_),
+      0.5 * this->cov_width_);
+}
+
+void Robot::setMaxCornerCut(double d) {
+  this->max_corner_cut_ = fabs(d);
+}
+
+double Robot::getDirectHopMaxDev() const {
+  return this->direct_hop_max_dev_ ?
+      *this->direct_hop_max_dev_ : 0.25 * this->cov_width_;
+}
+
+void Robot::setDirectHopMaxDev(double d) {
+  this->direct_hop_max_dev_ = fabs(d);
+}
+
+double Robot::getUturnMaxHop() const {
+  return this->uturn_max_hop_ ?
+      *this->uturn_max_hop_ : 3.0 * this->cov_width_;
+}
+
+void Robot::setUturnMaxHop(double d) {
+  this->uturn_max_hop_ = fabs(d);
+}
+
+double Robot::getTrackSimplifyTol() const {
+  return this->track_simplify_tol_ ?
+      *this->track_simplify_tol_ : 0.1 * this->cov_width_;
+}
+
+void Robot::setTrackSimplifyTol(double d) {
+  this->track_simplify_tol_ = fabs(d);
+}
+
+double Robot::getReversalSweep() const {
+  return this->reversal_sweep_;
+}
+
+void Robot::setReversalSweep(double a) {
+  this->reversal_sweep_ = fabs(a);
+}
+
+double Robot::getTurnSlack() const {
+  return this->turn_slack_;
+}
+
+void Robot::setTurnSlack(double a) {
+  this->turn_slack_ = fabs(a);
+}
+
+double Robot::getMinSweep() const {
+  return this->min_sweep_;
+}
+
+void Robot::setMinSweep(double a) {
+  this->min_sweep_ = fabs(a);
+}
+
+double Robot::getLegShare() const {
+  return this->leg_share_;
+}
+
+void Robot::setLegShare(double s) {
+  this->leg_share_ = fabs(s);
+}
+
+double Robot::getRadiusMargin() const {
+  return this->radius_margin_;
+}
+
+void Robot::setRadiusMargin(double m) {
+  this->radius_margin_ = fabs(m);
+}
+
+double Robot::getMinBackoffRadii() const {
+  return this->min_backoff_radii_;
+}
+
+void Robot::setMinBackoffRadii(double r) {
+  this->min_backoff_radii_ = fabs(r);
+}
+
+double Robot::getUturnReachRadii() const {
+  return this->uturn_reach_radii_;
+}
+
+void Robot::setUturnReachRadii(double r) {
+  this->uturn_reach_radii_ = fabs(r);
+}
+
+size_t Robot::getMaxCornerSpan() const {
+  return this->max_corner_span_;
+}
+
+void Robot::setMaxCornerSpan(size_t n) {
+  this->max_corner_span_ = n;
 }
 
 }  // namespace f2c::types

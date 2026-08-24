@@ -9,7 +9,10 @@
 #define PATH_PLANNING_CHECKER_HPP_
 
 #include <gtest/gtest.h>
+#include <algorithm>
 #include <fstream>
+#include <limits>
+#include <vector>
 #include "fields2cover.h"
 
 
@@ -88,6 +91,71 @@ inline testing::AssertionResult IsPathCorrect(
       start.distance(end) << ").";
   }
   return isPathCorrect(path);
+}
+
+// Distance from `q` to the polyline through the path's states. Straight runs
+// are a single state, so measuring to the states alone would miss the track
+// in between.
+inline double distanceToPath(const F2CPath& path, const F2CPoint& q) {
+  double best = std::numeric_limits<double>::max();
+  for (size_t i = 1; i < path.size(); ++i) {
+    best = std::min(best,
+        q.distance(F2CLineString(path[i - 1].point, path[i].point)));
+  }
+  return best;
+}
+
+// Largest heading jump between consecutive states.
+inline double maxHeadingStep(const F2CPath& path) {
+  double worst = 0.0;
+  for (size_t i = 1; i < path.size(); ++i) {
+    worst = std::max(worst,
+        F2CPoint::getAngleDiffAbs(path[i].angle, path[i - 1].angle));
+  }
+  return worst;
+}
+
+// Widest heading excursion of any single turn: how far its running signed
+// heading change spreads. A corner or an S stays inside half a revolution;
+// a loop runs past a full one. Length and maxHeadingStep both miss a loop,
+// because it is smooth and only 2*pi*R longer.
+inline double maxTurnSweep(const F2CPath& path) {
+  double worst = 0.0;
+  size_t i = 0;
+  while (i < path.size()) {
+    if (path[i].type != f2c::types::PathSectionType::TURN) {
+      ++i;
+      continue;
+    }
+    double run = 0.0, lo = 0.0, hi = 0.0;
+    for (++i; i < path.size() &&
+        path[i].type == f2c::types::PathSectionType::TURN; ++i) {
+      double d = path[i].angle - path[i - 1].angle;
+      run += atan2(sin(d), cos(d));       // signed, wrap-safe
+      lo = std::min(lo, run);
+      hi = std::max(hi, run);
+    }
+    worst = std::max(worst, hi - lo);
+  }
+  return worst;
+}
+
+// First point of each maximal run of TURN-type states, in order -- the
+// entry pose of each connection turn the path was rounded through.
+inline std::vector<F2CPoint> turnStarts(const F2CPath& path) {
+  std::vector<F2CPoint> starts;
+  bool in_turn = false;
+  for (auto&& s : path) {
+    if (s.type == f2c::types::PathSectionType::TURN) {
+      if (!in_turn) {
+        starts.push_back(s.point);
+      }
+      in_turn = true;
+    } else {
+      in_turn = false;
+    }
+  }
+  return starts;
 }
 
 #endif  // PATH_PLANNING_CHECKER_HPP_

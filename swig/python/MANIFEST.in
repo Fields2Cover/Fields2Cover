@@ -1,2 +1,0 @@
-recursive-include src *.cpp */*.cpp */*/*.cpp */*/*/*.cpp */*/*/*/*.cpp
-recursive-include include *.h* */*.h* */*/*.h */*/*/*.h* */*/*/*/*.h*

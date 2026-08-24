@@ -106,11 +106,8 @@ The Fields2Cover package has only been tested on Ubuntu 18.04, 20.04 and 22.04, 
 If you are able to run it in other operative systems, open an issue/PR and it will be added to this guide
 
 
-Linux
-^^^^^
-
-Requirements
-~~~~~~~~~~~~
+Requirements on Linux
+^^^^^^^^^^^^^^^^^^^^^
 
 Some packages are needed before compiling the package:
 
@@ -124,7 +121,7 @@ Some packages are needed before compiling the package:
    sudo add-apt-repository ppa:ubuntugis/ppa
    sudo apt-get update
    sudo apt-get install --no-install-recommends build-essential ca-certificates cmake \
-        doxygen g++ git libeigen3-dev libgdal-dev libpython3-dev python3 python3-pip \
+        doxygen g++ git libboost-dev libeigen3-dev libgdal-dev libpython3-dev python3 python3-pip \
         python3-matplotlib python3-tk lcov libgtest-dev libtbb-dev swig libgeos-dev \
         gnuplot libtinyxml2-dev nlohmann-json3-dev
    python3 -m pip install gcovr
@@ -133,7 +130,7 @@ Also, `OR-tools <https://developers.google.com/optimization>`__ for C++ is neede
 
 
 Compilation
-~~~~~~~~~~~
+^^^^^^^^^^^
 
 First, clone this repository.
 Then, from the source code folder of the project:
@@ -152,10 +149,37 @@ Finally, you can install it as:
    sudo make install;
 
 
-Compilation with python interface
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Add it to your projects
+^^^^^^^^^^^^^^^^^^^^^^^
 
-Assuming you have satisfied the "Requirements" and completed the initial "Compilation" step.
+To add Fields2Cover into your CMakeLists.txt, it is as easy as:
+
+.. code-block:: console
+
+   find_package(Fields2Cover REQUIRED)
+   target_link_libraries(<<<your_package>>> Fields2Cover)
+
+
+Compilation with python interface
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Assuming you have satisfied the "Requirements on Linux" and completed the initial "Compilation" step.
+
+The python module needs CMake >= 3.18 and Python >= 3.9.
+
+With the system dependencies from the previous section installed (or-tools
+must be discoverable through ``CMAKE_PREFIX_PATH``), the python module can be
+built and installed straight from the repository with pip — SWIG, CMake and
+Ninja are fetched into the isolated build environment, so no system SWIG is
+needed:
+
+.. code-block:: console
+
+   pip install .
+
+This compiles the library and the SWIG bindings and installs a
+``fields2cover`` package into the active python environment. The manual cmake
+route below is still available.
 
 Install the packages required as:
 
@@ -177,9 +201,9 @@ To test if the compilation and installation of the python interface is correct, 
 
 .. code-block:: python
 
-  import fields2cover as f2c
+  import fields2cover
 
-Or run the tests on the main folder:
+Or run on the main folder:
 
 .. code-block:: console
 
@@ -189,20 +213,12 @@ Or run the tests on the main folder:
 macOS (Apple Silicon)
 ^^^^^^^^^^^^^^^^^^^^^
 
-Requirements
-~~~~~~~~~~~~
-
 Some packages are needed before compiling the package:
 
 .. code-block:: console
 
    brew install cmake swig gdal geos or-tools tinyxml2 eigen tbb boost gnuplot googletest
 
-
-Compilation
-~~~~~~~~~~~
-
-First, clone this repository.
 Then, from the source code folder of the project:
 
 .. code-block:: console
@@ -211,18 +227,15 @@ Then, from the source code folder of the project:
    cd build;
    cmake -DCMAKE_PREFIX_PATH="$(brew --prefix)" ..;
    make -j$(sysctl -n hw.ncpu);
+   sudo make install;
 
-Finally, you can install it as:
+For the python interface, either install with pip (or-tools must be discoverable through ``CMAKE_PREFIX_PATH``):
 
 .. code-block:: console
 
-   sudo make install;
+   CMAKE_PREFIX_PATH="$(brew --prefix)" pip install .
 
-
-Compilation with python interface
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-From the source code folder of the project, adjust the BUILD_PYTHON option of the existing build:
+or use the manual cmake route, adjusting the BUILD_PYTHON option of the existing build:
 
 .. code-block:: console
 
@@ -231,28 +244,17 @@ From the source code folder of the project, adjust the BUILD_PYTHON option of th
    make -j$(sysctl -n hw.ncpu);
    sudo make install;
 
-To test if the compilation and installation of the python interface is correct, run on python:
+To test if the compilation and installation of the python interface is correct, run:
 
-.. code-block:: python
+.. code-block:: console
 
-  import fields2cover as f2c
+   python3 -c "import fields2cover as f2c; print(f2c.__version__)"
 
 Or run the tests on the main folder as:
 
 .. code-block:: console
 
-  python3 -m pytest tests/python/
-
-
-Add it to your projects
-^^^^^^^^^^^^^^^^^^^^^^^
-
-To add Fields2Cover into your CMakeLists.txt, it is as easy as:
-
-.. code-block:: console
-
-   find_package(Fields2Cover REQUIRED)
-   target_link_libraries(<<<your_package>>> Fields2Cover)
+   python3 -m pytest tests/python/
 
 
 Stability

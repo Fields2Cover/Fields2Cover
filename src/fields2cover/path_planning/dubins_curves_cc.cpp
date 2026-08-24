@@ -76,4 +76,8 @@ F2CPath DubinsCurvesCC::createConstrainedTurn(const F2CRobot& robot,
   }
 }
 
+bool DubinsCurvesCC::hasContinuousCurvature() const {
+  return true;
+}
+
 }  // namespace f2c::pp

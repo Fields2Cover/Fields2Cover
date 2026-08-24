@@ -18,6 +18,7 @@ class ReedsSheppCurvesHC : public TurningBase {
  public:
   F2CPath createSimpleTurn(const F2CRobot& robot,
       double dist_start_pos, double start_angle, double end_angle) override;
+  bool hasContinuousCurvature() const override;
 };
 
 }  // namespace f2c::pp

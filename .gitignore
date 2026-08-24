@@ -53,3 +53,9 @@ __pycache__/
 [._]s[a-rt-v][a-z]
 [._]ss[a-gi-z]
 [._]sw[a-p]
+
+# Python packaging
+/dist/
+*.egg-info/
+_skbuild/
+.venv/

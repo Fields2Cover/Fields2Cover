@@ -12,8 +12,6 @@
  %include <exception.i>
  %include <std_pair.i>
 
-#define __version__ "2.0.0"
-
 %inline %{
   #include "fields2cover.h"
 %}

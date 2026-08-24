@@ -87,4 +87,68 @@ TEST(fields2cover_types_route, init) {
 
 }
 
+namespace {
+
+F2CRoute createRouteToReverse() {
+  F2CRoute route;
+  route.addConnection(F2CMultiPoint({F2CPoint(-2, 0), F2CPoint(0, 0)}));
+  F2CSwaths swaths1;
+  swaths1.emplace_back(F2CLineString({F2CPoint(0, 0), F2CPoint(2, 0)}), 1);
+  route.addSwaths(swaths1);
+  route.addConnection(F2CMultiPoint({F2CPoint(2, 0), F2CPoint(2, 1)}));
+  F2CSwaths swaths2;
+  swaths2.emplace_back(F2CLineString({F2CPoint(2, 1), F2CPoint(0, 1)}), 1);
+  swaths2.emplace_back(F2CLineString({F2CPoint(0, 2), F2CPoint(2, 2)}), 1);
+  route.addSwaths(swaths2);
+  return route;
+}
+
+void expectSameLine(const F2CLineString& a, const F2CLineString& b) {
+  ASSERT_EQ(a.size(), b.size());
+  for (size_t i = 0; i < a.size(); ++i) {
+    EXPECT_EQ(a[i], b[i]);
+  }
+}
+
+}  // namespace
+
+TEST(fields2cover_types_route, reverse) {
+  F2CRoute route = createRouteToReverse();
+  const F2CPoint start = route.startPoint();
+  const F2CPoint end = route.endPoint();
+  const double length = route.length();
+  const F2CLineString line = route.asLineString();
+  const size_t n_connections = route.sizeConnections();
+
+  route.reverse();
+  EXPECT_EQ(route.startPoint(), end);
+  EXPECT_EQ(route.endPoint(), start);
+  EXPECT_NEAR(route.length(), length, 1e-7);
+
+  // Swaths are driven in the opposite direction too.
+  EXPECT_EQ(route.getSwaths(0)[0].startPoint(), F2CPoint(2, 2));
+  EXPECT_EQ(route.getSwaths(0)[0].endPoint(), F2CPoint(0, 2));
+
+  route.reverse();
+  expectSameLine(route.asLineString(), line);
+  EXPECT_EQ(route.sizeConnections(), n_connections);
+}
+
+TEST(fields2cover_types_route, reverseWithLastConnection) {
+  F2CRoute route = createRouteToReverse();
+  route.addConnection(F2CMultiPoint({F2CPoint(2, 2), F2CPoint(4, 2)}));
+  const F2CPoint start = route.startPoint();
+  const F2CPoint end = route.endPoint();
+  const F2CLineString line = route.asLineString();
+  const size_t n_connections = route.sizeConnections();
+
+  route.reverse();
+  EXPECT_EQ(route.startPoint(), end);
+  EXPECT_EQ(route.endPoint(), start);
+  EXPECT_EQ(route.sizeConnections(), n_connections);
+
+  route.reverse();
+  expectSameLine(route.asLineString(), line);
+}
+
 

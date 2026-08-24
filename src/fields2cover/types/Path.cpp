@@ -4,6 +4,7 @@
 //                        BSD-3 License
 //=============================================================================
 
+#include <algorithm>
 #include <numeric>
 #include <steering_functions/utilities/utilities.hpp>
 #include "fields2cover/utils/spline.h"
@@ -208,6 +209,11 @@ double Path::length() const {
 }
 
 void Path::appendSwath(const Swath& swath, double cruise_speed) {
+  this->appendSwath(swath, cruise_speed, PathSectionType::SWATH);
+}
+
+void Path::appendSwath(
+    const Swath& swath, double cruise_speed, PathSectionType type) {
   for (size_t i = 0; i < swath.numPoints() - 1; ++i) {
     PathState s;
     s.point = swath.getPoint(i);
@@ -216,10 +222,34 @@ void Path::appendSwath(const Swath& swath, double cruise_speed) {
     s.angle = p_ang.getAngleFromPoint();
     s.len = swath.getPoint(i + 1).distance(swath.getPoint(i));
     s.dir = PathDirection::FORWARD;
-    s.type = PathSectionType::SWATH;
+    s.type = type;
     s.velocity = cruise_speed;
     this->addState(s);
   }
+}
+
+void Path::appendStraight(const Point& start, const Point& end,
+    double cruise_speed, PathSectionType type) {
+  const double len = start.distance(end);
+  if (len < 1e-6) {
+    return;
+  }
+  PathState s;
+  s.point = start;
+  s.angle = (end - start).getAngleFromPoint();
+  s.len = len;
+  s.dir = PathDirection::FORWARD;
+  s.type = type;
+  s.velocity = cruise_speed;
+  this->addState(s);
+}
+
+double Path::maxDistanceTo(const LineString& line) const {
+  double worst = 0.0;
+  for (auto&& s : this->states_) {
+    worst = std::max(worst, s.point.distance(line));
+  }
+  return worst;
 }
 
 PathState Path::at(double len) const {
@@ -298,14 +328,16 @@ std::string Path::serializePath(size_t digit_precision) const {
 }
 
 /**
- * @brief Discretize the swath sections of the path and return a new path
+ * @brief Discretize the swath and headland-swath sections of the path and
+ *        return a new path
  * @param step_size Discretization step in [m]
- * @return New path with swath now discretized
+ * @return New path with swath and headland-swath sections now discretized
 */
 Path Path::discretizeSwath(double step_size) const {
   Path new_path;
   for (auto&& s : this->states_) {
-    if (s.type == PathSectionType::SWATH) {
+    if (s.type == PathSectionType::SWATH ||
+        s.type == PathSectionType::HL_SWATH) {
       double n_steps = max(1.0, std::round(fabs(s.len / step_size)));
       Point start2end = s.atEnd() - s.point;
       for (double j = 0.0; j < n_steps; j += 1.0) {
