@@ -83,12 +83,20 @@ More information
 
    self
    source/installation.rst
-   source/release.rst
    source/tutorials.rst
    source/migration_to_v2.rst
    source/faq.rst
    api/f2c_library.rst
 
+
+
+Developer's guide
+=================
+
+.. toctree::
+   :maxdepth: 2
+
+   source/release.rst
 
 
 Contribute
