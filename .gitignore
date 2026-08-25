@@ -42,6 +42,10 @@ docs/api
 authorized_keys
 cmake_install.cmake
 
+# Python
+__pycache__/
+*.py[cod]
+
 # Vim backup files
 [._]*.s[a-v][a-z]
 !*.svg  # comment out if you don't need vector files

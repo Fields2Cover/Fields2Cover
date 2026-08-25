@@ -1,7 +1,7 @@
 Installation
 ------------
 
-The Fields2Cover package has only been tested on Ubuntu.
+The Fields2Cover package has only been tested on Ubuntu and on macOS (Apple Silicon).
 If you are able to run it in other operative systems, open an issue/PR and it will be added to this guide
 
 
@@ -90,6 +90,53 @@ To test if the compilation and installation of the python interface is correct, 
 .. code-block:: python
 
   import fields2cover
+
+
+macOS (Apple Silicon)
+^^^^^^^^^^^^^^^^^^^^^
+
+Some packages are needed before compiling the package:
+
+.. code-block:: console
+
+   brew install cmake swig gdal geos or-tools tinyxml2 eigen tbb boost gnuplot googletest
+
+Then, from the source code folder of the project:
+
+.. code-block:: console
+
+   mkdir -p build;
+   cd build;
+   cmake -DCMAKE_PREFIX_PATH="$(brew --prefix)" -DPython_EXECUTABLE="$(which python3)" ..;
+   make -j$(sysctl -n hw.ncpu);
+   sudo make install;
+
+For the python interface, either install with pip (or-tools must be discoverable through ``CMAKE_PREFIX_PATH``):
+
+.. code-block:: console
+
+   CMAKE_PREFIX_PATH="$(brew --prefix)" pip install .
+
+or use the manual cmake route, adjusting the BUILD_PYTHON option of the existing build:
+
+.. code-block:: console
+
+   cd build;
+   cmake -DBUILD_PYTHON=ON -DPython_EXECUTABLE="$(which python3)" ..;
+   make -j$(sysctl -n hw.ncpu);
+   sudo make install;
+
+To test if the compilation and installation of the python interface is correct, run:
+
+.. code-block:: console
+
+   python3 -c "import fields2cover as f2c; print(f2c.__version__)"
+
+Or run the tests on the main folder as:
+
+.. code-block:: console
+
+   python3 -m pytest tests/python/
 
 
 
