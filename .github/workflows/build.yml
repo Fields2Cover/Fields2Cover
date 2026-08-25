@@ -128,6 +128,39 @@ jobs:
         # libFields2Cover.so's deps (matplot, steering_functions) live in the throwaway prefix
         run: LD_LIBRARY_PATH=$GITHUB_WORKSPACE/instdir/lib pytest-3 tests/python/
 
+  build-macos:
+    name: "macOS arm64, AppleClang, Release"
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Homebrew dependencies
+        run: |
+          brew install swig gdal geos or-tools tinyxml2 eigen tbb boost gnuplot googletest
+
+      - name: Configure
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_PYTHON=ON \
+            -DBUILD_TESTING=ON \
+            -DCMAKE_PREFIX_PATH="$(brew --prefix)" \
+            -DPython_EXECUTABLE="$(command -v python3)"
+
+      - name: Build
+        run: cmake --build build -j3
+
+      - name: Run C++ tests
+        run: ctest --test-dir build/tests --output-on-failure
+
+      - name: Install
+        run: sudo cmake --install build
+
+      - name: Run Python tests
+        run: |
+          python3 -m pip install --break-system-packages pytest numpy
+          python3 -m pytest tests/python/
+
   python-wheel:
     name: "pip install . (ubuntu, system deps)"
     runs-on: ubuntu-latest
