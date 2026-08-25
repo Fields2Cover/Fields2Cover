@@ -95,6 +95,7 @@ Developer's guide
 
 .. toctree::
    :maxdepth: 2
+   :caption: Developer's guide
 
    source/release.rst
 
