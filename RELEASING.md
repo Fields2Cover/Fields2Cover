@@ -17,7 +17,7 @@ Per release:
    release; it becomes the release notes.
 2. Optional dry run: *Actions → PyPI → Run workflow → target: testpypi*, then
    `pip install --index-url https://test.pypi.org/simple/ fields2cover`.
-3. From an up-to-date, clean `main` run `scripts/release.sh X.Y.Z` (needs the
+3. From an up-to-date, clean `main` run `./release.sh X.Y.Z` (needs the
    GitHub CLI, `gh auth login`). It bumps the version in `CMakeLists.txt` and
    `package.xml`, turns `[Unreleased]` into the `[X.Y.Z]` section, shows the
    diff and — after confirmation — commits, pushes and publishes the GitHub
