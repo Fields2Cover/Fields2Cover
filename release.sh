@@ -5,7 +5,7 @@
 # Everything here can also be done by hand; the script only keeps the steps in
 # order and refuses to continue when a precondition is not met.
 #
-# Usage: scripts/release.sh X.Y.Z
+# Usage: ./release.sh X.Y.Z
 set -euo pipefail
 
 [ $# -eq 1 ] || { echo "usage: $0 X.Y.Z" >&2; exit 2; }
