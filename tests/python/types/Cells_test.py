@@ -94,3 +94,12 @@ def test_fields2cover_types_cells_wherePoint():
   near(cells.getCellWherePoint(f2c.Point(0, 0)).area(), 4);
   near(cells.getCellWherePoint(f2c.Point(11, 11)).area(), 6);
 
+
+def test_fields2cover_types_cells_carveSharedBorders():
+  cells = f2c.Cells(f2c.Cell(f2c.LinearRing(f2c.VectorPoint(
+    [f2c.Point(0,0), f2c.Point(50,0), f2c.Point(50,100), f2c.Point(0,100), f2c.Point(0,0)]))));
+  cells.addGeometry(f2c.Cell(f2c.LinearRing(f2c.VectorPoint(
+    [f2c.Point(50,0), f2c.Point(100,0), f2c.Point(100,100), f2c.Point(50,100), f2c.Point(50,0)]))));
+  carved = cells.carveSharedBorders(2.0);
+  assert (carved.size() == 2);
+  near(cells.area() - carved.area(), 200, 1e-3);
