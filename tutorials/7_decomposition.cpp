@@ -67,7 +67,7 @@ int main() {
 
   F2CCells mid_hl = const_hl.generateHeadlands(cells, 1.5 * r_w);
   F2CCells decomp_mid_hl = decomp.decompose(mid_hl);
-  F2CCells no_hl = const_hl.generateHeadlands(decomp_mid_hl, 1.5 * r_w);
+  F2CCells no_hl = decomp_mid_hl.carveSharedBorders(1.5 * r_w);
   F2CSwathsByCells swaths = bf.generateBestSwaths(obj, r_w, no_hl);
 
   f2c::rp::RoutePlannerBase route_planner;

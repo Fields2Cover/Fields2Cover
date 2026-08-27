@@ -64,7 +64,7 @@ print("####### Tutorial 7.2 Decomposition with route planner ######");
 
 mid_hl = const_hl.generateHeadlands(cells, 1.5 * r_w);
 decomp_mid_hl = decomp.decompose(mid_hl);
-no_hl = const_hl.generateHeadlands(decomp_mid_hl, 1.5 * r_w);
+no_hl = decomp_mid_hl.carveSharedBorders(1.5 * r_w);
 swaths = bf.generateBestSwaths(obj, r_w, no_hl);
 
 route_planner = f2c.RP_RoutePlannerBase();
