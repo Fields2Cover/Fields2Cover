@@ -266,6 +266,50 @@ Cells Cells::buffer(double width) const {
   return destroyResGeom<Cells>(this->OGRBuffer(width));
 }
 
+Cells Cells::carveSharedBorders(double width) const {
+  constexpr double kTol = 1e-3;
+  constexpr double kSpur = 1e-9;
+  // Cut along the part of each border edge that a neighbour actually touches.
+  // The whole corridor comes out of the cell with the shorter border, so the
+  // larger neighbour keeps its shape: taking half from each side notches both,
+  // and a notched cell costs the swath generator a pass.
+  Cells carved;
+  for (size_t i = 0; i < this->size(); ++i) {
+    Cells cell {this->getGeometry(i)};
+    const LinearRing ring = this->getCellBorder(i);
+    const double perimeter = ring.length();
+    for (size_t k = 0; k < this->size(); ++k) {
+      if (k == i) {
+        continue;
+      }
+      const double perimeter_k = this->getCellBorder(k).length();
+      if (perimeter > perimeter_k || (perimeter == perimeter_k && i > k)) {
+        continue;  // the other cell gives up this corridor
+      }
+      const Cells neighbour = Cells::buffer(this->getGeometry(k), kTol);
+      for (size_t e = 0; e + 1 < ring.size(); ++e) {
+        MultiLineString edge;
+        edge.addGeometry(
+            LineString({ring.getGeometry(e), ring.getGeometry(e + 1)}));
+        const MultiLineString shared = edge.intersection(neighbour);
+        for (size_t j = 0; j < shared.size(); ++j) {
+          const LineString part = shared.getGeometry(j);
+          if (part.size() > 1 && part.length() > kTol) {
+            cell = cell.difference(Cells::buffer(part, width));
+          }
+        }
+      }
+    }
+    // The difference can leave a zero-width spur behind. Opening the result by
+    // a hair drops it without moving any real edge.
+    const Cells clean = cell.buffer(-kSpur).buffer(kSpur);
+    for (size_t j = 0; j < clean.size(); ++j) {
+      carved.addGeometry(clean.getGeometry(j));
+    }
+  }
+  return carved;
+}
+
 Point Cells::closestPointOnBorderTo(const Point& p) const {
   std::vector<double> dist;
   std::vector<Point> ps;
