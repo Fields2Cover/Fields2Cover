@@ -6,6 +6,8 @@
 
 #include <gtest/gtest.h>
 #include "fields2cover/types.h"
+#include "fields2cover/headland_generator/constant_headland.h"
+#include "fields2cover/decomposition/trapezoidal_decomp.h"
 
 TEST(fields2cover_types_cells, constructor) {
   F2CLinearRing ring1{
@@ -222,4 +224,32 @@ TEST(fields2cover_types_cells, isPointIn) {
   EXPECT_FALSE(cells.isPointIn(F2CPoint(10,-10)));
 }
 
+
+
+TEST(fields2cover_types_cells, degenerateCellDoesNotCrash) {
+  // An empty polygon has no exterior ring. Asking for its border used to
+  // dereference that null ring.
+  F2CCells cells;
+  cells.addGeometry(F2CCell());
+  EXPECT_EQ(cells.size(), 0);
+
+  EXPECT_EQ(cells.getCellBorder(0).size(), 0);
+  EXPECT_EQ(cells.getInteriorRing(0, 0).size(), 0);
+}
+
+TEST(fields2cover_types_cells, outOfRangeAccessThrows) {
+  F2CCells cells {
+    F2CCell(F2CLinearRing({
+          F2CPoint(0,0), F2CPoint(1,0), F2CPoint(1,1), F2CPoint(0,0)
+    }))
+  };
+  EXPECT_EQ(cells.getCellBorder(0).size(), 4);
+
+  EXPECT_THROW(cells.getCellBorder(99), std::out_of_range);
+  EXPECT_THROW(cells.getInteriorRing(99, 0), std::out_of_range);
+  EXPECT_THROW(cells.addRing(99, cells.getCellBorder(0)), std::out_of_range);
+
+  F2CCells empty;
+  EXPECT_THROW(empty.getCellBorder(0), std::out_of_range);
+}
 
