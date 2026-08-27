@@ -36,8 +36,30 @@ Graph& Graph::removeEdge(size_t i, size_t j) {
   return this->removeDirectedEdge(i, j).removeDirectedEdge(j, i);
 }
 
+std::unordered_set<size_t> Graph::getNodes() const {
+  std::unordered_set<size_t> nodes;
+  for (const auto& from : this->edges_) {
+    nodes.insert(from.first);
+    for (const auto& to : from.second) {
+      nodes.insert(to.first);
+    }
+  }
+  return nodes;
+}
+
 size_t Graph::numNodes() const {
-  return this->edges_.size();
+  return this->getNodes().size();
+}
+
+size_t Graph::matrixSize() const {
+  size_t size = 0;
+  for (const auto& from : this->edges_) {
+    size = std::max(size, from.first + 1);
+    for (const auto& to : from.second) {
+      size = std::max(size, to.first + 1);
+    }
+  }
+  return size;
 }
 
 size_t Graph::numEdges() const {
@@ -69,7 +91,7 @@ int64_t Graph::getCostFromEdge(size_t from, size_t to, int64_t INF) const {
 
 std::vector<std::vector<size_t>> Graph::allPathsBetween(
     size_t from, size_t to) const {
-  std::vector<bool> visited(this->numNodes(), false);
+  std::vector<bool> visited(this->matrixSize(), false);
   std::vector<std::vector<size_t>> routes(1);
   int route_index = 0;
   this->DFS(from, to, routes, visited, route_index);
@@ -100,7 +122,7 @@ void Graph::DFS(
 }
 
 void  Graph::shortestPathsAndCosts(int64_t INF) {
-  const size_t N = this->numNodes();
+  const size_t N = this->matrixSize();
   this->distance_.assign(N, std::vector<int64_t>(N, INF));
   this->next_.assign(N, std::vector<int64_t>(N, -1));
   initializeMatrices(distance_,next_, INF);
@@ -111,7 +133,7 @@ void Graph::initializeMatrices(std::vector<std::vector<int64_t>>& dist,
     std::vector<std::vector<int64_t>>& next,
     int64_t INF) {
 
-  const size_t N = this->numNodes();
+  const size_t N = this->matrixSize();
 
   // Initialize distances and paths for direct connections
   for (const auto& src : this->edges_) {
@@ -164,7 +186,7 @@ short_path_container_t& Graph::getPaths() {
     this->shortestPathsAndCosts();
   }
   if (shortest_paths_.empty()) {
-    const size_t N = this->numNodes();
+    const size_t N = this->matrixSize();
     shortest_paths_.assign(N, std::vector<std::vector<size_t>>(N));
     for (size_t i = 0; i < N; ++i) {
       for (size_t j = 0; j < N; ++j) {
@@ -184,7 +206,7 @@ short_path_container_t& Graph::getPaths() {
 }
 
 std::vector<size_t> Graph::shortestPath(size_t from, size_t to, int64_t INF) {
-  if (this->numNodes() > 0 && (this->next_.empty() || this->distance_.empty())) {
+  if (!this->edges_.empty() && (this->next_.empty() || this->distance_.empty())) {
     this->shortestPathsAndCosts(INF);
   }
   return this->reconstructPath(from, to, next_);
@@ -206,7 +228,7 @@ std::vector<size_t> Graph::reconstructPath(size_t from,
 }
 
 int64_t Graph::shortestPathCost(size_t from, size_t to, int64_t INF) {
-  if (this->numNodes() > 0 && this->distance_.size() == 0) {
+  if (!this->edges_.empty() && this->distance_.size() == 0) {
     this->shortestPathsAndCosts(INF);
   }
   return this->distance_[from][to];

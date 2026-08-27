@@ -312,3 +312,10 @@ TEST(fields2cover_types_point, closestPointInSegment) {
 
 }  // namespace f2c
 
+
+TEST(fields2cover_types_point, hashAgreesWithEquality) {
+  F2CPoint a {1, -1}, b {1 + 1e-9, -1 - 1e-9};
+
+  EXPECT_EQ(a, b);
+  EXPECT_EQ(std::hash<F2CPoint>()(a), std::hash<F2CPoint>()(b));
+}

@@ -40,15 +40,23 @@ class Graph2D : public Graph {
   size_t numNodes() const;
   std::vector<Point> getNodes() const;
 
+  /// Check if a point is a node of this graph.
+  bool hasNode(const Point& p) const;
+
   size_t nodeToIndex(const Point& p) const;
   Point indexToNode(size_t id) const;
 
+  /// Paths between two nodes. Empty if either point is not a node.
   std::vector<std::vector<Point>> allPathsBetween(
       const Point& from, const Point& to) const;
 
+  /// Shortest path between two nodes.
+  /// Empty if there is no path or either point is not a node.
   std::vector<Point> shortestPath(const Point& from, const Point& to,
         int64_t INF = 1<<30);
 
+  /// Cost of the shortest path between two nodes.
+  /// INF if there is no path or either point is not a node.
   int64_t shortestPathCost(const Point& from, const Point& to,
         int64_t INF = 1<<30);
 

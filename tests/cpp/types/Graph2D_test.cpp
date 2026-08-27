@@ -106,3 +106,35 @@ TEST(fields2cover_types_graph2d, shortestPaths) {
 }
 
 
+TEST(fields2cover_types_graph2d, shortestPathOnDirectedEdges) {
+  F2CPoint p1 {0, 0}, p2 {1, 0}, p3 {2, 0};
+  F2CGraph2D g;
+  g.addDirectedEdge(p1, p2, 1);
+  g.addDirectedEdge(p2, p3, 1);
+
+  auto path = g.shortestPath(p1, p3);
+
+  EXPECT_EQ(path.size(), 3);
+  EXPECT_EQ(g.shortestPathCost(p1, p3), 2);
+}
+
+TEST(fields2cover_types_graph2d, shortestPathToPointOutsideGraph) {
+  F2CPoint p1 {0, 0}, p2 {1, 0}, p_out {5, 5};
+  F2CGraph2D g;
+  g.addEdge(p1, p2, 1);
+
+  EXPECT_TRUE(g.shortestPath(p1, p_out).empty());
+  EXPECT_EQ(g.shortestPathCost(p1, p_out, 99), 99);
+  EXPECT_TRUE(g.allPathsBetween(p1, p_out).empty());
+  EXPECT_NO_THROW(g.removeEdge(p1, p_out));
+}
+
+TEST(fields2cover_types_graph2d, hasNode) {
+  F2CPoint p1 {0, 0}, p2 {1, 0}, p_out {5, 5};
+  F2CGraph2D g;
+  g.addEdge(p1, p2, 1);
+
+  EXPECT_TRUE(g.hasNode(p1));
+  EXPECT_TRUE(g.hasNode(p2));
+  EXPECT_FALSE(g.hasNode(p_out));
+}

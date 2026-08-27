@@ -46,6 +46,9 @@ Graph2D& Graph2D::addEdge(
 
 
 Graph2D& Graph2D::removeDirectedEdge(const Point& from, const Point& to) {
+  if (!hasNode(from) || !hasNode(to)) {
+    return *this;
+  }
   this->removeDirectedEdge(nodeToIndex(from), nodeToIndex(to));
   return *this;
 }
@@ -66,6 +69,10 @@ std::vector<Point> Graph2D::getNodes() const {
   return nodes;
 }
 
+bool Graph2D::hasNode(const Point& p) const {
+  return this->nodes_to_index_.count(p) > 0;
+}
+
 size_t Graph2D::nodeToIndex(const Point& p) const {
   return this->nodes_to_index_.at(p);
 }
@@ -76,6 +83,9 @@ Point Graph2D::indexToNode(size_t id) const {
 
 std::vector<std::vector<Point>> Graph2D::allPathsBetween(
     const Point& from, const Point& to) const {
+  if (!hasNode(from) || !hasNode(to)) {
+    return {};
+  }
   auto int_routes = this->allPathsBetween(nodeToIndex(from), nodeToIndex(to));
 
   std::vector<std::vector<Point>> routes;
@@ -90,6 +100,9 @@ std::vector<std::vector<Point>> Graph2D::allPathsBetween(
 
 std::vector<Point> Graph2D::shortestPath(
     const Point& from, const Point& to, int64_t INF) {
+  if (!hasNode(from) || !hasNode(to)) {
+    return {};
+  }
   auto i_path = this->shortestPath(nodeToIndex(from), nodeToIndex(to), INF);
   std::vector<Point> path;
   for (auto&& i : i_path) {
@@ -100,6 +113,9 @@ std::vector<Point> Graph2D::shortestPath(
 
 int64_t Graph2D::shortestPathCost(
     const Point& from, const Point& to, int64_t INF) {
+  if (!hasNode(from) || !hasNode(to)) {
+    return INF;
+  }
   return this->shortestPathCost(nodeToIndex(from), nodeToIndex(to), INF);
 }
 

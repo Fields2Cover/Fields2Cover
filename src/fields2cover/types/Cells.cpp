@@ -234,6 +234,15 @@ const Cell Cells::getCellWherePoint(const Point& p) const {
   return Cell();
 }
 
+const Cell Cells::getCellWherePoint(const Point& p, double d_tol) const {
+  for (auto&& cell : *this) {
+    if (p.distance(cell) <= d_tol) {
+      return cell;
+    }
+  }
+  return Cell();
+}
+
 LineString Cells::createLineUntilBorder(
     const f2c::types::Point& p, double ang) const {
   return this->getCellWherePoint(p).createLineUntilBorder(p, ang);

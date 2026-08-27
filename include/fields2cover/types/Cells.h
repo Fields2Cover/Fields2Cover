@@ -81,6 +81,10 @@ struct Cells : public Geometries<Cells, OGRMultiPolygon, wkbMultiPolygon,
 
   const Cell getCellWherePoint(const Point& p) const;
 
+  /// Get the cell a point belongs to, allowing the point to sit up to
+  /// d_tol outside it. Returns an empty cell if no cell is that close.
+  const Cell getCellWherePoint(const Point& p, double d_tol) const;
+
   LineString createLineUntilBorder(
       const f2c::types::Point& p, double ang) const;
 

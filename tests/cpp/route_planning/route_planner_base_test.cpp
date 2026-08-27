@@ -120,3 +120,25 @@ TEST(fields2cover_rp_route_plan_base, redirect_flag) {
 
 
 
+TEST(fields2cover_rp_route_plan_base, shortestGraphDoesNotLeaveTheCells) {
+  F2CCell cell_a {F2CLinearRing({
+      F2CPoint(0,0), F2CPoint(10,0), F2CPoint(10,10), F2CPoint(0,10), F2CPoint(0,0)})};
+  F2CCell cell_b {F2CLinearRing({
+      F2CPoint(20,0), F2CPoint(30,0), F2CPoint(30,10), F2CPoint(20,10), F2CPoint(20,0)})};
+
+  F2CSwath swath_a {F2CLineString({F2CPoint(2,5), F2CPoint(8,5)}), 1};
+  F2CSwath swath_b {F2CLineString({F2CPoint(22,5), F2CPoint(28,5)}), 1};
+  F2CSwaths swaths;
+  swaths.emplace_back(swath_a);
+  swaths.emplace_back(swath_b);
+  F2CSwathsByCells swaths_by_cells;
+  swaths_by_cells.emplace_back(swaths);
+
+  // Only cell_a is given, so swath_b is outside every cell of the graph.
+  F2CCells cells_a {cell_a};
+  f2c::rp::RoutePlannerBase route_planner;
+  F2CGraph2D g = route_planner.createShortestGraph(cells_a, swaths_by_cells, 1e-4);
+
+  EXPECT_TRUE(g.shortestPath(swath_b.startPoint(), swath_a.startPoint()).empty());
+  EXPECT_FALSE(g.shortestPath(swath_a.startPoint(), swath_a.endPoint()).empty());
+}

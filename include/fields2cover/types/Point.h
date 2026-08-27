@@ -9,6 +9,8 @@
 #define FIELDS2COVER_TYPES_POINT_H_
 
 #include <ogr_geometry.h>
+#include <cmath>
+#include <cstdint>
 #include <iostream>
 #include <functional>
 #include <memory>
@@ -189,7 +191,18 @@ namespace std {
 template<>
 struct hash<f2c::types::Point> {
   inline size_t operator()(const f2c::types::Point& p) const {
-    return size_t(p.getX() + p.getY() * 1e10 + p.getZ() * 1e20);
+    // Quantized to the tolerance of Point::operator==, so that points which
+    // compare equal share a value. Coordinates are hashed, not summed:
+    // the sum overflows to undefined behaviour on negative coordinates.
+    const int64_t coords[3] {
+      std::llround(p.getX() * 1e7),
+      std::llround(p.getY() * 1e7),
+      std::llround(p.getZ() * 1e7)};
+    size_t h {1469598103934665603ULL};
+    for (auto&& c : coords) {
+      h = (h ^ static_cast<size_t>(c)) * 1099511628211ULL;
+    }
+    return h;
   }
 };
 }
