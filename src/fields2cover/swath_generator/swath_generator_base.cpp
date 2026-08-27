@@ -4,6 +4,7 @@
 //                        BSD-3 License
 //=============================================================================
 
+#include <boost/math/constants/constants.hpp>
 #include "fields2cover/swath_generator/swath_generator_base.h"
 
 namespace f2c::sg {
@@ -18,7 +19,24 @@ void SwathGeneratorBase::setAllowOverlap(bool value) {
 
 F2CSwaths SwathGeneratorBase::generateBestSwaths(
     f2c::obj::SGObjective& obj, double op_width, const F2CCell& poly) {
-  return generateSwaths(computeBestAngle(obj, op_width, poly), op_width, poly);
+  const double ang = computeBestAngle(obj, op_width, poly);
+  F2CSwaths swaths = generateSwaths(ang, op_width, poly);
+  if (swaths.size() > 0) {
+    return swaths;
+  }
+  // The objectives score an angle from the cell border alone, so on a cell with
+  // a hairline spur the cheapest angle can cover nothing and the cell is skipped
+  // without a word. Sweep for an angle that does cover it.
+  constexpr int kTries = 8;
+  for (int i = 1; i < kTries; ++i) {
+    F2CSwaths alt = generateSwaths(
+        ang + i * boost::math::constants::pi<double>() / kTries,
+        op_width, poly);
+    if (alt.size() > 0) {
+      return alt;
+    }
+  }
+  return swaths;
 }
 
 F2CSwathsByCells SwathGeneratorBase::generateBestSwaths(
