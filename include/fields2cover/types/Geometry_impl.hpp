@@ -33,7 +33,8 @@ template <class T, OGRwkbGeometryType R>
 Geometry<T, R>::Geometry(T* g, EmptyDestructor) : data_(g, [](T* f) {}) {}
 
 template <class T, OGRwkbGeometryType R>
-Geometry<T, R>::Geometry(const T* g) : data_(downCast<T*>(g->clone()),
+Geometry<T, R>::Geometry(const T* g) : data_(
+  downCast<T*>(g ? g->clone() : OGRGeometryFactory::createGeometry(R)),
   [](T* f) {OGRGeometryFactory::destroyGeometry(f);}) {}
 
 template <class T, OGRwkbGeometryType R>
@@ -41,7 +42,8 @@ Geometry<T, R>::Geometry(OGRGeometry* g, EmptyDestructor) :
   data_(downCast<T*>(g), [](T* f) {}) {}
 
 template <class T, OGRwkbGeometryType R>
-Geometry<T, R>::Geometry(const OGRGeometry* g) : data_(downCast<T*>(g->clone()),
+Geometry<T, R>::Geometry(const OGRGeometry* g) : data_(
+  downCast<T*>(g ? g->clone() : OGRGeometryFactory::createGeometry(R)),
   [](T* f) {OGRGeometryFactory::destroyGeometry(f);}) {}
 
 template <class T, OGRwkbGeometryType R>

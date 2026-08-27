@@ -94,6 +94,10 @@ struct Cells : public Geometries<Cells, OGRMultiPolygon, wkbMultiPolygon,
 
   Cells buffer(double width) const;
 
+  /// Carve a corridor of \p width where cells of this set border each other.
+  /// Edges facing the outer boundary or a void are left untouched.
+  Cells carveSharedBorders(double width) const;
+
   Point closestPointOnBorderTo(const Point& p) const;
 };
 

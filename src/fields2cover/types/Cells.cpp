@@ -114,11 +114,21 @@ const Cell Cells::getCell(size_t i) const {
 }
 
 const LinearRing Cells::getCellBorder(size_t i) const {
+  // Check the index before asking OGR: getGeometryRef() dereferences a null
+  // collection entry when the index is out of range.
+  if (i >= static_cast<size_t>(this->data_->getNumGeometries())) {
+    throw std::out_of_range(
+        "Cells does not contain cell at " + std::to_string(i));
+  }
   return LinearRing(
       downCast<OGRPolygon*>(this->data_->getGeometryRef(i))->getExteriorRing());
 }
 
 const LinearRing Cells::getInteriorRing(size_t i_cell, size_t i_ring) const {
+  if (i_cell >= static_cast<size_t>(this->data_->getNumGeometries())) {
+    throw std::out_of_range(
+        "Cells does not contain cell at " + std::to_string(i_cell));
+  }
   return LinearRing(downCast<OGRPolygon*>(this->data_->getGeometryRef(i_cell))
       ->getInteriorRing(i_ring));
 }
@@ -128,6 +138,10 @@ void Cells::addGeometry(const Cell& c) {
 }
 
 void Cells::addRing(size_t i, const LinearRing& ring) {
+  if (i >= static_cast<size_t>(this->data_->getNumGeometries())) {
+    throw std::out_of_range(
+        "Cells does not contain cell at " + std::to_string(i));
+  }
   downCast<OGRPolygon*>(this->data_->getGeometryRef(i))->addRing(
       ring.clone().get());
 }
