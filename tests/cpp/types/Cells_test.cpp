@@ -5,6 +5,7 @@
 //=============================================================================
 
 #include <gtest/gtest.h>
+#include <cmath>
 #include "fields2cover/types.h"
 #include "fields2cover/headland_generator/constant_headland.h"
 #include "fields2cover/decomposition/trapezoidal_decomp.h"
@@ -359,5 +360,28 @@ TEST(fields2cover_types_cells, carveSharedBordersLeavesNoHairlineSpur) {
     ASSERT_EQ(opened.size(), 1);
     EXPECT_EQ(opened.getGeometry(0).getGeometry(0).size(),
               cell.getGeometry(0).size()) << "cell " << i << " has a spur";
+  }
+}
+
+TEST(fields2cover_types_cells, carveSharedBordersTreatsEquallySizedCellsAlike) {
+  // Five equal slices meeting at the centre. Their perimeters are equal in
+  // theory but differ in the last few bits, so a strict comparison lets that
+  // noise pick which cell gives up the corridor -- and some borders end up
+  // with no corridor at all while others get a full one.
+  const double r = 50.0;
+  F2CCells pie;
+  for (int k = 0; k < 5; ++k) {
+    const double a0 = 2 * M_PI * k / 5, a1 = 2 * M_PI * (k + 1) / 5;
+    pie.addGeometry(F2CCell(F2CLinearRing({
+        F2CPoint(0, 0), F2CPoint(r * cos(a0), r * sin(a0)),
+        F2CPoint(r * cos((a0 + a1) / 2) * 1.02, r * sin((a0 + a1) / 2) * 1.02),
+        F2CPoint(r * cos(a1), r * sin(a1)), F2CPoint(0, 0)})));
+  }
+
+  F2CCells carved = pie.carveSharedBorders(4.0);
+  ASSERT_EQ(carved.size(), 5);
+  for (size_t i = 1; i < carved.size(); ++i) {
+    EXPECT_NEAR(carved.getGeometry(i).area(), carved.getGeometry(0).area(), 1e-3)
+        << "slice " << i << " lost a different amount than slice 0";
   }
 }
