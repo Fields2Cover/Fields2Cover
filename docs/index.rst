@@ -7,58 +7,87 @@ Fields2Cover
 .. image:: ./figures/logo_fields2cover.jpeg
     :align: center
 
+Fields2Cover is an open-source C++ library with Python bindings that solves
+the Coverage Path Planning problem for agriculture: given a field and a
+vehicle, it computes a complete coverage path — headlands, swaths, an
+optimized route, and a drivable path with feasible turns.
 
-`The github repository is here <https://github.com/Fields2Cover/Fields2Cover>`__.
-
-
-The Coverage Path Planning problem (CPP) aims to create a path to cover an area with one or several vehicles.
-
+It also provides a common, extensible framework to implement and compare
+coverage path planning algorithms: there are many papers on the topic, but
+almost no code, so anyone researching it has to re-implement every algorithm
+they want to compare against. Fields2Cover splits the problem into modules,
+each solving one part of it, so algorithms can be combined, replaced and
+benchmarked against each other:
 
 .. image:: ./figures/diagram-F2C.jpg
    :align: center
    :width: 500px
 
+Although the development of this project is focused on offline planning of
+agricultural vehicles, the library accepts pull requests from other types of
+coverage planners.
 
-Although the development of this project is focused on offline planning of agricultural vehicles,
-the library accepts pull requests from other types of coverage planners.
+The source code is hosted on `GitHub <https://github.com/Fields2Cover/Fields2Cover>`__.
+
+New here? Start with the :doc:`installation guide <source/installation>` and
+the :doc:`Quick Start <source/quick_start>`, then work through the
+:doc:`tutorials <source/tutorials>`.
+
+.. toctree::
+   :hidden:
+
+   self
+
+.. toctree::
+   :caption: Getting Started
+   :maxdepth: 2
+   :hidden:
+
+   source/installation.rst
+   source/quick_start.rst
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+
+   source/tutorials.rst
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+
+   source/faq.rst
+
+.. toctree::
+   :caption: Reference
+   :maxdepth: 1
+   :hidden:
+
+   api/f2c_library.rst
+
+.. toctree::
+   :caption: Migration
+   :maxdepth: 1
+   :hidden:
+
+   source/migration_to_v2.rst
 
 
-F2C version 2.0
-===============
+Contribute
+==========
 
-The version 2.0 of Fields2Cover comes with support for non-convex fields and fields with obstacles!! This has been huge request from the community and finally it's here.
-
-A quick list of new additions to the library:
-
-#. :ref:`Decomposition algorithms<tutorial-decomp>`:
-
-   * Trapezoidal and Boustrophedon decomposition. Those algorithms are useful to split any concave field into several convex sub-fields.
-
-#. :ref:`Route planner<tutorial-route>`:
-
-   * Route optimizer using `OR-tools <https://developers.google.com/optimization>`__ can be used to order the swaths, instead of just using a known pattern.
-
-   * Support for a point used as the start and end points of the route.
-
-#. Path planner:
-
-   * Support for routes provided by the route optimizer.
-
-#. Swath generator:
-
-   * Speed improvement on swath generation.
-
-   * New cost function: ``NSwathModified``. It uses an approximation to compute the number of swaths, reducing computation costs.
-
-#. Many bugs fixed.
-
-For a little guide about the migration, please check: :ref:`migration-guide`.
+If you find any issue/bug/proposal, `open an issue
+<https://github.com/Fields2Cover/Fields2Cover/issues>`__ and we will try to
+solve/discuss it. Pull requests are more than welcome. For major changes,
+please open an issue first to discuss what you would like to change. Please
+make sure to update tests as appropriate.
 
 
 Citing
 ======
 
-Please cite `the following paper <https://ieeexplore.ieee.org/document/10050562>`__ when using Fields2Cover for your research:
+Please cite `this paper <https://ieeexplore.ieee.org/document/10050562>`__
+when using Fields2Cover for your research:
 
 .. code-block:: bibtex
 
@@ -74,37 +103,8 @@ Please cite `the following paper <https://ieeexplore.ieee.org/document/10050562>
   }
 
 
-
-More information
-================
-
-.. toctree::
-   :maxdepth: 2
-
-   self
-   source/installation.rst
-   source/tutorials.rst
-   source/migration_to_v2.rst
-   source/faq.rst
-   api/f2c_library.rst
-
-
-
-Contribute
-==========
-
-If you find any issue/bug/proposal, open an issue and we will try to solve/discuss it.
-
-Pull requests are more than welcome. For major changes, please open an issue first to discuss what you would like to change. Please make sure to update tests as appropriate.
-
-
 License
 =======
 
-Fields2Cover project is under `BSD-3 license <https://tldrlegal.com/license/bsd-3-clause-license-%28revised%29>`__.
-
-
-
-
-
-
+Fields2Cover is released under the `BSD-3 license
+<https://github.com/Fields2Cover/Fields2Cover/blob/main/LICENSE>`__.

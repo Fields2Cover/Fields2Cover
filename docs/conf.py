@@ -24,8 +24,14 @@ project = 'Fields2Cover'
 copyright = '2020-2024, Wageningen University'
 author = 'Wageningen University'
 
-# The full version, including alpha/beta/rc tags
-release = 'latest'
+# The full version, including alpha/beta/rc tags, parsed from the
+# project() call in CMakeLists.txt so it has a single source of truth.
+import re
+with open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                       "..", "CMakeLists.txt")) as _cmake:
+    release = re.search(r"project\s*\([^)]*?VERSION\s+(\d+\.\d+\.\d+)",
+                        _cmake.read(), re.DOTALL).group(1)
+version = release
 
 primary_domain = 'cpp'
 highlight_language = 'cpp'
@@ -56,7 +62,7 @@ extensions = [
 
 source_suffix = [".rst", ".md"]
 
-breathe_projects = {"Fields2Cover": "../build/docs/doc_doxygen/xml/index.xml"}
+breathe_projects = {"Fields2Cover": "../build/docs/doc_doxygen/xml"}
 breathe_default_project = "Fields2Cover"
 #breathe_default_members = ('members', 'undoc-members')
 exhale_args =  {
@@ -92,7 +98,6 @@ html_logo = "figures/logo_fields2cover.png"
 html_favicon = "figures/favicon/favicon.ico"
 html_theme_options = {
     'logo_only': True,
-    'display_version': False,
 }
 github_url = 'https://www.github.com/Fields2Cover/Fields2Cover'
 

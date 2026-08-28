@@ -844,7 +844,8 @@ RECURSIVE              = YES
 # Note that relative paths are relative to the directory from which doxygen is
 # run.
 
-EXCLUDE                = @CMAKE_CURRENT_SOURCE_DIR@/../src      \
+EXCLUDE                = @CMAKE_CURRENT_SOURCE_DIR@/../README.md \
+                         @CMAKE_CURRENT_SOURCE_DIR@/../src      \
                          @CMAKE_CURRENT_SOURCE_DIR@/../tests    \
                          @CMAKE_CURRENT_SOURCE_DIR@/../tutorials    \
                          @CMAKE_CURRENT_SOURCE_DIR@/../nn_train \
