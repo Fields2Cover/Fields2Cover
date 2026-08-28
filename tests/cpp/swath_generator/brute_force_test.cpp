@@ -14,6 +14,7 @@
 #include "fields2cover/swath_generator/brute_force.h"
 #include "fields2cover/objectives/sg_obj/n_swath_modified.h"
 #include "fields2cover/headland_generator/constant_headland.h"
+#include "fields2cover/headland_generator/corridor_headland.h"
 #include "fields2cover/decomposition/trapezoidal_decomp.h"
 #include "../test_helpers/swath_generator_checker.hpp"
 
@@ -60,9 +61,9 @@ TEST(fields2cover_swath_brute_gen, bestAngleCoversEveryCoverableCell) {
 
   f2c::decomp::TrapezoidalDecomp decomp;
   decomp.setSplitAngle(0.0);
-  F2CCells cells = decomp.decompose(
-      f2c::hg::ConstHL().generateHeadlands(F2CCells(field), 3.75))
-      .carveSharedBorders(2.5);
+  F2CCells cells = f2c::hg::CorridorHL().generateHeadlands(
+      decomp.decompose(f2c::hg::ConstHL().generateHeadlands(F2CCells(field), 3.75)),
+      2.5);
 
   f2c::sg::BruteForce sw_gen;
   f2c::obj::NSwathModified obj;

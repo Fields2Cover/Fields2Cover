@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- `F2CCells::carveSharedBorders(width)` opens a corridor of the given width where cells of the set border each other. Only the part of an edge a neighbour actually touches is cut, and the whole corridor comes out of the cell with the shorter border, so the larger neighbour keeps its shape. Edges facing the outer boundary or a void are left untouched.
+- `f2c::hg::CorridorHL`, a headland generator that opens a corridor where cells border each other instead of shrinking every border. Only the part of an edge a neighbour actually touches is cut, and the corridor comes out of the smaller cell so the larger neighbour keeps its shape; cells of the same size split it evenly. Edges facing the outer boundary or a void are left untouched.
 - Python module is built as a proper package with scikit-build-core (`pip install .`); version is taken from `CMakeLists.txt` and exposed as `fields2cover.__version__`.
 - Source distribution published to PyPI (`pip install fields2cover`).
 

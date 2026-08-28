@@ -111,7 +111,7 @@ The decomposition workflow doesn't work directly with the route planner, because
 
 To solve this, we create the middle headland ring first, decompose the inner part of that ring, and then carve a corridor where the decomposed cells border each other.
 
-Running the headland generator a second time would connect the cells too, but it shrinks every border, taking a second headland off the outer boundary that already has one. ``carveSharedBorders`` only cuts where two cells meet, so the swaths reach the outer headland.
+Running the headland generator a second time would connect the cells too, but it shrinks every border, taking a second headland off the outer boundary that already has one. ``CorridorHL`` only cuts where two cells meet, so the swaths reach the outer headland.
 
 .. tabs:: lang
 
@@ -120,7 +120,8 @@ Running the headland generator a second time would connect the cells too, but it
 
     F2CCells mid_hl = const_hl.generateHeadlands(cells, 1.5 * r_w);
     F2CCells decomp_mid_hl = decomp.decompose(mid_hl);
-    F2CCells no_hl = decomp_mid_hl.carveSharedBorders(1.5 * r_w);
+    f2c::hg::CorridorHL corridor_hl;
+    F2CCells no_hl = corridor_hl.generateHeadlands(decomp_mid_hl, 1.5 * r_w);
     F2CSwathsByCells swaths = bf.generateBestSwaths(obj, r_w, no_hl);
 
     f2c::rp::RoutePlannerBase route_planner;
@@ -131,7 +132,8 @@ Running the headland generator a second time would connect the cells too, but it
 
     mid_hl = const_hl.generateHeadlands(cells, 1.5 * r_w);
     decomp_mid_hl = decomp.decompose(mid_hl);
-    no_hl = decomp_mid_hl.carveSharedBorders(1.5 * r_w);
+    corridor_hl = f2c.HG_Corridor_gen();
+    no_hl = corridor_hl.generateHeadlands(decomp_mid_hl, 1.5 * r_w);
     swaths = bf.generateBestSwaths(obj, r_w, no_hl);
 
     route_planner = f2c.RP_RoutePlannerBase();
