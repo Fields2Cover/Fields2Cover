@@ -264,12 +264,12 @@ TEST(fields2cover_types_cells, carveSharedBordersOnlyBetweenTouchingCells) {
       F2CPoint(50,0), F2CPoint(100,0), F2CPoint(100,100),
       F2CPoint(50,100), F2CPoint(50,0)})));
 
-  // The corridor comes out of one side, so the other cell keeps its shape.
+  // Both cells are the same size, so they share the corridor evenly.
   F2CCells carved = cells.carveSharedBorders(2.0);
   EXPECT_EQ(carved.size(), 2);
   EXPECT_NEAR(cells.area() - carved.area(), 200, 1e-3);
-  EXPECT_NEAR(carved.getGeometry(0).area(), 48 * 100, 1e-3);
-  EXPECT_NEAR(carved.getGeometry(1).area(), 50 * 100, 1e-3);
+  EXPECT_NEAR(carved.getGeometry(0).area(), 49 * 100, 1e-3);
+  EXPECT_NEAR(carved.getGeometry(1).area(), 49 * 100, 1e-3);
 }
 
 TEST(fields2cover_types_cells, carveSharedBordersLeavesLoneCellsAlone) {

@@ -5,6 +5,7 @@
 //=============================================================================
 
 #include <algorithm>
+#include <cmath>
 #include "fields2cover/types/Cells.h"
 
 namespace f2c::types {
@@ -269,6 +270,7 @@ Cells Cells::buffer(double width) const {
 Cells Cells::carveSharedBorders(double width) const {
   constexpr double kTol = 1e-3;
   constexpr double kSpur = 1e-9;
+  constexpr double kSameSize = 1e-9;
   // Cut along the part of each border edge that a neighbour actually touches.
   // The whole corridor comes out of the cell with the shorter border, so the
   // larger neighbour keeps its shape: taking half from each side notches both,
@@ -282,10 +284,17 @@ Cells Cells::carveSharedBorders(double width) const {
       if (k == i) {
         continue;
       }
+      // Cells that are the same size share the corridor, each giving half.
+      // The comparison has to be loose: perimeters that are equal in theory
+      // differ in the last bits, and letting that noise pick a winner leaves
+      // some borders with a full corridor and others with none.
       const double perimeter_k = this->getCellBorder(k).length();
-      if (perimeter > perimeter_k || (perimeter == perimeter_k && i > k)) {
-        continue;  // the other cell gives up this corridor
+      const bool same_size =
+          std::abs(perimeter - perimeter_k) <= kSameSize * perimeter;
+      if (!same_size && perimeter > perimeter_k) {
+        continue;  // the smaller neighbour gives up this corridor
       }
+      const double share = same_size ? 0.5 : 1.0;
       const Cells neighbour = Cells::buffer(this->getGeometry(k), kTol);
       for (size_t e = 0; e + 1 < ring.size(); ++e) {
         MultiLineString edge;
@@ -295,7 +304,7 @@ Cells Cells::carveSharedBorders(double width) const {
         for (size_t j = 0; j < shared.size(); ++j) {
           const LineString part = shared.getGeometry(j);
           if (part.size() > 1 && part.length() > kTol) {
-            cell = cell.difference(Cells::buffer(part, width));
+            cell = cell.difference(Cells::buffer(part, width * share));
           }
         }
       }
