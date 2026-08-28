@@ -12,7 +12,7 @@ To be able to add new functionalities to the library, some classes are added:
 
 * ``f2c::types::Graph`` and ``f2c::types::Graph2D`` implement simple logic for graphs
 
-* ``f2c::types::Route`` on version 2 has  :doc:`a new logic <tutorials/basic_types.rst>`.
+* ``f2c::types::Route`` on version 2 has  :doc:`a new logic <tutorials/basic_types>`.
 
 * ``f2c::types::SwathsByCells`` is a class now, instead of just an alias to ``std::vector<Swaths>``.
 

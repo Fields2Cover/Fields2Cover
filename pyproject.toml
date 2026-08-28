@@ -6,7 +6,7 @@ build-backend = "scikit_build_core.build"
 name = "fields2cover"
 dynamic = ["version"]
 description = "Robust and efficient coverage paths for autonomous agricultural vehicles. A modular and extensible Coverage Path Planning library"
-readme = { file = "README.rst", content-type = "text/x-rst" }
+readme = { file = "README.md", content-type = "text/markdown" }
 license = { text = "BSD-3-Clause" }
 authors = [{ name = "Gonzalo Mier, Wageningen University", email = "gonzalo.miermunoz@wur.nl" }]
 requires-python = ">=3.9"
@@ -47,7 +47,6 @@ sdist.exclude = [
     ".github/",
     "Dockerfile",
     "Dockerfile.arm64",
-    "blog_posts.md",
     "package.xml",
 ]
 
