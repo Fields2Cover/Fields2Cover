@@ -15,6 +15,10 @@ namespace {
 constexpr double kTol = 1e-3;
 constexpr double kSpur = 1e-9;
 constexpr double kSameSize = 1e-9;
+// Buffering the neighbour by kTol turns a shared corner into a piece a few
+// millimetres long on each edge that reaches it. A border that short is a
+// corner, and a corner carries no corridor.
+constexpr double kMinBorder = 1e-2;
 }  // namespace
 
 std::vector<CorridorShare> CorridorHL::corridorShares(
@@ -52,7 +56,7 @@ std::vector<CorridorShare> CorridorHL::corridorShares(
         const F2CMultiLineString shared = edge.intersection(neighbour);
         for (size_t j = 0; j < shared.size(); ++j) {
           const F2CLineString part = shared.getGeometry(j);
-          if (part.size() > 1 && part.length() > kTol) {
+          if (part.size() > 1 && part.length() > kMinBorder) {
             share.shared_border.addGeometry(part);
             share.shared_length += part.length();
           }

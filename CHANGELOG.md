@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Source distribution published to PyPI (`pip install fields2cover`).
 
 ### Fixed
+- `f2c::hg::CorridorHL` no longer opens a corridor where two cells only meet at a corner. The neighbour is buffered by a tolerance to find the shared border, which turned a single shared point into a few millimetres of "border" on every edge reaching it; in a field of cells meeting at one point that carved a disc out of the middle and made every slice a neighbour of every other.
 - `F2CCells::getCellBorder`, `getInteriorRing` and `addRing` no longer segfault on an empty polygon or an out-of-range index; they throw `std::out_of_range` like `getGeometry` does.
 - `NSwathModified::computeCost` read the wrong neighbouring point for the first edge: `(i - 1) % ring.size()` wraps a `size_t` to `SIZE_MAX % n`, which is not the previous vertex. The cost of a polygon now no longer depends on which vertex its ring starts from.
 - `generateBestSwaths` no longer returns an angle that covers nothing. The objectives estimate the cost from the cell border alone, so a cell with a hairline spur could score best on an angle producing no swath at all and was silently left uncovered.

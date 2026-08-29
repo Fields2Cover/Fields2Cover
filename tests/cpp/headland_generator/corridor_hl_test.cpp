@@ -245,3 +245,29 @@ TEST(fields2cover_hl_corridor_gen, sharesAccountForEveryCarvedCorridor) {
   EXPECT_NEAR(carved_by_shares, carved, 1e-2);
   EXPECT_NEAR(carved, 2 * 100 * 2.0, 1e-2);
 }
+
+TEST(fields2cover_hl_corridor_gen, sharesTreatACornerAsNoBorder) {
+  f2c::hg::CorridorHL corridor;
+  // Five equal slices meeting at the centre. Each slice borders two others;
+  // the other two only reach the same point. Buffering a neighbour makes a
+  // corner look like a few millimetres of shared border, and a table built on
+  // that would call all four neighbours.
+  const double r = 50.0;
+  F2CCells pie;
+  for (int k = 0; k < 5; ++k) {
+    const double a0 = 2 * M_PI * k / 5, a1 = 2 * M_PI * (k + 1) / 5;
+    pie.addGeometry(F2CCell(F2CLinearRing({
+        F2CPoint(0, 0), F2CPoint(r * cos(a0), r * sin(a0)),
+        F2CPoint(r * cos((a0 + a1) / 2) * 1.02, r * sin((a0 + a1) / 2) * 1.02),
+        F2CPoint(r * cos(a1), r * sin(a1)), F2CPoint(0, 0)})));
+  }
+
+  const std::vector<f2c::hg::CorridorShare> shares = corridor.corridorShares(pie);
+  // Five borders, seen from both sides.
+  EXPECT_EQ(shares.size(), 10);
+  for (const auto& s : shares) {
+    EXPECT_TRUE(s.same_size);
+    EXPECT_NEAR(s.share, 0.5, 1e-9);
+    EXPECT_NEAR(s.shared_length, r, 1e-2) << "cells " << s.cell_i << "-" << s.cell_k;
+  }
+}
