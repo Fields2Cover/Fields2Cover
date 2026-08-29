@@ -54,7 +54,7 @@ This class creates a constant headland around the field.
 .. image:: ../../figures/Tutorial_3_1_Const_width.png
 
 
-On orange it is ``cells`` and in green it is ``no_hl``
+In blue it is ``cells`` and in orange it is ``no_hl``
 
 
 Required width headland
