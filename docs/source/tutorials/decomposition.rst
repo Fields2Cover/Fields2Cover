@@ -109,9 +109,9 @@ Decomposition and Route planner
 
 The decomposition workflow doesn't work directly with the route planner, because the middle headland ring of each decomposed cell are not connected between them.
 
-To solve this, we use a simple trick. First, we create the middle headland ring with the headland generator. Second, we decompose the inner part of the middle headland ring. Third, we generate the mainland using the headland generator again.
+To solve this, we create the middle headland ring first, decompose the inner part of that ring, and then carve a corridor where the decomposed cells border each other.
 
-With this process, we make sure that middle headland rings are connected, even after decomposition.
+Running the headland generator a second time would connect the cells too, but it shrinks every border, taking a second headland off the outer boundary that already has one. ``CorridorHL`` only cuts where two cells meet, so the swaths reach the outer headland.
 
 .. tabs:: lang
 
@@ -120,7 +120,8 @@ With this process, we make sure that middle headland rings are connected, even a
 
     F2CCells mid_hl = const_hl.generateHeadlands(cells, 1.5 * r_w);
     F2CCells decomp_mid_hl = decomp.decompose(mid_hl);
-    F2CCells no_hl = const_hl.generateHeadlands(decomp_mid_hl, 1.5 * r_w);
+    f2c::hg::CorridorHL corridor_hl;
+    F2CCells no_hl = corridor_hl.generateHeadlands(decomp_mid_hl, 1.5 * r_w);
     F2CSwathsByCells swaths = bf.generateBestSwaths(obj, r_w, no_hl);
 
     f2c::rp::RoutePlannerBase route_planner;
@@ -131,7 +132,8 @@ With this process, we make sure that middle headland rings are connected, even a
 
     mid_hl = const_hl.generateHeadlands(cells, 1.5 * r_w);
     decomp_mid_hl = decomp.decompose(mid_hl);
-    no_hl = const_hl.generateHeadlands(decomp_mid_hl, 1.5 * r_w);
+    corridor_hl = f2c.HG_Corridor_gen();
+    no_hl = corridor_hl.generateHeadlands(decomp_mid_hl, 1.5 * r_w);
     swaths = bf.generateBestSwaths(obj, r_w, no_hl);
 
     route_planner = f2c.RP_RoutePlannerBase();

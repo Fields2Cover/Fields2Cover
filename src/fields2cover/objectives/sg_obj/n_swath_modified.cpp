@@ -17,7 +17,7 @@ double NSwathModified::computeCost(
   for (auto&& ring : cell) {
     for (size_t i = 0; i < ring.size(); ++i) {
       auto p = ring.getGeometry(i);
-      auto p_1 = ring.getGeometry((i - 1) % ring.size());
+      auto p_1 = ring.getGeometry((i + ring.size() - 1) % ring.size());
       n_turns += p.distance(p_1) *
         fabs(sin(ang - (p - p_1).getAngleFromPoint()));
     }

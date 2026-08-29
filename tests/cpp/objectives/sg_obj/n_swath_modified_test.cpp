@@ -6,6 +6,7 @@
 
 #include <gtest/gtest.h>
 #include "fields2cover/objectives/sg_obj/n_swath_modified.h"
+#include <vector>
 #include "fields2cover/types.h"
 
 TEST(fields2cover_obj_n_swath_mod, computeCost_cost) {
@@ -57,3 +58,26 @@ TEST(fields2cover_obj_n_swath_mod, params_check) {
   EXPECT_TRUE(objective.isFastCompAvailable());
 }
 
+
+TEST(fields2cover_obj_n_swath_mod, costDoesNotDependOnWhereTheRingStarts) {
+  // The cost sums over the ring's edges, so writing the same polygon from a
+  // different starting vertex must not change it.
+  const std::vector<F2CPoint> corners {
+      F2CPoint(0, 0), F2CPoint(10, 0), F2CPoint(12, 6),
+      F2CPoint(6, 10), F2CPoint(0, 7)};
+  f2c::obj::NSwathModified objective;
+
+  std::vector<F2CPoint> ring {corners};
+  ring.push_back(ring[0]);
+  const double expected = objective.computeCost(0.0, 1.0, F2CCell(F2CLinearRing(ring)));
+
+  for (size_t r = 1; r < corners.size(); ++r) {
+    std::vector<F2CPoint> rotated;
+    for (size_t k = 0; k < corners.size(); ++k) {
+      rotated.push_back(corners[(r + k) % corners.size()]);
+    }
+    rotated.push_back(rotated[0]);
+    EXPECT_NEAR(objective.computeCost(0.0, 1.0, F2CCell(F2CLinearRing(rotated))),
+        expected, 1e-6) << "ring rotated by " << r;
+  }
+}

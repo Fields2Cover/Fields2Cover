@@ -285,6 +285,8 @@ DEFINE_PP_COSTS(BaseObjective<f2c::obj::PPObjective>, computeCostWithMinimizingS
 %include "fields2cover/headland_generator/headland_generator_base.h"
 %rename(HG_Const_gen) f2c::hg::ConstHL;
 %include "fields2cover/headland_generator/constant_headland.h"
+%rename(HG_Corridor_gen) f2c::hg::CorridorHL;
+%include "fields2cover/headland_generator/corridor_headland.h"
 
 
 %include "fields2cover/swath_generator/swath_generator_base.h"

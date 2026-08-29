@@ -93,4 +93,3 @@ def test_fields2cover_types_cells_wherePoint():
   near(cells.getCellWherePoint(f2c.Point(1, 1)).area(), 4);
   near(cells.getCellWherePoint(f2c.Point(0, 0)).area(), 4);
   near(cells.getCellWherePoint(f2c.Point(11, 11)).area(), 6);
-
