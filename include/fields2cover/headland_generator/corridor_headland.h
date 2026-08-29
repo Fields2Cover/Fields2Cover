@@ -14,6 +14,31 @@
 
 namespace f2c::hg {
 
+/// One shared border between two cells, and how the corridor over it is split.
+///
+/// A pair of touching cells gives two of these, one seen from each cell. The
+/// pair that shares the border evenly gives 0.5 twice; otherwise the smaller
+/// cell gives the whole corridor and the larger one keeps a row with a share
+/// of 0, so a report can tell which side of the border the corridor came from.
+struct CorridorShare {
+  /// Cell the corridor is taken out of.
+  size_t cell_i {0};
+  /// Neighbour on the other side of the border.
+  size_t cell_k {0};
+  /// Perimeter of cell \a cell_i, the size the rule compares.
+  double perimeter_i {0.0};
+  /// Perimeter of cell \a cell_k.
+  double perimeter_k {0.0};
+  /// True when both perimeters are equal up to the tolerance of the rule.
+  bool same_size {false};
+  /// Part of the corridor width taken out of \a cell_i: 0, 0.5 or 1.
+  double share {0.0};
+  /// Length of the border the two cells share.
+  double shared_length {0.0};
+  /// Border segments the corridor is opened along.
+  F2CMultiLineString shared_border;
+};
+
 /// Class to open a corridor where cells border each other, leaving the edges
 /// that face the outer boundary or a void untouched.
 ///
@@ -30,6 +55,14 @@ class CorridorHL : public HeadlandGeneratorBase {
   /// @return Mainland area
   F2CCells generateHeadlands(
     const F2CCells& field, double dist_headland) override;
+
+  /// Split the corridor between each pair of cells that share a border.
+  ///
+  /// This is the rule generateHeadlands() applies, on its own: which cell
+  /// gives the corridor, how much of it, and over which part of the border.
+  /// @param field Cells that share borders, usually from a decomposition.
+  /// @return One share per ordered pair of cells that touch along a border.
+  std::vector<CorridorShare> corridorShares(const F2CCells& field) const;
 
   /// Open a corridor wide enough for \a n_swaths passes.
   /// @param field Borders of the field and the obstacles on it.
