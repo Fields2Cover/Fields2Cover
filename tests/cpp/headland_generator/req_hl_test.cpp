@@ -71,7 +71,10 @@ TEST(fields2cover_hg_req_gen, headland_width_follows_the_border_angle) {
   // Turning the swaths turns the wide borders with them.
   auto hl_y = hl_gen.generateHeadlands(cell, robot, 0.5 * M_PI);
   EXPECT_NEAR(hl_y.area(), hl.area(), 1e-2);
-  EXPECT_NEAR(hl_y.getGeometry(0).getExteriorRing().getX(0), hl_y.getGeometry(0).getExteriorRing().getX(0), 1e-9);
+  EXPECT_NEAR(hl.getWidth(), hl_y.getHeight(), 1e-2);
+  EXPECT_NEAR(hl.getHeight(), hl_y.getWidth(), 1e-2);
+  // Swaths along x turn on the vertical borders, so x is what shrinks.
+  EXPECT_LT(hl.getWidth(), hl.getHeight());
 
   // A constant headland gives up the difference on every border.
   auto const_hl = const_hl_gen.generateHeadlands(cell, robot, 0.0);
@@ -86,8 +89,9 @@ TEST(fields2cover_hg_req_gen, headland_around_an_obstacle) {
   f2c::hg::ReqHL hl_gen;
   F2CRobot robot = createRobot();
   F2CCell cell = createSquare(100.0);
-  cell.addRing(F2CLinearRing{F2CPoint(40,40), F2CPoint(40,60),
-                             F2CPoint(60,60), F2CPoint(60,40), F2CPoint(40,40)});
+  cell.addRing(F2CLinearRing{
+    F2CPoint(40, 40), F2CPoint(40, 60), F2CPoint(60, 60), F2CPoint(60, 40),
+    F2CPoint(40, 40)});
 
   auto hl = hl_gen.generateHeadlands(cell, robot, 0.0);
 

@@ -4,6 +4,7 @@
 //                        BSD-3 License
 //=============================================================================
 
+#include <vector>
 #include "fields2cover/types/LinearRing.h"
 #include "fields2cover/types/LineString.h"
 
