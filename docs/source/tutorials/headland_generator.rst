@@ -55,3 +55,41 @@ This class creates a constant headland around the field.
 
 
 On orange it is ``cells`` and in green it is ``no_hl``
+
+
+Required width headland
+-----------------------
+
+A border the swaths run along is only entered, while a border they end on takes a whole turn.
+This class asks each border how much room the robot needs on it, given the angle of the swaths, and leaves the rest to the mainland.
+It takes the robot and one track angle per cell instead of a width.
+
+.. tabs:: lang
+
+  .. code-tab:: cpp
+    :caption: C++
+
+    robot.setMinTurningRadius(3.0);
+    f2c::hg::ReqHL req_hl;
+    F2CCells req_no_hl = req_hl.generateHeadlands(cells, robot, {0.0});
+    std::cout << "With swaths at 0 rad, the area without headlands is " <<
+        req_no_hl.area() << ", while a constant headland leaves " <<
+        const_hl.generateHeadlands(cells, robot, {0.0}).area() << std::endl;
+
+  .. code-tab:: python
+    :caption: Python
+
+    robot.setMinTurningRadius(3.0);
+    req_hl = f2c.HG_Req_gen();
+    req_no_hl = req_hl.generateHeadlands(cells, robot, f2c.VectorDouble([0.0]));
+    print("With swaths at 0 rad, the area without headlands is ", req_no_hl.area(),
+        ", while a constant headland leaves ",
+        const_hl.generateHeadlands(cells, robot, f2c.VectorDouble([0.0])).area());
+
+*With swaths at 0 rad, the area without headlands is 7696.32, while a constant headland leaves 7356.33*
+
+
+.. image:: ../../figures/Tutorial_3_2_Req_width.png
+
+
+On orange it is ``cells`` and in green it is ``req_no_hl``
