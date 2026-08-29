@@ -17,6 +17,8 @@ namespace f2c::hg {
 /// Class to generate headlands with equal width in each border.
 class ConstHL : public HeadlandGeneratorBase {
  public:
+  using HeadlandGeneratorBase::generateHeadlands;
+
   /// Generate headland area of the field at a given distance from borders
   /// @param field Borders of the field and the obstacles on it.
   /// @param dist_headland Distance between exterior and interior borders
