@@ -284,10 +284,17 @@ DEFINE_PP_COSTS(BaseObjective<f2c::obj::PPObjective>, computeCostWithMinimizingS
 %template(OBJ_CompleteTurnPathObj_ReedsSheppHC) f2c::obj::CompleteTurnPathObj<f2c::pp::ReedsSheppCurvesHC>;
 
 %include "fields2cover/headland_generator/headland_generator_base.h"
+// The generators pull the base overloads in with a using declaration,
+// which swig reads as an inherited pure virtual.
+%feature("notabstract") f2c::hg::ConstHL;
+%feature("notabstract") f2c::hg::CorridorHL;
+%feature("notabstract") f2c::hg::ReqHL;
 %rename(HG_Const_gen) f2c::hg::ConstHL;
 %include "fields2cover/headland_generator/constant_headland.h"
 %rename(HG_Corridor_gen) f2c::hg::CorridorHL;
 %include "fields2cover/headland_generator/corridor_headland.h"
+%rename(HG_Req_gen) f2c::hg::ReqHL;
+%include "fields2cover/headland_generator/required_headland.h"
 
 
 %include "fields2cover/swath_generator/swath_generator_base.h"

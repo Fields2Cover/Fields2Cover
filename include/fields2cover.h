@@ -47,6 +47,7 @@
 #include "fields2cover/headland_generator/headland_generator_base.h"
 #include "fields2cover/headland_generator/constant_headland.h"
 #include "fields2cover/headland_generator/corridor_headland.h"
+#include "fields2cover/headland_generator/required_headland.h"
 
 #include "fields2cover/swath_generator/swath_generator_base.h"
 #include "fields2cover/swath_generator/brute_force.h"
