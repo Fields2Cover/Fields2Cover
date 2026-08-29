@@ -52,6 +52,7 @@ DEFINE_GEOM_ALGS(disjoint)
 DEFINE_GEOM_ALGS(crosses)
 DEFINE_GEOM_ALGS(touches)
 DEFINE_GEOM_ALGS(within)
+DEFINE_GEOM_ALGS(contains)
 DEFINE_GEOM_ALGS(intersects)
 %template(GeomPoint) f2c::types::Geometry<OGRPoint, wkbPoint>;
 %template(GeomMultiPoint) f2c::types::Geometry<OGRMultiPoint, wkbMultiPoint>;
