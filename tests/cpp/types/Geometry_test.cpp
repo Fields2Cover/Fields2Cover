@@ -736,3 +736,27 @@ TEST(fields2cover_types_geometry, rotateFromPoint) {
 }
 
 
+
+TEST(fields2cover_types_geometry, contains) {
+  F2CPoint p_t(0.5, 0.5), p_n(-0.5, -0.5);
+  F2CLineString line {F2CPoint(0,0), F2CPoint(4,0)};
+  F2CLineString sub_line {F2CPoint(1,0), F2CPoint(3,0)};
+  F2CLinearRing ring1 {F2CPoint(0,0), F2CPoint(4,0), F2CPoint(4,3),
+                       F2CPoint(0,3), F2CPoint(0,0)};
+  F2CCell cell1 {ring1};
+  F2CCells cells1 {cell1};
+
+  // contains() is within() seen from the other side.
+  EXPECT_TRUE(cell1.contains(p_t));
+  EXPECT_EQ(cell1.contains(p_t), p_t.within(cell1));
+  EXPECT_FALSE(cell1.contains(p_n));
+  EXPECT_EQ(cell1.contains(p_n), p_n.within(cell1));
+  EXPECT_TRUE(cells1.contains(p_t));
+  EXPECT_FALSE(cells1.contains(p_n));
+
+  // A segment holding another one, as filterSelfIntersections() asks it.
+  EXPECT_TRUE(line.contains(sub_line));
+  EXPECT_FALSE(sub_line.contains(line));
+  EXPECT_TRUE(line.contains(line));
+  EXPECT_FALSE(line.contains(p_n));
+}

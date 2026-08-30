@@ -16,6 +16,26 @@ namespace f2c::hg {
 /// Base class to generate the headlands.
 class HeadlandGeneratorBase {
  public:
+  /// Get the regions of a cell without the headlands the robot needs to turn.
+  /// @param field Borders of the cell and the obstacles on it.
+  /// @param robot Robot doing the coverage.
+  /// @param track_ang Angle of the swaths on the cell.
+  /// @return Mainland area
+  virtual F2CCells generateHeadlands(
+    const F2CCell& field, const F2CRobot& robot, double track_ang);
+
+  /// Get the regions of the field without the headlands the robot needs.
+  /// @param field Borders of the field and the obstacles on it.
+  /// @param robot Robot doing the coverage.
+  /// @param track_angs Angle of the swaths on each cell.
+  /// @return Mainland area
+  virtual F2CCells generateHeadlands(
+    const F2CCells& field, const F2CRobot& robot,
+    const std::vector<double>& track_angs);
+
+  /// Width of the headland a robot can need on a border, at worst.
+  double maxHLWidthRequired(const F2CRobot& robot) const;
+
   /// Get the regions of the field without headlands.
   /// @param _field Original field
   /// @param _dist_headland Width of the headland

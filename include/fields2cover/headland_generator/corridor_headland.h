@@ -22,6 +22,8 @@ namespace f2c::hg {
 /// headland off ground that has one.
 class CorridorHL : public HeadlandGeneratorBase {
  public:
+  using HeadlandGeneratorBase::generateHeadlands;
+
   /// Open a corridor of the given width between cells that share a border.
   /// @param field Cells that share borders, usually from a decomposition.
   /// @param dist_headland Width of the corridor.

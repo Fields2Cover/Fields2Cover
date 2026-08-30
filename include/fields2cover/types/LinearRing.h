@@ -15,6 +15,8 @@
 
 namespace f2c::types {
 
+struct LineString;
+
 struct LinearRing : public Geometries<LinearRing, OGRLinearRing, wkbLinearRing,
   Point> {
  public:
@@ -50,6 +52,28 @@ struct LinearRing : public Geometries<LinearRing, OGRLinearRing, wkbLinearRing,
   LinearRing& closeRing();
 
   Point closestPointTo(const Point& p) const;
+
+  LinearRing& removePoint(size_t i);
+
+  LineString getSegment(size_t i) const;
+  LineString getLastSegment() const;
+  double segmentLength(size_t i) const;
+  double segmentAng(size_t i) const;
+
+  /// Remove the crossings a ring gets when its segments are offset.
+  LinearRing& filterSelfIntersections();
+
+  /// Generate a parallel curve with an offset d on every segment.
+  LinearRing getParallelLine(double d) const;
+
+  /// Generate a parallel curve with an offset d[i] for the i^th segment.
+  LinearRing getParallelLine(const std::vector<double>& d) const;
+
+  /// Offset each segment away from the interior of the ring.
+  LinearRing& bufferOutwards(const std::vector<double>& d);
+
+  /// Offset each segment towards the interior of the ring.
+  LinearRing& bufferInwards(const std::vector<double>& d);
 };
 
 

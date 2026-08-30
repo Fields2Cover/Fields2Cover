@@ -30,3 +30,10 @@ def test_fields2cover_types_geometry_getAngContinuity():
 
 
 
+
+def test_fields2cover_types_geometry_contains():
+  cell = f2c.Cell(f2c.LinearRing(f2c.VectorPoint([
+    f2c.Point(0,0), f2c.Point(4,0), f2c.Point(4,4), f2c.Point(0,4), f2c.Point(0,0)])));
+  assert cell.contains(f2c.Point(2,2));
+  assert not cell.contains(f2c.Point(9,9));
+  assert cell.contains(f2c.Point(2,2)) == f2c.Point(2,2).within(cell);
