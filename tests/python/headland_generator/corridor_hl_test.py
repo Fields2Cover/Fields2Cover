@@ -34,3 +34,21 @@ def test_fields2cover_hl_corridor_gen_corridorShares():
   assert (by_cell[0].cell_k == 1 and by_cell[1].cell_k == 0);
   near(by_cell[0].share, 0.0, 1e-9);
   near(by_cell[1].share, 1.0, 1e-9);
+
+def test_fields2cover_hl_corridor_gen_shareMode():
+  corridor = f2c.HG_Corridor_gen();
+  assert (corridor.getShareMode() == f2c.CorridorShareMode_ASYMMETRIC);
+
+  cells = f2c.Cells(f2c.Cell(f2c.LinearRing(f2c.VectorPoint(
+    [f2c.Point(0,0), f2c.Point(20,0), f2c.Point(20,10), f2c.Point(0,10), f2c.Point(0,0)]))));
+  cells.addGeometry(f2c.Cell(f2c.LinearRing(f2c.VectorPoint(
+    [f2c.Point(10,10), f2c.Point(20,10), f2c.Point(20,20), f2c.Point(10,20), f2c.Point(10,10)]))));
+
+  # Sizes differ, so ASYMMETRIC would give the whole corridor to one side.
+  shares = corridor.corridorShares(cells, f2c.CorridorShareMode_SYMMETRIC);
+  assert (len(shares) == 2);
+  for share in shares:
+    near(share.share, 0.5, 1e-9);
+
+  corridor.setShareMode(f2c.CorridorShareMode_SYMMETRIC);
+  assert (corridor.getShareMode() == f2c.CorridorShareMode_SYMMETRIC);

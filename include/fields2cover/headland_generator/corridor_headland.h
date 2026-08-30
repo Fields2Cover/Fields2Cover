@@ -14,6 +14,14 @@
 
 namespace f2c::hg {
 
+/// How CorridorHL splits the corridor between two cells that share a border.
+enum class CorridorShareMode {
+  /// The smaller cell gives the whole corridor; ties split evenly. Default.
+  ASYMMETRIC,
+  /// Every shared border splits evenly, regardless of the cells' size.
+  SYMMETRIC,
+};
+
 /// One shared border between two cells, and how the corridor over it is split.
 ///
 /// A pair of touching cells gives two of these, one seen from each cell. The
@@ -61,8 +69,18 @@ class CorridorHL : public HeadlandGeneratorBase {
   /// This is the rule generateHeadlands() applies, on its own: which cell
   /// gives the corridor, how much of it, and over which part of the border.
   /// @param field Cells that share borders, usually from a decomposition.
+  /// @param mode Rule to split the corridor with.
   /// @return One share per ordered pair of cells that touch along a border.
-  std::vector<CorridorShare> corridorShares(const F2CCells& field) const;
+  std::vector<CorridorShare> corridorShares(
+      const F2CCells& field,
+      CorridorShareMode mode = CorridorShareMode::ASYMMETRIC) const;
+
+  /// Rule generateHeadlands() uses to split the corridor. Defaults to
+  /// ASYMMETRIC.
+  void setShareMode(CorridorShareMode mode);
+
+  /// Rule generateHeadlands() currently uses to split the corridor.
+  CorridorShareMode getShareMode() const;
 
   /// Open a corridor wide enough for \a n_swaths passes.
   /// @param field Borders of the field and the obstacles on it.
@@ -81,6 +99,9 @@ class CorridorHL : public HeadlandGeneratorBase {
   std::vector<F2CCells> generateHeadlandSwaths(
     const F2CCells& field, double swath_width, int n_swaths,
     bool dir_out2in = true) override;
+
+ private:
+  CorridorShareMode share_mode_ {CorridorShareMode::ASYMMETRIC};
 };
 
 }  // namespace f2c::hg

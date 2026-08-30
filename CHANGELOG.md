@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Geometry::contains`, the other side of `Geometry::within`.
 - `f2c::hg::CorridorHL`, a headland generator that opens a corridor where cells border each other instead of shrinking every border. Only the part of an edge a neighbour actually touches is cut, and the corridor comes out of the smaller cell so the larger neighbour keeps its shape; cells of the same size split it evenly. Edges facing the outer boundary or a void are left untouched.
 - `f2c::hg::CorridorHL::corridorShares`, the rule that generator applies, on its own: for each pair of cells that share a border it reports the two perimeters, whether they count as the same size, how much of the corridor each cell gives, and the border they share.
+- `f2c::hg::CorridorShareMode`, to split every corridor evenly (`SYMMETRIC`) instead of giving it all to the smaller cell (`ASYMMETRIC`, the default). `CorridorHL::corridorShares` takes it as an argument, and `CorridorHL::setShareMode`/`getShareMode` set the mode `generateHeadlands` applies.
 - Python module is built as a proper package with scikit-build-core (`pip install .`); version is taken from `CMakeLists.txt` and exposed as `fields2cover.__version__`.
 - Source distribution published to PyPI (`pip install fields2cover`).
 

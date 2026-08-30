@@ -246,6 +246,49 @@ TEST(fields2cover_hl_corridor_gen, sharesAccountForEveryCarvedCorridor) {
   EXPECT_NEAR(carved, 2 * 100 * 2.0, 1e-2);
 }
 
+TEST(fields2cover_hl_corridor_gen, sharesSymmetricModeAlwaysSplitsEvenly) {
+  f2c::hg::CorridorHL corridor;
+  // Same field as sharesTellWhoGivesTheCorridor: sizes differ, so the default
+  // rule would give the whole corridor to the smaller cell.
+  F2CCells cells;
+  cells.addGeometry(F2CCell(F2CLinearRing({
+      F2CPoint(0,0), F2CPoint(20,0), F2CPoint(20,10), F2CPoint(0,10), F2CPoint(0,0)})));
+  cells.addGeometry(F2CCell(F2CLinearRing({
+      F2CPoint(10,10), F2CPoint(20,10), F2CPoint(20,20),
+      F2CPoint(10,20), F2CPoint(10,10)})));
+
+  const std::vector<f2c::hg::CorridorShare> shares = corridor.corridorShares(
+      cells, f2c::hg::CorridorShareMode::SYMMETRIC);
+  ASSERT_EQ(shares.size(), 2);
+  for (const auto& s : shares) {
+    EXPECT_FALSE(s.same_size);
+    EXPECT_NEAR(s.share, 0.5, 1e-9);
+  }
+}
+
+TEST(fields2cover_hl_corridor_gen, defaultShareModeIsAsymmetric) {
+  f2c::hg::CorridorHL corridor;
+  EXPECT_EQ(corridor.getShareMode(), f2c::hg::CorridorShareMode::ASYMMETRIC);
+}
+
+TEST(fields2cover_hl_corridor_gen, generateHeadlandsUsesConfiguredShareMode) {
+  f2c::hg::CorridorHL corridor;
+  // Two cells of the same size, so a symmetric split reduces both by the same
+  // amount instead of taking the whole corridor out of just one.
+  F2CCells cells;
+  cells.addGeometry(F2CCell(F2CLinearRing({
+      F2CPoint(0,0), F2CPoint(50,0), F2CPoint(50,100), F2CPoint(0,100), F2CPoint(0,0)})));
+  cells.addGeometry(F2CCell(F2CLinearRing({
+      F2CPoint(50,0), F2CPoint(100,0), F2CPoint(100,100),
+      F2CPoint(50,100), F2CPoint(50,0)})));
+
+  corridor.setShareMode(f2c::hg::CorridorShareMode::SYMMETRIC);
+  EXPECT_EQ(corridor.getShareMode(), f2c::hg::CorridorShareMode::SYMMETRIC);
+  F2CCells carved = corridor.generateHeadlands(cells, 2.0);
+  EXPECT_NEAR(carved.getGeometry(0).area(), 49 * 100, 1e-3);
+  EXPECT_NEAR(carved.getGeometry(1).area(), 49 * 100, 1e-3);
+}
+
 TEST(fields2cover_hl_corridor_gen, sharesTreatACornerAsNoBorder) {
   f2c::hg::CorridorHL corridor;
   // Five equal slices meeting at the centre. Each slice borders two others;

@@ -22,10 +22,11 @@ constexpr double kMinBorder = 1e-2;
 }  // namespace
 
 std::vector<CorridorShare> CorridorHL::corridorShares(
-    const F2CCells& field) const {
+    const F2CCells& field, CorridorShareMode mode) const {
   // The corridor comes out of the smaller cell, so the larger neighbour keeps
   // its shape: taking half from each side notches both, and a notched cell
-  // costs the swath generator a pass.
+  // costs the swath generator a pass. In SYMMETRIC mode every border splits
+  // evenly instead, regardless of size, for comparison against that rule.
   std::vector<CorridorShare> shares;
   for (size_t i = 0; i < field.size(); ++i) {
     const F2CLinearRing ring = field.getCellBorder(i);
@@ -45,8 +46,9 @@ std::vector<CorridorShare> CorridorHL::corridorShares(
       // some borders with a full corridor and others with none.
       share.same_size =
           std::abs(perimeter - share.perimeter_k) <= kSameSize * perimeter;
-      share.share = share.same_size ? 0.5 :
-          (perimeter < share.perimeter_k ? 1.0 : 0.0);
+      share.share = mode == CorridorShareMode::SYMMETRIC ? 0.5 :
+          (share.same_size ? 0.5 :
+              (perimeter < share.perimeter_k ? 1.0 : 0.0));
       // Keep the part of each border edge that the neighbour actually touches.
       const F2CCells neighbour = F2CCells::buffer(field.getGeometry(k), kTol);
       for (size_t e = 0; e + 1 < ring.size(); ++e) {
@@ -71,9 +73,17 @@ std::vector<CorridorShare> CorridorHL::corridorShares(
   return shares;
 }
 
+void CorridorHL::setShareMode(CorridorShareMode mode) {
+  share_mode_ = mode;
+}
+
+CorridorShareMode CorridorHL::getShareMode() const {
+  return share_mode_;
+}
+
 F2CCells CorridorHL::generateHeadlands(
     const F2CCells& field, double dist_headland) {
-  const std::vector<CorridorShare> shares = corridorShares(field);
+  const std::vector<CorridorShare> shares = corridorShares(field, share_mode_);
   F2CCells carved;
   for (size_t i = 0; i < field.size(); ++i) {
     F2CCells cell {field.getGeometry(i)};
