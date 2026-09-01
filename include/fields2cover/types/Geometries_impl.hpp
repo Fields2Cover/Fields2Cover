@@ -41,6 +41,9 @@ Geometries<SAMETYPE, T, R, CHILDRENTYPE>::Iterator::Private::~Private() {}
 
 template <class SAMETYPE, class T, OGRwkbGeometryType R, class CHILDRENTYPE>
 void Geometries<SAMETYPE, T, R, CHILDRENTYPE>::Iterator::update() {
+  // T not listed here means `for (auto&& c : geoms) { c = ...; }` silently
+  // writes into this iterator's own copy and never reaches `geoms` --
+  // no error, no warning, just a no-op. OGRMultiPolygon (Cells) is one.
   if (std::is_same<T, OGRMultiPoint>::value ||
     std::is_same<T, OGRLinearRing>::value ||
     std::is_same<T, OGRLineString>::value) {
