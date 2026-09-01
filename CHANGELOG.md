@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
-- `Point::intersectionOfLines` no longer sends the result arbitrarily far away for two lines a fraction of a degree apart. The parallel check compared the determinant to exactly 0, but two real-world collinear borders -- a redundant vertex on an otherwise straight, digitized field edge -- produce a determinant that is 0 only up to rounding, dividing by which is what actually blew up. Offsetting a ring past one of these (`LinearRing::bufferOutwards`, used by `ReqHL::generateHeadlands`) could shrink a cell to nearly nothing or grow its mainland past the input field.
+- `Point::intersectionOfLines` no longer sends the result arbitrarily far away for two lines a fraction of a degree apart. The parallel check compared the determinant to exactly 0, but two real-world collinear borders -- a redundant vertex on an otherwise straight, digitized field edge -- produce a determinant that is 0 only up to rounding, dividing by which is what actually blew up.
+- `ReqHL::generateHeadlands` no longer collapses a mainland to nearly nothing on a heavily digitized border. Offsetting hundreds of segments by widely different amounts crosses the resulting ring many times over; cleaning that up fell to `LinearRing::filterSelfIntersections`, which resolves one crossing at a time and drops every point between the two segments involved -- most of a real border, if that crossing is a distant one. The exterior ring's offset is now cleaned up with a GEOS buffer instead, which can also come back as more than one mainland cell where the ring legitimately splits.
 
 ## [2.1.0] - 2026-09-03
 

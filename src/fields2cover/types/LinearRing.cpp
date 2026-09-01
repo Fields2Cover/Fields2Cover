@@ -214,7 +214,6 @@ LinearRing LinearRing::getParallelLine(const std::vector<double>& d) const {
           ps0[i-1], ps1[i-1], ps0[i], ps1[i]));
   }
   ring.addPoint(ring[0]);
-  ring.filterSelfIntersections();
   return ring;
 }
 

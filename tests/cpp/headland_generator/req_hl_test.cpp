@@ -5,9 +5,15 @@
 //=============================================================================
 
 #include <gtest/gtest.h>
+#include <fstream>
+#include <sstream>
+#include <string>
 #include "fields2cover/headland_generator/required_headland.h"
 #include "fields2cover/headland_generator/constant_headland.h"
+#include "fields2cover/objectives/sg_obj/n_swath_modified.h"
+#include "fields2cover/swath_generator/brute_force.h"
 #include "fields2cover/utils/random.h"
+#include "fields2cover/utils/transformation.h"
 #include "fields2cover/types.h"
 
 namespace {
@@ -22,6 +28,19 @@ F2CCell createSquare(double side) {
   return F2CCell{F2CLinearRing{
     F2CPoint(0, 0), F2CPoint(side, 0), F2CPoint(side, side),
     F2CPoint(0, side), F2CPoint(0, 0)}};
+}
+
+F2CCell loadWktCell(const std::string& path) {
+  std::ifstream f(path);
+  if (!f.is_open()) {
+    ADD_FAILURE() << "could not open " << path;
+    return F2CCell();
+  }
+  std::stringstream ss;
+  ss << f.rdbuf();
+  F2CCell cell;
+  cell.importFromWkt(ss.str());
+  return cell;
 }
 
 }  // namespace
@@ -155,4 +174,38 @@ TEST(fields2cover_hg_req_gen, border_swaths) {
   EXPECT_EQ(hl_swaths.size(), 10);
   EXPECT_GT(hl_swaths[0].area(), hl_swaths[9].area());
   EXPECT_LT(no_hl.area(), field.area());
+}
+
+TEST(fields2cover_hg_req_gen, doesNotCollapseOnAHeavilyDigitizedBorder) {
+  // Offsetting 274 segments by widely different amounts crosses itself many
+  // times over. Cleaning that up used to fall to a greedy filter that
+  // resolves one crossing at a time and drops every point in between --
+  // most of the ring, if that crossing is a distant one. This field
+  // collapsed from 6875 m2 to 1 m2 that way.
+  F2CCell field = loadWktCell(std::string(DATA_PATH) + "ee_field_103.wkt");
+  ASSERT_GT(field.area(), 0) << "ee_field_103.wkt did not load a real field";
+  F2CField f2c_field(F2CCells(field), "ee_field_103");
+  f2c_field.setCRS("EPSG:4326");
+  f2c::Transform::transformToUTM(f2c_field);
+  F2CCell utm_field = f2c_field.getField().getGeometry(0);
+
+  F2CRobot robot(3.0, 3.0);
+  robot.setMinTurningRadius(6.0);
+  f2c::sg::BruteForce bf;
+  f2c::obj::NSwathModified obj;
+  auto swaths = bf.generateBestSwaths(obj, robot.getCovWidth(),
+      F2CCells(utm_field));
+  double track_ang = swaths.flatten().at(0).getInAngle();
+
+  f2c::hg::ReqHL req_hl;
+  f2c::hg::ConstHL const_hl;
+  double worst_case = const_hl.generateHeadlands(
+      F2CCells(utm_field), req_hl.maxHLWidthRequired(robot)).area();
+  double req_area = req_hl.generateHeadlands(utm_field, robot, track_ang)
+      .area();
+
+  // The rule ReqHL exists for: never worse than always taking the worst
+  // case, never more than the field it came from.
+  EXPECT_GE(req_area, worst_case);
+  EXPECT_LE(req_area, utm_field.area());
 }
