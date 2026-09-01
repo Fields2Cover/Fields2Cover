@@ -195,7 +195,9 @@ TEST(fields2cover_hg_req_gen, doesNotCollapseOnAHeavilyDigitizedBorder) {
   f2c::obj::NSwathModified obj;
   auto swaths = bf.generateBestSwaths(obj, robot.getCovWidth(),
       F2CCells(utm_field));
-  double track_ang = swaths.flatten().at(0).getInAngle();
+  auto flat_swaths = swaths.flatten();
+  ASSERT_GT(flat_swaths.size(), 0) << "no swath generated for ee_field_103.wkt";
+  double track_ang = flat_swaths.at(0).getInAngle();
 
   f2c::hg::ReqHL req_hl;
   f2c::hg::ConstHL const_hl;
