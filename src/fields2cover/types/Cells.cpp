@@ -192,11 +192,7 @@ Cells Cells::unionCascaded() const {
 }
 
 Cells Cells::splitByLine(const LineString& line) const {
-  Cells cells = this->difference(this->buffer(line, 1e-8));
-  for (auto&& c : cells) {
-    c = Cell::buffer(c, 1e-8 * 0.5);
-  }
-  return cells;
+  return this->difference(this->buffer(line, 1e-8));
 }
 
 Cells Cells::splitByLine(const MultiLineString& lines) const {
