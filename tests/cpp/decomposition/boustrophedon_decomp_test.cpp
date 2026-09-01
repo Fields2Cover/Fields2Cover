@@ -5,7 +5,6 @@
 //=============================================================================
 
 #include <gtest/gtest.h>
-#include <ogr_geometry.h>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -32,14 +31,14 @@ TEST(fields2cover_decomp_boustrophedon, decompose) {
 namespace {
 F2CCell loadWktCell(const std::string& path) {
   std::ifstream f(path);
+  if (!f.is_open()) {
+    ADD_FAILURE() << "could not open " << path;
+    return F2CCell();
+  }
   std::stringstream ss;
   ss << f.rdbuf();
-  std::string wkt = ss.str();
-  OGRGeometry* geom = nullptr;
-  const char* c = wkt.c_str();
-  OGRGeometryFactory::createFromWkt(&c, nullptr, &geom);
-  F2CCell cell(geom);
-  OGRGeometryFactory::destroyGeometry(geom);
+  F2CCell cell;
+  cell.importFromWkt(ss.str());
   return cell;
 }
 }  // namespace
@@ -51,6 +50,7 @@ TEST(fields2cover_decomp_boustrophedon, doesNotThrowOnAPinchedSplit) {
   // buffer on a pinched piece can separate it into two, and that used to
   // throw std::invalid_argument instead of decomposing the field.
   F2CCell raw = loadWktCell(std::string(DATA_PATH) + "ee_field_130.wkt");
+  ASSERT_GT(raw.area(), 0) << "ee_field_130.wkt did not load a real field";
   F2CField field(F2CCells(raw), "ee_field_130");
   field.setCRS("EPSG:4326");
   f2c::Transform::transformToUTM(field);
