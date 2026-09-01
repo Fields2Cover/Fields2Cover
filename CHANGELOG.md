@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- `Point::intersectionOfLines` no longer sends the result arbitrarily far away for two lines a fraction of a degree apart. The parallel check compared the determinant to exactly 0, but two real-world collinear borders -- a redundant vertex on an otherwise straight, digitized field edge -- produce a determinant that is 0 only up to rounding, dividing by which is what actually blew up. Offsetting a ring past one of these (`LinearRing::bufferOutwards`, used by `ReqHL::generateHeadlands`) could shrink a cell to nearly nothing or grow its mainland past the input field.
+
 ## [2.1.0] - 2026-09-03
 
 ### Added

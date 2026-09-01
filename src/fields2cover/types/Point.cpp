@@ -164,8 +164,13 @@ double Point::signedDistance2Segment(
 Point Point::intersectionOfLines(
     const Point& l1_s, const Point& l1_e,
     const Point& l2_s, const Point& l2_e) {
-  double den = det(l1_e - l1_s, l2_e - l2_s);
-  if (den == 0) {
+  const Point v1 = l1_e - l1_s;
+  const Point v2 = l2_e - l2_s;
+  double den = det(v1, v2);
+  // Near-parallel lines have den near but not at 0, and dividing by it
+  // sends the result arbitrarily far off. Scale the tolerance by the
+  // lines' length so it holds at any scale.
+  if (fabs(den) <= 1e-9 * sqrt((v1 * v1) * (v2 * v2))) {
     return l1_s;
   }
   double det1 = det(l1_e, l1_s);
