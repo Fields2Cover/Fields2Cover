@@ -143,6 +143,20 @@ TEST(fields2cover_types_linearring, bufferOutwardsAndInwards) {
   EXPECT_NEAR(neg_ring.bufferInwards({-1, -1, -1, -1}).area(), 36, 1e-7);
 }
 
+TEST(fields2cover_types_linearring, bufferOutwardsPastARedundantVertex) {
+  // (2,0) sits on the bottom edge, a redundant vertex splitting it into two
+  // collinear segments. That used to send it flying off the square.
+  F2CLinearRing ring{F2CPoint(0,0), F2CPoint(2,0), F2CPoint(4,0),
+                     F2CPoint(4,4), F2CPoint(0,4), F2CPoint(0,0)};
+  ring.bufferOutwards({1, 1, 1, 1, 1});
+  for (auto&& p : ring) {
+    EXPECT_LT(p.getX(), 10) << "a point shot far outside the buffered square";
+    EXPECT_GT(p.getX(), -10) << "a point shot far outside the buffered square";
+    EXPECT_LT(p.getY(), 10) << "a point shot far outside the buffered square";
+    EXPECT_GT(p.getY(), -10) << "a point shot far outside the buffered square";
+  }
+}
+
 TEST(fields2cover_types_linearring, filterSelfIntersections) {
   F2CLinearRing square{F2CPoint(0,0), F2CPoint(4,0), F2CPoint(4,4),
                        F2CPoint(0,4), F2CPoint(0,0)};
