@@ -10,6 +10,7 @@
 #include <string>
 #include "fields2cover/headland_generator/required_headland.h"
 #include "fields2cover/headland_generator/constant_headland.h"
+#include "fields2cover/decomposition/boustrophedon_decomp.h"
 #include "fields2cover/objectives/sg_obj/n_swath_modified.h"
 #include "fields2cover/swath_generator/brute_force.h"
 #include "fields2cover/utils/random.h"
@@ -210,4 +211,37 @@ TEST(fields2cover_hg_req_gen, doesNotCollapseOnAHeavilyDigitizedBorder) {
   // case, never more than the field it came from.
   EXPECT_GE(req_area, worst_case);
   EXPECT_LE(req_area, utm_field.area());
+}
+
+TEST(fields2cover_hg_req_gen, doesNotOvershootPastASharpCorner) {
+  // A corner where the two sides need very different headland widths used to
+  // send the plain miter join far outside the field -- up to 273 m on real,
+  // digitized boundaries, enough to run swaths off the field entirely.
+  // nl_field_188 is the mildest known case: the mainland still escapes, even
+  // though it happens to escape by too little to pull any swath out with it.
+  F2CCell field = loadWktCell(std::string(DATA_PATH) + "nl_field_188.wkt");
+  ASSERT_GT(field.area(), 0) << "nl_field_188.wkt did not load a real field";
+  F2CField f2c_field(F2CCells(field), "nl_field_188");
+  f2c_field.setCRS("EPSG:4326");
+  f2c::Transform::transformToUTM(f2c_field);
+  F2CCell utm_field = f2c_field.getField().getGeometry(0);
+
+  f2c::decomp::BoustrophedonDecomp decomp;
+  decomp.setSplitAngle(120.0 * M_PI / 180.0);
+  F2CCells decomposed = decomp.decompose(F2CCells(utm_field));
+
+  F2CRobot robot(3.0, 3.0);
+  robot.setMinTurningRadius(6.0);
+  f2c::sg::BruteForce bf;
+  f2c::obj::NSwathModified obj;
+  auto sw = bf.generateBestSwaths(obj, robot.getCovWidth(), decomposed);
+  std::vector<double> angs;
+  for (size_t i = 0; i < decomposed.size(); ++i) {
+    ASSERT_GT(sw[static_cast<int>(i)].size(), 0u) << "no swath for cell " << i;
+    angs.push_back(sw[static_cast<int>(i)][0].getInAngle());
+  }
+
+  f2c::hg::ReqHL req_hl;
+  F2CCells hl = req_hl.generateHeadlands(decomposed, robot, angs);
+  EXPECT_TRUE(hl.within(F2CCells(utm_field)));
 }
