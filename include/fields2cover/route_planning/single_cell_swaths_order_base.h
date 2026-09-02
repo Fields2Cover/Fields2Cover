@@ -9,10 +9,11 @@
 #define FIELDS2COVER_ROUTE_PLANNING_SINGLE_CELL_SWATHS_ORDER_BASE_H_
 
 #include "fields2cover/types.h"
+#include "fields2cover/route_planning/route_generator_base.h"
 
 namespace f2c::rp {
 
-class SingleCellSwathsOrderBase {
+class SingleCellSwathsOrderBase : public RouteGeneratorBase {
  public:
   virtual F2CSwaths genSortedSwaths(
       const F2CSwaths& swaths, uint32_t variant = 0) const;
@@ -27,7 +28,7 @@ class SingleCellSwathsOrderBase {
   /// @param swaths Swaths to be covered, kept apart per cell
   /// @param d_tol Tolerance distance to consider if two points are the same.
   F2CRoute genRoute(const F2CCells& cells, const F2CSwathsByCells& swaths,
-      double d_tol = 1e-4) const;
+      double d_tol = 1e-4) const override;
 
   virtual ~SingleCellSwathsOrderBase() = default;
 

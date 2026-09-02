@@ -53,6 +53,7 @@
 #include "fields2cover/swath_generator/brute_force.h"
 
 
+#include "fields2cover/route_planning/route_generator_base.h"
 #include "fields2cover/route_planning/single_cell_swaths_order_base.h"
 #include "fields2cover/route_planning/boustrophedon_order.h"
 #include "fields2cover/route_planning/snake_order.h"
