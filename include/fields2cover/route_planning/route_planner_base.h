@@ -16,11 +16,12 @@
 #include "fields2cover/types.h"
 #include "fields2cover/objectives/rp_obj/rp_objective.h"
 #include "fields2cover/objectives/rp_obj/direct_dist_path_obj.h"
+#include "fields2cover/route_planning/route_generator_base.h"
 #include "fields2cover/route_planning/single_cell_swaths_order_base.h"
 
 namespace f2c::rp {
 
-class RoutePlannerBase {
+class RoutePlannerBase : public RouteGeneratorBase {
  public:
   /// Generate route to cover the swaths on a field.
   ///   If two consecutive swaths are far away,
@@ -40,6 +41,20 @@ class RoutePlannerBase {
       const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells,
       bool show_log = false, double d_tol = 1e-4, bool redirect_swaths = true,
       long int time_limit_seconds = 1, bool search_for_optimum = false);
+
+  /// Generate route to cover the swaths on a field, with the optimizer
+  ///   settings left at their defaults.
+  ///
+  /// This is the common interface every route generator answers. The overload
+  /// above stays the way to reach the optimizer settings.
+  ///
+  /// @param cells Headland swath rings used to travel through the headlands
+  /// @param swaths_by_cells Swaths to be covered.
+  /// @param d_tol Tolerance distance to consider if two points are the same.
+  /// @return Route that covers all the swaths
+  F2CRoute genRoute(
+      const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells,
+      double d_tol = 1e-4) const override;
 
   /// Set the start and the end of the route.
   void setStartAndEndPoint(const F2CPoint& p);
@@ -90,6 +105,13 @@ class RoutePlannerBase {
 
  protected:
   std::optional<F2CPoint> r_start_end;
+
+ private:
+  /// Shared body of both genRoute overloads.
+  F2CRoute genRouteImpl(
+      const F2CCells& cells, const F2CSwathsByCells& swaths_by_cells,
+      bool show_log, double d_tol, bool redirect_swaths,
+      long int time_limit_seconds, bool search_for_optimum) const;
 };
 
 

@@ -14,6 +14,7 @@
 #include "fields2cover/route_planning/snake_order.h"
 #include "fields2cover/route_planning/spiral_order.h"
 #include "fields2cover/route_planning/custom_order.h"
+#include "fields2cover/route_planning/route_planner_base.h"
 
 namespace {
 
@@ -47,7 +48,7 @@ void expectSameRoute(const F2CRoute& a, const F2CRoute& b) {
 
 }  // namespace
 
-TEST(fields2cover_rp_route_generator_base, everyOrdererAnswersTheSameCall) {
+TEST(fields2cover_rp_route_generator_base, everyPlannerAnswersTheSameCall) {
   F2CCells cell = genCell();
   F2CSwathsByCells sbc = genSwaths(cell);
   const size_t n_swaths = sbc.flatten().size();
@@ -61,6 +62,7 @@ TEST(fields2cover_rp_route_generator_base, everyOrdererAnswersTheSameCall) {
   planners.emplace_back(std::make_unique<f2c::rp::SnakeOrder>());
   planners.emplace_back(std::make_unique<f2c::rp::SpiralOrder>(2));
   planners.emplace_back(std::make_unique<f2c::rp::CustomOrder>(order));
+  planners.emplace_back(std::make_unique<f2c::rp::RoutePlannerBase>());
 
   for (auto&& planner : planners) {
     F2CRoute route = planner->genRoute(cell, sbc);
@@ -82,6 +84,19 @@ TEST(fields2cover_rp_route_generator_base, orderersRouteTheSameThroughTheBase) {
   expectSameRoute(direct, polymorphic);
 }
 
+TEST(fields2cover_rp_route_generator_base, tspRoutesTheSameThroughTheBase) {
+  F2CCells cell = genCell();
+  F2CSwathsByCells sbc = genSwaths(cell);
+
+  f2c::rp::RoutePlannerBase planner;
+  F2CRoute direct = planner.genRoute(cell, sbc);
+
+  const f2c::rp::RouteGeneratorBase& base = planner;
+  F2CRoute polymorphic = base.genRoute(cell, sbc);
+
+  expectSameRoute(direct, polymorphic);
+}
+
 namespace {
 
 bool derived_destructor_ran = false;
@@ -98,4 +113,23 @@ TEST(fields2cover_rp_route_generator_base, deletingThroughTheBaseIsSafe) {
   f2c::rp::RouteGeneratorBase* planner = new DestructorProbe();
   delete planner;
   EXPECT_TRUE(derived_destructor_ran);
+}
+
+TEST(fields2cover_rp_route_generator_base, constPlannersRoute) {
+  F2CCells cell = genCell();
+  F2CSwathsByCells sbc = genSwaths(cell);
+
+  const f2c::rp::SnakeOrder sorter;
+  const f2c::rp::RoutePlannerBase planner;
+
+  F2CRoute sorter_route = sorter.genRoute(cell, sbc);
+  F2CRoute planner_route = planner.genRoute(cell, sbc);
+
+  EXPECT_FALSE(sorter_route.isEmpty());
+  EXPECT_FALSE(planner_route.isEmpty());
+
+  f2c::rp::SnakeOrder mut_sorter;
+  f2c::rp::RoutePlannerBase mut_planner;
+  expectSameRoute(sorter_route, mut_sorter.genRoute(cell, sbc));
+  expectSameRoute(planner_route, mut_planner.genRoute(cell, sbc));
 }

@@ -142,3 +142,29 @@ TEST(fields2cover_rp_route_plan_base, shortestGraphDoesNotLeaveTheCells) {
   EXPECT_TRUE(g.shortestPath(swath_b.startPoint(), swath_a.startPoint()).empty());
   EXPECT_FALSE(g.shortestPath(swath_a.startPoint(), swath_a.endPoint()).empty());
 }
+
+// genRoute has a second, shorter overload. Every call shape that compiled before
+// it existed must still compile, pick the same overload and give the same route.
+TEST(fields2cover_rp_route_plan_base, genRouteKeepsItsCallShapes) {
+  F2CCells cells {F2CCell(F2CLinearRing({
+      F2CPoint(0, 0), F2CPoint(60, 0), F2CPoint(60, 40), F2CPoint(0, 40),
+      F2CPoint(0, 0)}))};
+  F2CSwaths swaths;
+  for (int x = 5; x < 60; x += 10) {
+    swaths.append(F2CLineString({F2CPoint(x, 1), F2CPoint(x, 39)}), cells, 10);
+  }
+  F2CSwathsByCells swaths_by_cells;
+  swaths_by_cells.emplace_back(swaths);
+
+  f2c::rp::RoutePlannerBase route_planner;
+  F2CRoute two_args = route_planner.genRoute(cells, swaths_by_cells);
+  F2CRoute five_args =
+      route_planner.genRoute(cells, swaths_by_cells, false, 1e-4, true);
+  F2CRoute seven_args =
+      route_planner.genRoute(cells, swaths_by_cells, false, 1e-4, true, 1, false);
+
+  ASSERT_FALSE(two_args.isEmpty());
+  EXPECT_EQ(two_args.length(), five_args.length());
+  EXPECT_EQ(two_args.length(), seven_args.length());
+  EXPECT_EQ(two_args.asLineString().size(), seven_args.asLineString().size());
+}

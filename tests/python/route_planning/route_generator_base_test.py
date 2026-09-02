@@ -23,7 +23,7 @@ def gen_swaths(cell):
   return sbc;
 
 
-def test_fields2cover_route_generator_base_every_orderer_answers_the_same_call():
+def test_fields2cover_route_generator_base_every_planner_answers_the_same_call():
   cell = gen_cell();
   sbc = gen_swaths(cell);
   n_swaths = sbc.flatten().size();
@@ -35,6 +35,7 @@ def test_fields2cover_route_generator_base_every_orderer_answers_the_same_call()
       f2c.RP_Snake(),
       f2c.RP_Spiral(2),
       f2c.RP_CustomOrder(order),
+      f2c.RP_RoutePlannerBase(),
   ];
 
   for planner in planners:
