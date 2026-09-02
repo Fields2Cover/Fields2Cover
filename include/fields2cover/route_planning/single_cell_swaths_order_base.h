@@ -17,6 +17,18 @@ class SingleCellSwathsOrderBase {
   virtual F2CSwaths genSortedSwaths(
       const F2CSwaths& swaths, uint32_t variant = 0) const;
 
+  /// Sort each cell's swaths on their own, so an order never runs across cells.
+  virtual F2CSwathsByCells genSortedSwaths(
+      const F2CSwathsByCells& swaths, uint32_t variant = 0) const;
+
+  /// Route covering the swaths in this order, connected through the headland.
+  ///
+  /// @param cells Headland swath rings used to travel between swaths
+  /// @param swaths Swaths to be covered, kept apart per cell
+  /// @param d_tol Tolerance distance to consider if two points are the same.
+  F2CRoute genRoute(const F2CCells& cells, const F2CSwathsByCells& swaths,
+      double d_tol = 1e-4) const;
+
   virtual ~SingleCellSwathsOrderBase() = default;
 
  protected:
