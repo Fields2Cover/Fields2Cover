@@ -121,8 +121,15 @@ SwathsByCells SwathsByCells::clone() const {
 
 Swaths SwathsByCells::flatten() const {
   Swaths swaths;
-  for (auto&& s : *this) {
-    swaths.append(s);
+  for (auto&& cell_swaths : *this) {
+    for (auto&& s : cell_swaths) {
+      // Each cell numbers its swaths from 0, so keeping the ids would repeat
+      // them. Swaths::sort() orders on the id alone and would interleave the
+      // cells. Renumber, as every other Swaths producer does.
+      Swath renumbered = s;
+      renumbered.setId(static_cast<int>(swaths.size()));
+      swaths.emplace_back(renumbered);
+    }
   }
   return swaths;
 }
