@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `SingleCellSwathsOrderBase::genRoute`, which gives BOUSTROPHEDON, SNAKE, SPIRAL and CUSTOM a route whose connections are driven through the headland. `genSortedSwaths` is unchanged and still returns the bare order; a bare order ignores the boundary, so a snake or spiral skip cuts over covered ground on a field that is not convex.
 - `SingleCellSwathsOrderBase::genSortedSwaths` overload taking `F2CSwathsByCells`, which orders each cell on its own so a pattern never runs across cells.
+- `f2c::rp::RouteGeneratorBase`, the common interface of both route planner families. BOUSTROPHEDON, SNAKE, SPIRAL, CUSTOM and the TSP planner all answer `genRoute(cells, swaths_by_cells, d_tol)`, so a caller can hold any of them behind one type instead of branching on the mode. `RoutePlannerBase` keeps its existing `genRoute` overload, which is still the way to reach the optimizer settings.
 
 ### Fixed
 - `Point::intersectionOfLines` no longer sends the result arbitrarily far away for two lines a fraction of a degree apart. The parallel check compared the determinant to exactly 0, but two real-world collinear borders -- a redundant vertex on an otherwise straight, digitized field edge -- produce a determinant that is 0 only up to rounding, dividing by which is what actually blew up.
