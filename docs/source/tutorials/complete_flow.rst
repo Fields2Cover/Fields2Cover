@@ -70,7 +70,7 @@ Once we have the field in UTM, let's create a coverage path, as we did it in pre
     :caption: C++
 
     F2CRobot robot (2.0, 6.0);
-    robot.setMinRadius(2);  // m
+    robot.setMinTurningRadius(2);  // m
     f2c::hg::ConstHL const_hl;
     F2CCells mid_hl = const_hl.generateHeadlands(field.getField(), 1.5 * robot.getWidth());
     F2CCells no_hl = const_hl.generateHeadlands(field.getField(), 3.0 * robot.getWidth());
@@ -86,7 +86,7 @@ Once we have the field in UTM, let's create a coverage path, as we did it in pre
     :caption: Python
 
     robot = f2c.Robot(2.0, 6.0);
-    robot.setMinRadius(2);
+    robot.setMinTurningRadius(2);
     const_hl = f2c.HG_Const_gen()
     mid_hl = const_hl.generateHeadlands(field.getField(), 1.5 * robot.getWidth())
     no_hl = const_hl.generateHeadlands(field.getField(), 3.0 * robot.getWidth())

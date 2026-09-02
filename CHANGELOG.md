@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- `SingleCellSwathsOrderBase::genRoute`, so BOUSTROPHEDON, SNAKE, SPIRAL and CUSTOM return a route with the connections driven through the headland, not a bare swath order. A bare order ignores the boundary, so a snake or spiral skip cuts over covered ground on a field that is not convex.
+- `SingleCellSwathsOrderBase::genRoute`, which gives BOUSTROPHEDON, SNAKE, SPIRAL and CUSTOM a route whose connections are driven through the headland. `genSortedSwaths` is unchanged and still returns the bare order; a bare order ignores the boundary, so a snake or spiral skip cuts over covered ground on a field that is not convex.
 - `SingleCellSwathsOrderBase::genSortedSwaths` overload taking `F2CSwathsByCells`, which orders each cell on its own so a pattern never runs across cells.
 
 ### Fixed
