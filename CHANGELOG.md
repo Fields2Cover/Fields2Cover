@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `SingleCellSwathsOrderBase::genRoute`, so BOUSTROPHEDON, SNAKE, SPIRAL and CUSTOM return a route with the connections driven through the headland, not a bare swath order. A bare order ignores the boundary, so a snake or spiral skip cuts over covered ground on a field that is not convex.
+- `SingleCellSwathsOrderBase::genSortedSwaths` overload taking `F2CSwathsByCells`, which orders each cell on its own so a pattern never runs across cells.
+
+### Fixed
+- `F2CSwathsByCells::flatten` gave every cell's swaths the ids they had inside that cell, so the ids repeated across cells. `F2CSwaths::sort` orders on the id alone, so ordering a flattened multi-cell set interleaved the cells instead of covering them one after another. Flattened swaths are now numbered from 0.
+- `f2c::rp::CustomOrder` accepted an order with duplicate or out-of-range values and only reported it when the order was used. It is now checked when it is set, and the order must be a permutation of `0..n-1`.
+
 ## [2.1.0] - 2026-09-03
 
 ### Added
