@@ -191,16 +191,32 @@ Cells Cells::unionCascaded() const {
   return destroyResGeom<Cells>(this->data_->UnionCascaded());
 }
 
+namespace {
+// The cut takes a 1e-8-wide strip out of the field, so each piece is
+// reinflated by half that to keep the total size the same. Two chained
+// cut-reinflate passes let GEOS collapse the second cut into a no-op, so
+// every split line is buffered together into a single pass. A reinflated
+// piece can also come out pinched into two, which Cell::buffer can't hold;
+// collect into a fresh Cells instead.
+template <class T, OGRwkbGeometryType R>
+Cells splitCellsByGeom(const Cells& self, const Geometry<T, R>& geom) {
+  Cells raw = self.difference(self.buffer(geom, 1e-8));
+  Cells cells;
+  for (auto&& c : raw) {
+    for (auto&& piece : Cells::buffer(c, 1e-8 * 0.5)) {
+      cells.addGeometry(piece);
+    }
+  }
+  return cells;
+}
+}  // namespace
+
 Cells Cells::splitByLine(const LineString& line) const {
-  return this->difference(this->buffer(line, 1e-8));
+  return splitCellsByGeom(*this, line);
 }
 
 Cells Cells::splitByLine(const MultiLineString& lines) const {
-  Cells cells{*this};
-  for (auto&& line : lines) {
-    cells = cells.splitByLine(line);
-  }
-  return cells;
+  return splitCellsByGeom(*this, lines);
 }
 
 LineString Cells::createSemiLongLine(const Point& point, double angle) const {
