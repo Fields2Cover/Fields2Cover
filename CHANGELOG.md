@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `generateBestSwaths` no longer returns an angle that covers nothing. The objectives estimate the cost from the cell border alone, so a cell with a hairline spur could score best on an angle producing no swath at all and was silently left uncovered.
 
 ### Changed
+- `CorridorHL`'s tolerances (the neighbour-buffer, spur, same-size and minimum-border thresholds) are private member variables instead of constants hidden in the .cpp file, visible directly on the class in the header.
 - The decomposition tutorial carves a corridor between cells instead of running the headland generator a second time, which also shrank the outer boundary.
 - `cmake --install` places the python module in the interpreter's site-packages instead of calling `setup.py install`.
 - Building the python module requires CMake >= 3.18 and Python >= 3.9.
