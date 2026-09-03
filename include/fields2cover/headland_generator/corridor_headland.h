@@ -102,6 +102,17 @@ class CorridorHL : public HeadlandGeneratorBase {
 
  private:
   CorridorShareMode share_mode_ {CorridorShareMode::ASYMMETRIC};
+
+  /// Tolerance the neighbour is buffered by to find the shared border.
+  double tol_ {1e-3};
+  /// Width the zero-width spur a difference can leave behind is opened by.
+  double spur_ {1e-9};
+  /// Tolerance two perimeters are compared with to count as the same size.
+  double same_size_tol_ {1e-9};
+  /// Shortest border kept as real: buffering the neighbour by tol_ turns a
+  /// shared corner into a piece a few millimetres long on each edge that
+  /// reaches it, and a border that short is a corner, not a corridor.
+  double min_border_ {1e-2};
 };
 
 }  // namespace f2c::hg

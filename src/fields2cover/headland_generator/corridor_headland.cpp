@@ -11,16 +11,6 @@
 
 namespace f2c::hg {
 
-namespace {
-constexpr double kTol = 1e-3;
-constexpr double kSpur = 1e-9;
-constexpr double kSameSize = 1e-9;
-// Buffering the neighbour by kTol turns a shared corner into a piece a few
-// millimetres long on each edge that reaches it. A border that short is a
-// corner, and a corner carries no corridor.
-constexpr double kMinBorder = 1e-2;
-}  // namespace
-
 std::vector<CorridorShare> CorridorHL::corridorShares(
     const F2CCells& field, CorridorShareMode mode) const {
   // The corridor comes out of the smaller cell, so the larger neighbour keeps
@@ -44,13 +34,13 @@ std::vector<CorridorShare> CorridorHL::corridorShares(
       // The comparison has to be loose: perimeters that are equal in theory
       // differ in the last bits, and letting that noise pick a winner leaves
       // some borders with a full corridor and others with none.
-      share.same_size =
-          std::abs(perimeter - share.perimeter_k) <= kSameSize * perimeter;
+      share.same_size = std::abs(perimeter - share.perimeter_k) <=
+          same_size_tol_ * perimeter;
       share.share = mode == CorridorShareMode::SYMMETRIC ? 0.5 :
           (share.same_size ? 0.5 :
               (perimeter < share.perimeter_k ? 1.0 : 0.0));
       // Keep the part of each border edge that the neighbour actually touches.
-      const F2CCells neighbour = F2CCells::buffer(field.getGeometry(k), kTol);
+      const F2CCells neighbour = F2CCells::buffer(field.getGeometry(k), tol_);
       for (size_t e = 0; e + 1 < ring.size(); ++e) {
         F2CMultiLineString edge;
         edge.addGeometry(
@@ -58,7 +48,7 @@ std::vector<CorridorShare> CorridorHL::corridorShares(
         const F2CMultiLineString shared = edge.intersection(neighbour);
         for (size_t j = 0; j < shared.size(); ++j) {
           const F2CLineString part = shared.getGeometry(j);
-          if (part.size() > 1 && part.length() > kMinBorder) {
+          if (part.size() > 1 && part.length() > min_border_) {
             share.shared_border.addGeometry(part);
             share.shared_length += part.length();
           }
@@ -98,7 +88,7 @@ F2CCells CorridorHL::generateHeadlands(
     }
     // The difference can leave a zero-width spur behind. Opening the result by
     // a hair drops it without moving any real edge.
-    const F2CCells clean = cell.buffer(-kSpur).buffer(kSpur);
+    const F2CCells clean = cell.buffer(-spur_).buffer(spur_);
     for (size_t j = 0; j < clean.size(); ++j) {
       carved.addGeometry(clean.getGeometry(j));
     }
