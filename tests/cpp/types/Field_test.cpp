@@ -117,6 +117,12 @@ TEST(fields2cover_types_field, getUTMData) {
   EXPECT_EQ(F2CField::getUTMCoordSystem("UTM:10N"), "10N");
   EXPECT_EQ(F2CField::getUTMCoordSystem("UTM: 10N"), "10N");
   EXPECT_EQ(F2CField::getUTMCoordSystem("UTM 10N datum etrs89"), "10N");
+  EXPECT_EQ(F2CField::getUTMCoordSystem("UTM:6N"), "6N");
+  EXPECT_EQ(F2CField::getUTMCoordSystem("UTM:6S"), "6S");
+  EXPECT_EQ(F2CField::getUTMZone("UTM:6N datum:WGS84"), "6");
+  EXPECT_EQ(F2CField::getUTMHemisphere("UTM:6N datum:WGS84"), "+north");
+  EXPECT_EQ(F2CField::getUTMZone("UTM:6S datum:WGS84"), "6");
+  EXPECT_EQ(F2CField::getUTMHemisphere("UTM:6S datum:WGS84"), "+south");
   EXPECT_EQ(F2CField::getUTMDatum("UTM 10N datum etrs89"), "etrs89");
   EXPECT_EQ(F2CField::getUTMDatum("UTM 10N datum:etrs89"), "etrs89");
   EXPECT_EQ(F2CField::getUTMDatum("84WS"), "etrs89");
