@@ -11,36 +11,36 @@
 
 namespace f2c::hg {
 
-F2CCells CorridorHL::generateHeadlands(
-    const F2CCells& field, double dist_headland) {
-  constexpr double kTol = 1e-3;
-  constexpr double kSpur = 1e-9;
-  constexpr double kSameSize = 1e-9;
-  // Cut along the part of each border edge that a neighbour actually touches.
+std::vector<CorridorShare> CorridorHL::corridorShares(
+    const F2CCells& field, CorridorShareMode mode) const {
   // The corridor comes out of the smaller cell, so the larger neighbour keeps
   // its shape: taking half from each side notches both, and a notched cell
-  // costs the swath generator a pass.
-  F2CCells carved;
+  // costs the swath generator a pass. In SYMMETRIC mode every border splits
+  // evenly instead, regardless of size, for comparison against that rule.
+  std::vector<CorridorShare> shares;
   for (size_t i = 0; i < field.size(); ++i) {
-    F2CCells cell {field.getGeometry(i)};
     const F2CLinearRing ring = field.getCellBorder(i);
     const double perimeter = ring.length();
     for (size_t k = 0; k < field.size(); ++k) {
       if (k == i) {
         continue;
       }
+      CorridorShare share;
+      share.cell_i = i;
+      share.cell_k = k;
+      share.perimeter_i = perimeter;
+      share.perimeter_k = field.getCellBorder(k).length();
       // Cells that are the same size share the corridor, each giving half.
       // The comparison has to be loose: perimeters that are equal in theory
       // differ in the last bits, and letting that noise pick a winner leaves
       // some borders with a full corridor and others with none.
-      const double perimeter_k = field.getCellBorder(k).length();
-      const bool same_size =
-          std::abs(perimeter - perimeter_k) <= kSameSize * perimeter;
-      if (!same_size && perimeter > perimeter_k) {
-        continue;  // the smaller neighbour gives up this corridor
-      }
-      const double share = same_size ? 0.5 : 1.0;
-      const F2CCells neighbour = F2CCells::buffer(field.getGeometry(k), kTol);
+      share.same_size = std::abs(perimeter - share.perimeter_k) <=
+          same_size_tol_ * perimeter;
+      share.share = mode == CorridorShareMode::SYMMETRIC ? 0.5 :
+          (share.same_size ? 0.5 :
+              (perimeter < share.perimeter_k ? 1.0 : 0.0));
+      // Keep the part of each border edge that the neighbour actually touches.
+      const F2CCells neighbour = F2CCells::buffer(field.getGeometry(k), tol_);
       for (size_t e = 0; e + 1 < ring.size(); ++e) {
         F2CMultiLineString edge;
         edge.addGeometry(
@@ -48,16 +48,47 @@ F2CCells CorridorHL::generateHeadlands(
         const F2CMultiLineString shared = edge.intersection(neighbour);
         for (size_t j = 0; j < shared.size(); ++j) {
           const F2CLineString part = shared.getGeometry(j);
-          if (part.size() > 1 && part.length() > kTol) {
-            cell = cell.difference(
-                F2CCells::buffer(part, dist_headland * share));
+          if (part.size() > 1 && part.length() > min_border_) {
+            share.shared_border.addGeometry(part);
+            share.shared_length += part.length();
           }
         }
+      }
+      // Cells that only meet at a corner, or not at all, are not neighbours.
+      if (share.shared_length > 0.0) {
+        shares.emplace_back(share);
+      }
+    }
+  }
+  return shares;
+}
+
+void CorridorHL::setShareMode(CorridorShareMode mode) {
+  share_mode_ = mode;
+}
+
+CorridorShareMode CorridorHL::getShareMode() const {
+  return share_mode_;
+}
+
+F2CCells CorridorHL::generateHeadlands(
+    const F2CCells& field, double dist_headland) {
+  const std::vector<CorridorShare> shares = corridorShares(field, share_mode_);
+  F2CCells carved;
+  for (size_t i = 0; i < field.size(); ++i) {
+    F2CCells cell {field.getGeometry(i)};
+    for (const CorridorShare& share : shares) {
+      if (share.cell_i != i || share.share <= 0.0) {
+        continue;  // this cell gives no corridor on that border
+      }
+      for (size_t j = 0; j < share.shared_border.size(); ++j) {
+        cell = cell.difference(F2CCells::buffer(
+            share.shared_border.getGeometry(j), dist_headland * share.share));
       }
     }
     // The difference can leave a zero-width spur behind. Opening the result by
     // a hair drops it without moving any real edge.
-    const F2CCells clean = cell.buffer(-kSpur).buffer(kSpur);
+    const F2CCells clean = cell.buffer(-spur_).buffer(spur_);
     for (size_t j = 0; j < clean.size(); ++j) {
       carved.addGeometry(clean.getGeometry(j));
     }

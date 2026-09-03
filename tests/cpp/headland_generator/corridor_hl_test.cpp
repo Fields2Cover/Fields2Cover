@@ -148,3 +148,169 @@ TEST(fields2cover_hl_corridor_gen, treatsEquallySizedCellsAlike) {
         << "slice " << i << " lost a different amount than slice 0";
   }
 }
+
+TEST(fields2cover_hl_corridor_gen, sharesTellWhoGivesTheCorridor) {
+  f2c::hg::CorridorHL corridor;
+  // The lower cell is the larger one, and only 10 m of its top edge is shared.
+  F2CCells cells;
+  cells.addGeometry(F2CCell(F2CLinearRing({
+      F2CPoint(0,0), F2CPoint(20,0), F2CPoint(20,10), F2CPoint(0,10), F2CPoint(0,0)})));
+  cells.addGeometry(F2CCell(F2CLinearRing({
+      F2CPoint(10,10), F2CPoint(20,10), F2CPoint(20,20),
+      F2CPoint(10,20), F2CPoint(10,10)})));
+
+  const std::vector<f2c::hg::CorridorShare> shares = corridor.corridorShares(cells);
+  // One row per side of the border, and both know the border is 10 m long.
+  ASSERT_EQ(shares.size(), 2);
+  for (const auto& s : shares) {
+    EXPECT_FALSE(s.same_size);
+    EXPECT_NEAR(s.shared_length, 10, 1e-2);
+    EXPECT_NEAR(s.shared_border.length(), 10, 1e-2);
+    EXPECT_NEAR(s.perimeter_i, cells.getCellBorder(s.cell_i).length(), 1e-9);
+    EXPECT_NEAR(s.perimeter_k, cells.getCellBorder(s.cell_k).length(), 1e-9);
+  }
+  // The smaller cell gives the whole corridor, the larger one gives nothing.
+  const auto& from_big = shares[0].cell_i == 0 ? shares[0] : shares[1];
+  const auto& from_small = shares[0].cell_i == 0 ? shares[1] : shares[0];
+  EXPECT_EQ(from_big.cell_i, 0);
+  EXPECT_EQ(from_big.cell_k, 1);
+  EXPECT_NEAR(from_big.share, 0.0, 1e-9);
+  EXPECT_EQ(from_small.cell_i, 1);
+  EXPECT_EQ(from_small.cell_k, 0);
+  EXPECT_NEAR(from_small.share, 1.0, 1e-9);
+}
+
+TEST(fields2cover_hl_corridor_gen, sharesSplitEvenlyBetweenEqualCells) {
+  f2c::hg::CorridorHL corridor;
+  F2CCells cells;
+  cells.addGeometry(F2CCell(F2CLinearRing({
+      F2CPoint(0,0), F2CPoint(50,0), F2CPoint(50,100), F2CPoint(0,100), F2CPoint(0,0)})));
+  cells.addGeometry(F2CCell(F2CLinearRing({
+      F2CPoint(50,0), F2CPoint(100,0), F2CPoint(100,100),
+      F2CPoint(50,100), F2CPoint(50,0)})));
+
+  const std::vector<f2c::hg::CorridorShare> shares = corridor.corridorShares(cells);
+  ASSERT_EQ(shares.size(), 2);
+  for (const auto& s : shares) {
+    EXPECT_TRUE(s.same_size);
+    EXPECT_NEAR(s.share, 0.5, 1e-9);
+    EXPECT_NEAR(s.shared_length, 100, 1e-2);
+  }
+}
+
+TEST(fields2cover_hl_corridor_gen, sharesSkipCellsThatDoNotShareABorder) {
+  f2c::hg::CorridorHL corridor;
+  // Cells apart, and cells meeting at a single corner: neither shares a border.
+  F2CCells apart;
+  apart.addGeometry(F2CCell(F2CLinearRing({
+      F2CPoint(0,0), F2CPoint(50,0), F2CPoint(50,100), F2CPoint(0,100), F2CPoint(0,0)})));
+  apart.addGeometry(F2CCell(F2CLinearRing({
+      F2CPoint(60,0), F2CPoint(110,0), F2CPoint(110,100),
+      F2CPoint(60,100), F2CPoint(60,0)})));
+  EXPECT_TRUE(corridor.corridorShares(apart).empty());
+
+  F2CCells corner;
+  corner.addGeometry(F2CCell(F2CLinearRing({
+      F2CPoint(0,0), F2CPoint(10,0), F2CPoint(10,10), F2CPoint(0,10), F2CPoint(0,0)})));
+  corner.addGeometry(F2CCell(F2CLinearRing({
+      F2CPoint(10,10), F2CPoint(20,10), F2CPoint(20,20),
+      F2CPoint(10,20), F2CPoint(10,10)})));
+  EXPECT_TRUE(corridor.corridorShares(corner).empty());
+
+  F2CCells one {apart.getGeometry(0)};
+  EXPECT_TRUE(corridor.corridorShares(one).empty());
+}
+
+TEST(fields2cover_hl_corridor_gen, sharesAccountForEveryCarvedCorridor) {
+  f2c::hg::CorridorHL corridor;
+  // Three cells in a row, the middle one the widest: the outer cells each give
+  // a full corridor, and the shares add up to the area the carving removed.
+  F2CCells cells;
+  cells.addGeometry(F2CCell(F2CLinearRing({
+      F2CPoint(0,0), F2CPoint(10,0), F2CPoint(10,100), F2CPoint(0,100), F2CPoint(0,0)})));
+  cells.addGeometry(F2CCell(F2CLinearRing({
+      F2CPoint(10,0), F2CPoint(40,0), F2CPoint(40,100),
+      F2CPoint(10,100), F2CPoint(10,0)})));
+  cells.addGeometry(F2CCell(F2CLinearRing({
+      F2CPoint(40,0), F2CPoint(50,0), F2CPoint(50,100),
+      F2CPoint(40,100), F2CPoint(40,0)})));
+
+  const std::vector<f2c::hg::CorridorShare> shares = corridor.corridorShares(cells);
+  ASSERT_EQ(shares.size(), 4);
+  double carved_by_shares {0.0};
+  for (const auto& s : shares) {
+    carved_by_shares += s.share * s.shared_length * 2.0;
+  }
+  const double carved = cells.area() - corridor.generateHeadlands(cells, 2.0).area();
+  EXPECT_NEAR(carved_by_shares, carved, 1e-2);
+  EXPECT_NEAR(carved, 2 * 100 * 2.0, 1e-2);
+}
+
+TEST(fields2cover_hl_corridor_gen, sharesSymmetricModeAlwaysSplitsEvenly) {
+  f2c::hg::CorridorHL corridor;
+  // Same field as sharesTellWhoGivesTheCorridor: sizes differ, so the default
+  // rule would give the whole corridor to the smaller cell.
+  F2CCells cells;
+  cells.addGeometry(F2CCell(F2CLinearRing({
+      F2CPoint(0,0), F2CPoint(20,0), F2CPoint(20,10), F2CPoint(0,10), F2CPoint(0,0)})));
+  cells.addGeometry(F2CCell(F2CLinearRing({
+      F2CPoint(10,10), F2CPoint(20,10), F2CPoint(20,20),
+      F2CPoint(10,20), F2CPoint(10,10)})));
+
+  const std::vector<f2c::hg::CorridorShare> shares = corridor.corridorShares(
+      cells, f2c::hg::CorridorShareMode::SYMMETRIC);
+  ASSERT_EQ(shares.size(), 2);
+  for (const auto& s : shares) {
+    EXPECT_FALSE(s.same_size);
+    EXPECT_NEAR(s.share, 0.5, 1e-9);
+  }
+}
+
+TEST(fields2cover_hl_corridor_gen, defaultShareModeIsAsymmetric) {
+  f2c::hg::CorridorHL corridor;
+  EXPECT_EQ(corridor.getShareMode(), f2c::hg::CorridorShareMode::ASYMMETRIC);
+}
+
+TEST(fields2cover_hl_corridor_gen, generateHeadlandsUsesConfiguredShareMode) {
+  f2c::hg::CorridorHL corridor;
+  // Two cells of the same size, so a symmetric split reduces both by the same
+  // amount instead of taking the whole corridor out of just one.
+  F2CCells cells;
+  cells.addGeometry(F2CCell(F2CLinearRing({
+      F2CPoint(0,0), F2CPoint(50,0), F2CPoint(50,100), F2CPoint(0,100), F2CPoint(0,0)})));
+  cells.addGeometry(F2CCell(F2CLinearRing({
+      F2CPoint(50,0), F2CPoint(100,0), F2CPoint(100,100),
+      F2CPoint(50,100), F2CPoint(50,0)})));
+
+  corridor.setShareMode(f2c::hg::CorridorShareMode::SYMMETRIC);
+  EXPECT_EQ(corridor.getShareMode(), f2c::hg::CorridorShareMode::SYMMETRIC);
+  F2CCells carved = corridor.generateHeadlands(cells, 2.0);
+  EXPECT_NEAR(carved.getGeometry(0).area(), 49 * 100, 1e-3);
+  EXPECT_NEAR(carved.getGeometry(1).area(), 49 * 100, 1e-3);
+}
+
+TEST(fields2cover_hl_corridor_gen, sharesTreatACornerAsNoBorder) {
+  f2c::hg::CorridorHL corridor;
+  // Five equal slices meeting at the centre. Each slice borders two others;
+  // the other two only reach the same point. Buffering a neighbour makes a
+  // corner look like a few millimetres of shared border, and a table built on
+  // that would call all four neighbours.
+  const double r = 50.0;
+  F2CCells pie;
+  for (int k = 0; k < 5; ++k) {
+    const double a0 = 2 * M_PI * k / 5, a1 = 2 * M_PI * (k + 1) / 5;
+    pie.addGeometry(F2CCell(F2CLinearRing({
+        F2CPoint(0, 0), F2CPoint(r * cos(a0), r * sin(a0)),
+        F2CPoint(r * cos((a0 + a1) / 2) * 1.02, r * sin((a0 + a1) / 2) * 1.02),
+        F2CPoint(r * cos(a1), r * sin(a1)), F2CPoint(0, 0)})));
+  }
+
+  const std::vector<f2c::hg::CorridorShare> shares = corridor.corridorShares(pie);
+  // Five borders, seen from both sides.
+  EXPECT_EQ(shares.size(), 10);
+  for (const auto& s : shares) {
+    EXPECT_TRUE(s.same_size);
+    EXPECT_NEAR(s.share, 0.5, 1e-9);
+    EXPECT_NEAR(s.shared_length, r, 1e-2) << "cells " << s.cell_i << "-" << s.cell_k;
+  }
+}

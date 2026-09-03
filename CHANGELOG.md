@@ -14,16 +14,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `F2CLinearRing::getParallelLine`, `bufferOutwards`, `bufferInwards`, `filterSelfIntersections`, `removePoint`, `getSegment`, `getLastSegment`, `segmentLength` and `segmentAng`, to offset each segment of a ring by its own distance.
 - `Geometry::contains`, the other side of `Geometry::within`.
 - `f2c::hg::CorridorHL`, a headland generator that opens a corridor where cells border each other instead of shrinking every border. Only the part of an edge a neighbour actually touches is cut, and the corridor comes out of the smaller cell so the larger neighbour keeps its shape; cells of the same size split it evenly. Edges facing the outer boundary or a void are left untouched.
+- `f2c::hg::CorridorHL::corridorShares`, the rule that generator applies, on its own: for each pair of cells that share a border it reports the two perimeters, whether they count as the same size, how much of the corridor each cell gives, and the border they share.
+- `f2c::hg::CorridorShareMode`, to split every corridor evenly (`SYMMETRIC`) instead of giving it all to the smaller cell (`ASYMMETRIC`, the default). `CorridorHL::corridorShares` takes it as an argument, and `CorridorHL::setShareMode`/`getShareMode` set the mode `generateHeadlands` applies.
 - Python module is built as a proper package with scikit-build-core (`pip install .`); version is taken from `CMakeLists.txt` and exposed as `fields2cover.__version__`.
 - Source distribution published to PyPI (`pip install fields2cover`).
 
 ### Fixed
+- `f2c::hg::CorridorHL` no longer opens a corridor where two cells only meet at a corner. The neighbour is buffered by a tolerance to find the shared border, which turned a single shared point into a few millimetres of "border" on every edge reaching it; in a field of cells meeting at one point that carved a disc out of the middle and made every slice a neighbour of every other.
 - `Cells::splitByLine` no longer throws `std::invalid_argument` when a split leaves a piece touching itself at a single point. Reinflating each split piece went through `Cell::buffer`, which only accepts a single polygon back; a positive buffer on a pinched piece can separate it into two. A `MultiLineString` split also no longer silently keeps only the first line's cut: reinflating after every individual line let GEOS collapse the next cut into a no-op, so every line is now buffered and cut in one pass instead of one after another.
 - `F2CCells::getCellBorder`, `getInteriorRing` and `addRing` no longer segfault on an empty polygon or an out-of-range index; they throw `std::out_of_range` like `getGeometry` does.
 - `NSwathModified::computeCost` read the wrong neighbouring point for the first edge: `(i - 1) % ring.size()` wraps a `size_t` to `SIZE_MAX % n`, which is not the previous vertex. The cost of a polygon now no longer depends on which vertex its ring starts from.
 - `generateBestSwaths` no longer returns an angle that covers nothing. The objectives estimate the cost from the cell border alone, so a cell with a hairline spur could score best on an angle producing no swath at all and was silently left uncovered.
 
 ### Changed
+- `CorridorHL`'s tolerances (the neighbour-buffer, spur, same-size and minimum-border thresholds) are private member variables instead of constants hidden in the .cpp file, visible directly on the class in the header.
 - The decomposition tutorial carves a corridor between cells instead of running the headland generator a second time, which also shrank the outer boundary.
 - `cmake --install` places the python module in the interpreter's site-packages instead of calling `setup.py install`.
 - Building the python module requires CMake >= 3.18 and Python >= 3.9.
