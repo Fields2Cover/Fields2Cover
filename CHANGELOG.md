@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-09-03
+
 ### Added
 - `f2c::hg::ReqHL`, a headland generator that sizes each border on its own: a border the swaths run along is only entered, while a border they end on takes a whole turn. The difference is left to the mainland instead of being given up on every border.
 - `HeadlandGeneratorBase::generateHeadlands` overloads taking a robot and the track angles, and `maxHLWidthRequired`.
@@ -19,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - `f2c::hg::CorridorHL` no longer opens a corridor where two cells only meet at a corner. The neighbour is buffered by a tolerance to find the shared border, which turned a single shared point into a few millimetres of "border" on every edge reaching it; in a field of cells meeting at one point that carved a disc out of the middle and made every slice a neighbour of every other.
+- `Cells::splitByLine` no longer throws `std::invalid_argument` when a split leaves a piece touching itself at a single point. Reinflating each split piece went through `Cell::buffer`, which only accepts a single polygon back; a positive buffer on a pinched piece can separate it into two. A `MultiLineString` split also no longer silently keeps only the first line's cut: reinflating after every individual line let GEOS collapse the next cut into a no-op, so every line is now buffered and cut in one pass instead of one after another.
 - `F2CCells::getCellBorder`, `getInteriorRing` and `addRing` no longer segfault on an empty polygon or an out-of-range index; they throw `std::out_of_range` like `getGeometry` does.
 - `NSwathModified::computeCost` read the wrong neighbouring point for the first edge: `(i - 1) % ring.size()` wraps a `size_t` to `SIZE_MAX % n`, which is not the previous vertex. The cost of a polygon now no longer depends on which vertex its ring starts from.
 - `generateBestSwaths` no longer returns an angle that covers nothing. The objectives estimate the cost from the cell border alone, so a cell with a hairline spur could score best on an angle producing no swath at all and was silently left uncovered.
