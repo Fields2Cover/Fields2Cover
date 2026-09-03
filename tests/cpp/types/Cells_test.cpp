@@ -5,7 +5,9 @@
 //=============================================================================
 
 #include <gtest/gtest.h>
+#include <algorithm>
 #include <cmath>
+#include <vector>
 #include "fields2cover/types.h"
 #include "fields2cover/headland_generator/constant_headland.h"
 #include "fields2cover/decomposition/trapezoidal_decomp.h"
@@ -205,11 +207,16 @@ TEST(fields2cover_types_cells, splitByLine) {
   lines.setGeometry(1, line2);
 
   F2CCells split_cells = cells.splitByLine(lines);
-  EXPECT_NEAR(split_cells.size(), 4, 1e-7);
-  EXPECT_NEAR(split_cells.getGeometry(0).area(), 9, 1e-7);
-  EXPECT_NEAR(split_cells.getGeometry(1).area(), 3, 1e-7);
-  EXPECT_NEAR(split_cells.getGeometry(2).area(), 2, 1e-7);
-  EXPECT_NEAR(split_cells.getGeometry(3).area(), 6, 1e-7);
+  ASSERT_EQ(split_cells.size(), 4);
+  // Cutting both lines at once instead of one after the other does not
+  // promise an order, only which four pieces come out.
+  std::vector<double> areas;
+  for (auto&& c : split_cells) { areas.push_back(c.area()); }
+  std::sort(areas.begin(), areas.end());
+  EXPECT_NEAR(areas[0], 2, 1e-7);
+  EXPECT_NEAR(areas[1], 3, 1e-7);
+  EXPECT_NEAR(areas[2], 6, 1e-7);
+  EXPECT_NEAR(areas[3], 9, 1e-7);
 }
 
 TEST(fields2cover_types_cells, isPointIn) {
