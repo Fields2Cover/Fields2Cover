@@ -6,9 +6,12 @@
 
 #include <gtest/gtest.h>
 #include <fstream>
+#include <sstream>
+#include <string>
 #include "fields2cover/decomposition/boustrophedon_decomp.h"
 #include "fields2cover/objectives/sg_obj/n_swath.h"
 #include "fields2cover/utils/random.h"
+#include "fields2cover/utils/transformation.h"
 #include "fields2cover/types.h"
 
 TEST(fields2cover_decomp_boustrophedon, decompose) {
@@ -23,5 +26,37 @@ TEST(fields2cover_decomp_boustrophedon, decompose) {
   auto decomp_field = decomp.decompose(cells);
   EXPECT_EQ(decomp_field.size(), 4);
   EXPECT_NEAR(decomp_field.area(), cells.area(), 1e-3);
+}
+
+namespace {
+F2CCell loadWktCell(const std::string& path) {
+  std::ifstream f(path);
+  if (!f.is_open()) {
+    ADD_FAILURE() << "could not open " << path;
+    return F2CCell();
+  }
+  std::stringstream ss;
+  ss << f.rdbuf();
+  F2CCell cell;
+  cell.importFromWkt(ss.str());
+  return cell;
+}
+}  // namespace
+
+TEST(fields2cover_decomp_boustrophedon, doesNotThrowOnAPinchedSplit) {
+  // Splitting can leave a piece touching itself at a single point (a
+  // pinch). Cells::splitByLine re-inflates each split piece with
+  // Cell::buffer, which only accepts a single polygon back -- a positive
+  // buffer on a pinched piece can separate it into two, and that used to
+  // throw std::invalid_argument instead of decomposing the field.
+  F2CCell raw = loadWktCell(std::string(DATA_PATH) + "ee_field_130.wkt");
+  ASSERT_GT(raw.area(), 0) << "ee_field_130.wkt did not load a real field";
+  F2CField field(F2CCells(raw), "ee_field_130");
+  field.setCRS("EPSG:4326");
+  f2c::Transform::transformToUTM(field);
+
+  f2c::decomp::BoustrophedonDecomp decomp;
+  decomp.setSplitAngle(58.0 * M_PI / 180.0);
+  EXPECT_NO_THROW(decomp.decompose(field.getField()));
 }
 
