@@ -293,6 +293,7 @@ DEFINE_PP_COSTS(BaseObjective<f2c::obj::PPObjective>, computeCostWithMinimizingS
 %include "fields2cover/headland_generator/constant_headland.h"
 %rename(HG_Corridor_gen) f2c::hg::CorridorHL;
 %include "fields2cover/headland_generator/corridor_headland.h"
+%template(VectorCorridorShare) std::vector<f2c::hg::CorridorShare>;
 %rename(HG_Req_gen) f2c::hg::ReqHL;
 %include "fields2cover/headland_generator/required_headland.h"
 

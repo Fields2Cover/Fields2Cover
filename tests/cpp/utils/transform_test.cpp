@@ -108,6 +108,32 @@ TEST(fields2cover_utils_transformer, convert_to_UTM_and_return) {
   EXPECT_THROW( f2c::Transform::transformToPrevCRS(field), std::invalid_argument);
 }
 
+TEST(fields2cover_utils_transformer, convert_to_single_digit_UTM_zones) {
+  const std::vector<F2CPoint> gps_points {
+    F2CPoint(-147.0, 64.0),
+    F2CPoint(-147.0, -45.0)
+  };
+
+  for (const auto& gps_point : gps_points) {
+    F2CField field;
+    field.setRefPoint(gps_point);
+    field.setEPSGCoordSystem(4326);
+
+    f2c::Transform::transformToUTM(field, false);
+
+    const std::string hemisphere {gps_point.getY() > 0 ? "N" : "S"};
+    EXPECT_EQ(field.getCRS(), "UTM:6" + hemisphere + " datum:WGS84");
+    EXPECT_EQ(field.getUTMZone(), "6");
+    EXPECT_EQ(field.getUTMHemisphere(),
+      gps_point.getY() > 0 ? "+north" : "+south");
+    EXPECT_EQ(field.getPrevCRS(), "EPSG:4326");
+
+    f2c::Transform::transformToPrevCRS(field);
+    EXPECT_NEAR(field.getRefPoint().getX(), gps_point.getX(), 1e-6);
+    EXPECT_NEAR(field.getRefPoint().getY(), gps_point.getY(), 1e-6);
+  }
+}
+
 TEST(fields2cover_utils_transformer, convert_types) {
   F2CLineString line({
     F2CPoint(6.062131843297665, 51.51238564279176, 0),
