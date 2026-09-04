@@ -70,32 +70,39 @@ Once we have the field in UTM, let's create a coverage path, as we did it in pre
     :caption: C++
 
     F2CRobot robot (2.0, 6.0);
-    robot.setMinRadius(2);  // m
+    robot.setMinTurningRadius(2);  // m
     f2c::hg::ConstHL const_hl;
+    F2CCells mid_hl = const_hl.generateHeadlands(field.getField(), 1.5 * robot.getWidth());
     F2CCells no_hl = const_hl.generateHeadlands(field.getField(), 3.0 * robot.getWidth());
     f2c::sg::BruteForce bf;
-    F2CSwaths swaths = bf.generateSwaths(M_PI, robot.getCovWidth(), no_hl.getGeometry(0));
+    F2CSwathsByCells swaths = bf.generateSwaths(M_PI, robot.getCovWidth(), no_hl);
     f2c::rp::SnakeOrder snake_sorter;
-    swaths = snake_sorter.genSortedSwaths(swaths);
+    F2CRoute route = snake_sorter.genRoute(mid_hl, swaths);
     f2c::pp::PathPlanning path_planner;
     f2c::pp::DubinsCurves dubins;
-    F2CPath path = path_planner.planPath(robot, swaths, dubins);
+    F2CPath path = path_planner.planPath(robot, route, dubins);
 
   .. code-tab:: python
     :caption: Python
 
     robot = f2c.Robot(2.0, 6.0);
-    robot.setMinRadius(2);
+    robot.setMinTurningRadius(2);
     const_hl = f2c.HG_Const_gen()
+    mid_hl = const_hl.generateHeadlands(field.getField(), 1.5 * robot.getWidth())
     no_hl = const_hl.generateHeadlands(field.getField(), 3.0 * robot.getWidth())
     bf = f2c.SG_BruteForce()
-    swaths = bf.generateSwaths(math.pi, robot.getCovWidth(), no_hl.getGeometry(0))
+    swaths = bf.generateSwaths(math.pi, robot.getCovWidth(), no_hl)
     snake_sorter = f2c.RP_Snake()
-    swaths = snake_sorter.genSortedSwaths(swaths)
+    route = snake_sorter.genRoute(mid_hl, swaths)
     path_planner = f2c.PP_PathPlanning()
     dubins = f2c.PP_DubinsCurves()
-    path = path_planner.planPath(robot, swaths, dubins);
+    path = path_planner.planPath(robot, route, dubins);
 
+
+``genRoute`` returns the swaths in order *and* the connections between them, driven
+through the headland. ``genSortedSwaths`` returns the order alone; a snake or spiral
+skip would then be driven as a straight hop, cutting over ground that is already
+covered whenever the field is not convex.
 
 .. image:: ../../figures/Tutorial_8_1_UTM.png
 

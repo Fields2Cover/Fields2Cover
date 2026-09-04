@@ -24,7 +24,8 @@ class CustomOrder : public SingleCellSwathsOrderBase {
 
  private:
   std::vector<size_t> custom_order;
-  void check(const F2CSwaths& swaths) const;
+  /// Reject an order that is not a permutation of 0..order.size()-1.
+  static void check(const std::vector<size_t>& order);
 };
 
 

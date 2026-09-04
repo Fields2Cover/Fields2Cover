@@ -17,15 +17,18 @@ int main() {
 
   F2CRobot robot (2.0, 6.0);
   f2c::hg::ConstHL const_hl;
+  F2CCells mid_hl = const_hl.generateHeadlands(field.getField(), 1.5 * robot.getWidth());
   F2CCells no_hl = const_hl.generateHeadlands(field.getField(), 3.0 * robot.getWidth());
   f2c::sg::BruteForce bf;
-  F2CSwaths swaths = bf.generateSwaths(M_PI, robot.getCovWidth(), no_hl.getGeometry(0));
+  F2CSwathsByCells swaths = bf.generateSwaths(M_PI, robot.getCovWidth(), no_hl);
   f2c::rp::SnakeOrder snake_sorter;
-  swaths = snake_sorter.genSortedSwaths(swaths);
+  // genRoute connects the swaths through the headland. genSortedSwaths returns
+  // the order alone, and a snake skip would then cut over covered ground.
+  F2CRoute route = snake_sorter.genRoute(mid_hl, swaths);
   f2c::pp::PathPlanning path_planner;
   robot.setMinTurningRadius(2);  // m
   f2c::pp::DubinsCurves dubins;
-  F2CPath path = path_planner.planPath(robot, swaths, dubins);
+  F2CPath path = path_planner.planPath(robot, route, dubins);
 
 
   f2c::Visualizer::figure();
