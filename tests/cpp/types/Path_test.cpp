@@ -594,3 +594,34 @@ TEST(fields2cover_types_path, serialize_load_preserves_hl_swath) {
   EXPECT_NEAR(loaded[0].point.getY(), 2.0, 1e-6);
 }
 
+
+TEST(fields2cover_types_path, sharp_turns_are_countable) {
+  // Three straight legs meeting at right angles: a vehicle with a turning
+  // radius cannot drive either corner, and nothing else in the library says so.
+  F2CPath path;
+  path.appendStraight(F2CPoint(0, 0), F2CPoint(10, 0), 1.0,
+      f2c::types::PathSectionType::HL_SWATH);
+  path.appendStraight(F2CPoint(10, 0), F2CPoint(10, 10), 1.0,
+      f2c::types::PathSectionType::HL_SWATH);
+  path.appendStraight(F2CPoint(10, 10), F2CPoint(0, 10), 1.0,
+      f2c::types::PathSectionType::HL_SWATH);
+
+  EXPECT_EQ(path.countSharpTurns(0.35), 2u);
+  EXPECT_NEAR(path.maxHeadingJump(), M_PI / 2.0, 1e-9);
+  // Asked to allow more than a right angle, it finds none.
+  EXPECT_EQ(path.countSharpTurns(2.0), 0u);
+}
+
+TEST(fields2cover_types_path, a_straight_path_turns_nowhere) {
+  F2CPath path;
+  path.appendStraight(F2CPoint(0, 0), F2CPoint(10, 0), 1.0,
+      f2c::types::PathSectionType::HL_SWATH);
+  path.appendStraight(F2CPoint(10, 0), F2CPoint(20, 0), 1.0,
+      f2c::types::PathSectionType::HL_SWATH);
+  EXPECT_EQ(path.countSharpTurns(), 0u);
+  EXPECT_NEAR(path.maxHeadingJump(), 0.0, 1e-9);
+
+  F2CPath empty;
+  EXPECT_EQ(empty.countSharpTurns(), 0u);
+  EXPECT_NEAR(empty.maxHeadingJump(), 0.0, 1e-9);
+}
