@@ -4,6 +4,7 @@
 //                        BSD-3 License
 //=============================================================================
 
+#include <memory>
 #include "fields2cover/types/Point.h"
 
 namespace f2c::types {
@@ -17,7 +18,17 @@ Point::Point(double _x, double _y, double _z) : Geometry() {
 }
 
 Point::Point(const Point& p) : Geometry(p.clone()) {}
-Point::Point(Point&& p) = default;
+Point::Point(Point&& p)
+    : Geometry<OGRPoint, wkbPoint>(std::move(p)) {
+  // Assigning to a Point writes through data_ rather than replacing it, so a
+  // moved-from Point has to keep a buffer of its own. Leaving it null makes the
+  // next assignment to it dereference nothing -- which is what std::swap does
+  // on its way through std::reverse or std::sort, so those crashed on any
+  // vector<Point>.
+  p.data_ = std::shared_ptr<OGRPoint>(
+      static_cast<OGRPoint*>(OGRGeometryFactory::createGeometry(wkbPoint)),
+      [](OGRPoint* g) {OGRGeometryFactory::destroyGeometry(g);});
+}
 Point::~Point() = default;
 
 Point& Point::operator=(Point&& p) {
