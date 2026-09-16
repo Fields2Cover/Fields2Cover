@@ -62,9 +62,14 @@ size_t Graph2D::numNodes() const {
 }
 
 std::vector<Point> Graph2D::getNodes() const {
+  // In id order. Both maps are unordered, so walking either one hands back an
+  // order that is not the ids' and is not the same on another build. An id is
+  // the node count at the time the node was first seen and nodes are never
+  // erased, so the ids are dense over 0..numNodes()-1 and at() cannot throw.
   std::vector<Point> nodes;
-  for (auto&& n : nodes_to_index_) {
-    nodes.emplace_back(n.first);
+  nodes.reserve(this->numNodes());
+  for (size_t i = 0; i < this->numNodes(); ++i) {
+    nodes.emplace_back(index_to_nodes_.at(i));
   }
   return nodes;
 }

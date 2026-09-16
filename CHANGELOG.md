@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- `F2CGraph2D::getNodes` handed its nodes back in the order an `unordered_map` happened to hold them. That is not the order the node ids were handed out in, and it is not the same order on another build, yet the ids `getEdges` reports index exactly that vector -- so a caller resolving an edge through it joined the wrong pair of points, silently, and differently on another machine. The nodes now come back in id order, so `getNodes()[i]` is `indexToNode(i)`.
+
 ## [2.1.0] - 2026-09-03
 
 ### Added
