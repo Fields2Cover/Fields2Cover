@@ -134,6 +134,30 @@ bool crosses(const std::array<double, 4>& s, double px, double py,
   return d1 * d2 < 0 && d3 * d4 < 0;
 }
 
+// How far a point lies from a segment of the border.
+double distTo(const std::array<double, 4>& s, double px, double py) {
+  const double vx = s[2] - s[0], vy = s[3] - s[1];
+  const double l2 = vx * vx + vy * vy;
+  double t = (l2 > 0.0) ? ((px - s[0]) * vx + (py - s[1]) * vy) / l2 : 0.0;
+  t = std::max(0.0, std::min(1.0, t));
+  return std::hypot(px - (s[0] + t * vx), py - (s[1] + t * vy));
+}
+
+// A sample sitting on the border is standing on the ground. holds() is a ray
+// cast and answers no there, so without this every edge running ALONG a wall
+// is thrown away -- and a geodesic is made of exactly those edges. The
+// tolerance is for exact-boundary arithmetic, not for slack: it is the one
+// crosses() already tolerates that same wall with, never the sample step.
+bool onBorder(const std::vector<std::array<double, 4>>& border,
+    double px, double py, double eps) {
+  for (const auto& s : border) {
+    if (distTo(s, px, py) <= eps) {
+      return true;
+    }
+  }
+  return false;
+}
+
 void ringCorners(const F2CCells& cs, std::vector<F2CPoint>* out) {
   for (size_t i = 0; i < cs.size(); ++i) {
     const F2CCell c = cs.getGeometry(i);
@@ -239,7 +263,7 @@ F2CGraph2D FreeSpaceRoutePlanner::createShortestGraph(
     for (int t = 0; t < n; ++t) {
       const double u = (t + 0.5) / n;
       const double mx = ax + dx * u, my = ay + dy * u;
-      if (!ground.holds(mx, my)) {
+      if (!ground.holds(mx, my) && !onBorder(border, mx, my, eps)) {
         return false;
       }
       if (has_band && !room.isEmpty() && !room.holds(mx, my)) {

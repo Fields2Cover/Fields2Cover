@@ -84,6 +84,38 @@ TEST(fields2cover_rp_free_space, goes_around_the_crop_not_through_it) {
   EXPECT_EQ(planner.getComponentCount(), 1u);
 }
 
+TEST(fields2cover_rp_free_space, a_run_along_a_wall_of_the_ground_is_drivable) {
+  // A run along a side of the crop is ground the whole way: the wall is
+  // ground. Whether the graph offered that run used to depend on which side of
+  // the crop it was -- the ray cast that samples the segment answers "outside"
+  // on a wall it leaves below or to its left, and "inside" on the other two --
+  // so the same 60 m run was a straight line along the north and east walls
+  // and a 110.75 m trip around the corner of the field along the south and
+  // west ones.
+  const F2CCells ground = ringGround(100.0, 60.0);   // crop from 20 to 80
+  F2CSwathsByCells swaths;
+  f2c::rp::FreeSpaceRoutePlanner planner;
+  F2CGraph2D g = planner.createShortestGraph(ground, swaths, 1e-4);
+  ASSERT_EQ(planner.getComponentCount(), 1u);
+
+  struct Side { const char* name; F2CPoint a, b; };
+  for (const Side& s : {
+      Side{"south", F2CPoint(20, 20), F2CPoint(80, 20)},
+      Side{"north", F2CPoint(20, 80), F2CPoint(80, 80)},
+      Side{"west",  F2CPoint(20, 20), F2CPoint(20, 80)},
+      Side{"east",  F2CPoint(80, 20), F2CPoint(80, 80)}}) {
+    ASSERT_TRUE(g.hasNode(s.a));
+    ASSERT_TRUE(g.hasNode(s.b));
+    const std::vector<F2CPoint> path = g.shortestPath(s.a, s.b);
+    ASSERT_GE(path.size(), 2u);
+    EXPECT_NEAR(pathLength(path), 60.0, 1e-6)
+        << "the run along the crop's " << s.name << " wall is 60 m of ground "
+        << "from end to end, and the route takes " << path.size()
+        << " points to get there: a segment lying on a wall was rejected, so "
+        << "the graph went around the field instead";
+  }
+}
+
 TEST(fields2cover_rp_free_space, counts_the_pieces_the_ground_falls_into) {
   // Two squares that do not touch: nothing can be routed between them, and the
   // planner says so instead of leaving the caller to find out from the route.
