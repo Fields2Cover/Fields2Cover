@@ -34,6 +34,12 @@ double pathLength(const std::vector<F2CPoint>& p) {
   return len;
 }
 
+F2CCells block(double x0, double y0, double x1, double y1) {
+  return F2CCells(F2CCell(F2CLinearRing({
+      F2CPoint(x0, y0), F2CPoint(x1, y0), F2CPoint(x1, y1),
+      F2CPoint(x0, y1), F2CPoint(x0, y0)})));
+}
+
 }  // namespace
 
 TEST(fields2cover_rp_free_space, every_edge_stays_on_the_ground) {
@@ -82,6 +88,31 @@ TEST(fields2cover_rp_free_space, goes_around_the_crop_not_through_it) {
   EXPECT_EQ(path.back(), b);
   EXPECT_GT(pathLength(path), a.distance(b));
   EXPECT_EQ(planner.getComponentCount(), 1u);
+}
+
+TEST(fields2cover_rp_free_space, two_pieces_of_ground_are_not_joined_across_a_gap) {
+  // Ground in two pieces with 2 cm between them. Nothing can be driven from
+  // one to the other, but the segment joining them is only looked at every
+  // sample step, so a gap narrower than that used to go unseen: the graph
+  // reported one piece and offered six edges straight over the gap. The
+  // crossing test does not catch it, because such an edge runs along the walls
+  // instead of properly crossing them.
+  const F2CCells ground =
+      block(0.0, 0.0, 60.0, 10.0).difference(block(29.99, -1.0, 30.01, 11.0));
+  ASSERT_EQ(ground.size(), 2u);
+
+  F2CSwathsByCells swaths;
+  f2c::rp::FreeSpaceRoutePlanner planner;
+  F2CGraph2D g = planner.createShortestGraph(ground, swaths, 1e-4);
+
+  EXPECT_EQ(planner.getComponentCount(), 2u)
+      << "the two pieces were joined: a gap narrower than the sample step was "
+      << "stepped over";
+  const F2CPoint a(29.99, 0.0), b(30.01, 10.0);
+  ASSERT_TRUE(g.hasNode(a));
+  ASSERT_TRUE(g.hasNode(b));
+  EXPECT_TRUE(g.shortestPath(a, b).empty())
+      << "a route was found between two pieces of ground that do not touch";
 }
 
 TEST(fields2cover_rp_free_space, a_dip_in_a_wall_is_not_driven_over) {

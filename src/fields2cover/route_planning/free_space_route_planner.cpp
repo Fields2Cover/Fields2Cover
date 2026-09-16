@@ -236,6 +236,26 @@ F2CGraph2D FreeSpaceRoutePlanner::createShortestGraph(
   const double step = (sample_step_ > 0.0) ? sample_step_ : 0.5;
   const double eps = std::max(d_tol, 1e-9);
 
+  // Which piece of the ground each node stands on. Two pieces that do not
+  // touch cannot be driven between, yet the segment joining them is only
+  // looked at every `step`, so a gap narrower than that is never sampled and
+  // the two are joined -- measured, a 0.24 m gap is crossed and a 0.30 m one
+  // is not. The crossing test does not catch it either: such an edge runs
+  // along the walls rather than properly crossing them. Resolved once per
+  // node, so the pair test below stays a comparison of two integers. A node
+  // on no piece at all is a swath end, standing off the ground by half the
+  // strip its own swath covers; those are left to the tests that follow.
+  std::vector<int> piece(nodes.size(), -1);
+  for (size_t i = 0; i < nodes.size(); ++i) {
+    for (size_t c = 0; c < cells.size(); ++c) {
+      const F2CCell cell = cells.getGeometry(c);
+      if (cell.isPointIn(nodes[i]) || nodes[i].distance(cell) <= eps) {
+        piece[i] = static_cast<int>(c);
+        break;
+      }
+    }
+  }
+
   // Whether the segment between two nodes stays on the ground, and how much of
   // it runs inside the clearance band.
   auto reaches = [&](const F2CPoint& a, const F2CPoint& b,
@@ -290,6 +310,9 @@ F2CGraph2D FreeSpaceRoutePlanner::createShortestGraph(
     workers.emplace_back([&, t] {
       for (size_t i = t; i < nodes.size(); i += n_threads) {
         for (size_t k = i + 1; k < nodes.size(); ++k) {
+          if (piece[i] >= 0 && piece[k] >= 0 && piece[i] != piece[k]) {
+            continue;        // two pieces of ground that do not touch
+          }
           double band = 0.0;
           if (reaches(nodes[i], nodes[k], i >= n_corners, k >= n_corners,
                 &band)) {
