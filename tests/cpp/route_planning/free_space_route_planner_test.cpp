@@ -84,6 +84,36 @@ TEST(fields2cover_rp_free_space, goes_around_the_crop_not_through_it) {
   EXPECT_EQ(planner.getComponentCount(), 1u);
 }
 
+TEST(fields2cover_rp_free_space, a_dip_in_a_wall_is_not_driven_over) {
+  // The tripwire for the tolerance a sample on the border is given. That
+  // tolerance is for exact-boundary arithmetic, and it must stay far below any
+  // real geometry: the shallowest dip a chord along the wall can be allowed to
+  // shave is exactly the tolerance, while the length it shaves is unbounded.
+  // Tying it to the sample step -- a tempting tidy-up, since the walk beside it
+  // steps by that -- would buy no edge at all and would licence shaving a
+  // sample step of crop. This dip is 1 cm deep, so it fails the moment the
+  // tolerance is raised anywhere near the step.
+  F2CCells ground(F2CCell(F2CLinearRing({
+      F2CPoint(0, 0), F2CPoint(60, 0), F2CPoint(60, 10),
+      F2CPoint(35, 10), F2CPoint(35, 9.99), F2CPoint(25, 9.99),
+      F2CPoint(25, 10), F2CPoint(0, 10), F2CPoint(0, 0)})));
+  F2CSwathsByCells swaths;
+  f2c::rp::FreeSpaceRoutePlanner planner;
+  F2CGraph2D g = planner.createShortestGraph(ground, swaths, 1e-4);
+
+  const F2CPoint a(25.0, 10.0), b(35.0, 10.0);
+  ASSERT_TRUE(g.hasNode(a));
+  ASSERT_TRUE(g.hasNode(b));
+  const std::vector<F2CPoint> path = g.shortestPath(a, b);
+  ASSERT_GE(path.size(), 2u);
+  // Around the dip it is 10.02 m through its two corners; straight over it
+  // would be the 10.00 m chord.
+  EXPECT_GT(path.size(), 2u)
+      << "the chord over the dip was taken as an edge: the border tolerance is "
+      << "large enough to swallow 1 cm of ground";
+  EXPECT_GT(pathLength(path), 10.01);
+}
+
 TEST(fields2cover_rp_free_space, a_run_along_a_wall_of_the_ground_is_drivable) {
   // A run along a side of the crop is ground the whole way: the wall is
   // ground. Whether the graph offered that run used to depend on which side of
