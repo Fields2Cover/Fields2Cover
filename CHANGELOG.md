@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `f2c::decomp::simplifyForDecomposition`, which drops border detail below a
+  share of the robot's coverage width before a field is decomposed. A
+  decomposition splits a field wherever its border turns back on itself, and a
+  digitised border does that on details of a few centimetres: the field comes
+  back cut into pieces that exist only in the survey, each paying for a
+  headland it does not need. Over 305 real fields and two robots this returns
+  30% fewer cells while the area moves by less than a tenth of a percent, and
+  every arm of a five-way headland comparison gains from it. The result is not
+  clipped to the input -- simplifying moves the border both ways -- so it takes
+  ground already inside the field, not the raw boundary.
+
 ## [2.1.0] - 2026-09-03
 
 ### Added
