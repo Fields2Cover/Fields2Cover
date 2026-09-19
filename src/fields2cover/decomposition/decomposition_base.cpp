@@ -25,5 +25,9 @@ F2CCells DecompositionBase::merge(
 }
 
 
+F2CCells simplifyForDecomposition(const F2CCells& cells, const F2CRobot&) {
+  return cells;
+}
+
 }  // namespace f2c::decomp
 

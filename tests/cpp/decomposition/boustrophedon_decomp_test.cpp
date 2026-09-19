@@ -60,3 +60,30 @@ TEST(fields2cover_decomp_boustrophedon, doesNotThrowOnAPinchedSplit) {
   EXPECT_NO_THROW(decomp.decompose(field.getField()));
 }
 
+
+TEST(fields2cover_decomp_boustrophedon, simplifyDropsBorderNoiseBeforeSplitting) {
+  // A digitised border turns back on itself on details far smaller than the
+  // machine, and the decomposition splits the field on every one of them.
+  F2CCell raw = loadWktCell(std::string(DATA_PATH) + "ee_field_130.wkt");
+  ASSERT_GT(raw.area(), 0) << "ee_field_130.wkt did not load a real field";
+  F2CField field(F2CCells(raw), "ee_field_130");
+  field.setCRS("EPSG:4326");
+  f2c::Transform::transformToUTM(field);
+  const F2CCells cells = field.getField();
+
+  f2c::decomp::BoustrophedonDecomp decomp;
+  decomp.setSplitAngle(0.0);
+  F2CRobot robot(2.5, 2.5);
+
+  EXPECT_EQ(decomp.decompose(cells).size(), 16);
+
+  // Detail below 0.6 of the coverage width -- 1.5 m for this robot -- is not
+  // something it can act on, and four of those sixteen pieces only exist
+  // because of it.
+  const F2CCells simple =
+      f2c::decomp::simplifyForDecomposition(cells, robot);
+  EXPECT_EQ(decomp.decompose(simple).size(), 12);
+
+  // The noise goes, the field stays: the area barely moves.
+  EXPECT_NEAR(simple.area(), cells.area(), 0.005 * cells.area());
+}
