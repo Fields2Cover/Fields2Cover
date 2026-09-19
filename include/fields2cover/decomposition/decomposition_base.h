@@ -54,15 +54,11 @@ class DecompositionBase {
 /// Drop border detail a robot of this width cannot act on.
 ///
 /// A decomposition splits a field wherever its border turns back on itself,
-/// and a digitised border does that on details far smaller than the machine:
-/// the field comes back cut into pieces that exist only in the survey, each
-/// one paying for a headland it does not need. Detail below a share of the
-/// coverage width is removed first, so the split lines follow the shape of
-/// the field rather than the noise on it.
+/// which a digitised border does on details far smaller than the machine.
+/// Removing them first keeps the split lines on the shape of the field.
 ///
-/// The result is not clipped to \a cells: simplifying moves the border both
-/// ways, so a point can land outside. Pass ground that is already inside the
-/// field -- a mainland from a headland generator, not the raw boundary.
+/// Not clipped to \a cells -- simplifying moves the border both ways, so pass
+/// ground already inside the field, not the raw boundary.
 /// @param cells Cells about to be decomposed.
 /// @param robot Robot doing the coverage.
 /// @return The same cells with border detail below the threshold removed
