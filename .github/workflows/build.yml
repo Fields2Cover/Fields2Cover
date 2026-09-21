@@ -146,6 +146,7 @@ jobs:
         run: |
           cmake -S . -B build \
             -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX="$GITHUB_WORKSPACE/instdir" \
             -DBUILD_PYTHON=ON \
             -DBUILD_TESTING=ON \
             -DCMAKE_PREFIX_PATH="$(brew --prefix)" \
@@ -158,11 +159,14 @@ jobs:
         run: ctest --test-dir build/tests --output-on-failure
 
       - name: Install
-        run: sudo cmake --install build
+        run: cmake --install build
 
       - name: Run Python tests
         run: |
           python3 -m pip install --break-system-packages pytest numpy
+          python_site="$GITHUB_WORKSPACE/instdir/lib/python$(python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')/site-packages"
+          PYTHONPATH="$python_site" \
+          DYLD_LIBRARY_PATH="$GITHUB_WORKSPACE/instdir/lib" \
           python3 -m pytest tests/python/
 
   python-wheel:
