@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.1] - 2026-09-21
+
+### Fixed
+- Install the Python bindings relative to `CMAKE_INSTALL_PREFIX`, so ROS RPM packages keep them under `/opt/ros/<distro>` instead of leaving unpackaged files in `/usr/lib64/pythonX.Y/site-packages`.
+
 ## [2.1.0] - 2026-09-03
 
 ### Added
@@ -70,7 +75,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - On RP module: Boustrophedon, custom, snake and spiral.
 - On PP module: Dubins and Reeds-Sheep with/without continuous curvature.
 - Objective functions are split between global and path cost functions.
-
 
 
 
