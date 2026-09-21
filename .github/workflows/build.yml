@@ -103,7 +103,7 @@ jobs:
             -DBUILD_TUTORIALS=OFF \
             -DBUILD_TESTING=ON   \
             -DBUILD_DOC=OFF \
-            -DBUILD_SHARED_LIBS={{ matrix.shared }} \
+            -DBUILD_SHARED_LIBS=${{ matrix.shared }} \
             -DUSE_ORTOOLS_RELEASE=ON \
             ..
 
@@ -126,7 +126,11 @@ jobs:
       - name: Test Python
         working-directory: ${{github.workspace}}
         # libFields2Cover.so's deps (matplot, steering_functions) live in the throwaway prefix
-        run: LD_LIBRARY_PATH=$GITHUB_WORKSPACE/instdir/lib pytest-3 tests/python/
+        run: |
+          python_site="$GITHUB_WORKSPACE/instdir/lib/python$(python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')/site-packages"
+          PYTHONPATH="$python_site" \
+          LD_LIBRARY_PATH="$GITHUB_WORKSPACE/instdir/lib" \
+          python3 -m pytest tests/python/
 
   build-macos:
     name: "macOS arm64, AppleClang, Release"
