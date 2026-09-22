@@ -38,6 +38,9 @@ class Graph2D : public Graph {
   Graph2D& removeEdge(const Point& i, const Point& j);
 
   size_t numNodes() const;
+
+  /// Nodes in id order: getNodes()[i] is indexToNode(i), so the ids getEdges
+  /// reports can be used to index the result.
   std::vector<Point> getNodes() const;
 
   /// Check if a point is a node of this graph.

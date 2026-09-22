@@ -138,3 +138,31 @@ TEST(fields2cover_types_graph2d, hasNode) {
   EXPECT_TRUE(g.hasNode(p2));
   EXPECT_FALSE(g.hasNode(p_out));
 }
+
+TEST(fields2cover_types_graph2d, getNodesIsOrderedByIndex) {
+  // getNodes() is the vector a caller indexes with the ids getEdges() hands
+  // out. Nodes are kept in an unordered_map, so with no order of its own the
+  // vector comes back in hash order -- not the order the ids were handed out
+  // in, and not even the same order on another build -- and every edge
+  // resolved through it joins the wrong pair of points.
+  const std::vector<F2CPoint> ring {
+      {0, 0}, {100, 0}, {100, 60}, {0, 60},
+      {10, 10}, {90, 10}, {90, 50}, {10, 50}};
+  F2CGraph2D g;
+  for (size_t i = 0; i + 1 < ring.size(); ++i) {
+    g.addEdge(ring[i], ring[i + 1], 1);
+  }
+
+  const std::vector<F2CPoint> nodes = g.getNodes();
+  ASSERT_EQ(nodes.size(), g.numNodes());
+  for (size_t i = 0; i < nodes.size(); ++i) {
+    EXPECT_EQ(nodes[i], g.indexToNode(i)) << "at index " << i;
+    EXPECT_EQ(g.nodeToIndex(nodes[i]), i) << "at index " << i;
+  }
+}
+
+TEST(fields2cover_types_graph2d, getNodesOfAnEmptyGraph) {
+  F2CGraph2D g;
+  EXPECT_EQ(g.numNodes(), 0);
+  EXPECT_TRUE(g.getNodes().empty());
+}
