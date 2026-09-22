@@ -62,11 +62,7 @@ class DecompositionBase {
 /// @param cells Cells about to be decomposed.
 /// @param robot Robot doing the coverage.
 /// @param detail_share Part of the coverage width a border detail has to
-///        exceed to survive. The default was measured over 305 real fields and
-///        two robots: the decomposition returns 30% fewer cells, no piece of
-///        any field lands outside the field it came from, and the area moves
-///        by less than a tenth of a percent. Less leaves noise behind; much
-///        more starts merging splits the shape of the field genuinely asks for.
+///        exceed to survive.
 /// @return The same cells with border detail below the threshold removed
 F2CCells simplifyForDecomposition(const F2CCells& cells, const F2CRobot& robot,
     double detail_share = 0.6);
