@@ -84,3 +84,47 @@ TEST(fields2cover_types_swathsByCells, reverse) {
 
 
 
+
+TEST(fields2cover_types_swathsByCells, flattenGivesUniqueIds) {
+  F2CSwathsByCells sbc;
+  for (int cell = 0; cell < 2; ++cell) {
+    F2CSwaths swaths;
+    for (int i = 0; i < 3; ++i) {
+      swaths.append(F2CLineString(
+            {F2CPoint(10 * cell + i, 0), F2CPoint(10 * cell + i, 5)}), 1);
+    }
+    sbc.emplace_back(swaths);
+  }
+  // Each cell numbers its own swaths from 0, so the ids repeat across cells.
+  EXPECT_EQ(sbc.at(0).at(0).getId(), 0);
+  EXPECT_EQ(sbc.at(1).at(0).getId(), 0);
+
+  F2CSwaths flat = sbc.flatten();
+  ASSERT_EQ(flat.size(), 6);
+  for (size_t i = 0; i < flat.size(); ++i) {
+    EXPECT_EQ(flat.at(i).getId(), static_cast<int>(i));
+  }
+}
+
+TEST(fields2cover_types_swathsByCells, flattenKeepsOrderAndSourceIds) {
+  F2CSwathsByCells sbc;
+  for (int cell = 0; cell < 2; ++cell) {
+    F2CSwaths swaths;
+    for (int i = 0; i < 3; ++i) {
+      swaths.append(F2CLineString(
+            {F2CPoint(10 * cell + i, 0), F2CPoint(10 * cell + i, 5)}), 1);
+    }
+    sbc.emplace_back(swaths);
+  }
+  F2CSwaths flat = sbc.flatten();
+  ASSERT_EQ(flat.size(), 6);
+  size_t k = 0;
+  for (size_t c = 0; c < sbc.size(); ++c) {
+    for (size_t i = 0; i < sbc.at(c).size(); ++i, ++k) {
+      EXPECT_EQ(flat.at(k).startPoint(), sbc.at(c).at(i).startPoint());
+      EXPECT_EQ(flat.at(k).endPoint(), sbc.at(c).at(i).endPoint());
+    }
+  }
+  // Renumbering the flattened copy must not touch the source.
+  EXPECT_EQ(sbc.at(1).at(0).getId(), 0);
+}

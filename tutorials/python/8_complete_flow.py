@@ -17,16 +17,19 @@ f2c.Transform.transformToUTM(field);
 
 robot = f2c.Robot(2.0, 6.0);
 const_hl = f2c.HG_Const_gen()
+mid_hl = const_hl.generateHeadlands(field.getField(), 1.5 * robot.getWidth())
 no_hl = const_hl.generateHeadlands(field.getField(), 3.0 * robot.getWidth())
 bf = f2c.SG_BruteForce()
-swaths = bf.generateSwaths(math.pi, robot.getCovWidth(), no_hl.getGeometry(0))
+swaths = bf.generateSwaths(math.pi, robot.getCovWidth(), no_hl)
 snake_sorter = f2c.RP_Snake()
-swaths = snake_sorter.genSortedSwaths(swaths)
+# genRoute connects the swaths through the headland. genSortedSwaths returns
+# the order alone, and a snake skip would then cut over covered ground.
+route = snake_sorter.genRoute(mid_hl, swaths)
 
 robot.setMinTurningRadius(2)
 path_planner = f2c.PP_PathPlanning()
 dubins = f2c.PP_DubinsCurves()
-path = path_planner.planPath(robot, swaths, dubins);
+path = path_planner.planPath(robot, route, dubins);
 
 
 f2c.Visualizer.figure();

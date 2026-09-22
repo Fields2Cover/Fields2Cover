@@ -35,7 +35,9 @@ set(F2C_PYTHON_PACKAGE_DIR fields2cover)
 if(DEFINED SKBUILD)
   set(F2C_PYTHON_INSTALL_DIR ${F2C_PYTHON_PACKAGE_DIR})
 else()
-  set(F2C_PYTHON_INSTALL_DIR "${Python_SITEARCH}/${F2C_PYTHON_PACKAGE_DIR}" CACHE PATH
+  set(F2C_PYTHON_INSTALL_DIR
+      "lib/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/site-packages/${F2C_PYTHON_PACKAGE_DIR}"
+      CACHE PATH
       "Install directory of the fields2cover python package (default: site-packages)")
   # RPATH to <prefix>/lib where libFields2Cover.so is installed. The prefix may
   # be relative (CI passes ../instdir), so resolve it against the build dir.
