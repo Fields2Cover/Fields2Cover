@@ -13,10 +13,6 @@
 namespace f2c::rp {
 
 /// Common interface of everything that turns swaths into a route.
-///
-/// Both families of route planners implement it: the swath orderers
-/// (BOUSTROPHEDON, SNAKE, SPIRAL, CUSTOM) and the TSP route planner. A caller
-/// can hold any of them behind this one type instead of branching on the mode.
 class RouteGeneratorBase {
  public:
   /// Generate a route covering the swaths, connected through the headland.
