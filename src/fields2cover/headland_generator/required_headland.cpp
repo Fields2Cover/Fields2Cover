@@ -9,6 +9,17 @@
 
 namespace f2c::hg {
 
+namespace {
+// Offset a ring per segment, then clean it up with a GEOS buffer -- can
+// come back as more than one polygon, hence Cells rather than a Cell.
+F2CCells offsetRing(const F2CLinearRing& ring,
+    const std::vector<double>& dist) {
+  F2CLinearRing offset = ring;
+  offset.bufferOutwards(dist);
+  return F2CCells::buffer(F2CCells::buffer(F2CCell(offset), 1e-5), -1e-5);
+}
+}  // namespace
+
 F2CCells ReqHL::generateHeadlands(
     const F2CCell& field, const F2CRobot& robot, double track_ang) {
   double max_req_dist = this->maxHLWidthRequired(robot);
@@ -16,23 +27,31 @@ F2CCells ReqHL::generateHeadlands(
 
   F2CCells new_cells;
   for (auto&& inner_cell : inner_cells) {
-    F2CCell new_cell;
-    for (size_t i = 0; i < inner_cell.size(); ++i) {
-      auto ring = inner_cell[i];
-      auto req_dist = this->requiredHeadlandDist(robot, track_ang, ring);
-
-      // Give each border back what it does not need to turn on. Obstacles
-      // are the other way around: their borders grow into the mainland.
-      for (auto&& d : req_dist) {
-        d = (max_req_dist - d) * (i == 0 ? 1.0 : -1.0);
-      }
-      new_cell.addGeometry(ring.bufferOutwards(req_dist));
-      // Close the hairline spurs offsetting each segment on its own leaves.
-      new_cell = F2CCell::buffer(F2CCell::buffer(new_cell, 1e-5), -1e-5);
+    // The exterior ring's own offset already produces the mainland: pieces
+    // it splits into become separate cells instead of getting silently
+    // discarded.
+    auto ext_ring = inner_cell.getExteriorRing();
+    auto ext_dist = this->requiredHeadlandDist(robot, track_ang, ext_ring);
+    for (auto&& d : ext_dist) {
+      d = max_req_dist - d;
     }
-    new_cells.addGeometry(new_cell);
-    new_cells = F2CCells::buffer(F2CCells::buffer(new_cells, 1e-5), -1e-5);
+    F2CCells mainland = offsetRing(ext_ring, ext_dist);
+
+    // Every obstacle grows the same way and is cut out of the mainland.
+    for (size_t i = 1; i < inner_cell.size(); ++i) {
+      auto hole_ring = inner_cell.getInteriorRing(i - 1);
+      auto hole_dist = this->requiredHeadlandDist(robot, track_ang, hole_ring);
+      for (auto&& d : hole_dist) {
+        d = -(max_req_dist - d);
+      }
+      mainland = mainland.difference(offsetRing(hole_ring, hole_dist));
+    }
+
+    for (auto&& c : mainland) {
+      new_cells.addGeometry(c);
+    }
   }
+  new_cells = F2CCells::buffer(F2CCells::buffer(new_cells, 1e-5), -1e-5);
   return new_cells;
 }
 

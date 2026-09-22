@@ -4,6 +4,7 @@
 //                        BSD-3 License
 //=============================================================================
 
+#include <algorithm>
 #include <vector>
 #include "fields2cover/types/LinearRing.h"
 #include "fields2cover/types/LineString.h"
@@ -192,6 +193,28 @@ LinearRing& LinearRing::filterSelfIntersections() {
   return *this;
 }
 
+namespace {
+// A sharp corner with very different offsets on each side sends the plain
+// line-line miter join arbitrarily far from the original vertex -- outside
+// the source polygon, in the worst cases. Past this many times the larger
+// of the two offsets, bevel (both offset segment endpoints, joined by a
+// straight edge) instead of the single miter point.
+constexpr double kMiterLimit = 4.0;
+
+void addMiterOrBevel(const Point& p0_prev, const Point& p1_prev,
+    const Point& p0_curr, const Point& p1_curr, const Point& orig,
+    double d_prev, double d_curr, LinearRing* ring) {
+  Point miter = Point::intersectionOfLines(p0_prev, p1_prev, p0_curr, p1_curr);
+  double max_d = std::max(fabs(d_prev), fabs(d_curr));
+  if (max_d > 0.0 && miter.distance(orig) > kMiterLimit * max_d) {
+    ring->addPoint(p1_prev);
+    ring->addPoint(p0_curr);
+  } else {
+    ring->addPoint(miter);
+  }
+}
+}  // namespace
+
 LinearRing LinearRing::getParallelLine(const std::vector<double>& d) const {
   if (this->size() != d.size() + 1) {
     throw std::invalid_argument(
@@ -207,14 +230,13 @@ LinearRing LinearRing::getParallelLine(const std::vector<double>& d) const {
   }
 
   LinearRing ring;
-  ring.addPoint(Point::intersectionOfLines(
-        ps0.back(), ps1.back(), ps0[0], ps1[0]));
+  addMiterOrBevel(ps0.back(), ps1.back(), ps0[0], ps1[0],
+      at(0), d.back(), d[0], &ring);
   for (size_t i = 1; i < ps0.size(); ++i) {
-    ring.addPoint(Point::intersectionOfLines(
-          ps0[i-1], ps1[i-1], ps0[i], ps1[i]));
+    addMiterOrBevel(ps0[i-1], ps1[i-1], ps0[i], ps1[i],
+        at(i), d[i-1], d[i], &ring);
   }
   ring.addPoint(ring[0]);
-  ring.filterSelfIntersections();
   return ring;
 }
 
