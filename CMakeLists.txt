@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.12.4...3.22)
 
 project(Fields2Cover
-  VERSION 2.1.0
+  VERSION 2.1.1
   DESCRIPTION "Fields2Cover is a complete coverage path planning package for autonomous robots"
   HOMEPAGE_URL "http://fields2cover.github.io"
   LANGUAGES CXX
@@ -223,4 +223,3 @@ set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Gonzalo Mier<${CPACK_PACKAGE_CONTACT}>")
 set(CPACK_SOURCE_GENERATOR "TGZ;ZIP")
 set(CPACK_SOURCE_IGNORE_FILES .git dist .*build.* \\\\.DS_Store .dockerignore)
 include(CPack)
-
