@@ -22,6 +22,19 @@ F2CRoute RoutePlannerBase::genRoute(
     const F2CCells& cells, const F2CSwathsByCells& swaths,
     bool show_log, double d_tol, bool redirect_swaths,
     long int time_limit_seconds, bool search_for_optimum) {
+  return genRouteImpl(cells, swaths, show_log, d_tol, redirect_swaths,
+      time_limit_seconds, search_for_optimum);
+}
+
+F2CRoute RoutePlannerBase::genRoute(
+    const F2CCells& cells, const F2CSwathsByCells& swaths, double d_tol) const {
+  return genRouteImpl(cells, swaths, false, d_tol, true, 1, false);
+}
+
+F2CRoute RoutePlannerBase::genRouteImpl(
+    const F2CCells& cells, const F2CSwathsByCells& swaths,
+    bool show_log, double d_tol, bool redirect_swaths,
+    long int time_limit_seconds, bool search_for_optimum) const {
   F2CGraph2D shortest_graph = createShortestGraph(cells, swaths, d_tol);
 
   F2CGraph2D cov_graph = createCoverageGraph(

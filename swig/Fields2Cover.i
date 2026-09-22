@@ -310,6 +310,8 @@ DEFINE_PP_COSTS(BaseObjective<f2c::obj::PPObjective>, computeCostWithMinimizingS
 %include "fields2cover/decomposition/boustrophedon_decomp.h"
 
 
+%rename(RP_Route_generator_base_class) f2c::rp::RouteGeneratorBase;
+%include "fields2cover/route_planning/route_generator_base.h"
 %rename(RP_Single_cell_order_base_class) f2c::rp::SingleCellSwathsOrderBase;
 %include "fields2cover/route_planning/single_cell_swaths_order_base.h"
 %rename(RP_Boustrophedon) f2c::rp::BoustrophedonOrder;
