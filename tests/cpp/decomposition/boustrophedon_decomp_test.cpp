@@ -87,3 +87,22 @@ TEST(fields2cover_decomp_boustrophedon, simplifyDropsBorderNoiseBeforeSplitting)
   // The noise goes, the field stays: the area barely moves.
   EXPECT_NEAR(simple.area(), cells.area(), 0.005 * cells.area());
 }
+
+TEST(fields2cover_decomp_boustrophedon, simplifyTakesTheShareItIsGiven) {
+  // A 100x100 field with a 1 x 0.5 m notch cut out of its top edge, and a
+  // robot covering 2.5 m.
+  const F2CCells cells {F2CCell(F2CLinearRing({
+      F2CPoint(0, 0), F2CPoint(100, 0), F2CPoint(100, 100),
+      F2CPoint(50, 100), F2CPoint(50, 99.5), F2CPoint(49, 99.5),
+      F2CPoint(49, 100), F2CPoint(0, 100), F2CPoint(0, 0)}))};
+  F2CRobot robot(2.5, 2.5);
+
+  // Left to its default, detail below 0.6 of the coverage width -- 1.5 m --
+  // goes, and the notch with it.
+  EXPECT_NEAR(f2c::decomp::simplifyForDecomposition(cells, robot).area(),
+      100 * 100, 1e-6);
+  // Asked for a tenth, 0.25 m, the 0.5 m deep notch is detail to keep.
+  EXPECT_NEAR(
+      f2c::decomp::simplifyForDecomposition(cells, robot, 0.1).area(),
+      100 * 100 - 0.5, 1e-6);
+}
