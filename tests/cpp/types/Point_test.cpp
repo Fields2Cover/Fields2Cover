@@ -293,6 +293,16 @@ TEST(fields2cover_types_point, intersectionOfLines) {
   EXPECT_EQ(F2CPoint::intersectionOfLines(p00, p_10, p11, p1_1).distance(p10),  0.0);
 }
 
+TEST(fields2cover_types_point, intersectionOfNearParallelLines) {
+  // Two lines a fraction of a degree apart: den is a rounding error, not
+  // exactly 0, so the naive division sends the result far from either line.
+  F2CPoint l1_s {0, 0}, l1_e {100, 0};
+  F2CPoint l2_s {0, 1}, l2_e {100, 1 + 1e-10};
+  EXPECT_NEAR(
+      F2CPoint::intersectionOfLines(l1_s, l1_e, l2_s, l2_e).distance(l1_s),
+      0.0, 1e-6);
+}
+
 TEST(fields2cover_types_point, closestPointInSegment) {
   F2CPoint s1_s {-1, 1}; F2CPoint s1_e {1, 1};
   F2CPoint p1 {2, 1};

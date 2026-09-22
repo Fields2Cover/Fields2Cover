@@ -7,16 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- `f2c::decomp::simplifyForDecomposition`, which drops border detail below a
-  share of the robot's coverage width before a field is decomposed. A
-  decomposition splits a field wherever its border turns back on itself, and a
-  digitised border does that on details of a few centimetres: the field comes
-  back cut into pieces that exist only in the survey, each paying for a
-  headland it does not need. Over 305 real fields and two robots this returns
-  30% fewer cells while the area moves by less than a tenth of a percent, and
-  every arm of a five-way headland comparison gains from it. The result is not
-  clipped to the input -- simplifying moves the border both ways -- so it takes
-  ground already inside the field, not the raw boundary.
+- `f2c::decomp::simplifyForDecomposition`, which drops border detail below a share of the robot's coverage width before a field is decomposed. A decomposition splits a field wherever its border turns back on itself, and a digitised border does that on details of a few centimetres: the field comes back cut into pieces that exist only in the survey, each paying for a headland it does not need. Over 305 real fields and two robots this returns 30% fewer cells while the area moves by less than a tenth of a percent, and every arm of a five-way headland comparison gains from it. The result is not clipped to the input -- simplifying moves the border both ways -- so it takes ground already inside the field, not the raw boundary.
+- `SingleCellSwathsOrderBase::genRoute`, which gives BOUSTROPHEDON, SNAKE, SPIRAL and CUSTOM a route whose connections are driven through the headland. `genSortedSwaths` is unchanged and still returns the bare order; a bare order ignores the boundary, so a snake or spiral skip cuts over covered ground on a field that is not convex.
+- `SingleCellSwathsOrderBase::genSortedSwaths` overload taking `F2CSwathsByCells`, which orders each cell on its own so a pattern never runs across cells.
+
+### Fixed
+- `Point::intersectionOfLines` no longer sends the result arbitrarily far away for two lines a fraction of a degree apart. The parallel check compared the determinant to exactly 0, but two real-world collinear borders -- a redundant vertex on an otherwise straight, digitized field edge -- produce a determinant that is 0 only up to rounding, dividing by which is what actually blew up.
+- `ReqHL::generateHeadlands` no longer collapses a mainland to nearly nothing on a heavily digitized border. Offsetting hundreds of segments by widely different amounts crosses the resulting ring many times over; cleaning that up fell to `LinearRing::filterSelfIntersections`, which resolves one crossing at a time and drops every point between the two segments involved -- most of a real border, if that crossing is a distant one. The exterior ring's offset is now cleaned up with a GEOS buffer instead, which can also come back as more than one mainland cell where the ring legitimately splits.
+- `LinearRing::getParallelLine` no longer sends a corner's offset vertex arbitrarily far from the polygon when its two sides need very different offset distances. The plain line-line miter join has no limit on how far the intersection can land as the corner sharpens; past 4 times the larger of the two offsets it now bevels (the two offset segment endpoints, joined directly) instead of following the miter out. On real fields this let `ReqHL`'s mainland reach up to 273 m outside the field it came from, occasionally taking a coverage swath with it.
+- `F2CSwathsByCells::flatten` gave every cell's swaths the ids they had inside that cell, so the ids repeated across cells. `F2CSwaths::sort` orders on the id alone, so ordering a flattened multi-cell set interleaved the cells instead of covering them one after another. Flattened swaths are now numbered from 0.
+- `f2c::rp::CustomOrder` accepted an order with duplicate or out-of-range values and only reported it when the order was used. It is now checked when it is set, and the order must be a permutation of `0..n-1`.
+- `F2CGraph2D::getNodes` handed its nodes back in the order an `unordered_map` happened to hold them. That is not the order the node ids were handed out in, and it is not the same order on another build, yet the ids `getEdges` reports index exactly that vector -- so a caller resolving an edge through it joined the wrong pair of points, silently, and differently on another machine. The nodes now come back in id order, so `getNodes()[i]` is `indexToNode(i)`.
+
+## [2.1.1] - 2026-09-21
+
+### Fixed
+- Install the Python bindings relative to `CMAKE_INSTALL_PREFIX`, so ROS RPM packages keep them under `/opt/ros/<distro>` instead of leaving unpackaged files in `/usr/lib64/pythonX.Y/site-packages`.
 
 ## [2.1.0] - 2026-09-03
 
@@ -82,7 +88,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - On RP module: Boustrophedon, custom, snake and spiral.
 - On PP module: Dubins and Reeds-Sheep with/without continuous curvature.
 - Objective functions are split between global and path cost functions.
-
 
 
 
