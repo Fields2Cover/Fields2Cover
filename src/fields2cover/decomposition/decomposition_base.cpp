@@ -25,5 +25,10 @@ F2CCells DecompositionBase::merge(
 }
 
 
+F2CCells simplifyForDecomposition(
+    const F2CCells& cells, const F2CRobot& robot, double detail_share) {
+  return cells.simplify(detail_share * robot.getCovWidth());
+}
+
 }  // namespace f2c::decomp
 

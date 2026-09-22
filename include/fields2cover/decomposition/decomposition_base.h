@@ -51,6 +51,22 @@ class DecompositionBase {
   virtual ~DecompositionBase() = default;
 };
 
+/// Drop border detail a robot of this width cannot act on.
+///
+/// A decomposition splits a field wherever its border turns back on itself,
+/// which a digitised border does on details far smaller than the machine.
+/// Removing them first keeps the split lines on the shape of the field.
+///
+/// Not clipped to \a cells -- simplifying moves the border both ways, so pass
+/// ground already inside the field, not the raw boundary.
+/// @param cells Cells about to be decomposed.
+/// @param robot Robot doing the coverage.
+/// @param detail_share Part of the coverage width a border detail has to
+///        exceed to survive.
+/// @return The same cells with border detail below the threshold removed
+F2CCells simplifyForDecomposition(const F2CCells& cells, const F2CRobot& robot,
+    double detail_share = 0.6);
+
 }  // namespace f2c::decomp
 
 
