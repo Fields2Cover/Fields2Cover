@@ -289,7 +289,7 @@ F2CPath PathPlanning::planPath(const F2CRobot& robot,
       F2CPath turn_path = turn.createTurn(robot,
           swaths[i].endPoint(), swaths[i].getOutAngle(),
           swaths[i + 1].startPoint(), swaths[i + 1].getInAngle());
-      path += turn_path.discretize(0.1);
+      path += turn_path.discretize(turn.getDiscretization());
     }
   }
   if (swaths.size() > 0) {
@@ -372,4 +372,3 @@ double PathPlanning::getSmoothTurningRadius(const F2CRobot& robot) {
 }
 
 }  // namespace f2c::pp
-
