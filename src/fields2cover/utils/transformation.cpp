@@ -232,6 +232,16 @@ F2CSwaths Transform::transformToPrevCRS(
   return transformSwathsWithFieldRef(s, field, field.getPrevCRS());
 }
 
+F2CPoint Transform::transformToFieldCRS(
+    const F2CPoint& p, const F2CField&) {
+  return p;
+}
+
+F2CLineString Transform::transformToFieldCRS(
+    const F2CLineString& line, const F2CField&) {
+  return line;
+}
+
 F2CPoint Transform::getRefPointInGPS(const F2CField& field) {
   auto point = field.getRefPoint();
   point->transform(generateCoordTransf(field.getCRS(), "EPSG:4326").get());
