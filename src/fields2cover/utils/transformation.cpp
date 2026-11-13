@@ -232,14 +232,27 @@ F2CSwaths Transform::transformToPrevCRS(
   return transformSwathsWithFieldRef(s, field, field.getPrevCRS());
 }
 
+namespace {
+
+// A field that was never transformed has no previous CRS: only the
+// reference point separates the data from the field's frame.
+template <class T>
+T toFieldCRS(const T& t, const F2CField& field) {
+  const T moved = field.getPrevCRS().empty() ? t :
+    Transform::transform(t, field.getPrevCRS(), field.getCRS());
+  return moved - field.getRefPoint();
+}
+
+}  // namespace
+
 F2CPoint Transform::transformToFieldCRS(
-    const F2CPoint& p, const F2CField&) {
-  return p;
+    const F2CPoint& p, const F2CField& field) {
+  return toFieldCRS(p, field);
 }
 
 F2CLineString Transform::transformToFieldCRS(
-    const F2CLineString& line, const F2CField&) {
-  return line;
+    const F2CLineString& line, const F2CField& field) {
+  return toFieldCRS(line, field);
 }
 
 F2CPoint Transform::getRefPointInGPS(const F2CField& field) {
