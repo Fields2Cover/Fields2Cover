@@ -46,3 +46,22 @@ def test_fields2cover_utils_transformer_convertToF2CAndReturn():
 
   path = f2c.Path()
   f2c.Transform.transformPathWithFieldRef(path, field, "EPSG:4326");
+
+def test_fields2cover_utils_transformer_convertToFieldCRS():
+  field = f2c.Field(f2c.Cells(f2c.Cell(f2c.LinearRing(f2c.VectorPoint([
+    f2c.Point(5, 5), f2c.Point(15, 5), f2c.Point(15, 15), f2c.Point(5, 5)])))));
+  p = f2c.Transform.transformToFieldCRS(f2c.Point(10, 8), field);
+  assert (p.getX(), p.getY()) == (5, 3)
+
+  gps = f2c.Point(6.062131843297665, 51.51238564279176, 0)
+  field = f2c.Field(f2c.Cells(f2c.Cell(f2c.LinearRing(f2c.VectorPoint([
+    gps,
+    f2c.Point(6.062215149507296, 51.51204470468504, 0),
+    f2c.Point(6.062259746209906, 51.51187606814959, 0),
+    gps])))));
+  field.setEPSGCoordSystem(4326);
+  f2c.Transform.transformToUTM(field);
+  line = f2c.Transform.transformToFieldCRS(
+      f2c.LineString(f2c.VectorPoint([gps, gps])), field);
+  near(line.getGeometry(1).getX(), 0, 1e-8);
+  near(line.getGeometry(1).getY(), 0, 1e-8);

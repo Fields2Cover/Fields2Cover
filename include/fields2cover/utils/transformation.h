@@ -51,6 +51,12 @@ class Transform {
   static F2CSwaths transformToPrevCRS(
       const F2CSwaths& s, const F2CField& field);
 
+  /// Bring data given in the field's previous CRS into the field's own frame.
+  static F2CPoint transformToFieldCRS(
+      const F2CPoint& p, const F2CField& field);
+  static F2CLineString transformToFieldCRS(
+      const F2CLineString& line, const F2CField& field);
+
   static F2CPath transformPath(const F2CPath& p,
       const std::string& coord_sys_from, const std::string& coord_sys_to);
   static F2CStrip transformStrip(const F2CStrip& s,

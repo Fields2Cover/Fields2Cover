@@ -187,3 +187,54 @@ TEST(fields2cover_utils_transformer, convert_types) {
   EXPECT_NEAR(returned_path2[0].point.getX(), 6.062131843297665, 1e-3);
   EXPECT_NEAR(returned_path2[0].point.getY(), 51.51238564279176, 1e-3);
 }
+
+TEST(fields2cover_utils_transformer, convert_to_field_crs_without_prev_crs) {
+  F2CField field {F2CCells(F2CCell(F2CLinearRing({
+    F2CPoint(5, 5), F2CPoint(15, 5), F2CPoint(15, 15), F2CPoint(5, 5)})))};
+  ASSERT_EQ(field.getRefPoint(), F2CPoint(5, 5));
+  ASSERT_TRUE(field.getPrevCRS().empty());
+
+  EXPECT_EQ(f2c::Transform::transformToFieldCRS(F2CPoint(5, 5), field),
+      F2CPoint(0, 0));
+  EXPECT_EQ(f2c::Transform::transformToFieldCRS(F2CPoint(10, 8), field),
+      F2CPoint(5, 3));
+}
+
+TEST(fields2cover_utils_transformer, convert_to_field_crs) {
+  const F2CLineString gps_border({
+    F2CPoint(6.062131843297665, 51.51238564279176, 0),
+    F2CPoint(6.062215149507296, 51.51204470468504, 0),
+    F2CPoint(6.062232423018175, 51.51197104647852, 0),
+    F2CPoint(6.062259746209906, 51.51187606814959, 0)});
+  F2CField field {F2CCells(F2CCell(F2CLinearRing({
+    gps_border.getGeometry(0), gps_border.getGeometry(1),
+    gps_border.getGeometry(2), gps_border.getGeometry(3),
+    gps_border.getGeometry(0)})))};
+  field.setEPSGCoordSystem(4326);
+  f2c::Transform::transformToUTM(field);
+  const auto local_border = field.getField().getCellBorder(0);
+
+  // The field went through the same transformation, so its border is the
+  // answer. Not bit for bit: the field added its GPS reference back before
+  // projecting, which rounds in the last digit (measured 4e-14 m).
+  const F2CLineString gps_copy = gps_border.clone();
+  auto line = f2c::Transform::transformToFieldCRS(gps_border, field);
+  ASSERT_EQ(line.size(), gps_border.size());
+  for (size_t i = 0; i < line.size(); ++i) {
+    EXPECT_NEAR(line.getGeometry(i).getX(), local_border.getGeometry(i).getX(), 1e-12);
+    EXPECT_NEAR(line.getGeometry(i).getY(), local_border.getGeometry(i).getY(), 1e-12);
+    EXPECT_EQ(gps_border.getGeometry(i), gps_copy.getGeometry(i));
+  }
+
+  // Two UTM coordinates of ~5.7e6 m differ by one ulp of ~1e-9 m.
+  auto corner = f2c::Transform::transformToFieldCRS(gps_border.getGeometry(0), field);
+  EXPECT_NEAR(corner.getX(), 0, 1e-8);
+  EXPECT_NEAR(corner.getY(), 0, 1e-8);
+
+  const F2CPoint p = gps_border.getGeometry(2);
+  auto back = f2c::Transform::transform(
+      f2c::Transform::transformToFieldCRS(p, field), field.getRefPoint(),
+      field.getCRS(), field.getPrevCRS());
+  EXPECT_NEAR(back.getX(), p.getX(), 1e-12);
+  EXPECT_NEAR(back.getY(), p.getY(), 1e-12);
+}
