@@ -11,7 +11,9 @@
 #include <math.h>
 #include <utility>
 #include <vector>
+#include <algorithm>
 #include <limits>
+#include <stdexcept>
 #include "fields2cover/route_planning/route_planner_base.h"
 
 namespace f2c::rp {
@@ -171,16 +173,35 @@ F2CGraph2D RoutePlannerBase::createCoverageGraph(
 std::vector<long long int> RoutePlannerBase::computeBestRoute(
     const F2CGraph2D& cov_graph, bool show_log, long int time_limit_seconds,
     bool use_guided_local_search) const {
-  int depot_id = static_cast<int>(cov_graph.numNodes()-1);
+  const size_t n_nodes = cov_graph.numNodes();
+  if (n_nodes < 2) {
+    // Without any swath there is nothing to route, and OR-Tools would abort
+    // the whole process (CHECK failure on depot index -1) instead of throwing.
+    throw std::invalid_argument(
+        "RoutePlannerBase: no swaths to route (empty coverage graph)");
+  }
+  int depot_id = static_cast<int>(n_nodes - 1);
   const ortools::RoutingIndexManager::NodeIndex depot{depot_id};
-  ortools::RoutingIndexManager manager(cov_graph.numNodes(), 1, depot);
+  ortools::RoutingIndexManager manager(static_cast<int>(n_nodes), 1, depot);
   ortools::RoutingModel routing(manager);
 
+  // The transit callback is evaluated millions of times during local search.
+  // Look the costs up in a dense row-major matrix instead of the nested hash
+  // maps of the graph (same values: missing edges keep the default INF).
+  const size_t n_mat = std::max(cov_graph.matrixSize(), n_nodes);
+  std::vector<int64_t> cost_mat(n_mat * n_mat,
+      cov_graph.getCostFromEdge(n_mat, n_mat));  // default INF of the graph
+  for (const auto& from : cov_graph.getEdges()) {
+    for (const auto& to : from.second) {
+      cost_mat[from.first * n_mat + to.first] = to.second;
+    }
+  }
   const int transit_callback_index = routing.RegisterTransitCallback(
-      [&cov_graph, &manager] (long long int from, long long int to) -> long long int {
-        auto from_node = manager.IndexToNode(from).value();
-        auto to_node = manager.IndexToNode(to).value();
-        return cov_graph.getCostFromEdge(from_node, to_node);
+      [&cost_mat, &manager, n_mat] (long long int from, long long int to)
+      -> long long int {
+        const size_t from_node = manager.IndexToNode(from).value();
+        const size_t to_node = manager.IndexToNode(to).value();
+        return cost_mat[from_node * n_mat + to_node];
       });
   routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index);
   ortools::RoutingSearchParameters searchParameters =
@@ -199,6 +220,10 @@ std::vector<long long int> RoutePlannerBase::computeBestRoute(
   searchParameters.set_log_search(show_log);
   const ortools::Assignment* solution =
     routing.SolveWithParameters(searchParameters);
+  if (solution == nullptr) {
+    throw std::runtime_error(
+        "RoutePlannerBase: OR-Tools found no route within the time limit");
+  }
 
   long long int index = routing.Start(0);
   std::vector<long long int> v_id;
