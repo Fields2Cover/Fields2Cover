@@ -159,19 +159,10 @@ void Graph::initializeMatrices(std::vector<std::vector<int64_t>>& dist,
     }
   }
 
-  // Reconstruct paths
-  for (size_t i = 0; i < N; ++i) {
-    for (size_t j = 0; j < N; ++j) {
-      if (i != j && next[i][j] != -1) {
-        size_t current = i;
-        while (current != j) {
-          current = next[current][j];
-        }
-      } else if (i != j && next[i][j] == -1) {
-        dist[i][j] = INF;
-      }
-    }
-  }
+  // Unreachable pairs keep dist == INF and next == -1 from the
+  // initialisation above, so no post-processing pass is needed. (A former
+  // pass walked every i->j path here without storing it: O(N^2 * L) work
+  // with no effect on the result.)
 }
 
 std::vector<std::vector<int64_t>>& Graph::getCosts() {

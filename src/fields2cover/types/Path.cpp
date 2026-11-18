@@ -98,6 +98,7 @@ PathState& Path::back() {
 }
 
 Path& Path::operator+=(const Path& path) {
+  this->states_.reserve(this->states_.size() + path.size());
   for (auto&& new_state : path) {
     this->states_.emplace_back(new_state);
   }

@@ -168,3 +168,18 @@ TEST(fields2cover_rp_route_plan_base, genRouteKeepsItsCallShapes) {
   EXPECT_EQ(two_args.length(), seven_args.length());
   EXPECT_EQ(two_args.asLineString().size(), seven_args.asLineString().size());
 }
+
+TEST(fields2cover_rp_route_plan_base, noSwathsThrowsInsteadOfAborting) {
+  F2CCells cells {
+    F2CCell(F2CLinearRing({
+          F2CPoint(0, 0), F2CPoint(10, 0), F2CPoint(10, 10), F2CPoint(0, 10),
+          F2CPoint(0, 0)}))
+  };
+  F2CSwathsByCells no_swaths;
+  f2c::rp::RoutePlannerBase route_planner;
+  EXPECT_THROW(route_planner.genRoute(cells, no_swaths, false, 1e-4, true, 1, false),
+      std::invalid_argument);
+  route_planner.setStartAndEndPoint(F2CPoint(-1, -1));
+  EXPECT_THROW(route_planner.genRoute(cells, no_swaths, false, 1e-4, true, 1, false),
+      std::invalid_argument);
+}
