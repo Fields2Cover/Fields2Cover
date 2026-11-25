@@ -131,3 +131,26 @@ TEST(fields2cover_route_snake, genRouteCoversTheSameSwathsInTheSameOrder) {
     EXPECT_EQ(from_route.at(i).endPoint(), ordered.at(i).endPoint());
   }
 }
+
+TEST(fields2cover_rp_snake_order, a_cell_with_one_swath_is_left_alone) {
+  // (size() - 1) / 2 + 1 leaves i == 1 for a single swath, so the reverse used
+  // to start one past the end; with none at all, size() - 1 wrapped around.
+  f2c::rp::SnakeOrder order;
+  for (size_t n : {0u, 1u, 2u}) {
+    F2CSwaths swaths;
+    for (size_t i = 0; i < n; ++i) {
+      swaths.emplace_back(F2CLineString(
+          {F2CPoint(0, 2.0 * i), F2CPoint(10, 2.0 * i)}), 2.0);
+    }
+    F2CSwaths sorted = order.genSortedSwaths(swaths);
+    ASSERT_EQ(sorted.size(), n);
+    // Nothing to reorder below three, so the swaths come back as they went in.
+    // (genSortedSwaths may still flip a swath to keep the drive continuous,
+    // so compare the segment, not which end it starts from.)
+    for (size_t i = 0; i < n; ++i) {
+      const F2CPoint s0 = sorted[i].startPoint(), s1 = sorted[i].endPoint();
+      const F2CPoint w0 = swaths[i].startPoint(), w1 = swaths[i].endPoint();
+      EXPECT_TRUE((s0 == w0 && s1 == w1) || (s0 == w1 && s1 == w0));
+    }
+  }
+}
