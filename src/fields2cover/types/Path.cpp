@@ -5,6 +5,7 @@
 //=============================================================================
 
 #include <algorithm>
+#include <cmath>
 #include <numeric>
 #include <steering_functions/utilities/utilities.hpp>
 #include "fields2cover/utils/spline.h"
@@ -472,5 +473,25 @@ Path& Path::discretize(double step_size) {
   return *this;
 }
 
-}  // namespace f2c::types
+size_t Path::countSharpTurns(double max_jump) const {
+  const double limit = std::fabs(max_jump);
+  size_t n = 0;
+  for (size_t i = 0; i + 1 < this->states_.size(); ++i) {
+    if (Point::getAngleDiffAbs(
+          this->states_[i].angle, this->states_[i + 1].angle) > limit) {
+      ++n;
+    }
+  }
+  return n;
+}
 
+double Path::maxHeadingJump() const {
+  double worst = 0.0;
+  for (size_t i = 0; i + 1 < this->states_.size(); ++i) {
+    worst = std::max(worst, Point::getAngleDiffAbs(
+          this->states_[i].angle, this->states_[i + 1].angle));
+  }
+  return worst;
+}
+
+}  // namespace f2c::types

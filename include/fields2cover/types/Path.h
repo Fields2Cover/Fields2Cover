@@ -74,6 +74,21 @@ struct Path {
 
   double length(void) const;
 
+  /// Corners the path turns through faster than the vehicle can steer.
+  ///
+  /// Each state carries the heading it is driven at, so a jump in heading
+  /// between one state and the next is a corner turned on the spot. A vehicle
+  /// with a turning radius cannot drive one. PathPlanning leaves a corner
+  /// square when no turn fits the room it has, and nothing reports it: the
+  /// path comes back looking complete and is not drivable.
+  /// @param max_jump Heading change, in radians, still counted as steering.
+  /// @return Number of corners that turn faster than \a max_jump
+  size_t countSharpTurns(double max_jump = 0.35) const;
+
+  /// Widest heading jump between two consecutive states, in radians.
+  /// Zero on a path of fewer than two states.
+  double maxHeadingJump() const;
+
   void appendSwath(const Swath& swath, double cruise_speed);
   void appendSwath(const Swath& swath, double cruise_speed, PathSectionType type);
 
