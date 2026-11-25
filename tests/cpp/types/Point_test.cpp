@@ -5,6 +5,8 @@
 //=============================================================================
 
 #include <gtest/gtest.h>
+#include <algorithm>
+#include <vector>
 #include "fields2cover/utils/random.h"
 #include "fields2cover/types.h"
 
@@ -328,4 +330,32 @@ TEST(fields2cover_types_point, hashAgreesWithEquality) {
 
   EXPECT_EQ(a, b);
   EXPECT_EQ(std::hash<F2CPoint>()(a), std::hash<F2CPoint>()(b));
+}
+
+TEST(fields2cover_types_point, survives_the_standard_algorithms) {
+  // std::swap moves a into a temporary, then assigns b into a. Assigning to a
+  // Point writes through its buffer, so a moved-from Point that kept no buffer
+  // took the whole program down -- on any vector<Point>, through reverse, sort,
+  // rotate or anything else built on swap.
+  std::vector<F2CPoint> v {F2CPoint(0, 0), F2CPoint(1, 1), F2CPoint(2, 2)};
+  std::reverse(v.begin(), v.end());
+  EXPECT_EQ(v[0], F2CPoint(2, 2));
+  EXPECT_EQ(v[2], F2CPoint(0, 0));
+
+  std::vector<F2CPoint> w {F2CPoint(2, 0), F2CPoint(0, 0), F2CPoint(1, 0)};
+  std::sort(w.begin(), w.end(),
+      [](const F2CPoint& a, const F2CPoint& b) {return a.getX() < b.getX();});
+  EXPECT_EQ(w[0], F2CPoint(0, 0));
+  EXPECT_EQ(w[1], F2CPoint(1, 0));
+  EXPECT_EQ(w[2], F2CPoint(2, 0));
+}
+
+TEST(fields2cover_types_point, a_moved_from_point_is_still_a_point) {
+  F2CPoint a(3, 4);
+  F2CPoint b(std::move(a));
+  EXPECT_EQ(b, F2CPoint(3, 4));
+  // Reading it is defined, and assigning to it works rather than crashing.
+  EXPECT_NO_THROW(a.getX());
+  a = F2CPoint(7, 8);
+  EXPECT_EQ(a, F2CPoint(7, 8));
 }
