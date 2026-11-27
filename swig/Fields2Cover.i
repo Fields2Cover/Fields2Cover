@@ -334,6 +334,8 @@ DEFINE_PP_COSTS(BaseObjective<f2c::obj::PPObjective>, computeCostWithMinimizingS
 // %ignore f2c::rp::RoutePlannerBase::createCoverageGraph;
 %rename(RP_RoutePlannerBase) f2c::rp::RoutePlannerBase;
 %include "fields2cover/route_planning/route_planner_base.h"
+%rename(RP_FreeSpaceRoutePlanner) f2c::rp::FreeSpaceRoutePlanner;
+%include "fields2cover/route_planning/free_space_route_planner.h"
 
 
 %rename(PP_Turning_base_class) f2c::pp::TurningBase;

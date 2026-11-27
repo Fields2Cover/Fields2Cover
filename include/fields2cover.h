@@ -61,6 +61,7 @@
 #include "fields2cover/route_planning/custom_order.h"
 
 #include "fields2cover/route_planning/route_planner_base.h"
+#include "fields2cover/route_planning/free_space_route_planner.h"
 
 #include "fields2cover/path_planning/turning_base.h"
 #include "fields2cover/path_planning/dubins_curves.h"
